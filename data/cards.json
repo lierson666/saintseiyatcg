@@ -8082,7 +8082,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Cosmic Marionation — When Griffon Minos enters the Battlefield, you may pay {1}{S}. If you do, target enemy Devotee gets -2 @ATK / -2 @HP until the end of your round.",
+        "Cosmic Marionation — When Griffon Minos enters the Battlefield, you may pay {2}{S}. If you do, each enemy Devotee gets -1 @ATK / -1 @HP until the end of your round.",
         "Puppet Master — Whenever an enemy Devotee is defeated during your round, its controller loses {1}{S}."
       ],
       "habilidade_awaken_en": "",
@@ -8091,7 +8091,7 @@
       "nome_exibicao_pt": "MINOS DE GRIFO",
       "subtitulo_pt": "O Mestre da Marionete Cósmica",
       "habilidades_pt": [
-        "Marionete Cósmica — Quando Minos de Grifo entra no Campo de Batalha, você pode pagar {1}{S}. Se fizer isso, o Devoto inimigo alvo recebe -2 @ATQ / -2 @PV até o fim da sua rodada.",
+        "Marionete Cósmica — Quando Minos de Grifo entra no Campo de Batalha, você pode pagar {2}{S}. Se fizer isso, cada Devoto inimigo recebe -1 @ATQ / -1 @PV até o fim da sua rodada.",
         "Mestre dos Fantoches — Sempre que um Devoto inimigo é derrotado durante a sua rodada, o controlador dele perde {1}{S}."
       ],
       "tagline_pt": "O Mestre da Marionete Cósmica"
@@ -8258,8 +8258,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Balance of Curse — When Sphinx Pharaoh enters the Battlefield, you may pay {1}{S}. If you do, target enemy God loses {2}{S} and your God gains {2}{S}.",
-        "Dead End Symphony — Once until the start of your next round, whenever you pay Soul to activate an ability, you may pay an additional {1}{S}. If you do, draw 1 card."
+        "Balance of Curse — At the start of your round, you may lose {1}{S}. If you do, draw 1 card."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -8267,8 +8266,7 @@
       "nome_exibicao_pt": "PHARAÓ DE ESFINGE",
       "subtitulo_pt": "O Juiz das Almas",
       "habilidades_pt": [
-        "Balança da Maldição — Quando Pharaó de Esfinge entra no Campo de Batalha, você pode pagar {1}{S}. Se fizer isso, o Deus inimigo alvo perde {2}{S} e seu Deus ganha {2}{S}.",
-        "Sinfonia do Fim — Uma vez até o início da sua próxima rodada, sempre que você paga Alma para ativar uma habilidade, você pode pagar {1}{S} adicional. Se fizer isso, compre 1 carta."
+        "Balança da Maldição — No início da sua rodada, você pode perder {1}{S}. Se fizer isso, compre 1 carta."
       ],
       "tagline_pt": "O Juiz das Almas"
     },
@@ -8514,7 +8512,7 @@
       "keywords_en": [],
       "habilidades_en": [
         "Terrible Providence — When Thanatos enters the Battlefield, you may pay {3}{S}. If you do, defeat target enemy Devotee.",
-        "Divine Execution — Once each round, whenever an enemy Devotee is defeated, its controller loses {2}{S} and your God gains {2}{S}."
+        "Divine Execution — Once each round, whenever another friendly Devotee is defeated, target opponent sacrifices a Devotee."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -8523,7 +8521,7 @@
       "subtitulo_pt": "O Deus Impiedoso da Morte",
       "habilidades_pt": [
         "Providência Terrível — Quando Thanatos entra no Campo de Batalha, você pode pagar {3}{S}. Se fizer isso, derrote o Devoto inimigo alvo.",
-        "Execução Divina — Uma vez por rodada, sempre que um Devoto inimigo é derrotado, o controlador dele perde {2}{S} e seu Deus ganha {2}{S}."
+        "Execução Divina — Uma vez por rodada, sempre que outro Devoto aliado é derrotado, o oponente alvo sacrifica um Devoto."
       ],
       "tagline_pt": "O Deus Impiedoso da Morte"
     },
@@ -8877,7 +8875,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Greed the Life — When Harpy Valentine enters the Battlefield, you may pay {1}{S}. If you do, target enemy God loses {2}{S} and your God gains {2}{S}.",
+        "Greed the Life — When Harpy Valentine enters the Battlefield, target enemy God loses X {S} and your God gains X {S}, where X is the number of Specters you control (maximum 4).",
         "Loyal Servant — Whenever a friendly Judge Specter is defeated, you may sacrifice Harpy Valentine. If you do, return that Judge Specter from your Tartarus to your hand."
       ],
       "habilidade_awaken_en": "",
@@ -8886,7 +8884,7 @@
       "nome_exibicao_pt": "VALENTINE DE HARPIA",
       "subtitulo_pt": "O Servo Leal de Wyvern",
       "habilidades_pt": [
-        "Ganância pela Vida — Quando Valentine de Harpia entra no Campo de Batalha, você pode pagar {1}{S}. Se fizer isso, o Deus inimigo alvo perde {2}{S} e seu Deus ganha {2}{S}.",
+        "Ganância pela Vida — Quando Valentine de Harpia entra no Campo de Batalha, o Deus inimigo alvo perde X {S} e seu Deus ganha X {S}, onde X é o número de Espectros que você controla (máximo 4).",
         "Servo Leal — Sempre que um Juiz do Inferno aliado é derrotado, você pode sacrificar Valentine de Harpia. Se fizer isso, devolva esse Juiz do Inferno do seu Tártaro para a sua mão."
       ],
       "tagline_pt": "O Servo Leal de Wyvern"
@@ -9002,7 +9000,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Deep Fragrance — When Deep Niobe enters the Battlefield, you may pay {2}{S}. If you do, target enemy Devotee gets -3 @ATK / -3 @HP until the end of your round.",
+        "Deep Fragrance — When Deep Niobe enters the Battlefield, you may pay X {S}, where X is 3 or less. If you do, each other Devotee gets -X @ATK / -X @HP until the end of your round.",
         "Poisonous Death — When Deep Niobe is defeated, target enemy Devotee gets -2 @ATK / -2 @HP until the end of your round."
       ],
       "habilidade_awaken_en": "",
@@ -9011,7 +9009,7 @@
       "nome_exibicao_pt": "NIOBE DE DEEP",
       "subtitulo_pt": "A Fragrância Mortal",
       "habilidades_pt": [
-        "Perfume de Deep — Quando Niobe de Deep entra no Campo de Batalha, você pode pagar {2}{S}. Se fizer isso, o Devoto inimigo alvo recebe -3 @ATQ / -3 @PV até o fim da sua rodada.",
+        "Perfume de Deep — Quando Niobe de Deep entra no Campo de Batalha, você pode pagar X {S}, sendo X 3 ou menos. Se fizer isso, cada outro Devoto recebe -X @ATQ / -X @PV até o fim da sua rodada.",
         "Morte Venenosa — Quando Niobe de Deep é derrotado, o Devoto inimigo alvo recebe -2 @ATQ / -2 @PV até o fim da sua rodada."
       ],
       "tagline_pt": "A Fragrância Mortal"
@@ -9043,7 +9041,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Annihilation Flap — Whenever Basilisk Sylphid deals combat damage to an enemy Devotee, that Devotee gets -2 @ATK / -2 @HP until the end of your round.",
+        "Annihilation Flap — Whenever Basilisk Sylphid deals combat damage to an enemy Devotee, defeat that Devotee.",
         "Deadly Pursuit — Whenever an enemy Devotee is defeated during your round, Basilisk Sylphid gets +2 @ATK until the end of your round."
       ],
       "habilidade_awaken_en": "",
@@ -9052,7 +9050,7 @@
       "nome_exibicao_pt": "SYLPHID DE BASILISCO",
       "subtitulo_pt": "A Estrela Venenosa",
       "habilidades_pt": [
-        "Batida da Aniquilação — Sempre que Sylphid de Basilisco causa dano de Golpe a um Devoto inimigo, esse Devoto recebe -2 @ATQ / -2 @PV até o fim da sua rodada.",
+        "Batida da Aniquilação — Sempre que Sylphid de Basilisco causa dano de Golpe a um Devoto inimigo, derrote esse Devoto.",
         "Perseguição Mortal — Sempre que um Devoto inimigo é derrotado durante a sua rodada, Sylphid de Basilisco recebe +2 @ATQ até o fim da sua rodada."
       ],
       "tagline_pt": "A Estrela Venenosa"
@@ -9210,7 +9208,7 @@
       "keywords_en": [],
       "habilidades_en": [
         "Hidden Cosmo {4}",
-        "Worm's Bind — When Worm Raimi enters the Battlefield, you may pay {1}{S}. If you do, target enemy Devotee gets -1 @ATK / -1 @HP until the end of your round.",
+        "Worm's Bind — When Worm Raimi enters the Battlefield, you may pay {1}{S}. If you do, target opponent discards a card of their choice.",
         "Underground Ambush — Whenever Worm Raimi Strikes a damaged Devotee, Worm Raimi gets +2 @ATK until the end of your round."
       ],
       "habilidade_awaken_en": "",
@@ -9220,7 +9218,7 @@
       "subtitulo_pt": "O Espectro Sob a Terra",
       "habilidades_pt": [
         "Cosmo Oculto {4}",
-        "Prisão do Verme — Quando Raimi de Verme entra no Campo de Batalha, você pode pagar {1}{S}. Se fizer isso, o Devoto inimigo alvo recebe -1 @ATQ / -1 @PV até o fim da sua rodada.",
+        "Prisão do Verme — Quando Raimi de Verme entra no Campo de Batalha, você pode pagar {1}{S}. Se fizer isso, o oponente alvo descarta uma carta à escolha dele.",
         "Emboscada Subterrânea — Sempre que Raimi de Verme Golpeia um Devoto com dano marcado, Raimi de Verme recebe +2 @ATQ até o fim da sua rodada."
       ],
       "tagline_pt": "O Espectro Sob a Terra"
@@ -9252,7 +9250,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Rolling Bomber Stone — When Golem Rock enters the Battlefield, you may sacrifice another friendly Devotee. If you do, defeat target enemy Devotee with 3 @HP or less.",
+        "Rolling Bomber Stone — When Golem Rock enters the Battlefield, you may sacrifice another friendly Devotee. If you do, target opponent sacrifices a Devotee.",
         "Stone Colossus — Whenever another friendly Devotee is defeated, Golem Rock gets +1 @ATK until the end of your round."
       ],
       "habilidade_awaken_en": "",
@@ -9261,7 +9259,7 @@
       "nome_exibicao_pt": "ROCK DE GOLEM",
       "subtitulo_pt": "A Estrela Esmagadora",
       "habilidades_pt": [
-        "Bomba de Pedra Rolante — Quando Rock de Golem entra no Campo de Batalha, você pode sacrificar outro Devoto aliado. Se fizer isso, derrote o Devoto inimigo alvo com 3 @PV ou menos.",
+        "Bomba de Pedra Rolante — Quando Rock de Golem entra no Campo de Batalha, você pode sacrificar outro Devoto aliado. Se fizer isso, o oponente alvo sacrifica um Devoto.",
         "Colosso de Pedra — Sempre que outro Devoto aliado é derrotado, Rock de Golem recebe +1 @ATQ até o fim da sua rodada."
       ],
       "tagline_pt": "A Estrela Esmagadora"
@@ -9286,15 +9284,14 @@
       "soul": null,
       "attack": null,
       "awaken": null,
-      "power": 3,
-      "vida": 2,
+      "power": 4,
+      "vida": 4,
       "resistance": 3,
       "damage_cloth": null,
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Greater Axe Crusher — When Troll Iwan enters the Battlefield, you may sacrifice another friendly Devotee. If you do, target enemy Devotee gets -3 @ATK / -3 @HP until the end of your round.",
-        "Bloodthirst — Whenever another friendly Devotee is defeated, Troll Iwan gets +1 @ATK until the end of your round."
+        "Bloodthirst — Whenever another friendly Devotee is defeated, put a @Training counter on Troll Iwan."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -9302,8 +9299,7 @@
       "nome_exibicao_pt": "IWAN DE TROLL",
       "subtitulo_pt": "A Estrela Brutal",
       "habilidades_pt": [
-        "Grande Machado Esmagador — Quando Iwan de Troll entra no Campo de Batalha, você pode sacrificar outro Devoto aliado. Se fizer isso, o Devoto inimigo alvo recebe -3 @ATQ / -3 @PV até o fim da sua rodada.",
-        "Sede de Sangue — Sempre que outro Devoto aliado é derrotado, Iwan de Troll recebe +1 @ATQ até o fim da sua rodada."
+        "Sede de Sangue — Sempre que outro Devoto aliado é derrotado, coloque um marcador de @Treinamento em Iwan de Troll."
       ],
       "tagline_pt": "A Estrela Brutal"
     },
@@ -9373,7 +9369,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Howling Inferno — When Lycaon Phlegyas enters the Battlefield, you may pay {1}{S}. If you do, target enemy Devotee gets -2 @ATK / -2 @HP until the end of your round.",
+        "Howling Inferno — When Lycaon Phlegyas enters the Battlefield, send up to 3 target cards from an enemy Tartarus to the Void. While Lycaon Phlegyas is on the Battlefield, enemy Devotees that would be put into the Tartarus when defeated are sent to the Void instead.",
         "Savage Predator — Whenever Lycaon Phlegyas defeats an enemy Devotee in combat, your God gains {2}{S}."
       ],
       "habilidade_awaken_en": "",
@@ -9382,7 +9378,7 @@
       "nome_exibicao_pt": "FLEGIAS DE LICAÃO",
       "subtitulo_pt": "A Estrela Selvagem",
       "habilidades_pt": [
-        "Inferno Uivante — Quando Flegias de Licaão entra no Campo de Batalha, você pode pagar {1}{S}. Se fizer isso, o Devoto inimigo alvo recebe -2 @ATQ / -2 @PV até o fim da sua rodada.",
+        "Inferno Uivante — Quando Flegias de Licaão entra no Campo de Batalha, mande até 3 cartas alvo de um Tártaro inimigo ao Vazio. Enquanto Flegias de Licaão estiver no Campo de Batalha, Devotos inimigos que iriam para o Tártaro ao serem derrotados vão para o Vazio em vez disso.",
         "Predador Selvagem — Sempre que Flegias de Licaão derrota um Devoto inimigo com um Golpe, seu Deus ganha {2}{S}."
       ],
       "tagline_pt": "A Estrela Selvagem"
@@ -9543,7 +9539,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Death Messenger — When Dullahan Cube enters the Battlefield, target enemy God loses {1}{S} and your God gains {1}{S}.",
+        "Death Messenger — Once each round, when Dullahan Cube or another friendly Devotee is defeated, target enemy God loses {1}{S} and your God gains {1}{S}.",
         "Last Breath — When Dullahan Cube is defeated, you may return another target Devotee with Casting Cost 1 or less from your Tartarus to your hand.",
         "Afterlife {2}{C}: Target enemy God loses {1}{S}."
       ],
@@ -9553,7 +9549,7 @@
       "nome_exibicao_pt": "CUBE DE DULLAHAN",
       "subtitulo_pt": "O Carrasco Sem Cabeça",
       "habilidades_pt": [
-        "Mensageiro da Morte — Quando Cube de Dullahan entra no Campo de Batalha, o Deus inimigo alvo perde {1}{S} e seu Deus ganha {1}{S}.",
+        "Mensageiro da Morte — Uma vez por rodada, quando Cube de Dullahan ou outro Devoto aliado é derrotado, o Deus inimigo alvo perde {1}{S} e seu Deus ganha {1}{S}.",
         "Último Suspiro — Quando Cube de Dullahan é derrotado, você pode devolver outro Devoto alvo com Custo de Conjuração 1 ou menos do seu Tártaro para a sua mão.",
         "Além-Túmulo {2}{C}: O Deus inimigo alvo perde {1}{S}."
       ],
@@ -11026,7 +11022,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Seki Shiki Meikai Ha — When Cancer Deathmask enters the Battlefield, you may pay {2}{S}. If you do, target enemy Devotee gets -3 @ATK / -3 @HP until the end of your round.",
+        "Seki Shiki Meikai Ha — When Cancer Deathmask enters the Battlefield, you may sacrifice another friendly Devotee. If you do, put target Devotee with Casting Cost 4 or less from any Tartarus onto the Battlefield under your control Unprepared.",
         "Gateway to Yomotsu — Whenever an enemy Devotee is defeated, you may pay {1}{S}. If you do, put the top 2 cards of your deck into your Tartarus. This ability triggers only once each round."
       ],
       "habilidade_awaken_en": "",
@@ -11036,7 +11032,7 @@
       "subtitulo_pt": "Retorno do Buscador da Morte",
       "tagline_pt": "O Retorno do Buscador da Morte",
       "habilidades_pt": [
-        "Ondas do Inferno — Quando Máscara da Morte de Câncer entra no Campo de Batalha, você pode pagar {2}{S}. Se fizer isso, o Devoto inimigo alvo recebe -3 @ATQ / -3 @PV até o fim da sua rodada.",
+        "Ondas do Inferno — Quando Máscara da Morte de Câncer entra no Campo de Batalha, você pode sacrificar outro Devoto aliado. Se fizer isso, coloque o Devoto alvo com Custo de Conjuração 4 ou menos de qualquer Tártaro no Campo de Batalha sob o seu controle, Despreparado.",
         "Portal de Yomotsu — Sempre que um Devoto inimigo é derrotado, você pode pagar {1}{S}. Se fizer isso, coloque as 2 cartas do topo do seu Deck no seu Tártaro. Esta habilidade ativa apenas uma vez por rodada."
       ]
     },
@@ -11067,8 +11063,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Bloody Rose — When Pisces Aphrodite enters the Battlefield, you may pay {1}{S}. If you do, target enemy Devotee gets -2 @ATK / -2 @HP until the end of your round.",
-        "Royal Demon Rose — Once each round, whenever an enemy Devotee is defeated, its controller loses {1}{S} and your God gains {1}{S}."
+        "Bloody Rose — Whenever an opponent draws a card, except the first card they draw in each of their rounds, that player's God loses {1}{S}."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -11076,8 +11071,7 @@
       "nome_exibicao_pt": "AFRODITE DE PEIXES, O CAVALEIRO RESSUSCITADO",
       "subtitulo_pt": "A Beleza da Morte Eterna",
       "habilidades_pt": [
-        "Rosa Sangrenta — Quando Afrodite de Peixes entra no Campo de Batalha, você pode pagar {1}{S}. Se fizer isso, o Devoto inimigo alvo recebe -2 @ATQ / -2 @PV até o fim da sua rodada.",
-        "Rosa Demoníaca Real — Uma vez por rodada, sempre que um Devoto inimigo é derrotado, o controlador dele perde {1}{S} e seu Deus ganha {1}{S}."
+        "Rosa Sangrenta — Sempre que um oponente compra uma carta, exceto a primeira que ele compra em cada rodada dele, o Deus desse jogador perde {1}{S}."
       ],
       "tagline_pt": "A Beleza da Morte Eterna"
     },
@@ -11150,7 +11144,7 @@
       "keywords_en": [],
       "habilidades_en": [
         "Diamond Dust — When Aquarius Camus enters the Battlefield, you may pay {1}{S}. If you do, target enemy Devotee can't declare a Strike during its controller's next round.",
-        "Aurora Execution — Once each round, whenever an enemy Devotee is defeated, its controller loses {1}{S} and your God gains {1}{S}."
+        "Aurora Execution — Once each round, whenever an enemy Devotee is defeated, you may lose {1}{S}. If you do, draw 1 card."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -11160,7 +11154,7 @@
       "tagline_pt": "A Alma Congelada do Mundo dos Mortos",
       "habilidades_pt": [
         "Pó de Diamante — Quando Camus de Aquário entra no Campo de Batalha, você pode pagar {1}{S}. Se fizer isso, o Devoto inimigo alvo não pode declarar um Golpe durante a próxima rodada do controlador dele.",
-        "Execução Aurora — Uma vez por rodada, sempre que um Devoto inimigo é derrotado, o controlador dele perde {1}{S} e seu Deus ganha {1}{S}."
+        "Execução Aurora — Uma vez por rodada, sempre que um Devoto inimigo é derrotado, você pode perder {1}{S}. Se fizer isso, compre 1 carta."
       ]
     },
     {

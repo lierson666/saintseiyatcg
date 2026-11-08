@@ -4,6 +4,21 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-11-08 — §58 (Alvos, Guardian e controle) — reanimar do oponente, edito e Void em vez do Tartarus
+
+- **Antes:** o guia não definia sacrifício pelo oponente (edito), reanimação a partir do Tartarus inimigo nem a substituição do Tartarus pelo Void.
+- **Depois:** (1) o Devotee reanimado do Tartarus inimigo fica sob o seu controle e, ao sair do campo, volta às zonas do dono; (2) sacrificar conta como derrota, e no edito o oponente escolhe na resolução, sem alvo; (3) ir ao Void em vez do Tartarus ainda conta como derrota para os gatilhos.
+- **Motivo:** autor, 08/11/2026: proposta de Hades com as staples do preto (`docs/proposta-hades-staples-preto.md`), para Golem Rock, Thanatos, Cancer Deathmask e Lycaon Phlegyas.
+- **Feito:** guia §58 e motor (`core.destroyDevotee`: `state.voidOnDefeat`).
+
+## 2026-11-08 — 14 Devotos de Hades — staples do preto (EDH)
+
+- **Antes:** 17 dos 37 Devotos matavam ou encolhiam um Devoto ao entrar; 7 drenavam quando um inimigo morria; Golem Rock e Underworld Executioner eram iguais.
+- **Depois** (`docs/proposta-hades-staples-preto.md`): 217 Dullahan = Blood Artist; 209 Worm Raimi = descarte; 187 Sphinx = Phyrexian Arena; 201 Harpy = Gray Merchant (X = Specters, até 4); 204 Niobe = Toxic Deluge (X ≤ 3, simétrico); 205 Basilisk = toque mortal; 210 Golem = edito; 213 Lycaon = Bojuka Bog + Dauthi; 251 Deathmask = Victimize (qualquer Tartarus); 252 Aphrodite = Sheoldred; 183 Minos = Massacre Wurm; 211 Troll = 4/4 com Training counter; 254 Camus = Midnight Reaper; 193 Thanatos = Grave Pact.
+- **Motivo:** autor, 08/11/2026: Hades mais diverso, com arquétipos do preto no Commander, poder conforme o custo.
+- **Feito:** cards.json (EN/PT, Troll vida 2 → 4), rascunho PT, motor (`hades.js`, observador de compra no checkpoint) e testes (`test-engine-v3-v6-hades.mjs`, 37/37).
+- **Pendente:** Sphinx Surplice (188) depende de "Sphinx faz o God inimigo perder Soul", que a carta nova não faz; precisa de texto novo do autor.
+
 ## 2026-11-08 — Carta poseidon-v6-102 — Priest of the Abyss vira Devoto de mill
 
 - **Antes:** Common. Abyssal Ritual ({1}{C}, {T}: -1 ATK em inimigo com Seal) e Whispers Below (olhar o topo quando um inimigo fica Sealed).

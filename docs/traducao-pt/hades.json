@@ -92,8 +92,8 @@
     "n": "MINOS DE GRIFO",
     "s": "O Mestre da Marionete Cósmica",
     "h": [
-      "Marionete Cósmica — Quando Minos de Grifo entra no Campo de Batalha, você pode pagar {1}{S}. Se fizer isso, o Devoto inimigo alvo recebe -2 ATQ / -2 PV até o fim da rodada.",
-      "Mestre dos Fantoches — Sempre que um Devoto inimigo é derrotado durante o seu turno, o controlador dele perde {1}{S}."
+      "Marionete Cósmica — Quando Minos de Grifo entra no Campo de Batalha, você pode pagar {2}{S}. Se fizer isso, cada Devoto inimigo recebe -1 ATQ / -1 PV até o fim da sua rodada.",
+      "Mestre dos Fantoches — Sempre que um Devoto inimigo é derrotado durante a sua rodada, o controlador dele perde {1}{S}."
     ]
   },
   "hades-v6-184": {
@@ -122,8 +122,7 @@
     "n": "PHARAÓ DE ESFINGE",
     "s": "O Juiz das Almas",
     "h": [
-      "Balança da Maldição — Quando Pharaó de Esfinge entra no Campo de Batalha, você pode pagar {1}{S}. Se fizer isso, o Deus inimigo alvo perde {2}{S} e seu Deus ganha {2}{S}.",
-      "Sinfonia do Fim — Uma vez por rodada, sempre que você paga Alma para ativar uma habilidade, você pode pagar {1}{S} adicional. Se fizer isso, compre 1 carta."
+      "Balança da Maldição — No início da sua rodada, você pode perder {1}{S}. Se fizer isso, compre 1 carta."
     ]
   },
   "hades-v6-188": {
@@ -170,7 +169,7 @@
     "s": "O Deus Impiedoso da Morte",
     "h": [
       "Providência Terrível — Quando Thanatos entra no Campo de Batalha, você pode pagar {3}{S}. Se fizer isso, derrote o Devoto inimigo alvo.",
-      "Execução Divina — Uma vez por rodada, sempre que um Devoto inimigo é derrotado, o controlador dele perde {2}{S} e seu Deus ganha {2}{S}."
+      "Execução Divina — Uma vez por rodada, sempre que outro Devoto aliado é derrotado, o oponente alvo sacrifica um Devoto."
     ]
   },
   "hades-v6-194": {
@@ -238,7 +237,7 @@
     "n": "VALENTINE DE HARPIA",
     "s": "O Servo Leal de Wyvern",
     "h": [
-      "Ganância pela Vida — Quando Valentine de Harpia entra no Campo de Batalha, você pode pagar {1}{S}. Se fizer isso, o Deus inimigo alvo perde {2}{S} e seu Deus ganha {2}{S}.",
+      "Ganância pela Vida — Quando Valentine de Harpia entra no Campo de Batalha, o Deus inimigo alvo perde X {S} e seu Deus ganha X {S}, onde X é o número de Espectros que você controla (máximo 4).",
       "Servo Leal — Sempre que um Juiz do Inferno aliado é derrotado, você pode sacrificar Valentine de Harpia. Se fizer isso, devolva esse Juiz do Inferno do seu Tártaro para a sua mão."
     ]
   },
@@ -262,16 +261,16 @@
     "n": "NIOBE DE DEEP",
     "s": "A Fragrância Mortal",
     "h": [
-      "Perfume de Deep — Quando Niobe de Deep entra no Campo de Batalha, você pode pagar {2}{S}. Se fizer isso, o Devoto inimigo alvo recebe -3 ATQ / -3 PV até o fim da rodada.",
-      "Morte Venenosa — Quando Niobe de Deep é derrotado, o Devoto inimigo alvo recebe -2 ATQ / -2 PV até o fim da rodada."
+      "Perfume de Deep — Quando Niobe de Deep entra no Campo de Batalha, você pode pagar X {S}, sendo X 3 ou menos. Se fizer isso, cada outro Devoto recebe -X ATQ / -X PV até o fim da sua rodada.",
+      "Morte Venenosa — Quando Niobe de Deep é derrotado, o Devoto inimigo alvo recebe -2 ATQ / -2 PV até o fim da sua rodada."
     ]
   },
   "hades-v6-205": {
     "n": "SYLPHID DE BASILISCO",
     "s": "A Estrela Venenosa",
     "h": [
-      "Batida da Aniquilação — Sempre que Sylphid de Basilisco causa dano de Golpe a um Devoto inimigo, esse Devoto recebe -2 ATQ / -2 PV até o fim da rodada.",
-      "Perseguição Mortal — Sempre que um Devoto inimigo é derrotado durante o seu turno, Sylphid de Basilisco recebe +2 ATQ até o fim da rodada."
+      "Batida da Aniquilação — Sempre que Sylphid de Basilisco causa dano de Golpe a um Devoto inimigo, derrote esse Devoto.",
+      "Perseguição Mortal — Sempre que um Devoto inimigo é derrotado durante a sua rodada, Sylphid de Basilisco recebe +2 ATQ até o fim da sua rodada."
     ]
   },
   "hades-v6-206": {
@@ -303,24 +302,23 @@
     "s": "O Espectro Sob a Terra",
     "h": [
       "Cosmo Oculto {4}",
-      "Prisão do Verme — Quando Raimi de Verme entra no Campo de Batalha, você pode pagar {1}{S}. Se fizer isso, o Devoto inimigo alvo recebe -1 ATQ / -1 PV até o fim da rodada.",
-      "Emboscada Subterrânea — Sempre que Raimi de Verme Golpeia um Devoto com dano marcado, Raimi de Verme recebe +2 ATQ até o fim da rodada."
+      "Prisão do Verme — Quando Raimi de Verme entra no Campo de Batalha, você pode pagar {1}{S}. Se fizer isso, o oponente alvo descarta uma carta à escolha dele.",
+      "Emboscada Subterrânea — Sempre que Raimi de Verme Golpeia um Devoto com dano marcado, Raimi de Verme recebe +2 ATQ até o fim da sua rodada."
     ]
   },
   "hades-v6-210": {
     "n": "ROCK DE GOLEM",
     "s": "A Estrela Esmagadora",
     "h": [
-      "Bomba de Pedra Rolante — Quando Rock de Golem entra no Campo de Batalha, você pode sacrificar outro Devoto aliado. Se fizer isso, derrote o Devoto inimigo alvo com 3 PV ou menos.",
-      "Colosso de Pedra — Sempre que outro Devoto aliado é derrotado, Rock de Golem recebe +1 ATQ até o fim da rodada."
+      "Bomba de Pedra Rolante — Quando Rock de Golem entra no Campo de Batalha, você pode sacrificar outro Devoto aliado. Se fizer isso, o oponente alvo sacrifica um Devoto.",
+      "Colosso de Pedra — Sempre que outro Devoto aliado é derrotado, Rock de Golem recebe +1 ATQ até o fim da sua rodada."
     ]
   },
   "hades-v6-211": {
     "n": "IWAN DE TROLL",
     "s": "A Estrela Brutal",
     "h": [
-      "Grande Machado Esmagador — Quando Iwan de Troll entra no Campo de Batalha, você pode sacrificar outro Devoto aliado. Se fizer isso, o Devoto inimigo alvo recebe -3 ATQ / -3 PV até o fim da rodada.",
-      "Sede de Sangue — Sempre que outro Devoto aliado é derrotado, Iwan de Troll recebe +1 ATQ até o fim da rodada."
+      "Sede de Sangue — Sempre que outro Devoto aliado é derrotado, coloque um marcador de Treinamento em Iwan de Troll."
     ]
   },
   "hades-v6-212": {
@@ -337,7 +335,7 @@
     "n": "FLEGIAS DE LICAÃO",
     "s": "A Estrela Selvagem",
     "h": [
-      "Inferno Uivante — Quando Flegias de Licaão entra no Campo de Batalha, você pode pagar {1}{S}. Se fizer isso, o Devoto inimigo alvo recebe -2 ATQ / -2 PV até o fim da rodada.",
+      "Inferno Uivante — Quando Flegias de Licaão entra no Campo de Batalha, mande até 3 cartas alvo de um Tártaro inimigo ao Vazio. Enquanto Flegias de Licaão estiver no Campo de Batalha, Devotos inimigos que iriam para o Tártaro ao serem derrotados vão para o Vazio em vez disso.",
       "Predador Selvagem — Sempre que Flegias de Licaão derrota um Devoto inimigo com um Golpe, seu Deus ganha {2}{S}."
     ]
   },
@@ -369,8 +367,9 @@
     "n": "CUBE DE DULLAHAN",
     "s": "O Carrasco Sem Cabeça",
     "h": [
-      "Mensageiro da Morte — Quando Cube de Dullahan entra no Campo de Batalha, o Deus inimigo alvo perde {1}{S} e seu Deus ganha {1}{S}.",
-      "Último Suspiro — Quando Cube de Dullahan é derrotado, você pode devolver outro Devoto alvo com Custo de Conjuração 1 ou menos do seu Tártaro para a sua mão."
+      "Mensageiro da Morte — Uma vez por rodada, quando Cube de Dullahan ou outro Devoto aliado é derrotado, o Deus inimigo alvo perde {1}{S} e seu Deus ganha {1}{S}.",
+      "Último Suspiro — Quando Cube de Dullahan é derrotado, você pode devolver outro Devoto alvo com Custo de Conjuração 1 ou menos do seu Tártaro para a sua mão.",
+      "Além-Túmulo {2}{C}: O Deus inimigo alvo perde {1}{S}."
     ]
   },
   "hades-v6-218": {
@@ -643,7 +642,7 @@
     "s": "Retorno do Buscador da Morte",
     "t": "O Retorno do Buscador da Morte",
     "h": [
-      "Ondas do Inferno — Quando Máscara da Morte de Câncer entra no Campo de Batalha, você pode pagar {2}{S}. Se fizer isso, o Devoto inimigo alvo recebe -3 ATQ / -3 PV até o fim da rodada.",
+      "Ondas do Inferno — Quando Máscara da Morte de Câncer entra no Campo de Batalha, você pode sacrificar outro Devoto aliado. Se fizer isso, coloque o Devoto alvo com Custo de Conjuração 4 ou menos de qualquer Tártaro no Campo de Batalha sob o seu controle, Despreparado.",
       "Portal de Yomotsu — Sempre que um Devoto inimigo é derrotado, você pode pagar {1}{S}. Se fizer isso, coloque as 2 cartas do topo do seu Deck no seu Tártaro. Esta habilidade ativa apenas uma vez por rodada."
     ]
   },
@@ -651,8 +650,7 @@
     "n": "AFRODITE DE PEIXES, O CAVALEIRO RESSUSCITADO",
     "s": "A Beleza da Morte Eterna",
     "h": [
-      "Rosa Sangrenta — Quando Afrodite de Peixes entra no Campo de Batalha, você pode pagar {1}{S}. Se fizer isso, o Devoto inimigo alvo recebe -2 ATQ / -2 PV até o fim da rodada.",
-      "Rosa Demoníaca Real — Uma vez por rodada, sempre que um Devoto inimigo é derrotado, o controlador dele perde {1}{S} e seu Deus ganha {1}{S}."
+      "Rosa Sangrenta — Sempre que um oponente compra uma carta, exceto a primeira que ele compra em cada rodada dele, o Deus desse jogador perde {1}{S}."
     ]
   },
   "hades-v6-253": {
@@ -668,8 +666,8 @@
     "s": "Alma Congelada do Mundo dos Mortos",
     "t": "A Alma Congelada do Mundo dos Mortos",
     "h": [
-      "Pó de Diamante — Quando Camus de Aquário entra no Campo de Batalha, você pode pagar {1}{S}. Se fizer isso, o Devoto inimigo alvo não pode declarar um Golpe durante o próximo turno do controlador dele.",
-      "Execução Aurora — Uma vez por rodada, sempre que um Devoto inimigo é derrotado, o controlador dele perde {1}{S} e seu Deus ganha {1}{S}."
+      "Pó de Diamante — Quando Camus de Aquário entra no Campo de Batalha, você pode pagar {1}{S}. Se fizer isso, o Devoto inimigo alvo não pode declarar um Golpe durante a próxima rodada do controlador dele.",
+      "Execução Aurora — Uma vez por rodada, sempre que um Devoto inimigo é derrotado, você pode perder {1}{S}. Se fizer isso, compre 1 carta."
     ]
   },
   "hades-v6-255": {

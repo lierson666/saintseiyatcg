@@ -7,7 +7,7 @@ import {loadCanon} from '../shared/canon-cards.js';
 import {canonIndex} from '../shared/deck-v3.js';
 import {addPreviewCards} from '../shared/preview-cards.js';
 import {createMatch} from '../playtest/engine-v3/match.js';
-import {startTurn, passAll, prepareUnit, runCheckpoint} from '../playtest/engine-v3/core.js';
+import {startTurn, passAll, prepareUnit, runCheckpoint, draw} from '../playtest/engine-v3/core.js';
 import {playDevotee, playSpell, activate} from '../playtest/engine-v3/play.js';
 import {declareStrike} from '../playtest/engine-v3/strike.js';
 import {checkDefeats, atkOf, hpOf, keywordsOf, damageDevotee} from '../playtest/engine-v3/effects.js';
@@ -50,12 +50,11 @@ const done = s => { while (s.window) passAll(s); };
 // Aceita pagar a taxa de Soul do ETB (rebalanceamento de 30/10/2026) e escolhe a primeira opção de alvo.
 const yes = (pl, q) => (q.options ? q.options[0] : true);
 
-test('enter + drain (Harpy Valentine): paga 1 Soul; enemy God perde 2, o seu ganha 2', () => {
-  const {s, p, b, play, answers} = hades();
-  answers({'GREED THE LIFE': yes});
+test('Harpy Valentine (Gray Merchant, 08/11/2026): drena X = Specters seus, até 4', () => {
+  const {s, p, b, add, play} = hades();
+  add('hades-v6-219', 'A', 'battlefield'); // outro Specter
   play('hades-v6-201'); done(s);
-  assert.equal(b.soul, 8);
-  assert.equal(p.soul, 11, '10 − 1 (taxa) + 2');
+  assert.deepEqual([b.soul, p.soul], [8, 12], 'X = 2 (Royal Guard + Valentine)');
 });
 
 test('Taxa de Soul recusada: o ETB não acontece (Deep Niobe)', () => {
@@ -100,14 +99,14 @@ test('retorno ao campo (Shion): volta Unprepared e Stardust Revolution drena 2',
   assert.equal(b.soul, 8); assert.equal(p.soul, 12);
 });
 
-test('sacrifício (Golem Rock + Giganto): derrota inimigo com HP ≤ 3; Feast of Death ganha 1 Soul', () => {
+test('edito (Golem Rock, 08/11/2026) + Giganto: o oponente escolhe qual sacrifica; Feast of Death ganha 1 Soul', () => {
   const {s, p, b, add, play, answers} = hades();
   add('hades-v6-208', 'A', 'battlefield');
-  const fodder = add('hades-v6-218', 'A', 'battlefield'), foe = add('hades-v6-206', 'B', 'battlefield');
-  answers({'ROLLING BOMBER STONE': (pl, q) => (q.options ? (q.options.includes(fodder) ? fodder : foe) : true)});
+  const fodder = add('hades-v6-218', 'A', 'battlefield'), big = add('hades-v6-191', 'B', 'battlefield'), small = add('hades-v6-206', 'B', 'battlefield');
+  answers({'ROLLING BOMBER STONE': (pl, q) => (!q.options ? true : pl === 'A' ? fodder : small)});
   play('hades-v6-210'); done(s);
   assert.ok(p.tartarus.includes(fodder));
-  assert.ok(b.tartarus.includes(foe));
+  assert.ok(b.tartarus.includes(small) && b.battlefield.includes(big), 'B escolheu o pequeno');
   assert.equal(p.soul, 11);
 });
 
@@ -130,12 +129,16 @@ test('Awakening of the Specters: volta Unprepared e não declara Strike no turno
   assert.equal(s.strikes.get(dead), s.turn);
 });
 
-test('Minos (31/10/2026): Cosmic Marionation dá -2/-2 no alvo inimigo, sem Seal', () => {
-  const {s, ctx, add, play, answers} = hades();
-  const foe = add('hades-v6-191', 'B', 'battlefield'), atk = atkOf(s, ctx, foe), life = hpOf(s, ctx, foe);
+test('Minos (Massacre Wurm, 08/11/2026): paga 2, cada Devotee inimigo -1/-1; os seus não', () => {
+  const {s, ctx, p, b, add, play, answers} = hades();
+  const foe = add('hades-v6-191', 'B', 'battlefield'), weak = add('hades-v6-218', 'B', 'battlefield'), mine = add('hades-v6-219', 'A', 'battlefield');
+  const [atk, life, myLife] = [atkOf(s, ctx, foe), hpOf(s, ctx, foe), hpOf(s, ctx, mine)];
   answers({'COSMIC MARIONATION': yes});
   play('hades-v6-183'); done(s);
-  assert.deepEqual([atkOf(s, ctx, foe), hpOf(s, ctx, foe), s.units[foe].seal ?? 0], [atk - 2, life - 2, 0]);
+  assert.deepEqual([atkOf(s, ctx, foe), hpOf(s, ctx, foe), hpOf(s, ctx, mine)], [atk - 1, life - 1, myLife]);
+  assert.ok(b.tartarus.includes(weak), '1/1 morre');
+  assert.equal(b.soul, 9, 'Puppet Master: morreu no seu turno');
+  assert.equal(p.soul, 8);
 });
 
 test('descarte (Balron Lune): escolhe Moment/Technique da mão; Fire Whip drena 1', () => {
@@ -244,14 +247,15 @@ test('231 Torch of the Underworld — Guiding Light: ao ir para o Tartarus, 2 ca
   assert.equal(p.deck.length, deck - 2);
 });
 
-test('Puppet Master (183) e Aurora Execution (254) (31/10/2026): Devotee inimigo derrotado no seu turno', () => {
-  const {s, p, b, add, kill} = hades();
+test('Puppet Master (183) e Aurora Execution (254, Midnight Reaper 08/11/2026): perde 1 e compra 1, uma vez por Round', () => {
+  const {s, p, b, add, kill, answers} = hades();
+  answers({'AURORA EXECUTION': true});
   add('hades-v6-183', 'A', 'battlefield'); add('hades-v6-254', 'A', 'battlefield');
-  const foe = add('hades-v6-218', 'B', 'battlefield'), other = add('hades-v6-218', 'B', 'battlefield');
+  const foe = add('hades-v6-218', 'B', 'battlefield'), other = add('hades-v6-218', 'B', 'battlefield'), hand = p.hand.length;
   kill(foe); done(s);
-  assert.deepEqual([b.soul, p.soul], [8, 11], 'Puppet Master 1 + Aurora 1 (drena)');
+  assert.deepEqual([b.soul, p.soul, p.hand.length], [9, 9, hand + 1]);
   kill(other); done(s);
-  assert.deepEqual([b.soul, p.soul], [7, 11], 'Aurora só uma vez por Round');
+  assert.deepEqual([b.soul, p.soul, p.hand.length], [8, 9, hand + 1], 'Aurora só uma vez por Round');
 });
 
 test('Eternal Slumber (191): paga 2 Soul e derrota o Devotee que perdeu o último Seal', () => {
@@ -266,15 +270,17 @@ test('Eternal Slumber (191): paga 2 Soul e derrota o Devotee que perdeu o últim
   assert.equal(p.soul, 8);
 });
 
-test('Soul pago por habilidade: Dead End Symphony (187) compra pagando +1', () => {
-  const {s, ctx, p, b, add, play, answers} = hades();
+test('Sphinx Pharaoh (Phyrexian Arena, 08/11/2026): no início do seu turno perde 1 Soul e compra 1', () => {
+  const {s, ctx, p, add, answers} = hades();
   bindContext(s, ctx);
-  answers({'GREED THE LIFE': yes, 'DEAD END SYMPHONY': true});
+  answers({'BALANCE OF CURSE': true});
   add('hades-v6-187', 'A', 'battlefield');
-  const hand = p.hand.length;
-  play('hades-v6-201'); done(s); runCheckpoint(s); done(s);
-  assert.equal(p.hand.length, hand + 1, 'comprou 1');
-  assert.equal(p.soul, 10 - 1 + 2 - 1, 'taxa 1, drain +2, Symphony 1');
+  const hand = p.hand.length, soul = p.soul;
+  s.active = 'B'; startTurn(s); done(s);
+  assert.deepEqual([p.soul, p.hand.length], [soul, hand], 'turno do oponente: nada');
+  s.active = 'A'; startTurn(s); done(s);
+  assert.equal(p.soul, soul - 1);
+  assert.ok(p.hand.length >= hand + 1);
 });
 
 test('265 The Possession of Shun (31/10/2026): reanima do Tartarus do oponente, sob o seu controle, Unprepared; Hades perde 3', () => {
@@ -330,4 +336,83 @@ test('Whispers of Pandora: a mão inteira vem em `shown`; só não-Devotee é es
   assert.deepEqual(seen.shown, [dev, spell]);
   assert.deepEqual(seen.options, [spell]);
   assert.ok(b.tartarus.includes(spell) && b.hand.includes(dev));
+});
+
+test('Deep Niobe (Toxic Deluge, 08/11/2026): paga X, cada outro Devotee recebe -X/-X, os seus também', () => {
+  const {s, ctx, p, b, add, play, answers} = hades();
+  const foe = add('hades-v6-191', 'B', 'battlefield'), mine = add('hades-v6-218', 'A', 'battlefield'), life = hpOf(s, ctx, foe);
+  answers({'DEEP FRAGRANCE': (pl, q) => (q.options ? '2' : true)});
+  play('hades-v6-204'); done(s);
+  assert.equal(hpOf(s, ctx, foe), life - 2);
+  assert.ok(p.tartarus.includes(mine), 'o seu 1/1 também morre');
+  assert.equal(p.soul, 8);
+});
+
+test('Basilisk Sylphid (toque mortal, 08/11/2026): dano de Strike derrota o Devotee inimigo', () => {
+  const {s, ctx, b, add} = hades();
+  const basil = add('hades-v6-205', 'A', 'battlefield'), foe = add('hades-v6-191', 'B', 'battlefield');
+  declareStrike(s, ctx, basil, {kind: 'devotee', uid: foe}); done(s);
+  assert.ok(b.tartarus.includes(foe));
+});
+
+test('Lycaon Phlegyas (Bog + Dauthi, 08/11/2026): 3 cartas do Tartarus inimigo ao Void; derrotado vai ao Void e ainda conta', () => {
+  const {s, b, add, play, kill, answers} = hades();
+  add('hades-v6-252', 'A', 'battlefield'); // não interfere
+  const dead = [1, 2, 3, 4].map(() => add('hades-v6-218', 'B', 'tartarus'));
+  answers({'HOWLING INFERNO': (pl, q) => q.options.slice(0, 3)});
+  play('hades-v6-213'); done(s);
+  assert.equal(b.void.filter(u => dead.includes(u)).length, 3);
+  add('hades-v6-215', 'A', 'battlefield'); // Alraune: Feed on Life (+1 Soul por inimigo derrotado)
+  const soul = s.players.A.soul, foe = add('hades-v6-218', 'B', 'battlefield');
+  kill(foe); done(s);
+  assert.ok(b.void.includes(foe) && !b.tartarus.includes(foe));
+  assert.equal(s.players.A.soul, soul + 1, 'conta como derrotado');
+});
+
+test('Cancer Deathmask (Victimize, 08/11/2026): sacrifica um aliado e reanima do Tartarus inimigo; ao morrer, vai ao dono', () => {
+  const {s, p, b, add, play, kill, answers} = hades();
+  const fodder = add('hades-v6-218', 'A', 'battlefield'), theirs = add('hades-v6-216', 'B', 'tartarus');
+  answers({'SEKI SHIKI MEIKAI HA': (pl, q) => (!q.options ? true : q.options.includes(theirs) ? theirs : fodder)});
+  play('hades-v6-251'); done(s);
+  assert.ok(p.tartarus.includes(fodder));
+  assert.ok(p.battlefield.includes(theirs) && s.units[theirs].prepared === false);
+  kill(theirs); done(s);
+  assert.ok(b.tartarus.includes(theirs), 'Tartarus do dono');
+});
+
+test('Pisces Aphrodite (Sheoldred, 08/11/2026): oponente perde 1 Soul por compra além da primeira do turno dele', () => {
+  const {s, ctx, b, add} = hades();
+  bindContext(s, ctx);
+  add('hades-v6-252', 'A', 'battlefield');
+  s.active = 'B'; startTurn(s); done(s); runCheckpoint(s); done(s);
+  const soul = b.soul;
+  draw(s, 'B', 2); runCheckpoint(s); done(s);
+  assert.equal(b.soul, soul - 2, 'compras extras no turno dele');
+});
+
+test('Thanatos (Grave Pact, 08/11/2026) e Dullahan (Blood Artist): aliado derrotado, oponente sacrifica e Dullahan drena 1', () => {
+  const {s, p, b, add, kill} = hades();
+  add('hades-v6-193', 'A', 'battlefield'); add('hades-v6-217', 'A', 'battlefield');
+  const mine = add('hades-v6-218', 'A', 'battlefield'), foe = add('hades-v6-206', 'B', 'battlefield');
+  kill(mine); done(s);
+  assert.ok(b.tartarus.includes(foe));
+  assert.deepEqual([b.soul, p.soul], [9, 11]);
+});
+
+test('Troll Iwan (08/11/2026): 4/4; Bloodthirst põe Training counter (+1/+1 permanente)', () => {
+  const {s, ctx, add, kill} = hades();
+  const troll = add('hades-v6-211', 'A', 'battlefield'), mine = add('hades-v6-218', 'A', 'battlefield');
+  assert.deepEqual([atkOf(s, ctx, troll), hpOf(s, ctx, troll)], [4, 4]);
+  kill(mine); done(s);
+  assert.deepEqual([atkOf(s, ctx, troll), hpOf(s, ctx, troll), s.units[troll].training], [5, 5, 1]);
+});
+
+test('Worm Raimi (Mind Rot, 08/11/2026): paga 1, o oponente descarta à escolha dele', () => {
+  const {s, p, b, add, play, answers} = hades();
+  const keep = add('hades-v6-191', 'B', 'hand'), toss = add('hades-v6-218', 'B', 'hand');
+  s.players.B.hand = [keep, toss];
+  answers({"WORM'S BIND": (pl, q) => (q.options ? (pl === 'B' ? toss : q.options[0]) : true)});
+  play('hades-v6-209'); done(s);
+  assert.ok(b.tartarus.includes(toss) && b.hand.includes(keep));
+  assert.equal(p.soul, 9);
 });

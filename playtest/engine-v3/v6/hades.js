@@ -37,6 +37,12 @@ hooks.checkpoint.push(state => {
   for (const e of events) {
     if (e.type === 'seal_removed' && ctx.objects[e.uid]) out.push(...collect(state, ctx, state.order, 'watchSealRemoved', [e], 'a Seal counter is removed'));
     if (e.type === 'soul_paid') out.push(...collect(state, ctx, state.order, 'watchSoulPaid', [e], 'Soul is paid'));
+    if (e.type === 'draw') { // 252 Bloody Rose: conta as compras do jogador no turno dele; `extra` = não é a primeira do Round dele
+      const seen = (state.hadesDraws ||= {})[e.player];
+      const n = seen?.turn === state.turn ? seen.n + 1 : 1;
+      if (state.active === e.player) state.hadesDraws[e.player] = {turn: state.turn, n};
+      out.push(...collect(state, ctx, state.order, 'watchDraw', [e, state.active !== e.player || n > 1], 'a card is drawn'));
+    }
   }
   if (out.length) pushTriggers(state, out);
 });
@@ -198,8 +204,8 @@ export default {
   'hades-v6-182': { // Wyvern Surplice: "destroys … in combat" = derrota no Strike, atacando ou retaliando
     gearKillInCombat: (s, c, key, self, bearer, victim) => /RHADAMANTHYS/i.test(name(c, bearer)) && (st => drain(st, key, 2, c.objects[victim].owner)),
   },
-  'hades-v6-183': { // Griffon Minos
-    enter: taxed(1, 'COSMIC MARIONATION', weakenOnEnter(2, 'COSMIC MARIONATION')),
+  'hades-v6-183': { // Griffon Minos (Massacre Wurm, autor 08/11/2026): cada Devotee inimigo -1/-1
+    enter: taxed(2, 'COSMIC MARIONATION', (s, c, key) => st => { for (const u of k.enemies(st, c, key)) k.buff(st, u, -1, -1); k.checkDefeats(st, c); }),
     watchDefeat: (s, c, key, self, dead, owner) => owner !== key && s.active === key && (st => lose(st, owner, 1)), // Puppet Master
   },
   'hades-v6-184': { // Griffon Surplice
@@ -211,13 +217,9 @@ export default {
     killInCombat: (s, c, key, self) => st => aiacosReturn(st, c, key, self),
   },
   // 186 Garuda Surplice: dentro de Galactica Illusion (185), único retorno ao campo feito por Aiacos.
-  'hades-v6-187': {enter: taxed(1, 'BALANCE OF CURSE', drainOnEnter(2, (st, c, key, self) => { // Sphinx Pharaoh + Sphinx Surplice (188)
-    if (resonance(st, c, self, 'hades-v6-188') && pay(st, c, key, 'SPHINX SURPLICE', 2)) k.draw(st, key, 1);
-  }).enter, always),
-    // Dead End Symphony. Interpretação: todo Soul pago por habilidade (os "you may pay N Soul" de Hades); o próprio pagamento extra não reabre.
-    watchSoulPaid: (s, c, key, self, e) => e.player === key && e.ability !== 'DEAD END SYMPHONY' && !s.roundUses.has(`${self}:symphony`)
-      && (st => { if (k.onField(st, key, self) && pay(st, c, key, 'DEAD END SYMPHONY', 1, self)) { k.once(st, `${self}:symphony`); k.draw(st, key, 1); } }),
-  },
+  // Sphinx Pharaoh (Phyrexian Arena, autor 08/11/2026). Perder Soul não é pagar: sem evento soul_paid.
+  // pendente: Sphinx Surplice (188) pede "Sphinx causa perda de Soul ao God inimigo", que a carta nova não faz.
+  'hades-v6-187': {startTurn: (s, c, key) => st => { if (st.players[key].soul >= 1 && k.may(c, key, 'BALANCE OF CURSE', {text: 'Lose {1}{S} to draw 1 card?'})) { lose(st, key, 1); if (!st.victory) k.draw(st, key, 1); } }},
   'hades-v6-189': { // Acheron Charon
     enter: (s, c, key) => st => { if (pay(st, c, key, "THE FERRYMAN'S PRICE", 2)) k.search(st, c, key, "THE FERRYMAN'S PRICE", devCost(3)); },
     watchDefeat: onDefeat('other', (st, c, key, self) => { if (pay(st, c, key, 'PASSAGE TO THE UNDERWORLD', 1)) charonMill(st, c, key, self, 1); }, 'passage'),
@@ -237,7 +239,8 @@ export default {
   }}},
   'hades-v6-193': { // Thanatos
     enter: taxed(3, 'TERRIBLE PROVIDENCE', (s, c, key) => st => { const t = enemy(st, c, key, 'TERRIBLE PROVIDENCE'); if (t) k.defeat(st, c, t); }),
-    watchDefeat: onDefeat('enemy', (st, c, key, self, dead, owner) => drain(st, key, 2, owner), 'execution'),
+    // Divine Execution (Grave Pact, autor 08/11/2026): outro Devotee aliado derrotado, o oponente sacrifica um.
+    watchDefeat: onDefeat('other', (st, c, key) => oppSacrifices(st, c, key, 'DIVINE EXECUTION', 1), 'execution'),
   },
   'hades-v6-194': {spell: {run: (s, c, key) => { // Divine Touch of Death
     const t = k.choose(c, key, 'DIVINE TOUCH OF DEATH', k.allDevotees(s, c));
@@ -278,7 +281,11 @@ export default {
     leaves: (s, c, key) => st => { gain(st, key, 3); k.draw(st, key, 1); },
   },
   'hades-v6-201': { // Harpy Valentine + Harpy Surplice (246)
-    enter: taxed(1, 'GREED THE LIFE', drainOnEnter(2, (st, c, key, self) => { if (resonance(st, c, self, 'hades-v6-246')) gain(st, key, 1); }).enter, always),
+    // Greed the Life (Gray Merchant, autor 08/11/2026): X = Specters que você controla, até 4.
+    enter: (s, c, key, self) => st => {
+      const x = Math.min(4, k.devotees(st, c, key).filter(u => k.hasType(c, u, 'Specter')).length);
+      if (x) { drain(st, key, x); if (resonance(st, c, self, 'hades-v6-246')) gain(st, key, 1); }
+    },
     watchDefeat: (s, c, key, self, dead, owner) => owner === key && k.hasType(c, dead, 'Judge Specter') && (st => {
       if (!k.onField(st, key, self) || !st.players[key].tartarus.includes(dead) || !k.may(c, key, 'LOYAL SERVANT', {uid: dead, text: 'Sacrifice Harpy Valentine?'})) return;
       k.sacrifice(st, c, self);
@@ -297,9 +304,24 @@ export default {
     enter: (s, c, key) => st => payDraw(st, c, key, 'METAMORPHOSIS', 2, 2),
     godDamage: (s, c, key, self) => st => myuReturn(st, c, key, self),
   },
-  'hades-v6-204': {enter: taxed(2, 'DEEP FRAGRANCE', niobe(3, 3, 'DEEP FRAGRANCE')), defeated: niobe(2, 2, 'POISONOUS DEATH')}, // Deep Niobe (+249)
+  // Deep Niobe (+249). Deep Fragrance (Toxic Deluge, autor 08/11/2026): paga X ≤ 3, cada outro Devotee (os seus também) -X/-X.
+  'hades-v6-204': {
+    enter: (s, c, key, self) => st => {
+      const xs = ['1', '2', '3'].filter(x => st.players[key].soul >= +x);
+      if (!xs.length || !k.may(c, key, 'DEEP FRAGRANCE', {uid: self, text: 'Pay X Soul to give each other Devotee -X/-X?'})) return;
+      const x = +(xs.length > 1 ? c.decide?.(key, {ability: 'DEEP FRAGRANCE', options: xs, choose: 'mode', text: 'Choose X.'}) ?? xs[0] : xs[0]);
+      if (!x || !k.paySoul(st, key, x)) return;
+      k.emit(st, 'soul_paid', {player: key, amount: x, uid: self, ability: 'DEEP FRAGRANCE'});
+      const hit = k.allDevotees(st, c).filter(u => u !== self);
+      const res = hit.some(u => !friendly(st, key, u) && k.hpOf(st, c, u) - x <= 0) && resonance(st, c, self, 'hades-v6-249');
+      for (const u of hit) k.buff(st, u, -x, -x);
+      k.checkDefeats(st, c);
+      if (res) drain(st, key, 2);
+    },
+    defeated: niobe(2, 2, 'POISONOUS DEATH'),
+  },
   'hades-v6-205': { // Basilisk Sylphid
-    combatDamage: (s, c, key, self, victim) => st => weaken(st, c, victim, 2, 2),
+    combatDamage: (s, c, key, self, victim) => st => { if (st.units[victim]) k.defeat(st, c, victim); }, // Annihilation Flap: toque mortal (08/11/2026)
     watchDefeat: (s, c, key, self, dead, owner) => owner !== key && s.active === key && (st => k.buff(st, self, 2, 0)),
   },
   'hades-v6-206': { // Skeleton Markino
@@ -316,22 +338,26 @@ export default {
     declare: (s, c, key, self) => st => { if (k.onField(st, key, self) && sacrificeOne(st, c, key, 'BRUTAL STRENGTH', self, true)) k.buff(st, self, 2, 0); },
     watchDefeat: (s, c, key, self, dead, owner) => owner === key && sacrificed(s, dead) && (st => gain(st, key, 1)),
   },
-  'hades-v6-209': { // Worm Raimi
-    enter: taxed(1, "WORM'S BIND", weakenOnEnter(1, "WORM'S BIND")),
+  'hades-v6-209': { // Worm Raimi. Worm's Bind (08/11/2026): o oponente descarta 1 carta à escolha dele.
+    enter: taxed(1, "WORM'S BIND", (s, c, key) => st => k.discard(st, c, k.other(st, key), 1, "WORM'S BIND"), (st, c, key) => st.players[k.other(st, key)].hand.length > 0),
     declare: (s, c, key, self, target) => target.kind === 'devotee' && s.units[target.uid]?.damage > 0 && (st => k.buff(st, self, 2, 0)),
   },
   'hades-v6-210': { // Golem Rock
-    enter: offering('ROLLING BOMBER STONE', ...execute('ROLLING BOMBER STONE', 3)),
+    enter: offering('ROLLING BOMBER STONE', hasEnemy, (st, c, key) => oppSacrifices(st, c, key, 'ROLLING BOMBER STONE', 1)), // edito (08/11/2026)
     watchDefeat: onDefeat('other', (st, c, key, self) => k.buff(st, self, 1, 0)),
   },
-  'hades-v6-211': { // Troll Iwan
-    enter: offering('GREATER AXE CRUSHER', (st, c, key) => k.enemies(st, c, key).length > 0, (st, c, key) => curse(3, 3, 'GREATER AXE CRUSHER')(st, c, key)(st)),
-    watchDefeat: onDefeat('other', (st, c, key, self) => k.buff(st, self, 1, 0)),
+  'hades-v6-211': { // Troll Iwan (08/11/2026): só Bloodthirst, que agora põe Training counter
+    watchDefeat: onDefeat('other', (st, c, key, self) => k.addCounter(st, self, 1)),
   },
   // Guardian: o parser do texto V6 não lê "X has Guardian" como keyword impressa.
   'hades-v6-212': {...riseFromTartarus(2, 'ETERNAL DEFENDER'), mods: () => [{keywords: ['Guardian']}]},
-  'hades-v6-213': { // Lycaon Phlegyas
-    enter: taxed(1, 'HOWLING INFERNO', curse(2, 2, 'HOWLING INFERNO')),
+  'hades-v6-213': { // Lycaon Phlegyas. Howling Inferno (Bojuka Bog + Dauthi, 08/11/2026).
+    // shortcut: a substituição "Void em vez do Tartarus" (core.destroyDevotee, §58) liga quando o gatilho de entrada resolve.
+    enter: (s, c, key, self) => st => {
+      const foe = k.other(st, key);
+      for (const u of k.chooseUpTo(c, key, 'HOWLING INFERNO', [...st.players[foe].tartarus], 3, {text: "Choose up to 3 cards in the enemy Tartarus to send to the Void."})) k.exile(st, c, u, 'tartarus');
+      if (k.onField(st, key, self)) (st.voidOnDefeat ||= {})[self] = foe;
+    },
     killInCombat: (s, c, key) => st => gain(st, key, 2),
   },
   'hades-v6-214': { // Minotaur Gordon. Interpretação: Executioner ("defeats") lido como derrota no Strike (killInCombat).
@@ -347,9 +373,12 @@ export default {
     // Stone Curse: −2 ATK "during that Strike" aplicado até o fim do Round (como o 216 fazia antes).
     declare: (s, c, key, self, target) => target.kind === 'devotee' && k.once(s, `${self}:stone`) && (st => k.buff(st, target.uid, -2, 0)),
   },
-  'hades-v6-217': { // Dullahan Cube
-    ...drainOnEnter(1),
-    defeated: (s, c, key, self) => st => toHandFrom(st, c, key, 'LAST BREATH', devCost(1), {optional: true, exclude: self}),
+  'hades-v6-217': { // Dullahan Cube. Death Messenger (Blood Artist, 08/11/2026): ele ou outro Devotee aliado derrotado, uma vez por Round.
+    watchDefeat: onDefeat('other', (st, c, key) => drain(st, key, 1), 'messenger'),
+    defeated: (s, c, key, self) => st => {
+      if (k.once(st, `${self}:messenger`)) drain(st, key, 1);
+      toHandFrom(st, c, key, 'LAST BREATH', devCost(1), {optional: true, exclude: self});
+    },
   },
   'hades-v6-218': riseFromTartarus(1, 'RISE AGAIN'),
   'hades-v6-219': {defeated: (s, c, key) => st => drain(st, key, 2), mods: () => [{keywords: ['Guardian']}]}, // Hades' Royal Guard
@@ -495,21 +524,26 @@ export default {
   'hades-v6-250': { // Basilisk Surplice
     gearKillInCombat: (s, c, key, self, bearer) => /SYLPHID/i.test(name(c, bearer)) && (st => toHandFrom(st, c, key, 'BASILISK SURPLICE', specter(2), {optional: true})),
   },
-  'hades-v6-251': { // Cancer Deathmask
-    enter: taxed(2, 'SEKI SHIKI MEIKAI HA', curse(3, 3, 'SEKI SHIKI MEIKAI HA')),
+  'hades-v6-251': { // Cancer Deathmask. Seki Shiki (Victimize, 08/11/2026): sacrifica outro aliado e reanima custo ≤4 de qualquer Tartarus.
+    // Controle: o Devotee do Tartarus inimigo fica com você; ao sair, vai às zonas do dono (§58). Como 265.
+    enter: offering('SEKI SHIKI MEIKAI HA', (st, c, key) => Object.keys(st.players).some(p => returnable(st, c, p, devCost(4)).length), (st, c, key) => {
+      const t = k.choose(c, key, 'SEKI SHIKI MEIKAI HA', Object.keys(st.players).flatMap(p => returnable(st, c, p, devCost(4))), {text: 'Choose a Devotee with cost 4 or less in any Tartarus.'});
+      if (t) raise(st, c, key, t);
+    }),
     watchDefeat: onDefeat('enemy', (st, c, key) => { if (pay(st, c, key, 'GATEWAY TO YOMOTSU', 1)) k.mill(st, key, 2); }, 'yomotsu'),
   },
-  'hades-v6-252': { // Pisces Aphrodite
-    enter: taxed(1, 'BLOODY ROSE', curse(2, 2, 'BLOODY ROSE')),
-    watchDefeat: onDefeat('enemy', (st, c, key, self, dead, owner) => drain(st, key, 1, owner), 'rose'),
-  },
+  // Pisces Aphrodite. Bloody Rose (Sheoldred, 08/11/2026): oponente compra além da primeira do Round dele, perde 1 Soul.
+  'hades-v6-252': {watchDraw: (s, c, key, self, e, extra) => e.player !== key && extra && (st => lose(st, e.player, 1))},
   'hades-v6-253': { // Capricorn Shura
     enter: taxed(3, 'EXCALIBUR', (s, c, key) => st => execute('EXCALIBUR', 3)[1](st, c, key), execute('EXCALIBUR', 3)[0]),
     killInCombat: (s, c, key, self) => st => { if (sacrificeOne(st, c, key, 'BLADE OF SACRIFICE', self, true)) k.draw(st, key, 2); },
   },
   'hades-v6-254': { // Aquarius Camus
     enter: taxed(1, 'DIAMOND DUST', lockOnEnter('DIAMOND DUST')),
-    watchDefeat: (s, c, key, self, dead, owner) => owner !== key && k.once(s, `${self}:aurora`) && (st => drain(st, key, 1, owner)), // Aurora Execution
+    // Aurora Execution (Midnight Reaper, 08/11/2026): uso do Round só gasto se perder o Soul.
+    watchDefeat: (s, c, key, self, dead, owner) => owner !== key && !s.roundUses.has(`${self}:aurora`) && (st => {
+      if (st.players[key].soul >= 1 && k.may(c, key, 'AURORA EXECUTION', {uid: self, text: 'Lose {1}{S} to draw 1 card?'})) { k.once(st, `${self}:aurora`); lose(st, key, 1); if (!st.victory) k.draw(st, key, 1); }
+    }),
   },
   'hades-v6-255': { // Gemini Saga
     enter: taxed(3, 'ANOTHER DIMENSION', (s, c, key, self) => st => {

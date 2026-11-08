@@ -263,7 +263,10 @@ export function destroyDevotee(state, uid, objects, attached, event = 'destroyed
   for (const moved of [uid]) {
     restoreMoon(objects, moved); // Moon Spirit derrotada: a carta real vai ao Tartarus (D209)
     for (const p of Object.values(state.players)) p.battlefield = p.battlefield.filter(x => x !== moved);
-    if (!objects[moved].token) state.players[objects[moved].owner].tartarus.push(moved); // token some (guia §63)
+    // §58 (autor, 08/11/2026): "vai para o Void em vez do Tartarus" (state.voidOnDefeat[fonte] = jogador afetado); a fonte precisa estar em campo.
+    const owner = objects[moved].owner, toVoid = Object.entries(state.voidOnDefeat || {}).some(([src, who]) => who === owner
+      && Object.values(state.players).some(p => p.battlefield.includes(src)));
+    if (!objects[moved].token) state.players[owner][toVoid ? 'void' : 'tartarus'].push(moved); // token some (guia §63)
     delete attached[moved];
     delete state.units[moved];
     state.effects = state.effects.filter(e => e.target !== moved); // objeto novo se voltar
