@@ -676,6 +676,8 @@ Revisado em 31/10/2026 (ALPHA-P01, P02, P03 e P06, aprovadas em 28/10/2026; limi
 - **Soul não abaixo de 1 (Worship):** um efeito que diz que o Soul do seu God não cai abaixo de 1 segura toda perda: dano, perda e pagamento. Com Soul 1, não dá para pagar Soul (autor, 08/11/2026).
 - **Rodada extra:** o mesmo jogador joga outra rodada inteira logo depois, com renovação de Bases e compra. "Até o fim da sua próxima rodada" conta a rodada extra (autor, 08/11/2026).
 - **Jogar do topo pagando Soul:** quando um efeito deixa jogar a carta do topo pagando Soul, vale qualquer carta, no momento certo dela, e o Soul substitui o custo inteiro. Não se pode pagar Soul até zerar (autor, 08/11/2026).
+- **Não pode ser alvo de Moments e Techniques inimigos:** a Spell inimiga não pode escolher o objeto como alvo, nem ao conjurar nem por troca de alvo; se o objeto ficar protegido depois de mirado, a parte da Spell que dependia dele não acontece. Strike e efeitos sem alvo ("cada Devotee inimigo") continuam pegando (autor, 08/11/2026).
+- **Soul não pode ser reduzido:** nenhuma perda tira Soul do God (dano, perda ou pagamento) enquanto o efeito durar; o jogador também não pode pagar Soul (autor, 08/11/2026).
 - Equipamentos não mudam de controlador automaticamente. Como a ligação normal exige equipamento e portador do mesmo controlador, um equipamento incompatível fica em campo sem portador e perde a evolução. Um efeito pode transferir expressamente ambos.
 
 ### 59. Combate e textos das keywords

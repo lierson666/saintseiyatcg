@@ -110,7 +110,7 @@
     "neutral-v6-465": {"categoria": "ARMOR", "status": "CONFIRMED_EXPORT", "motivo": "Decisão do autor, 02/11/2026 (guia §26).", "familia": "CLOTH", "patente": "Steel"},
     "neutral-v6-466": {"categoria": "ARMOR", "status": "CONFIRMED_EXPORT", "motivo": "Decisão do autor, 02/11/2026 (guia §26).", "familia": "CLOTH", "patente": "Steel"},
     "neutral-v6-467": {"categoria": "ARMOR", "status": "CONFIRMED_EXPORT", "motivo": "Decisão do autor, 02/11/2026 (guia §26).", "familia": "CLOTH", "patente": "Steel"},
-    "neutral-v6-469": {"categoria": "ARMOR", "status": "CONFIRMED_EXPORT", "motivo": "Decisão do autor, 02/11/2026 (guia §26).", "familia": "CLOTH", "patente": "Steel"},
+    "neutral-v6-469": {"categoria": "OTHER_EQUIPMENT", "status": "CATEGORY_REVIEW", "motivo": "Não atribuir Armor Rank; revisar classe/subtipo do Equipment."},
     "neutral-v6-470": {"categoria": "OTHER_EQUIPMENT", "status": "CATEGORY_REVIEW", "motivo": "Não atribuir Armor Rank; revisar classe/subtipo do Equipment."},
     "neutral-v6-478": {"categoria": "OTHER_EQUIPMENT", "status": "CATEGORY_REVIEW", "motivo": "Não atribuir Armor Rank; revisar classe/subtipo do Equipment."},
     "neutral-v6-491": {"categoria": "OTHER_EQUIPMENT", "status": "CATEGORY_REVIEW", "motivo": "Não atribuir Armor Rank; revisar classe/subtipo do Equipment."},
@@ -121,6 +121,7 @@
     "athena-v6-534": {"categoria": "OTHER_EQUIPMENT", "status": "CATEGORY_REVIEW", "motivo": "Não atribuir Armor Rank; revisar classe/subtipo do Equipment."},
     "athena-v6-539": {"categoria": "OTHER_EQUIPMENT", "status": "CATEGORY_REVIEW", "motivo": "Não atribuir Armor Rank; revisar classe/subtipo do Equipment."},
     "poseidon-v6-549": {"categoria": "OTHER_EQUIPMENT", "status": "CATEGORY_REVIEW", "motivo": "Não atribuir Armor Rank; revisar classe/subtipo do Equipment."},
+    "hades-v6-256": {"categoria": "OTHER_EQUIPMENT", "status": "CATEGORY_REVIEW", "motivo": "Não atribuir Armor Rank; revisar classe/subtipo do Equipment."},
     "hades-v6-562": {"categoria": "OTHER_EQUIPMENT", "status": "CATEGORY_REVIEW", "motivo": "Não atribuir Armor Rank; revisar classe/subtipo do Equipment."},
     "hades-v6-569": {"categoria": "OTHER_EQUIPMENT", "status": "CATEGORY_REVIEW", "motivo": "Não atribuir Armor Rank; revisar classe/subtipo do Equipment."},
     "artemis-v6-596": {"categoria": "OTHER_EQUIPMENT", "status": "CATEGORY_REVIEW", "motivo": "Não atribuir Armor Rank; revisar classe/subtipo do Equipment."}

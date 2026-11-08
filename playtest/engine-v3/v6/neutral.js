@@ -52,6 +52,7 @@ const targetTartarusDevotees = (s, c, key, ability, count) => k.chooseUpTo(c, ke
 const targetSpellOnChain = (s, c, key, ability, self) => k.choose(c, key, ability, s.chain.filter(i => i.spell && i.uid !== self).map(i => i.uid), {text: 'Choose target Moment or Technique.'});
 
 // "Choose one" de habilidade ativada com dois modos: `choice.mode` ou o primeiro legal (sem pergunta, para o check e o run concordarem).
+const chestModes = (s, key, self) => [!s.roundUses.has(`chest:${self}`) && 'supplies', k.canPayCosmo(s, key, 1) && 'reserves'].filter(Boolean);
 function modeOf(choice, legal, ability) {
   const mode = choice?.mode ?? legal[0];
   if (!legal.includes(mode)) throw new k.RuleError('modo', `${ability}: modo ilegal agora`);
@@ -238,12 +239,8 @@ export default {
   },
   // Steel Saint Recruit
   'neutral-v6-468': {mods: (s, c, key, self) => (k.gearOf(c, self).length ? [{atk: 1, hp: 1}] : [])}, // Mechanical Training
-  // Steel Armor Prototype
-  'neutral-v6-469': {
-    gearDeclare: (s, c, key, self, bearer) => ready(s, key) >= 1 && (st => { // Unstable Mechanism
-      if (live(st, bearer) && pay(st, c, key, 1, 'UNSTABLE MECHANISM', self)) k.buff(st, bearer, 1, 0, 'this_round');
-    }),
-  },
+  // Steel Armor Prototype (Swiftfoot Boots, 08/11/2026): Impulse e não pode ser alvo de Spell inimiga (§58, v6/targets.js).
+  'neutral-v6-469': {bearerUntargetable: true, aura: (s, c, key, self, unit) => (unit === k.bearerOf(c, self) ? {keywords: ['Impulse']} : null)},
   // Graad Foundation Laboratory
   'neutral-v6-470': {
     activate: {name: 'Research Facility', cost: 2, once: true, tap: false, run: (s, c, key) => loot(s, c, key, 'RESEARCH FACILITY')},
@@ -321,16 +318,8 @@ export default {
     if (t) k.putOntoField(s, c, key, t, 'tartarus', {prepared: false});
     lose(s, key, 3); // Soul Sacrifice
   }}},
-  // Universal Cosmo Crystal: dois modos em `choice.mode`: 'amplify' ({T}, uma vez por Round) e 'overload' (sacrifício, só no seu turno).
-  'neutral-v6-478': {
-    activate: {name: 'Cosmo Crystal', cost: 0, once: false, tap: false,
-      check: (s, c, key, self, choice) => { modeOf(choice, [!s.roundUses.has(`crystal:${self}`) && 'amplify', 'overload'].filter(Boolean), 'COSMO CRYSTAL'); },
-      run: (s, c, key, self, choice) => {
-        const mode = modeOf(choice, [!s.roundUses.has(`crystal:${self}`) && 'amplify', 'overload'].filter(Boolean), 'COSMO CRYSTAL');
-        if (mode === 'amplify') { k.once(s, `crystal:${self}`); k.gainLatent(s, key, 1); } // Cosmo Amplification
-        else { k.toTartarus(s, c, self, 'battlefield'); k.gainLatent(s, key, 2); } // Crystal Overload
-      }},
-  },
+  // Universal Cosmo Crystal (Arcane Signet, 08/11/2026): uma vez por rodada, na sua rodada, {1}{L}.
+  'neutral-v6-478': {activate: {name: 'Cosmo Amplification', cost: 0, once: true, tap: false, run: (s, c, key) => k.gainLatent(s, key, 1)}},
   // Forbidden Knowledge (Moment)
   'neutral-v6-479': {spell: {run: (s, c, key) => {
     draw(s, key, 3);
@@ -484,12 +473,16 @@ export default {
         (s.v6Converter ||= {})[self] = s.players[key].ownTurns;
       }},
   },
-  // Sanctuary Supply Chest
-  'neutral-v6-494': {
-    cast: (s, c, key) => st => loot(st, c, key, 'EMERGENCY SUPPLIES'),
-    activate: {name: 'Last Reserves', cost: 3, once: false, tap: false, // custo: 3 Cosmo e sacrificar o Chest
-      run: (s, c, key, self) => { k.toTartarus(s, c, self, 'battlefield'); draw(s, key, 2); }},
-  },
+  // Sanctuary Supply Chest (Mind Stone, 08/11/2026): `choice.mode` 'supplies' ({1}{L}, uma vez por rodada) ou 'reserves'
+  // (pague {1}{C} e sacrifique: compre 1).
+  'neutral-v6-494': {activate: {name: 'Sanctuary Supply Chest', cost: 0, once: false, tap: false,
+    check: (s, c, key, self, choice) => { modeOf(choice, chestModes(s, key, self), 'SANCTUARY SUPPLY CHEST'); },
+    run: (s, c, key, self, choice) => {
+      if (modeOf(choice, chestModes(s, key, self), 'SANCTUARY SUPPLY CHEST') === 'supplies') { k.once(s, `chest:${self}`); k.gainLatent(s, key, 1); return; }
+      k.payCosmo(s, key, 1);
+      k.toTartarus(s, c, self, 'battlefield');
+      draw(s, key, 1);
+    }}},
   // Forced Exile
   'neutral-v6-495': {spell: {run: (s, c, key) => {
     const t = targetAnyDevotee(s, c, key, 'DIMENSIONAL BANISHMENT', 'Send target Devotee to the Void.');

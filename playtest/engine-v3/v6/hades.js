@@ -561,11 +561,19 @@ export default {
     }),
     watchDefeat: onDefeat('other', (st, c, key) => lose(st, k.other(st, key), 2), 'galaxian'),
   },
-  'hades-v6-256': {spell: {run: (s, c, key) => { // The Betrayal of the Gold Saints
-    const picks = k.chooseUpTo(c, key, 'THE BETRAYAL OF THE GOLD SAINTS', inTartarus(s, c, key, goldSaint), 2, {text: 'Choose Gold Saint cards to return to your hand.'});
-    lose(s, key, 2 * picks.filter(u => recall(s, c, key, u)).length);
-    if (!s.victory) k.draw(s, key, 1);
-  }}},
+  // Black Market of the Underworld (Black Market Connections, autor 08/11/2026): no início da sua rodada, até {3}{S};
+  // cada {1}{S} compra um modo ainda não escolhido. Não paga o último Soul (pagar até 0 perderia a partida).
+  'hades-v6-256': {startTurn: (s, c, key) => s.players[key].soul > 1 && (st => {
+    const left = ['Generate {1}{L}', 'Create a 1/1 Specter Spirit', 'Draw a card'];
+    while (left.length && st.players[key].soul > 1 && k.may(c, key, 'BLACK MARKET OF THE UNDERWORLD', {cost: '{1}{S}', text: 'Pay {1}{S} for another option?'})) {
+      if (!k.paySoul(st, key, 1)) break;
+      const m = left.length > 1 ? c.decide?.(key, {ability: 'BLACK MARKET OF THE UNDERWORLD', options: [...left], choose: 'mode', text: 'Choose one.'}) ?? left[0] : left[0];
+      left.splice(left.indexOf(m), 1);
+      if (m === 'Generate {1}{L}') k.gainLatent(st, key, 1);
+      else if (m === 'Draw a card') k.draw(st, key, 1);
+      else k.summonToken(st, c, key, {id: 'token-specter-spirit', name: 'Specter Spirit', atk: 1, hp: 1, type: 'Specter Spirit'});
+    }
+  })},
   'hades-v6-257': {spell: {run: (s, c, key) => { strip(s, c, key, 'THE TRIAL OF THE DEAD', () => true); lose(s, key, 2); }}},
   'hades-v6-258': {spell: {run: (s, c, key) => { // The Judgment of Minos
     const t = enemy(s, c, key, 'THE JUDGMENT OF MINOS');
@@ -590,16 +598,11 @@ export default {
     lose(s, key, 3);
     if (v && !s.victory && /PANDORA, QUEEN/i.test(name(c, v))) k.search(s, c, key, 'THE DEATH OF PANDORA', () => true);
   }}},
-  // The Destruction of the Gold Cloths. Interpretação: conta todo Equipment preso, inclusive Armor que já foi ao
-  // Tartarus junto com o portador derrotado.
-  'hades-v6-262': {spell: {run: (s, c, key) => {
-    const t = enemy(s, c, key, 'THE DESTRUCTION OF THE GOLD CLOTHS');
-    if (!t) return;
-    const gear = k.gearOf(c, t), ctl = k.controllerOf(s, t);
-    k.defeat(s, c, t);
-    for (const g of gear) if (k.toTartarus(s, c, g, 'battlefield')) k.emit(s, 'destroyed', {uid: g, owner: c.objects[g].owner});
-    lose(s, ctl, 2 * gear.length);
-  }}},
+  // The Destruction of the Gold Cloths (Deadly Rollick, autor 08/11/2026): ao Void; custa {0} com um Judge Specter.
+  'hades-v6-262': {
+    selfCostLess: (s, c, key) => (k.devotees(s, c, key).some(u => k.hasType(c, u, 'Judge Specter')) ? {n: 99} : null),
+    spell: {run: (s, c, key) => { const t = enemy(s, c, key, 'THE DESTRUCTION OF THE GOLD CLOTHS'); if (t) k.exile(s, c, t); }},
+  },
   'hades-v6-263': {spell: {run: (s, c, key) => { // The Three Judges of Hell
     const judge = cd => /Judge Specter/.test(cd.type);
     if (k.search(s, c, key, 'THE THREE JUDGES OF HELL', judge)) k.search(s, c, key, 'THE THREE JUDGES OF HELL', judge);

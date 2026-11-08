@@ -11,6 +11,7 @@ import {createMatch} from '../playtest/engine-v3/match.js';
 import {startTurn, endTurn, passAll} from '../playtest/engine-v3/core.js';
 import {playDevotee, playSpell, playEquipment, reequip, activateAfterlife} from '../playtest/engine-v3/play.js';
 import {declareStrike} from '../playtest/engine-v3/strike.js';
+import {keywordsOf} from '../playtest/engine-v3/effects.js';
 import {bindContext} from '../playtest/engine-v3/v6/registry.js';
 import * as k from '../playtest/engine-v3/v6/kit.js';
 import {guardDecide} from './engine-test-upto.mjs';
@@ -75,15 +76,10 @@ test('307 Divine Flame Disciple: troca 2 cartas e cria token por Devotee descart
   assert.equal(p.battlefield.length, field + 2); // o Disciple e um token
 });
 
-test('319 War Drums: ao prender, Berserkers do topo 4 vão à mão e o resto ao fundo', () => {
-  const {p, give, equip, hand} = setup();
-  const host = give('A', 'ares-v6-293'), other = give('A', 'athena-v6-051', 'deck'), b1 = give('A', 'ares-v6-293', 'deck');
-  p.deck.splice(p.deck.indexOf(other), 1); p.deck.splice(p.deck.indexOf(b1), 1); p.deck.unshift(b1, other);
-  const h = hand();
-  equip('A', 'ares-v6-319', host);
-  assert.ok(p.hand.includes(b1));
-  assert.equal(p.deck.at(-1) === other || p.deck.includes(other), true);
-  assert.ok(hand() >= h + 1);
+test('319 War Drums (Rhythm of the Wild, 08/11/2026): os Devotees aliados têm Impulse', () => {
+  const {s, ctx, give} = setup();
+  give('A', 'ares-v6-319'); const host = give('A', 'ares-v6-293');
+  assert.ok(keywordsOf(s, ctx, host).includes('Impulse'));
 });
 
 test('321 Chains of Fury: dano de combate no God compra', () => {

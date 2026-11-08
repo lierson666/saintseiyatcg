@@ -4,6 +4,13 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-11-08 — §58 — "Não pode ser alvo de Moments e Techniques inimigos" e "Soul não pode ser reduzido"
+
+- **Antes:** a única proteção contra alvo era o @Immune por facção (§43A); o guia não previa travar o Soul por inteiro.
+- **Depois:** "não pode ser alvo" barra só Spells inimigas (ao conjurar e na resolução); "Soul não pode ser reduzido" segura toda perda e impede pagar Soul.
+- **Motivo:** autor, 08/11/2026: staples do top 100 do EDHREC (`docs/proposta-staples-top100.md`, diff `docs/proposta-staples-top100.diff`): botas neutras 469 (Swiftfoot Boots) e Athena 087 (Teferi's Protection). Junto: pedras neutras 478 e 494, Hades 262 (Deadly Rollick) e 256 (Black Market Connections), Ares 319 (Rhythm of the Wild).
+- **Feito (08/11/2026):** diff gravado; motor e testes das 7 cartas. O gancho "não pode ser alvo" fica em `playtest/engine-v3/v6/targets.js` (ao conjurar e na resolução). A proposta 009 do BALANCE-PATCH-001 (texto antigo da 262) saiu do patch experimental.
+
 ## 2026-11-08 — §58 — Worship, rodada extra e jogar do topo pagando Soul
 
 - **Antes:** o guia não previa piso de Soul, rodada extra nem jogar do topo do deck.

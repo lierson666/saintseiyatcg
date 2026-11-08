@@ -268,7 +268,8 @@ export function checkDefeats(state, ctx) {
       if (!state.units[uid] || state.units[uid].damage < hpOf(state, ctx, uid)) continue;
       // §58 (autor, 08/11/2026): "não pode ser derrotado por dano" até o fim do Round; HP 0 ou menos derrota. O dano fica e é
       // verificado de novo no checkpoint da passagem de turno.
-      if (state.v6Unbreakable?.[uid] === state.round && hpOf(state, ctx, uid) > 0) continue;
+      const ub = state.v6Unbreakable?.[uid]; // número = só esta rodada; {key, ownTurns} = até o início da próxima rodada de `key` (087)
+      if ((ub === state.round || (ub?.key && state.players[ub.key].ownTurns === ub.ownTurns)) && hpOf(state, ctx, uid) > 0) continue;
       // God Athena, Divine Protection (D200): Defeat prevenível de Athena Devotee; pode pagar 3 Latent, fica com 1 HP.
       const p = state.players[key];
       if (athenaAwaken(state, ctx, key, uid) && p.latent >= 3 && ask(ctx, key, {ability: 'Divine Protection', god: true, uid, cost: '3 Latent'})) {
@@ -419,15 +420,6 @@ export const SPELLS = {
       save(s, target, (st, cx) => {
         if (id(cx, target) === '001' && ask(cx, k, {ability: "Cassios's Sacrifice", uid: target, prepare: true})) prepareNoStrike(st, target);
       });
-    },
-  },
-  // Seiya Raises Athena's Shield: todo dano ao seu God neste Round é prevenido; com Pegasus Seiya, remove até 3 de dano
-  // de cada Saint seu (31/10/2026: sem The Last Hope).
-  '087': {
-    check: () => {},
-    run: (s, c, k) => {
-      shield(s, `god:${k}`, Infinity, {strikeOnly: false});
-      if (controls(s, c, k, '001')) devotees(s, c, k).filter(u => isSaint(c, u)).forEach(u => removeDamage(s, u, 3));
     },
   },
 };

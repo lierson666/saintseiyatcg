@@ -1,6 +1,6 @@
 // Mudanças de valor do BALANCE-PATCH-001 que vivem no código das cartas, só neste processo de simulação.
 // Não altera arquivo nenhum de playtest/engine-v3: troca a entrada em memória e devolve como desfazer.
-// Não é motor paralelo: são quatro trechos curtos, cópia do efeito oficial com o número proposto.
+// Não é motor paralelo: são três trechos curtos (a 009 saiu em 08/11/2026: a carta 262 virou Deadly Rollick), cópia do efeito oficial com o número proposto.
 import '../playtest/engine-v3/v6/hooks.js'; // carrega antes do kit: os módulos V6 têm dependência circular.
 import * as k from '../playtest/engine-v3/v6/kit.js';
 
@@ -17,15 +17,6 @@ const OVERRIDES = {
       k.addCounter(st, uid, 1);
       k.watchers(st, c, 'watchCounter', [uid, 1, key], 'Training counter');
     }
-  }]],
-  // 009: perde 1 Soul por Equipment, no lugar de 2 (cópia de hades.js).
-  '009': V6 => [[V6['hades-v6-262'].spell, 'run', (s, c, key) => {
-    const t = k.choose(c, key, 'THE DESTRUCTION OF THE GOLD CLOTHS', k.enemies(s, c, key));
-    if (!t) return;
-    const gear = k.gearOf(c, t), ctl = k.controllerOf(s, t);
-    k.defeat(s, c, t);
-    for (const g of gear) if (k.toTartarus(s, c, g, 'battlefield')) k.emit(s, 'destroyed', {uid: g, owner: c.objects[g].owner});
-    if (!s.victory && gear.length) k.loseSoulOf(s, ctl, gear.length);
   }]],
 };
 export const OVERRIDE_KEYS = Object.keys(OVERRIDES);

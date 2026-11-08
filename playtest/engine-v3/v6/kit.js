@@ -1,6 +1,6 @@
 // Kit das cartas V6: ações comuns de texto de carta sobre a engine 3.0. Toda escolha é uma pergunta da engine
 // (`ctx.decide`), respondida no modal de decisão da arena, pela IA ou pelo jogador remoto. Sem `decide`, recusa.
-import {RuleError, destroyDevotee, draw, emit, gainLatent, loseSoul, mill, prepareUnit, useOncePerRound, addEffect, restoreMoon, spendBase, hooks} from '../core.js';
+import {RuleError, destroyDevotee, draw, emit, gainLatent, loseSoul, mill, prepareUnit, useOncePerRound, addEffect, restoreMoon, spendBase, hooks, soulLocked} from '../core.js';
 import {card, controllerOf, modify, damageDevotee, checkDefeats, atkOf, hpOf, keywordsOf, blockedNow, redirectGod} from '../effects.js';
 import {gainSoul} from '../gods.js';
 import {collect, resonanceTag} from './registry.js';
@@ -90,6 +90,7 @@ export const loseSoulOf = (s, key, n) => loseSoul(s, {[key]: n}, 'loss');
 // "Pay N Soul": custo. Não paga se não tiver Soul suficiente (devolve false).
 export function paySoul(s, key, n) {
   if (s.players[key].soul - n < (hooks.soulFloor?.(s, key) ? 1 : 0)) return false; // Worship (539): em 1 não paga Soul
+  if (soulLocked(s, key)) return false; // Soul travado (Athena 087)
   loseSoul(s, {[key]: n}, 'payment');
   return true;
 }

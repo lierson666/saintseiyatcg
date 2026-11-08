@@ -192,7 +192,7 @@ test('carta genérica: personagem original, sem referência, sem regras e sem c�
 
 test('cânone continua com referências, e criatura genérica não ganha dedos', () => {
   const byName = (n) => cartas.find((c) => c.nome_exibicao_en === n);
-  for (const n of ['PEGASUS SEIYA', 'MERMAID THETIS', 'MERMAID SCALE', 'GALACTIC ILLUSION', 'THE BETRAYAL OF THE GOLD SAINTS', 'ATHENA', 'HADES CASTLE']) assert.equal(cardFacts(byName(n), cartas).generic, false, n);
+  for (const n of ['PEGASUS SEIYA', 'MERMAID THETIS', 'MERMAID SCALE', 'GALACTIC ILLUSION', 'THE DESTRUCTION OF THE GOLD CLOTHS', 'ATHENA', 'HADES CASTLE']) assert.equal(cardFacts(byName(n), cartas).generic, false, n);
   for (const n of ['MARINA SPEARMAN', 'OCEANIC SPEAR', 'THE RISING TIDE', 'THE SUNKEN TEMPLE']) {
     const f = cardFacts(byName(n), cartas), text = buildImagePrompt(f, defaultParams(f));
     assert.equal(f.generic, true, n);

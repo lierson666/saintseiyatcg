@@ -208,6 +208,13 @@ export default {
   },
   // Staples do branco (autor, 08/11/2026: docs/proposta-athena-staples-branco.md).
   // Blood of the Dragon — Reprieve: o Moment/Technique inimigo na pilha volta à mão do dono; compre 1.
+  // Seiya Raises Athena's Shield → Divine Salvation (Teferi's Protection, autor 08/11/2026: docs/proposta-staples-top100.md):
+  // até o início da sua próxima rodada, Soul travado; Devotees aliados não são derrotados nem alvo de Spell inimiga (§58).
+  'athena-v6-087': {spell: {run: (s, c, key) => {
+    const mark = {key, ownTurns: s.players[key].ownTurns};
+    (s.v6SoulLock ||= {})[key] = mark.ownTurns;
+    for (const u of k.devotees(s, c, key)) { (s.v6Unbreakable ||= {})[u] = mark; (s.v6Untargetable ||= {})[u] = mark; }
+  }}},
   'athena-v6-058': {spell: {
     check: (s, c, key) => { if (!enemyMT(s, c, key).length) throw new k.RuleError('alvo', 'sem Moment ou Technique inimigo na cadeia'); },
     run: (s, c, key) => {

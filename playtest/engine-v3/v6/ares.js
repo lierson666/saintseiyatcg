@@ -422,7 +422,6 @@ export default {
   'ares-v6-316': {gearGodDamage: (s, c, key) => st => k.gainLatent(st, key, 1)}, // Reaver Cleaver (08/11/2026)
   'ares-v6-317': merge(gearKeywords(['Pierce']), gearDeathGod(1, "DEATH'S TRIBUTE")),
   'ares-v6-318': k.sword('BATTLEFIELD AXE', 'athena', 'poseidon'),
-  'ares-v6-319': gearDeclareOther(1, 'RHYTHM OF DESTRUCTION'),
   'ares-v6-320': gearDeclareDamage(1, 'FLAMING PROJECTILE'),
   'ares-v6-321': merge(gearDeclareSelf(2), {
     endTurn: (s, c, key, self) => {
@@ -694,10 +693,8 @@ export default {
     draw(st, key, 2);
     for (const u of out) if (k.card(c, u)?.kind === 'Devotee') k.summonToken(st, c, key, {id: 'neutral-token-sanctuary-soldier', name: 'Sanctuary Soldier', atk: 1, hp: 1, type: 'Soldier'});
   }},
-  'ares-v6-319': {attach: (s, c, key, self) => k.once(s, `${self}:drums`) && (st => {
-    const p = st.players[key], top = p.deck.splice(0, 4);
-    for (const u of top) { if (berserker(c, u)) p.hand.push(u); else p.deck.push(u); }
-  })},
+  // War Drums (Rhythm of the Wild, autor 08/11/2026: docs/proposta-staples-top100.md): os Devotees aliados têm Impulse.
+  'ares-v6-319': {aura: (s, c, key, self, unit) => (k.controllerOf(s, unit) === key && k.isDevotee(c, unit) ? {keywords: ['Impulse']} : null)},
   'ares-v6-515': {spell: {run: (s, c, key) => {
     let lost = false;
     for (let i = s.events.length - 1; i >= 0 && s.events[i].type !== 'turn_start'; i--) if (s.events[i].type === 'soul_lost' && s.events[i].player !== key) lost = true;

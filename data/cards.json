@@ -3740,12 +3740,12 @@
       "nome_interno_pt": "",
       "faccao": "Athena",
       "tipo": "Spell",
-      "subtipos": ["Technique"],
+      "subtipos": ["Moment"],
       "raridade": "Legendary",
       "status": "design-ready",
       "cosmoble": false,
       "caminho_imagem": null,
-      "custo": 5,
+      "custo": 4,
       "unidade_custo": "base_cosmo",
       "soul": null,
       "attack": null,
@@ -3757,17 +3757,15 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Divine Salvation — Prevent all damage that would be dealt to your God until the start of your next round.",
-        "Athena’s Light — If you control Pegasus Seiya, remove up to 3 damage from each friendly Saint."
+        "Divine Salvation — Until the start of your next round, your God's Soul can't be reduced, and friendly Devotees can't be defeated or be the target of enemy Moments or Techniques."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção).",
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção). Staples do top 100 do EDHREC, diff aprovado pelo autor em 08/11/2026: docs/proposta-staples-top100.md.",
       "nome_exibicao_pt": "SEIYA ERGUE O ESCUDO DE ATHENA",
       "subtitulo_pt": "A Luz que Salva uma Deusa",
       "habilidades_pt": [
-        "Salvação Divina — Previna todo o dano que seria causado ao seu Deus até o início da sua próxima rodada.",
-        "A Luz de Athena — Se você controlar Seiya de Pégaso, remova até 3 de dano de cada Cavaleiro aliado."
+        "Salvação Divina — Até o início da sua próxima rodada, o Soul do seu Deus não pode ser reduzido, e os Devotos aliados não podem ser derrotados nem ser alvo de Momentos e Técnicas inimigos."
       ],
       "tagline_pt": "A Luz que Salva uma Deusa"
     },
@@ -11175,17 +11173,17 @@
       "id_fonte": "HADES-V6-256",
       "conjunto": "hades-vanilla-v6",
       "numero_carta": 256,
-      "nome_exibicao_en": "THE BETRAYAL OF THE GOLD SAINTS",
-      "tagline_en": "The Dead Return as Enemies",
+      "nome_exibicao_en": "BLACK MARKET OF THE UNDERWORLD",
+      "tagline_en": "Everything Has a Price Below",
       "nome_interno_pt": "",
       "faccao": "Hades",
-      "tipo": "Spell",
-      "subtipos": ["Moment"],
+      "tipo": "Equipment",
+      "subtipos": ["Artifact"],
       "raridade": "Uncommon",
       "status": "design-ready",
       "cosmoble": false,
       "caminho_imagem": null,
-      "custo": 4,
+      "custo": 3,
       "unidade_custo": "base_cosmo",
       "soul": null,
       "attack": null,
@@ -11197,21 +11195,24 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Return up to 2 target Gold Saint cards from your Tartarus to your hand.",
-        "Your God loses {2}{S} for each card returned this way.",
-        "Draw 1 card."
+        "Black Market of the Underworld — At the start of your round, you may pay up to {3}{S}. For each {1}{S} paid this way, choose one that wasn't chosen: generate {1}{L}; create a 1/1 Specter Spirit Devotee Token; or draw a card."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção).",
-      "nome_exibicao_pt": "A TRAIÇÃO DOS CAVALEIROS DE OURO",
-      "subtitulo_pt": "Os Mortos Voltam como Inimigos",
+      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção). Staples do top 100 do EDHREC, diff aprovado pelo autor em 08/11/2026: docs/proposta-staples-top100.md. Era Moment; vira Equipment global (sem Equip).",
+      "categoria_equipamento": "Artifact",
+      "slot_equipamento": null,
+      "auto_equip_en": [],
+      "donos": [],
+      "equipar_custo_outros": null,
+      "equipar_custo_ressonante": null,
+      "equipar_auto": false,
+      "nome_exibicao_pt": "MERCADO NEGRO DO SUBMUNDO",
+      "subtitulo_pt": "Tudo Tem um Preço Lá Embaixo",
       "habilidades_pt": [
-        "Devolva até 2 cartas de Cavaleiro de Ouro alvo do seu Tártaro para a sua mão.",
-        "Seu Deus perde {2}{S} para cada carta devolvida assim.",
-        "Compre 1 carta."
+        "Mercado Negro do Submundo — No início da sua rodada, você pode pagar até {3}{S}. Para cada {1}{S} pago assim, escolha um ainda não escolhido: gere {1}{L}; crie uma Ficha de Devoto Espírito Espectro 1/1; ou compre uma carta."
       ],
-      "tagline_pt": "Os Mortos Voltam como Inimigos"
+      "tagline_pt": "Tudo Tem um Preço Lá Embaixo"
     },
     {
       "id": "hades-v6-257",
@@ -11455,19 +11456,17 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Defeat target enemy Devotee.",
-        "Destroy all Equipment attached to that Devotee.",
-        "For each Equipment destroyed this way, its controller loses {2}{S}."
+        "Send target enemy Devotee to the Void.",
+        "If you control a Judge Specter, this Moment costs {0}."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026. Hades → Preto (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-hades-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção).",
+      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026. Hades → Preto (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-hades-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção). Staples do top 100 do EDHREC, diff aprovado pelo autor em 08/11/2026: docs/proposta-staples-top100.md.",
       "nome_exibicao_pt": "A DESTRUIÇÃO DAS ARMADURAS DE OURO",
       "subtitulo_pt": "Nem o Ouro Resiste à Morte",
       "habilidades_pt": [
-        "Derrote o Devoto inimigo alvo.",
-        "Destrua todos os Equipamentos equipados nesse Devoto.",
-        "Para cada Equipamento destruído assim, o controlador dele perde {2}{S}."
+        "Mande o Devoto inimigo alvo ao Vazio.",
+        "Se você controla um Juiz Espectro, este Momento custa {0}."
       ],
       "tagline_pt": "Nem o Ouro Resiste à Morte"
     },
@@ -13965,12 +13964,11 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Equipped Devotee gets +0 @ATK / +1 @HP.",
-        "War Call — Once each round, when War Drums becomes attached to a Devotee, reveal the top four cards of your deck. Put the Berserker cards among them into your hand and the rest on the bottom of your deck."
+        "War Call — Friendly Devotees have @Impulse."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Sem custo de Equip no original: tratado como Equipment global.",
+      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Sem custo de Equip no original: tratado como Equipment global. Staples do top 100 do EDHREC, diff aprovado pelo autor em 08/11/2026: docs/proposta-staples-top100.md.",
       "categoria_equipamento": "Artifact",
       "slot_equipamento": null,
       "auto_equip_en": [],
@@ -13981,8 +13979,7 @@
       "nome_exibicao_pt": "TAMBORES DE GUERRA",
       "subtitulo_pt": "A Marcha do Massacre Sem Fim",
       "habilidades_pt": [
-        "O Devoto equipado recebe +0 @ATQ / +1 @PV.",
-        "Chamado de Guerra — Uma vez por rodada, quando os Tambores de Guerra são presos a um Devoto, revele as 4 cartas do topo do seu deck. Ponha as cartas de Berserker entre elas na sua mão e o resto no fundo do seu deck."
+        "Chamado de Guerra — Os Devotos aliados têm @Impulso."
       ],
       "flavour_pt": "\"Os tambores nunca param. A guerra também não.\"",
       "tagline_pt": "A Marcha do Massacre Sem Fim"
@@ -20404,13 +20401,12 @@
       "nome_interno_pt": "",
       "faccao": "Neutral",
       "tipo": "Equipment",
-      "subtipos": ["Cloth"],
-      "patente_armadura": "Steel",
+      "subtipos": ["Artifact"],
       "raridade": "Common",
       "status": "design-ready",
       "cosmoble": true,
       "caminho_imagem": null,
-      "custo": 1,
+      "custo": 2,
       "unidade_custo": "base_cosmo",
       "soul": null,
       "attack": null,
@@ -20418,25 +20414,25 @@
       "power": null,
       "vida": null,
       "resistance": null,
-      "equipar_custo": 2,
+      "equipar_custo": 1,
       "keywords_en": [],
       "habilidades_en": [
-        "Unstable Mechanism — Whenever equipped Devotee Strikes, you may pay {1}{C}. If you do, it gets +1/+0 until the end of your round."
+        "Unstable Mechanism — Equipped Devotee has @Impulse and can't be the target of enemy Moments or Techniques."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Neutral Set, 29/10/2026.",
-      "categoria_equipamento": "Armor",
-      "slot_equipamento": "armadura",
+      "notas_pt": "Texto do autor, Neutral Set, 29/10/2026. Staples do top 100 do EDHREC, diff aprovado pelo autor em 08/11/2026: docs/proposta-staples-top100.md. Deixa de ser Armor.",
+      "categoria_equipamento": "Artifact",
+      "slot_equipamento": "acessorio",
       "auto_equip_en": [],
       "donos": [],
-      "equipar_custo_outros": 2,
-      "bonus_poder": 1,
-      "bonus_vida": 1,
+      "equipar_custo_outros": 1,
+      "equipar_custo_ressonante": 0,
+      "equipar_auto": false,
       "nome_exibicao_pt": "PROTÓTIPO DE ARMADURA DE AÇO",
       "subtitulo_pt": "O Primeiro Passo Rumo ao Cosmo Artificial",
       "habilidades_pt": [
-        "Mecanismo Instável — Sempre que o Devoto equipado declara um Golpe, você pode pagar {1}{C}. Se fizer isso, ele recebe +1 @ATQ até o fim da sua rodada."
+        "Mecanismo Instável — O Devoto equipado tem @Impulso e não pode ser alvo de Momentos e Técnicas inimigos."
       ],
       "flavour_pt": "\"Toda obra-prima começa como um experimento, e todo experimento carrega o risco de falha.\"",
       "tagline_pt": "O Primeiro Passo Rumo ao Cosmo Artificial"
@@ -20807,7 +20803,7 @@
       "status": "design-ready",
       "cosmoble": false,
       "caminho_imagem": null,
-      "custo": 4,
+      "custo": 2,
       "unidade_custo": "base_cosmo",
       "soul": null,
       "attack": null,
@@ -20819,12 +20815,11 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Cosmo Amplification — Once until the start of your next round, you may generate {1}{L}.",
-        "Crystal Overload — Sacrifice Universal Cosmo Crystal: Generate {2}{L}. Activate only during your round."
+        "Cosmo Amplification — Once each round, during your round, generate {1}{L}."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Neutral Set, 29/10/2026. Tipo no original: Item — Relic; tratado como Equipment global (sem Equip). Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção).",
+      "notas_pt": "Texto do autor, Neutral Set, 29/10/2026. Tipo no original: Item — Relic; tratado como Equipment global (sem Equip). Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção). Staples do top 100 do EDHREC, diff aprovado pelo autor em 08/11/2026: docs/proposta-staples-top100.md.",
       "categoria_equipamento": "Artifact",
       "slot_equipamento": null,
       "auto_equip_en": [],
@@ -20835,8 +20830,7 @@
       "nome_exibicao_pt": "CRISTAL DE COSMO UNIVERSAL",
       "subtitulo_pt": "Um Fragmento do Universo Infinito",
       "habilidades_pt": [
-        "Amplificação de Cosmo — Uma vez até o início da sua próxima rodada, você pode gerar {1}{L}.",
-        "Sobrecarga de Cristal — Sacrifique Cristal de Cosmo Universal: Gere {2}{L}. Ative apenas durante a sua rodada."
+        "Amplificação de Cosmo — Uma vez por rodada, durante a sua rodada, gere {1}{L}."
       ],
       "flavour_pt": "\"Dentro de um fragmento de cristal, a energia infinita do universo espera para ser despertada.\"",
       "tagline_pt": "Um Fragmento do Universo Infinito"
@@ -21509,7 +21503,7 @@
       "status": "design-ready",
       "cosmoble": true,
       "caminho_imagem": null,
-      "custo": 3,
+      "custo": 2,
       "unidade_custo": "base_cosmo",
       "soul": null,
       "attack": null,
@@ -21521,12 +21515,12 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Emergency Supplies — When Sanctuary Supply Chest enters the Battlefield, draw 1 card, then discard 1 card.",
-        "Last Reserves — Pay {3}{C} and sacrifice Sanctuary Supply Chest: Draw 2 cards."
+        "Emergency Supplies — Once each round, during your round, generate {1}{L}.",
+        "Last Reserves — Pay {1}{C} and sacrifice Sanctuary Supply Chest: Draw a card."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Neutral Set, 29/10/2026. Tipo no original: Item — Supply; tratado como Equipment global (sem Equip).",
+      "notas_pt": "Texto do autor, Neutral Set, 29/10/2026. Tipo no original: Item — Supply; tratado como Equipment global (sem Equip). Staples do top 100 do EDHREC, diff aprovado pelo autor em 08/11/2026: docs/proposta-staples-top100.md.",
       "categoria_equipamento": "Artifact",
       "slot_equipamento": null,
       "auto_equip_en": [],
@@ -21537,8 +21531,8 @@
       "nome_exibicao_pt": "BAÚ DE SUPRIMENTOS DO SANTUÁRIO",
       "subtitulo_pt": "Recursos para a Longa Guerra",
       "habilidades_pt": [
-        "Suprimentos de Emergência — Quando Baú de Suprimentos do Santuário entra no Campo de Batalha, compre uma carta e depois descarte uma carta.",
-        "Últimas Reservas — Pague {3}{C} e sacrifique Baú de Suprimentos do Santuário: Compre 2 cartas."
+        "Suprimentos de Emergência — Uma vez por rodada, durante a sua rodada, gere {1}{L}.",
+        "Últimas Reservas — Pague {1}{C} e sacrifique o Baú de Suprimentos do Santuário: compre uma carta."
       ],
       "flavour_pt": "\"Guerreiros podem sobreviver de coragem, mas exércitos sobrevivem de preparação.\"",
       "tagline_pt": "Recursos para a Longa Guerra"

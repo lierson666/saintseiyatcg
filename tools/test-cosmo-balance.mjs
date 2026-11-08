@@ -400,12 +400,12 @@ test('biblioteca cobre todo efeito lido e toda ação de kit.js', () => {
   assert.deepEqual(orphan, []);
 });
 
-test('patch: as 12 propostas validam contra o catálogo e divergência vira NEEDS_REVIEW', () => {
+test('patch: as 11 propostas validam contra o catálogo e divergência vira NEEDS_REVIEW', () => {
   const v = validatePatch(PATCH, catalog.cartas, index);
-  assert.equal(v.length, 12);
+  assert.equal(v.length, 11);
   assert.deepEqual(v.filter(x => x.status !== VALIDATED).map(x => x.key), []);
   assert.equal(PATCH.proposals.filter(p => p.group === 'A').length, 8);
-  assert.equal(PATCH.proposals.filter(p => p.group === 'B').length, 4);
+  assert.equal(PATCH.proposals.filter(p => p.group === 'B').length, 3);
   const wrongCost = {...PATCH.proposals[0], changes: [{field: 'custo', from: 9, to: 2}]};
   assert.equal(validateProposal(wrongCost, catalog.cartas, index).status, NEEDS_REVIEW);
   const wrongText = {...PATCH.proposals[2], changes: [{field: 'habilidades_en', match: 'up to +9/+9', replace: 'x'}]};
@@ -422,8 +422,8 @@ test('patch: versiona, preserva o original e reverte exatamente; só Developer c
   assert.throws(() => applyPatch(catalog.cartas, PATCH, {env: 'official'}), /Developer/);
   assert.throws(() => applyPatch(catalog.cartas, PATCH, {}), /Developer/);
   const {cards, active, versions} = applyPatch(catalog.cartas, PATCH, {env: 'developer', engineIndex: index});
-  assert.equal(active.length, 12);
-  assert.equal(versions.length, 12);
+  assert.equal(active.length, 11);
+  assert.equal(versions.length, 11);
   assert.equal(stableStringify(catalog.cartas), before);
   const spearman = cards.find(c => c.id === 'poseidon-v6-107');
   assert.equal(spearman.custo, 2);
@@ -442,7 +442,7 @@ test('patch: toda proposta muda a nota na direção pedida, sem mover a curva', 
     const c = compareProposal(e, p, catalog.cartas, r);
     assert.ok(c, p.key);
     assert.notEqual(`${c.after.power}|${c.after.effective}`, `${c.before.power}|${c.before.effective}`, `${p.key} não mexe no modelo`);
-    const nerfGroup = ['001', '002', '003', '004', '005', '006', '007', '008', '009'];
+    const nerfGroup = ['001', '002', '003', '004', '005', '006', '007', '008'];
     if (nerfGroup.includes(p.key)) assert.ok(c.after.relative < c.before.relative, p.key);
     else assert.ok(c.after.relative > c.before.relative, p.key);
   }
@@ -480,21 +480,20 @@ test('simulação: cenários, overlay e overrides com o motor real, reversíveis
   const {V6} = await import('../playtest/engine-v3/v6/registry.js');
   assert.deepEqual(scenarioKeys(PATCH, 'A'), []);
   assert.equal(scenarioKeys(PATCH, 'B').length, 8);
-  assert.equal(scenarioKeys(PATCH, 'C').length, 12);
+  assert.equal(scenarioKeys(PATCH, 'C').length, 11);
   assert.deepEqual(scenarioKeys(PATCH, 'A+006'), ['006']);
-  assert.equal(scenarioKeys(PATCH, 'C-006').length, 11);
+  assert.equal(scenarioKeys(PATCH, 'C-006').length, 10);
   assert.deepEqual(Object.keys(SCENARIOS), ['A', 'B', 'C']);
   assert.deepEqual([...OVERRIDE_KEYS].sort(), PATCH.proposals.filter(p => p.engine === 'override').map(p => p.key));
   assert.deepEqual(plan([{}, {}], 2, 1).map(j => j.first), ['A', 'B', 'A', 'B']);
   assert.equal(plan([{}, {}], 1, 1)[0].seed, plan([{}, {}], 1, 1)[1].seed, 'iniciativa espelhada com a mesma semente');
   const [lo, hi] = wilson(5, 10);
   assert.ok(lo < 0.5 && hi > 0.5);
-  const originals = {mods: V6['artemis-v6-405'].mods, run: V6['hades-v6-262'].spell.run};
+  const originals = {mods: V6['artemis-v6-405'].mods};
   const undo = applyEngineOverrides(V6, OVERRIDE_KEYS);
   assert.notEqual(V6['artemis-v6-405'].mods, originals.mods);
   undo();
   assert.equal(V6['artemis-v6-405'].mods, originals.mods);
-  assert.equal(V6['hades-v6-262'].spell.run, originals.run);
   const stub = {'artemis-v6-405': {mods: () => [{atk: 3, hp: 3}]}, 'artemis-v6-384': {mods: () => [{atk: 1, hp: 1}]}};
   applyEngineOverrides(stub, ['003', '005']);
   assert.deepEqual(stub['artemis-v6-405'].mods(), [{atk: 2, hp: 2}], 'teto novo');

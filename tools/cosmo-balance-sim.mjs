@@ -1,5 +1,5 @@
 // Cenários do BALANCE-PATCH-001 na simulação headless real (tools/simulate-v3.mjs, playtest/engine-v3).
-// A: catálogo atual. B: 8 prioritárias. C: 12 propostas. Mesmos decks, sementes e iniciativa espelhada (§65) em todo cenário.
+// A: catálogo atual. B: 8 prioritárias. C: 11 propostas (a 009 saiu em 08/11/2026). Mesmos decks, sementes e iniciativa espelhada (§65) em todo cenário.
 // NÃO é metagame: os dois lados usam a IA heurística do playtest, sem aprendizado nem deckbuilding, e decks de teste.
 // node tools/cosmo-balance-sim.mjs --dry-run
 // node tools/cosmo-balance-sim.mjs --games 20 --scenarios A,B,C --ablations 001,006 --seed 1

@@ -317,7 +317,7 @@ function playSpellV6(state, ctx, key, uid, choice) {
     // Redirecionamento (Sky Defender 461): troca o alvo `from` por `to` nas respostas guardadas; alvo ilegal vira null.
     const swap = st.v6Redirect?.[uid], to = v => (swap && v === swap.from ? swap.to : v);
     const records = aimed.records && aimed.records.map(r => ({...r, value: to(r.value)}));
-    withTargets(ctx, key, records, () => entry.spell.run(st, ctx, key, uid, choice, aimed.values.map(to)));
+    withTargets(ctx, key, records, () => entry.spell.run(st, ctx, key, uid, choice, aimed.values.map(to)), st);
     st.players[key].stack.splice(st.players[key].stack.indexOf(uid), 1);
     st.players[ctx.objects[uid].owner][spellDestination(st, uid)].push(uid);
     checkDefeats(st, ctx);

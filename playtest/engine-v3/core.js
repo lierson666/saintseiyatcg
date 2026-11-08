@@ -180,12 +180,15 @@ export function gainLatent(state, key, n) {
 // D52 + D174: Soul 0 encerra na hora; os dois Gods em 0 ao mesmo tempo empatam.
 // `cause` (G3-013): 'damage' (dano, depois de prevenção), 'loss' (Lose Soul direto) ou 'payment' (custo pago).
 // Soul atual nunca fica negativo; `amount` registra o valor integral (G3-012).
+// §58 (autor, 08/11/2026): Soul travado até o início da próxima rodada do dono (`v6SoulLock[key]` = ownTurns ao travar).
+export const soulLocked = (state, key) => state.v6SoulLock?.[key] != null && state.v6SoulLock[key] === state.players[key].ownTurns;
 export function loseSoul(state, losses, cause = 'loss') {
   alive(state);
   for (let [key, n] of Object.entries(losses)) {
     const p = state.players[key];
     // §58 (autor, 08/11/2026): Worship (Nike 539) — nenhuma perda de Soul leva o God abaixo de 1.
     if (hooks.soulFloor?.(state, key)) n = Math.max(0, Math.min(n, p.soul - 1));
+    if (soulLocked(state, key)) n = 0; // §58: "Soul não pode ser reduzido" (Athena 087)
     p.soul = Math.max(0, p.soul - n);
     emit(state, 'soul_lost', {player: key, amount: n, soul: p.soul, cause});
   }

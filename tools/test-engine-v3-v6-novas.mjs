@@ -8,7 +8,7 @@ import {canonIndex} from '../shared/deck-v3.js';
 import {addPreviewCards} from '../shared/preview-cards.js';
 import {createMatch} from '../playtest/engine-v3/match.js';
 import {startTurn, endTurn, passAll, runCheckpoint, draw, placeBase} from '../playtest/engine-v3/core.js';
-import {playDevotee, playSpell, playableFrom, castFromZone} from '../playtest/engine-v3/play.js';
+import {playDevotee, playSpell, playableFrom, castFromZone, activate} from '../playtest/engine-v3/play.js';
 import {declareStrike} from '../playtest/engine-v3/strike.js';
 import {atkOf, hpOf, keywordsOf} from '../playtest/engine-v3/effects.js';
 import * as k from '../playtest/engine-v3/v6/kit.js';
@@ -453,4 +453,81 @@ test('599 Genesis Wave: Devotees e Equipment de custo 7 ou menos ao campo, o res
   cast('A', 'artemis-v6-599');
   assert.equal(top.filter(u => A.battlefield.includes(u)).length, 6);
   assert.ok(A.tartarus.includes(top[3]));
+});
+
+// ---------- Staples do top 100 do EDHREC (autor, 08/11/2026: docs/proposta-staples-top100.md) ----------
+test('478 Universal Cosmo Crystal: {1}{L} uma vez por rodada', () => {
+  const {s, ctx, give, A} = setup();
+  const cr = give('A', 'neutral-v6-478'), latent = A.latent;
+  activate(s, ctx, 'A', cr); if (s.window) passAll(s);
+  assert.equal(A.latent, latent + 1);
+  assert.throws(() => activate(s, ctx, 'A', cr));
+});
+
+test('494 Supply Chest: {1}{L} por rodada; pague {1} e sacrifique para comprar 1', () => {
+  const {s, ctx, give, A} = setup();
+  const chest = give('A', 'neutral-v6-494'), latent = A.latent, hand = A.hand.length;
+  activate(s, ctx, 'A', chest, {mode: 'supplies'}); if (s.window) passAll(s);
+  assert.equal(A.latent, latent + 1);
+  activate(s, ctx, 'A', chest, {mode: 'reserves'}); if (s.window) passAll(s);
+  assert.ok(A.tartarus.includes(chest));
+  assert.equal(A.hand.length, hand + 1);
+});
+
+test('469 botas: Impulse e não pode ser alvo de Spell inimiga', () => {
+  const {s, ctx, give, cast} = setup();
+  const foe = give('B', V); give('B', 'neutral-v6-469', 'battlefield', foe);
+  const other = give('B', V);
+  assert.ok(keywordsOf(s, ctx, foe).includes('Impulse'));
+  pickFirst(ctx, (p, q) => (q.ability === 'EXILE TO STAR HILL' ? (q.options.includes(foe) ? foe : other) : undefined));
+  cast('A', 'athena-v6-532');
+  assert.ok(s.players.B.battlefield.includes(foe), 'protegido');
+  assert.ok(s.players.B.void.includes(other));
+});
+
+test('087 Divine Salvation: Soul travado e aliados protegidos até a sua próxima rodada', () => {
+  const {s, ctx, give, cast, A} = setup();
+  const dev = give('A', V);
+  cast('A', 'athena-v6-087');
+  const soul = A.soul;
+  k.loseSoulOf(s, 'A', 5);
+  assert.equal(A.soul, soul);
+  assert.equal(k.paySoul(s, 'A', 1), false);
+  k.damage(s, ctx, dev, 10);
+  assert.ok(s.units[dev], 'não é derrotado');
+  endTurn(s); passAll(s); startTurn(s); if (s.window) passAll(s); // rodada de B: segue protegido
+  k.loseSoulOf(s, 'A', 1);
+  assert.equal(A.soul, soul);
+  endTurn(s); passAll(s); startTurn(s); if (s.window) passAll(s); // sua rodada: acabou
+  k.loseSoulOf(s, 'A', 1);
+  assert.equal(A.soul, soul - 1);
+});
+
+test('262 Deadly Rollick: ao Void; custa {0} com Judge Specter', () => {
+  const {s, give, cast, B} = setup();
+  give('A', 'hades-v6-181');
+  const foe = give('B', V), bases = ready(s, 'A');
+  cast('A', 'hades-v6-262');
+  assert.ok(B.void.includes(foe));
+  assert.equal(ready(s, 'A'), bases);
+});
+
+test('256 Black Market: paga Soul por Latent, ficha e compra no início da rodada', () => {
+  const {s, give, A} = setup();
+  give('A', 'hades-v6-256');
+  endTurn(s); passAll(s); startTurn(s); if (s.window) passAll(s);
+  endTurn(s); passAll(s);
+  A.latent = 0; // teto de Latent
+  const soul = A.soul, latent = A.latent, field = A.battlefield.length;
+  startTurn(s); if (s.window) passAll(s);
+  assert.equal(A.soul, soul - 3);
+  assert.equal(A.latent, latent + 1);
+  assert.equal(A.battlefield.length, field + 1);
+});
+
+test('319 War Drums: os Devotees aliados têm Impulse', () => {
+  const {s, ctx, give} = setup();
+  give('A', 'ares-v6-319'); const dev = give('A', V), foe = give('B', V);
+  assert.ok(keywordsOf(s, ctx, dev).includes('Impulse'));
+  assert.ok(!keywordsOf(s, ctx, foe).includes('Impulse'));
 });

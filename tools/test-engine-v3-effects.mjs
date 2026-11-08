@@ -101,18 +101,18 @@ test('056 Protect Saori: 3, ou 5 se você controla um Saint com Guardian', () =>
   assert.equal(c.s.effects.find(e => e.target === 'god:A').amount, 3);
 });
 
-test('087 Seiya Raises Athena\'s Shield: God sem dano no Round; remove 3 de cada Saint com Seiya; não prepara mais (31/10/2026)', () => {
+test('087 Divine Salvation (Teferi\'s Protection, 08/11/2026): Soul travado e Saints não derrotados até a sua próxima rodada', () => {
   const {s, ctx, field, cast, end, strike} = setup();
-  const seiya = field('A', '001'), jabu = field('A', '028');
-  s.units[seiya].damage = 3; s.units[jabu].damage = 1; s.units[jabu].prepared = false;
+  const seiya = field('A', '001');
   s.players.A.soul = 5;
   cast('A', '087', {});
-  assert.deepEqual([s.units[seiya].damage, s.units[jabu].damage, s.units[jabu].prepared], [0, 0, false]);
+  s.units[seiya].damage = 99;
   end();
   const acolyte = field('B', '043');
   startTurn(s);
   strike(acolyte, {kind: 'god', player: 'A'});
-  assert.equal(s.players.A.soul, 5, 'prevenido até o fim do Round');
+  assert.equal(s.players.A.soul, 5, 'Soul travado na rodada do oponente');
+  assert.ok(s.units[seiya], 'não é derrotado por dano');
 });
 
 test('estáticas: Seika com Seiya, Shunrei com Shiryu (Tatsumi virou Drannith Magistrate em 08/11/2026)', () => {

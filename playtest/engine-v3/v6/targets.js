@@ -10,7 +10,19 @@
 // shortcut: alvo que depende de uma escolha da própria resolução ("you may defeat… for each, target…") só é perguntado
 // na resolução (o ensaio responde "não" ao "you may"); mover para `targets` explícito se a carta precisar.
 import {clone} from '../decision.js';
-import {bindContext} from './registry.js';
+import {bindContext, entryOf} from './registry.js';
+
+// §58 (autor, 08/11/2026): "não pode ser alvo de Moments e Techniques inimigos". Protegem: `state.v6Untargetable[uid] =
+// {key, ownTurns}` (até o início da próxima rodada de `key`, Athena 087) e Equipment com `bearerUntargetable` (botas 469).
+export function untargetable(s, c, caster, uid) {
+  if (typeof uid !== 'string' || uid.startsWith('god:')) return false;
+  const ctrl = s.order.find(k => s.players[k].battlefield.includes(uid));
+  if (!ctrl || ctrl === caster) return false;
+  const u = s.v6Untargetable?.[uid];
+  if (u && s.players[u.key].ownTurns === u.ownTurns) return true;
+  return Object.keys(c.attached).some(g => c.attached[g] === uid && entryOf(c, g)?.bearerUntargetable);
+}
+const legal = (s, c, key, q) => (s && q.options && q.choose === 'target' ? {...q, options: q.options.filter(o => !untargetable(s, c, key, o))} : q);
 
 const isTargetQ = (key, player, q) => player === key && ((q.options && (q.choose === 'target' || q.choose === 'mode')) || q.part === 'target');
 const kindOf = q => q.choose || 'may';
@@ -33,6 +45,8 @@ export function aim(s, c, key, self, entry, choice = {}) {
   s2.resolving = {uid: self, controller: key}; // fonte do Imune (§43A)
   c2.decide = (player, q) => {
     if (!isTargetQ(key, player, q)) return dummy(q);
+    q = legal(s2, c2, key, q);
+    if (q.options && !q.options.length) { records.push({ability: q.ability, kind: kindOf(q), value: null, options: []}); return q.count ? [] : null; }
     let value;
     try { value = real(player, q); } catch (e) { asked = e; throw e; } // PendingDecision e resposta ilegal sobem daqui
     records.push({ability: q.ability, kind: kindOf(q), value, options: q.options}); // `options`: alvos legais (Ares 325 troca de alvo)
@@ -43,12 +57,13 @@ export function aim(s, c, key, self, entry, choice = {}) {
 }
 
 // Roda `fn` (a resolução) com as respostas de alvo guardadas. Sem `records` (alvos explícitos) só roda.
-export function withTargets(c, key, records, fn) {
+export function withTargets(c, key, records, fn, state = null) {
   const real = c.decide;
   if (!real || !records) return fn();
   const left = [...records];
   c.decide = (player, q) => {
     if (isTargetQ(key, player, q)) {
+      q = legal(state, c, key, q); // protegido depois de mirado: a parte dele não acontece
       const at = left.findIndex(r => r.ability === q.ability && r.kind === kindOf(q));
       if (at >= 0) {
         const [r] = left.splice(at, 1);

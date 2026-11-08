@@ -247,7 +247,7 @@ test('462 Daichi: +0/+2 equipado; Earthquake Generator: ao defender, paga 2 e ca
   const {s, ctx, give} = setup();
   const daichi = give('A', N(462)), base = hpOf(s, ctx, daichi);
   give('A', N(469), 'battlefield', daichi);
-  assert.equal(hpOf(s, ctx, daichi), base + 2 + 1); // +2 Steel Fortress, +1 do Prototype
+  assert.equal(hpOf(s, ctx, daichi), base + 2); // +2 Steel Fortress (o Prototype virou botas em 08/11/2026: sem bônus)
   const foe = mkFoe(s, give), r = ready(s, 'A');
   tough(s, foe);
   foeStrike(s, ctx, foe, dev(daichi));
@@ -317,15 +317,11 @@ test('468 Mechanical Training: +1/+1 equipado', () => {
   assert.deepEqual([atkOf(s, ctx, rec), hpOf(s, ctx, rec)], [base[0] + 1 + 1, base[1] + 1 + 1]);
 });
 
-test('469 Unstable Mechanism: ao atacar, paga 1 Cosmo para +1/+0', () => {
+test('469 Steel Armor Prototype (Swiftfoot Boots, 08/11/2026): o portador tem Impulse', () => {
   const {s, ctx, give} = setup();
-  const rec = give('A', N(468)), foe = mkFoe(s, give);
+  const rec = give('A', N(468));
   give('A', N(469), 'battlefield', rec);
-  tough(s, foe);
-  const r = ready(s, 'A'), atk = atkOf(s, ctx, rec);
-  strike(s, ctx, rec, dev(foe));
-  assert.equal(ready(s, 'A'), r - 1);
-  assert.equal(s.units[foe].damage, atk + 1);
+  assert.ok(keywordsOf(s, ctx, rec).includes('Impulse'));
 });
 
 test('470 Research Facility: paga 2, compra 1 e descarta 1; segundo Equipment do turno cria Steel Recruit', () => {
@@ -443,15 +439,12 @@ test('477 Desperate Resurrection: devolve Devotee do Tartarus exhausted e perde 
   assert.equal(s.players.A.soul, soul - 3);
 });
 
-test('478 Universal Cosmo Crystal: gera 1 Latent uma vez por Round; sacrifício gera 2', () => {
+test('478 Universal Cosmo Crystal (Arcane Signet, 08/11/2026): gera 1 Latent uma vez por rodada', () => {
   const {s, ctx, give} = setup();
   const crystal = give('A', N(478)), latent = s.players.A.latent;
-  ability(s, ctx, crystal, {mode: 'amplify'});
-  assert.equal(s.players.A.latent, latent + 1);
-  assert.throws(() => ability(s, ctx, crystal, {mode: 'amplify'}), /modo ilegal/);
-  ability(s, ctx, crystal, {mode: 'overload'});
-  assert.equal(s.players.A.latent, Math.min(3, latent + 3));
-  assert.ok(s.players.A.tartarus.includes(crystal));
+  ability(s, ctx, crystal);
+  assert.equal(s.players.A.latent, Math.min(3, latent + 1));
+  assert.throws(() => ability(s, ctx, crystal));
 });
 
 test('479 Forbidden Knowledge: compra 3, descarta 1 e perde 2 Soul', () => {
@@ -655,15 +648,14 @@ test('493 Cosmo Converter: paga 1 Soul para 2 Latent; Overloaded Circuits: não 
   ability(s, ctx, conv);
 });
 
-test('494 Sanctuary Supply Chest: compra e descarta ao entrar; Last Reserves: paga 3, sacrifica e compra 2', () => {
+test('494 Sanctuary Supply Chest (Mind Stone, 08/11/2026): 1 Latent por rodada; paga 1, sacrifica e compra 1', () => {
   const {s, ctx, give} = setup();
-  const rec = give('A', N(468)), chest = give('A', N(494), 'hand');
-  const t = s.players.A.tartarus.length;
-  equip(s, ctx, chest, rec);
-  assert.equal(s.players.A.tartarus.length, t + 1);
-  const hand = s.players.A.hand.length;
-  ability(s, ctx, chest);
-  assert.equal(s.players.A.hand.length, hand + 2);
+  const chest = give('A', N(494)), latent = s.players.A.latent = 0, hand = s.players.A.hand.length;
+  ability(s, ctx, chest, {mode: 'supplies'});
+  assert.equal(s.players.A.latent, latent + 1);
+  assert.throws(() => ability(s, ctx, chest, {mode: 'supplies'}), /modo ilegal/);
+  ability(s, ctx, chest, {mode: 'reserves'});
+  assert.equal(s.players.A.hand.length, hand + 1);
   assert.ok(s.players.A.tartarus.includes(chest));
 });
 
