@@ -120,8 +120,8 @@ export const BRAZIER = [[0, 0], [.55, 0], [.55, .12], [.32, .2], [.16, .32], [.1
   [.3, 2.15], [.62, 2.32], [.86, 2.5], [.92, 2.62], [.82, 2.66], [.5, 2.5], [0, 2.46]];
 
 // Varredura de um perfil (y crescente, z = avanço) ao longo de x, de -L/2 a L/2. Faces planas com tampas: cornijas e molduras.
-export function sweep(THREE, prof, L = 1) {
-  const pos = [], h = L / 2, zb = Math.min(...prof.map(p => p[1]));
+export function sweep(THREE, prof, L = 1, back = null) {
+  const pos = [], h = L / 2, zb = back ?? Math.min(...prof.map(p => p[1]));
   const q = (a, b, c, d) => pos.push(...a, ...b, ...c, ...a, ...c, ...d);
   for (let i = 0; i < prof.length - 1; i++) {
     const [y0, z0] = prof[i], [y1, z1] = prof[i + 1];
@@ -236,3 +236,24 @@ export function rockGeo(THREE, seed = 1, w = 10, h = 8) {
   }
   const f = g.toNonIndexed(); g.dispose(); f.computeVertexNormals(); return f;
 }
+
+// Chama pintada: dois planos cruzados com shader de gota (núcleo claro, borda teal, tremor por ruído). Base em y = 0, altura 1.
+export function flameGeo(THREE) {
+  const q = [[-.5, 0, 0], [.5, 0, 0], [.5, 1, 0], [-.5, 1, 0], [0, 0, -.5], [0, 0, .5], [0, 1, .5], [0, 1, -.5]];
+  const uv = [0, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1];
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(q.flat()), 3));
+  g.setAttribute('uv', new THREE.BufferAttribute(new Float32Array(uv), 2));
+  g.setIndex([0, 1, 2, 0, 2, 3, 4, 5, 6, 4, 6, 7]); return g;
+}
+export const FLAME_FRAG = `uniform float uTime; varying vec2 vUv;
+  void main(){
+    float y = vUv.y, sway = sin(y * 5. + uTime * 3.1) * .06 * y + sin(y * 11. - uTime * 5.3) * .025 * y;
+    float x = (vUv.x - .5 - sway) * 2.;
+    float w = .78 * pow(1. - y, .55) * smoothstep(0., .14, y);   // gota: larga embaixo, ponta fina
+    float a = smoothstep(w, w * .35, abs(x));
+    float core = smoothstep(w * .55, 0., abs(x)) * (1. - smoothstep(.2, .75, y));
+    vec3 col = mix(vec3(.08, .55, .7), vec3(.55, .95, 1.), a) + vec3(.9, 1., 1.) * core * .7;
+    a *= .8 * (1. - smoothstep(.55, 1., y) * .6);
+    gl_FragColor = vec4(col * a, a);
+  }`;

@@ -36,7 +36,8 @@ Os Master Artboards **continuam ausentes do Mac**: `docs/art-bible/references/` 
 | 7 | Grande Pilar | Cilindro liso | Médio | Fuste com 24 caneluras e base ática; os pilares distantes também |
 | 8 | Oceano suspenso | Plano único com borda visível no horizonte | Médio | Refração estilizada (ondulação deslocada por ruído) e segunda camada alta e escura que cobre o horizonte |
 | 9 | Balaustrada e braseiros do campo | Cilindros de 8 lados | Médio-baixo | Balaústres em vaso e braseiros torneados |
-| 10 | Chamas dos braseiros | Cones translúcidos que leem como cristal | Baixo | **Não tratado** (pendente) |
+| 10 | Chamas dos braseiros | Cones translúcidos que leem como cristal | Baixo | Chama pintada em gota: dois planos cruzados, núcleo claro, borda teal e tremor |
+| 12 | Escadaria | Degraus de caixa | Médio | Degraus com focinho moldurado (bocel e sombra sob a quina), fundidos numa malha só |
 | 11 | Piso cerimonial | Já pintado. Bom | — | Mantido: a legibilidade das cartas é a mesma |
 
 ## 2. Benchmark reproduzível
@@ -155,12 +156,30 @@ O Material Studio precisa do servidor com API, `card-forge/serve.py` na porta 87
 
 ## 6. Limitações
 
-1. **Relevo do tímpano:** as ondas são poucas e pequenas. Leem como volutas, não como um mar esculpido.
-2. **Acrotério central:** a palmeta tem pontas demais e lê como sol.
-3. **Chamas dos braseiros:** continuam cones translúcidos.
-4. **Escadaria:** os degraus continuam caixas. O desgaste vem só do material.
-5. **Cinemática:** as chaves não foram mexidas. A melhora vem da luz rasante, do mar e da arquitetura. Não foram feitos ajustes de enquadramento nem de revelação dos guardiões.
-6. **Master Artboards:** sem eles no Mac, a comparação usa só o texto da Art Bible.
+**Corrigidas em 08/11/2026, depois da aprovação da direção:**
+
+| Pendência | Correção |
+| --- | --- |
+| Chamas | Chama pintada em gota |
+| Ondas do tímpano | Fileira contínua, com o tamanho de cada onda ajustado à altura das águas do frontão, e faixa de mar ligando as bases |
+| Palmeta | Anthemion de 5 lóbulos arredondados |
+| Escadaria | Degraus com focinho moldurado, numa malha só |
+
+Com a escadaria numa malha só e as rochas instanciadas, a cena desenha menos:
+
+| Câmera | Draw calls da V1.1 | Draw calls da V15 |
+| --- | --- | --- |
+| Partida no Alto | 123 | 95 |
+| Partida no celular | 68 | 56 |
+| Chave 1 no Alto | 223 | 227 |
+
+Uma medida curta (2 rodadas, Alto e celular, na chave 1 e na partida) não mostrou mudança de GPU além do ruído do dia.
+
+**Ainda abertas:**
+
+1. **Cinemática:** as chaves não foram mexidas. Não foram feitos ajustes de enquadramento nem de revelação dos guardiões.
+2. **Master Artboards:** continuam ausentes do Mac.
+3. **Desempenho:** os achados da seção 2 continuam abertos (LOD mobile dos guardiões no celular).
 
 ## Arquivos
 

@@ -174,12 +174,19 @@ export function createPoseidonPalace(THREE, {quality = 'high', reduceMotion = fa
   // Pátio de entrada e escadaria central (eixo x=0), com laterais inclinadas e pedestais na base.
   slab(0,0,.26,-26.6,34,14,M.platform);
   slab(0,0,.18,-18.3,13,3.2,M.platform); // caminho processional: do campo ao primeiro degrau
+  const stepParts=[]; // V15: degraus com focinho moldurado (bocel e sombra sob a quina), numa malha só
   for(let i=0;i<STEP_N;i++){
     const z=STAIR_Z-i*STEP_D,top=.35+(i+1)*STEP_R;
+    if(v15){
+      const D=STEP_D+.01,f=D;
+      stepParts.push([V15.sweep(THREE,[[0,f-.02],[top-.11,f-.02],[top-.085,f+.02],[top-.05,f+.06],[top-.02,f+.065],[top,f+.03]],STAIR_W,0),[0,0,z-D/2]]);
+    } else {
     slab(0,0,top,z,STAIR_W,STEP_D+.01,M.stairs);
     box(0,top-.02,z+STEP_D*.47,STAIR_W+.02,.04,.07,M.plinth); // quina do degrau levemente gasta
+    }
     contact(0,top,z-STEP_D*.36,STAIR_W*.98,STEP_D*.55);
   }
+  if(stepParts.length) part(V15.merge(THREE,stepParts),M.stairs,0,0,0).name='V15 · Escadaria';
   const run=(STEP_N-1)*STEP_D,rise=(STEP_N-1)*STEP_R,ang=Math.atan2(rise,run),len=Math.hypot(run,rise)+1.6;
   for(const side of [-1,1]){
     const cheek=box(side*(STAIR_W/2+.6),(.64+P)/2+.55,STAIR_Z-run/2,1.2,1.5,len,M.entab);
@@ -322,8 +329,8 @@ export function createPoseidonPalace(THREE, {quality = 'high', reduceMotion = fa
     for(let i=0;i<nD;i++){dm.makeScale(.19,.24,.2).setPosition(-8.6+.18+i*.36,ENT+1.82,dz+.09);dInst.setMatrixAt(i,dm);}
     dInst.name='V15 · Dentículos';into.add(dInst);
     // palmetas (acrotérios) de ouro
-    const palm=[],lobes=7;
-    for(let k=0;k<=lobes*2;k++){const a=Math.PI*(.06+.88*k/(lobes*2)),r=k%2?.52:1;palm.push([Math.cos(a)*r*.6,.25+Math.sin(a)*r*.75]);}
+    const palm=[]; // anthemion de 5 lóbulos arredondados
+    for(let k=0;k<=48;k++){const a=Math.PI*(.08+.84*k/48),r=.62+.38*Math.pow(Math.abs(Math.cos(5.95*(a-Math.PI/2))),1.6);palm.push([Math.cos(a)*r*.6,.25+Math.sin(a)*r*.75]);}
     const palmOutline=[[.18,0],...palm,[-.18,0]].map(([x,y])=>[x,y]);
     part(V15.extrudePoly(THREE,palmOutline,.16,.04),gold,0,C+PH+.05,fz+.12,1.5,1.5,1);
     for(const side of [-1,1]) part(V15.extrudePoly(THREE,palmOutline,.14,.035),gold,side*(PW/2-.35),C+.42,fz+.3,1,1,1);
@@ -340,9 +347,17 @@ export function createPoseidonPalace(THREE, {quality = 'high', reduceMotion = fa
     part(V15.merge(THREE,tri.map(([o,[x,y,z]])=>[V15.extrudePoly(THREE,o,.18,.04),[x,y,z]])),gold,0,0,0);
     // ondas: três de cada lado, menores em direção aos cantos (cabem sob as águas do frontão)
     const wave=V15.waveOutline(),wl=[...wave].map(([x,y])=>[-x,y]).reverse(),waves=[];
-    for(const side of [-1,1]) for(const [x0,sc] of [[1.55,1.25],[3.85,1.0],[6.0,.7]]){
-      waves.push([V15.extrudePoly(THREE,side>0?wave:wl,.22,.05),[side*x0,tb-.05,tz,sc*1.25,sc,1]]);
+    // fileira contínua de ondas: cada uma cabe sob a água do frontão; uma faixa de mar liga as bases
+    const hAt=x=>th*(1-x/(tw/2))-.3;
+    for(const side of [-1,1]){
+      let x0=1.05;
+      while(x0<tw/2-1.1){
+        const sc=Math.max(.32,Math.min(1.45,hAt(x0+1.15)/1.08));
+        waves.push([V15.extrudePoly(THREE,side>0?wave:wl,.24,.055),[side*x0,tb-.05,tz,sc*1.3,sc,1]]);
+        x0+=sc*1.3*1.18;
+      }
     }
+    waves.push([V15.extrudePoly(THREE,[[-tw/2+.5,0],[tw/2-.5,0],[tw/2-.7,.16],[-tw/2+.7,.16]],.2,.04),[0,tb-.12,tz]]);
     part(V15.merge(THREE,waves),M.capital,0,0,0);
   }
   // Alas laterais: pódio, stoa de 5 colunas encaixadas, entablamento, pavilhão com telhado piramidal.
@@ -505,12 +520,16 @@ export function createPoseidonPalace(THREE, {quality = 'high', reduceMotion = fa
   buildColumns();
   const flameMat=new THREE.MeshBasicMaterial({color:0x7fe9ff,transparent:true,opacity:.75,blending:THREE.AdditiveBlending,depthWrite:false});owned.push(flameMat);
   const flames=[];
+  // V15: chama pintada em gota (dois planos cruzados), no lugar do cone que lia como cristal.
+  const flameV15=v15?new THREE.ShaderMaterial({transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,side:THREE.DoubleSide,fog:false,uniforms:{uTime:shared.uTime},
+    vertexShader:'varying vec2 vUv; void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',fragmentShader:V15.FLAME_FRAG}):null;
+  if(flameV15) owned.push(flameV15);
   for(const a of [-47,-25,25,47]){
     const [x,z]=polar(18.4,a);
     if(v15) part(V15.lathe(THREE,V15.BRAZIER,tier?20:10),gold,x,0,z); // V15: braseiro torneado (pé, nós e taça)
     else { part(new THREE.CylinderGeometry(.12,.3,2.2,10),gold,x,1.1,z);
     part(new THREE.CylinderGeometry(.85,.35,.5,16),gold,x,2.4,z); }
-    const f=part(new THREE.ConeGeometry(.55,1.5,12),flameMat,x,3.3,z);flames.push(f);
+    const f=v15?Object.assign(part(V15.flameGeo(THREE),flameV15,x,2.48,z,1.15,1.9,1.15),{userData:{s:[1.15,1.9]}}):part(new THREE.ConeGeometry(.55,1.5,12),flameMat,x,3.3,z);flames.push(f);
     contact(x,0,z,2,2);
   }
   // Sombras de contato numa malha só (instanciada).
@@ -633,6 +652,6 @@ export function createPoseidonPalace(THREE, {quality = 'high', reduceMotion = fa
     // Transição de luz da cinemática: multiplica a iluminação do mundo (1 = luz da partida).
     setLight(k){ hemi.intensity=base.hemi*k; key.intensity=base.key*k; rim.intensity=base.rim*k; warm.intensity=base.warm*k; front.intensity=base.front*k; rakeL.intensity=base.rake*k; },
     update(t){ if(reduceMotion) return; shared.uTime.value=t; beams.forEach((b,i)=>{b.rotation.z=b.userData.tilt+Math.sin(t*.07+i*1.7)*.012;});
-      flames.forEach((f,i)=>{const k=1+Math.sin(t*5+i*2.1)*.08+Math.sin(t*11.3+i)*.04;f.scale.set(1,k,1);}); },
+      flames.forEach((f,i)=>{const k=1+Math.sin(t*5+i*2.1)*.08+Math.sin(t*11.3+i)*.04;const u=f.userData.s||[1,1];f.scale.set(u[0],k*u[1],u[0]);}); },
     dispose(){ guardianV13Disposed=true;guardianV13?.dispose(); guardianBDisposed=true;guardianB?.dispose(); portalV9Disposed=true;if(portalInstances)G.landmark.remove(portalInstances);portalV9?.dispose();capV8Disposed=true;if(capInstances)G.landmark.remove(capInstances);capV8?.dispose();v7Disposed=true;glbV7?.dispose();paintedMaps?.dispose();battlePainting?.dispose();root.traverse(n=>{ if(n.isMesh && n.geometry!==unitBox) n.geometry.dispose(); }); new Set(owned).forEach(o=>o.dispose()); root.material.dispose(); }};
 }
