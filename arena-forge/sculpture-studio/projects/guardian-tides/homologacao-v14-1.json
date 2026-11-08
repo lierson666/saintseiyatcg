@@ -1,0 +1,385 @@
+{
+  "projeto": "guardian-tides",
+  "assetId": "POS-MON-V10-001",
+  "versao": "v14-1",
+  "data": "2026-11-08T17:54:59",
+  "status": "TECHNICALLY_VALIDATED / ART_REVIEW_PENDING",
+  "tecnico": {
+    "status": "TECHNICALLY_VALIDATED",
+    "checks": [
+      {
+        "id": "arquivos",
+        "nome": "Os 4 GLB existem (LOD0, LOD1, LOD2, Mobile)",
+        "ok": true,
+        "detalhe": "ok"
+      },
+      {
+        "id": "hashes",
+        "nome": "SHA-256 dos GLB batem com SHA256SUMS",
+        "ok": true,
+        "detalhe": "ok"
+      },
+      {
+        "id": "lod0-estrutura",
+        "nome": "lod0: auditoria estrutural limpa",
+        "ok": true,
+        "detalhe": "STRUCTURE_VALID_ART_REVIEW_PENDING"
+      },
+      {
+        "id": "lod0-orcamento",
+        "nome": "lod0: triângulos entre 15000 e 30000",
+        "ok": true,
+        "detalhe": "29203"
+      },
+      {
+        "id": "lod0-partes",
+        "nome": "lod0: as 9 partes nomeadas",
+        "ok": true,
+        "detalhe": "ok"
+      },
+      {
+        "id": "lod0-materiais",
+        "nome": "lod0: materiais STATUE_AGED_IVORY, STATUE_DEEP_MARBLE, STATUE_ANCIENT_GOLD",
+        "ok": true,
+        "detalhe": "STATUE_AGED_IVORY, STATUE_ANCIENT_GOLD, STATUE_DEEP_MARBLE"
+      },
+      {
+        "id": "lod0-escala",
+        "nome": "lod0: altura 9.0–10.5 m, base até 4.0 m, pivô no chão",
+        "ok": true,
+        "detalhe": "3.37 × 9.90 × 3.34 m, pivô y 0.000"
+      },
+      {
+        "id": "lod1-estrutura",
+        "nome": "lod1: auditoria estrutural limpa",
+        "ok": true,
+        "detalhe": "STRUCTURE_VALID_ART_REVIEW_PENDING"
+      },
+      {
+        "id": "lod1-orcamento",
+        "nome": "lod1: triângulos entre 5000 e 10000",
+        "ok": true,
+        "detalhe": "8791"
+      },
+      {
+        "id": "lod1-partes",
+        "nome": "lod1: as 9 partes nomeadas",
+        "ok": true,
+        "detalhe": "ok"
+      },
+      {
+        "id": "lod1-materiais",
+        "nome": "lod1: materiais STATUE_AGED_IVORY, STATUE_DEEP_MARBLE, STATUE_ANCIENT_GOLD",
+        "ok": true,
+        "detalhe": "STATUE_AGED_IVORY__L1, STATUE_ANCIENT_GOLD__L1, STATUE_DEEP_MARBLE__L1"
+      },
+      {
+        "id": "lod1-escala",
+        "nome": "lod1: altura 9.0–10.5 m, base até 4.0 m, pivô no chão",
+        "ok": true,
+        "detalhe": "3.37 × 9.90 × 3.34 m, pivô y 0.000"
+      },
+      {
+        "id": "lod1-silhueta",
+        "nome": "lod1: caixa de cada peça a até 10 cm da do LOD0",
+        "ok": true,
+        "detalhe": "pior: TIDES__DETAILS 0.07 m"
+      },
+      {
+        "id": "lod2-estrutura",
+        "nome": "lod2: auditoria estrutural limpa",
+        "ok": true,
+        "detalhe": "STRUCTURE_VALID_ART_REVIEW_PENDING"
+      },
+      {
+        "id": "lod2-orcamento",
+        "nome": "lod2: triângulos entre 500 e 3000",
+        "ok": true,
+        "detalhe": "2933"
+      },
+      {
+        "id": "lod2-partes",
+        "nome": "lod2: as 9 partes nomeadas",
+        "ok": true,
+        "detalhe": "ok"
+      },
+      {
+        "id": "lod2-materiais",
+        "nome": "lod2: materiais STATUE_AGED_IVORY, STATUE_DEEP_MARBLE, STATUE_ANCIENT_GOLD",
+        "ok": true,
+        "detalhe": "STATUE_AGED_IVORY__L2, STATUE_ANCIENT_GOLD__L2, STATUE_DEEP_MARBLE__L2"
+      },
+      {
+        "id": "lod2-escala",
+        "nome": "lod2: altura 9.0–10.5 m, base até 4.0 m, pivô no chão",
+        "ok": true,
+        "detalhe": "3.37 × 9.90 × 3.34 m, pivô y 0.000"
+      },
+      {
+        "id": "lod2-silhueta",
+        "nome": "lod2: caixa de cada peça a até 10 cm da do LOD0",
+        "ok": true,
+        "detalhe": "pior: TIDES__CLOTH 0.00 m"
+      },
+      {
+        "id": "mobile-estrutura",
+        "nome": "mobile: auditoria estrutural limpa",
+        "ok": true,
+        "detalhe": "STRUCTURE_VALID_ART_REVIEW_PENDING"
+      },
+      {
+        "id": "mobile-orcamento",
+        "nome": "mobile: triângulos entre 5000 e 10000",
+        "ok": true,
+        "detalhe": "8791"
+      },
+      {
+        "id": "mobile-partes",
+        "nome": "mobile: as 9 partes nomeadas",
+        "ok": true,
+        "detalhe": "ok"
+      },
+      {
+        "id": "mobile-materiais",
+        "nome": "mobile: materiais STATUE_AGED_IVORY, STATUE_DEEP_MARBLE, STATUE_ANCIENT_GOLD",
+        "ok": true,
+        "detalhe": "STATUE_AGED_IVORY__L1, STATUE_ANCIENT_GOLD__L1, STATUE_DEEP_MARBLE__L1"
+      },
+      {
+        "id": "mobile-escala",
+        "nome": "mobile: altura 9.0–10.5 m, base até 4.0 m, pivô no chão",
+        "ok": true,
+        "detalhe": "3.37 × 9.90 × 3.34 m, pivô y 0.000"
+      },
+      {
+        "id": "mobile-silhueta",
+        "nome": "mobile: caixa de cada peça a até 10 cm da do LOD0",
+        "ok": true,
+        "detalhe": "pior: TIDES__DETAILS 0.07 m"
+      },
+      {
+        "id": "mobile-texturas",
+        "nome": "mobile: texturas até 512²",
+        "ok": true,
+        "detalhe": "512 px"
+      },
+      {
+        "id": "capturas",
+        "nome": "Capturas de revisão presentes (rosto, cabelo, mãos, manto, ondas, materiais, mundo)",
+        "ok": true,
+        "detalhe": "ok"
+      },
+      {
+        "id": "preserva-v13",
+        "nome": "V13 preservada (hashes iguais)",
+        "ok": true,
+        "detalhe": "ok"
+      },
+      {
+        "id": "preserva-v14",
+        "nome": "V14 preservada (hashes iguais)",
+        "ok": true,
+        "detalhe": "ok"
+      }
+    ]
+  },
+  "artistico": {
+    "status": "ART_REVIEW_PENDING",
+    "revisor": null,
+    "data": null,
+    "notas": ""
+  },
+  "criteriosArte": [
+    {
+      "criterio": "Silhueta legível nas chaves 0, 1 e 2 da cinemática; coroa, cabelo e tridente não batem no entablamento nem no teto",
+      "estado": "pendente"
+    },
+    {
+      "criterio": "Figura ereta, peso na perna de trás, pé da frente na onda; peito girado para a escadaria",
+      "estado": "pendente"
+    },
+    {
+      "criterio": "Tridente vertical perto do ombro de fora; mão com cinco dedos segurando o cabo de verdade",
+      "estado": "pendente"
+    },
+    {
+      "criterio": "A outra mão controla o manto, com contato real entre dedos e pano",
+      "estado": "pendente"
+    },
+    {
+      "criterio": "Rosto severo e sereno, mais velho; cabelo e barba em mechas; coroa de louros; sem brilho nos olhos",
+      "estado": "pendente"
+    },
+    {
+      "criterio": "Panejamento assimétrico sobre um ombro; cinto de escamas; ouro só nos acentos",
+      "estado": "pendente"
+    },
+    {
+      "criterio": "Ondas esculpidas (não líquido); base plana ligada ao plinto",
+      "estado": "pendente"
+    },
+    {
+      "criterio": "Nada lê como boneco de esferas, cilindros ou cubos",
+      "estado": "pendente"
+    },
+    {
+      "criterio": "Marfim envelhecido, mármore de veios verde-azulados, ouro gasto só no tridente, cinto e entalhes",
+      "estado": "pendente"
+    }
+  ],
+  "lods": [
+    {
+      "lod": "lod0",
+      "arquivo": "arena-forge/assets/poseidon-v14-1/guardian-tides-lod0.glb",
+      "tri": 29203,
+      "malhas": 9,
+      "materiais": 3,
+      "texturaMax": 2048,
+      "altura": 9.9,
+      "largura": 3.37,
+      "profundidade": 3.34,
+      "pivoY": 0,
+      "sha256": "930773f34f304a7c4a79009e7a9cba4575453411f9c9787d5674be8ac89f4edb",
+      "bytes": 5467728,
+      "gate": "STRUCTURE_VALID_ART_REVIEW_PENDING"
+    },
+    {
+      "lod": "lod1",
+      "arquivo": "arena-forge/assets/poseidon-v14-1/guardian-tides-lod1.glb",
+      "tri": 8791,
+      "malhas": 9,
+      "materiais": 3,
+      "texturaMax": 1024,
+      "altura": 9.9,
+      "largura": 3.37,
+      "profundidade": 3.34,
+      "pivoY": 0,
+      "sha256": "9ea8bab0f75c69fbff7766453203be9fb0eeda79f2ccf7cc283ea48c4bec2a65",
+      "bytes": 1599072,
+      "gate": "STRUCTURE_VALID_ART_REVIEW_PENDING"
+    },
+    {
+      "lod": "lod2",
+      "arquivo": "arena-forge/assets/poseidon-v14-1/guardian-tides-lod2.glb",
+      "tri": 2933,
+      "malhas": 9,
+      "materiais": 3,
+      "texturaMax": 1024,
+      "altura": 9.9,
+      "largura": 3.37,
+      "profundidade": 3.34,
+      "pivoY": 0,
+      "sha256": "07bf9bddac11af049e6d9a6da234802e49edd08f11f18b02689b2089749c3641",
+      "bytes": 1176548,
+      "gate": "STRUCTURE_VALID_ART_REVIEW_PENDING"
+    },
+    {
+      "lod": "mobile",
+      "arquivo": "arena-forge/assets/poseidon-v14-1/guardian-tides-mobile.glb",
+      "tri": 8791,
+      "malhas": 9,
+      "materiais": 3,
+      "texturaMax": 512,
+      "altura": 9.9,
+      "largura": 3.37,
+      "profundidade": 3.34,
+      "pivoY": 0,
+      "sha256": "d2e0083834bc441fd294253a695db0795b4fb3db9dd837ae099063ac63eb087d",
+      "bytes": 549716,
+      "gate": "STRUCTURE_VALID_ART_REVIEW_PENDING"
+    }
+  ],
+  "comparacao": {
+    "versao": "v14",
+    "lods": [
+      {
+        "lod": "lod0",
+        "tri": 29182
+      },
+      {
+        "lod": "lod1",
+        "tri": 8742
+      },
+      {
+        "lod": "lod2",
+        "tri": 2566
+      },
+      {
+        "lod": "mobile",
+        "tri": 8742
+      }
+    ]
+  },
+  "testes": [
+    {
+      "nome": "V14.1 (inspetor e mundo)",
+      "script": "tools/test-sculpture-v14-1.py",
+      "passou": 8,
+      "esperado": 8,
+      "errosDePagina": "nenhum",
+      "ok": true
+    },
+    {
+      "nome": "V14 (regressão)",
+      "script": "tools/test-sculpture-v14.py",
+      "passou": 8,
+      "esperado": 8,
+      "errosDePagina": "nenhum",
+      "ok": true
+    },
+    {
+      "nome": "V13 (regressão)",
+      "script": "tools/test-sculpture-studio.py",
+      "passou": 15,
+      "esperado": 15,
+      "errosDePagina": "nenhum",
+      "ok": true
+    }
+  ],
+  "capturas": {
+    "pasta": "docs/img/sculpture-studio/v14-1",
+    "grupos": {
+      "Silhueta geral": [
+        "compare-folha-corpo.png",
+        "compare-tres-quartos.png"
+      ],
+      "Rosto": [
+        "compare-rosto-frente.png",
+        "compare-rosto-tres-quartos.png"
+      ],
+      "Cabelo": [
+        "compare-rosto-perfil.png",
+        "compare-rosto-costas.png"
+      ],
+      "Mãos": [
+        "compare-mao-direita.png",
+        "compare-mao-esquerda.png",
+        "compare-mao-esquerda-frente.png"
+      ],
+      "Manto": [
+        "compare-costas.png",
+        "compare-esquerda.png",
+        "compare-torso-frente.png"
+      ],
+      "Ondas": [
+        "compare-onda-lado.png",
+        "compare-onda-costas.png",
+        "compare-pedestal.png",
+        "compare-pedestal-frente.png"
+      ],
+      "Materiais": [
+        "material-frente.png",
+        "material-costas.png",
+        "material-esquerda.png",
+        "material-direita.png",
+        "material-tres-quartos.png"
+      ],
+      "No mundo": [
+        "mundo-cinematica-chave0.png",
+        "mundo-cinematica-chave1.png",
+        "mundo-cinematica-chave2.png",
+        "mundo-partida.png"
+      ]
+    }
+  }
+}

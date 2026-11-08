@@ -5,6 +5,11 @@
 // metallicRoughness/occlusion (ORM) em imagens embutidas (JPEG/PNG). Qualquer coisa fora disso é recusada.
 // Inclui o apoio arquitetônico sob o pedestal: o pódio vai só até x = ±9,2; o guardião fica em x = -10,8.
 export const GUARDIAN_TIDES = {position: [-10.8, 4.41, -34.8], url: './assets/poseidon-v13/guardian-tides-lod0.glb', yaw: 0};   // o giro de ~10° para o templo já está na pose (raiz do rig)
+// Posição B (direita do mundo): Guardião das Profundezas. Só a prévia em argila existe (DEV), atrás de ?sculptDepthsClay=1.
+export const GUARDIAN_DEPTHS = {position: [10.8, 4.41, -34.8], url: './assets/poseidon-depths-clay/guardian-depths-clay.glb', yaw: 0, dev: true};
+export function depthsClayFlag() {
+  try { return new URLSearchParams(location.search).get('sculptDepthsClay') === '1'; } catch { return false; }
+}
 
 const COMP = {5120: Int8Array, 5121: Uint8Array, 5122: Int16Array, 5123: Uint16Array, 5125: Uint32Array, 5126: Float32Array};
 const SIZE = {SCALAR: 1, VEC2: 2, VEC3: 3, VEC4: 4};

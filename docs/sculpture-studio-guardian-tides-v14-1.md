@@ -51,9 +51,9 @@ O build é `guardian_tides_build.py -- --stage game-v14-1`, com os mesmos materi
 
 | | V14 | V14.1 |
 | --- | --- | --- |
-| LOD0 | 29.182 tri | 29.594 tri |
-| LOD1 | 8.742 tri | 8.896 tri |
-| LOD2 | 2.566 tri | 2.576 tri |
+| LOD0 | 29.182 tri | 29.609 tri |
+| LOD1 | 8.742 tri | 8.899 tri |
+| LOD2 | 2.566 tri | 2.956 tri |
 | Mobile | LOD1 + 512² | LOD1 + 512² |
 | Malhas, materiais | 9, 3 | 9, 3 |
 
@@ -65,14 +65,22 @@ O build é `guardian_tides_build.py -- --stage game-v14-1`, com os mesmos materi
 | Mármore | 8–24 % |
 | Ouro | 1,1–1,6 % |
 
-**Hashes (SHA-256, `arena-forge/assets/poseidon-v14-1/SHA256SUMS`):**
+**Correção do LOD2 na homologação (08/11/2026).** A homologação mediu a caixa de cada peça por LOD e achou um defeito que vinha da V13:
+
+- no LOD2 a base do plinto ficava 8 cm acima do chão;
+- a ponta do tridente perdia 0,77 m;
+- o alto do cabelo perdia 0,5 m.
+
+O build agora segura os vértices extremos de cada peça na decimação e, se a caixa ainda encolher mais de 10 cm, decima de novo com mais triângulos. Os GLBs da V14.1 foram refeitos; a V13 e a V14 continuam com os hashes antigos.
+
+**Hashes (SHA-256, `arena-forge/assets/poseidon-v14-1/SHA256SUMS`, depois da correção):**
 
 | GLB | SHA-256 |
 | --- | --- |
-| `guardian-tides-lod0.glb` | `878d7bedf5940f51bc6a36824cd6f37eb3f8519e679606617ab908e273d56009` |
-| `guardian-tides-lod1.glb` | `851f1d0e58af42f23e6ebd97f33bbdea7756f795d57a95355c6f8b1a915c4d7d` |
-| `guardian-tides-lod2.glb` | `583c685c1a1b46251ece49286a20378aa67548da6de2c2d59e57ddfdc269dce9` |
-| `guardian-tides-mobile.glb` | `0280a5ef3cee970b2df4b8c4a916f9469949065f57d06b87f9ec55ef60b4068c` |
+| `guardian-tides-lod0.glb` | `930773f34f304a7c4a79009e7a9cba4575453411f9c9787d5674be8ac89f4edb` |
+| `guardian-tides-lod1.glb` | `9ea8bab0f75c69fbff7766453203be9fb0eeda79f2ccf7cc283ea48c4bec2a65` |
+| `guardian-tides-lod2.glb` | `07bf9bddac11af049e6d9a6da234802e49edd08f11f18b02689b2089749c3641` |
+| `guardian-tides-mobile.glb` | `d2e0083834bc441fd294253a695db0795b4fb3db9dd837ae099063ac63eb087d` |
 
 ## No mundo e no inspetor
 

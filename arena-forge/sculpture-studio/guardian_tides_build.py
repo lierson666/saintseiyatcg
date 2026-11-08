@@ -135,16 +135,34 @@ def _split(o, groups):
     return out
 
 
+def _protect_extremes(o, k=8):
+    """Grupo com os k vértices mais extremos em cada ponta de cada eixo da peça. A decimação não mexe neles:
+    sem isso o LOD2 perdia a base do plinto (8 cm acima do chão), a ponta do tridente e o alto do cabelo.
+    Poucos vértices de propósito: uma faixa inteira travava a decimação nas malhas densas."""
+    co = np.array([v.co[:] for v in o.data.vertices])
+    if len(co) < 8 * k: return None
+    ids = set()
+    for a in range(3):
+        order = np.argsort(co[:, a]); ids.update(order[:k].tolist()); ids.update(order[-k:].tolist())
+    g = o.vertex_groups.new(name='EXTREMOS'); g.add([int(i) for i in ids], 1.0, 'REPLACE')
+    return g.name
+
+
 def _decimate(o, target):
+    keep = _protect_extremes(o)
     for _ in range(4):   # malhas muito densas (cinto, cabelo no LOD2) não chegam à meta numa passada só
         t = tris(o)
         if t <= target * 1.05: break
         m = o.modifiers.new('lod', 'DECIMATE'); m.ratio = max(target / t, 0.02); m.use_collapse_triangulate = True
+        if keep: m.vertex_group = keep; m.invert_vertex_group = True   # decima tudo menos as pontas
         apply_modifiers(o)
     m = o.modifiers.new('tri', 'TRIANGULATE'); apply_modifiers(o)
     if tris(o) > target * 1.15:
         # peças pequenas soltas (folhas da coroa) não colapsam: no LOD distante saem as menores até caber
         bm = bmesh.new(); bm.from_mesh(o.data)
+        dl = bm.verts.layers.deform.active
+        ki = o.vertex_groups[keep].index if keep else -1
+        pinned = (lambda f: any(ki in v[dl] for v in f.verts)) if (keep and dl) else (lambda f: False)
         isl, seen = [], set()
         for f in bm.faces:
             if f.index in seen: continue
@@ -158,11 +176,27 @@ def _decimate(o, target):
             isl.append(part)
         isl.sort(key=lambda p: sum(f.calc_area() for f in p))
         total = sum(len(p) for p in isl); drop = []
-        for p in isl[:-1]:                    # a maior ilha (a peça em si) nunca sai
+        for p in isl[:-1]:                    # a maior ilha (a peça em si) nunca sai, nem ilha que segura uma ponta
             if total <= target: break
+            if any(pinned(f) for f in p): continue
             drop += p; total -= len(p)
         bmesh.ops.delete(bm, geom=drop, context='FACES'); bm.to_mesh(o.data); bm.free()
+    if keep: o.vertex_groups.remove(o.vertex_groups[keep])
     for p in o.data.polygons: p.use_smooth = True
+    return o
+
+
+def _decimate_keep_shape(o, target, tol=0.03, tries=3):
+    """Decima e confere a caixa da peça: se alguma ponta encolher mais que `tol` (3 cm no corpo base, ~10 cm no
+    mundo), volta à malha original e decima de novo com 60 % mais triângulos. O LOD2 perdia as pontas do tridente."""
+    ext = lambda ob: (lambda c: (c.min(0), c.max(0)))(np.array([v.co[:] for v in ob.data.vertices]))
+    src = o.data.copy(); lo0, hi0 = ext(o)
+    for k in range(tries):
+        _decimate(o, target)
+        lo, hi = ext(o)
+        if max(np.abs(lo - lo0).max(), np.abs(hi - hi0).max()) <= tol or k == tries - 1: break
+        old = o.data; o.data = src.copy(); bpy.data.meshes.remove(old); target = int(target * 1.6)
+    bpy.data.meshes.remove(src)
     return o
 
 
@@ -224,7 +258,7 @@ def low_poly(hi, low_body, lod):
         o = objs[0] if len(objs) == 1 else _join(objs, f'L{lod}_{name}')
         for g in o.vertex_groups[:]: o.vertex_groups.remove(g)
         o.name = f'L{lod}_{name}'
-        low[name] = _decimate(o, max(int(LOD0[name] * f), 150))
+        low[name] = _decimate_keep_shape(o, max(int(LOD0[name] * f), 150))
     return low
 
 

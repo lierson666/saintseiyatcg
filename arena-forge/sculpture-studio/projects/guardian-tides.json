@@ -1,0 +1,236 @@
+{
+  "id": "guardian-tides",
+  "nome": "Guardião das Marés",
+  "nome_en": "Guardian of the Tides",
+  "assetId": "POS-MON-V10-001",
+  "arena": "poseidon",
+  "posicao": {
+    "lado": "esquerda",
+    "ancora": [
+      -10.8,
+      4.41,
+      -34.8
+    ]
+  },
+  "estagio": "ART_REVIEW",
+  "fontes": [
+    "docs/art-bible/POSEIDON_V11_SCULPTURE_BIBLE.md",
+    "docs/art-bible/POSEIDON_V10_GUARDIAN_ART_PRODUCTION.md",
+    "docs/art-bible/POSEIDON_V14_ART_REVIEW_DECISIONS.md"
+  ],
+  "etapas": {
+    "referencias": {
+      "estado": "feito",
+      "artefatos": [
+        "docs/art-bible/POSEIDON_V11_SCULPTURE_BIBLE.md"
+      ]
+    },
+    "modelagem": {
+      "estado": "feito",
+      "artefatos": [
+        "arena-forge/sculpture-studio/guardian_tides_build.py",
+        "arena-forge/sculpture-studio/guardian_tides_drapery.py",
+        "arena-forge/sculpture-studio/guardian_tides_hair.py",
+        "arena-forge/sculpture-studio/guardian_tides_pedestal.py",
+        "arena-forge/sculpture-studio/guardian_tides_trident.py"
+      ]
+    },
+    "rig_pose": {
+      "estado": "feito",
+      "artefatos": [
+        "arena-forge/sculpture-studio/guardian_tides_body.py"
+      ]
+    },
+    "escultura": {
+      "estado": "feito",
+      "artefatos": [
+        "arena-forge/sculpture-studio/guardian_tides_v14.py",
+        "arena-forge/sculpture-studio/guardian_tides_v14_1.py"
+      ]
+    },
+    "materiais": {
+      "estado": "feito",
+      "artefatos": [
+        "arena-forge/sculpture-studio/guardian_tides_build.py"
+      ]
+    },
+    "lods": {
+      "estado": "feito",
+      "artefatos": [
+        "arena-forge/assets/poseidon-v14-1/guardian-tides-build.json"
+      ]
+    },
+    "exportacao": {
+      "estado": "feito",
+      "artefatos": [
+        "arena-forge/assets/poseidon-v14-1/SHA256SUMS"
+      ]
+    },
+    "comparacao": {
+      "estado": "feito",
+      "artefatos": [
+        "arena-forge/sculpture-studio/gate_compare.py",
+        "docs/img/sculpture-studio/v14-1/compare-folha-corpo.png"
+      ]
+    },
+    "validacao": {
+      "estado": "feito",
+      "artefatos": [
+        "tools/sculpture-homologate.py",
+        "tools/test-sculpture-v14-1.py",
+        "tools/test-sculpture-homologacao.py"
+      ]
+    },
+    "versionamento": {
+      "estado": "feito",
+      "artefatos": [
+        "a95e077"
+      ]
+    }
+  },
+  "glb": "guardian-tides-{lod}.glb",
+  "prefixoPartes": "TIDES__",
+  "partes": [
+    "PEDESTAL",
+    "WAVES",
+    "BODY",
+    "FACE",
+    "HAIR_BEARD",
+    "CLOTH",
+    "HAND_GRIP",
+    "TRIDENT",
+    "DETAILS"
+  ],
+  "materiais": [
+    "STATUE_AGED_IVORY",
+    "STATUE_DEEP_MARBLE",
+    "STATUE_ANCIENT_GOLD"
+  ],
+  "orcamento": {
+    "lod0": [
+      15000,
+      30000
+    ],
+    "lod1": [
+      5000,
+      10000
+    ],
+    "lod2": [
+      500,
+      3000
+    ],
+    "mobile": [
+      5000,
+      10000
+    ],
+    "texturaMobile": 512,
+    "altura": [
+      9.0,
+      10.5
+    ],
+    "base": 4.0
+  },
+  "versoes": [
+    {
+      "id": "v13",
+      "nome": "V13",
+      "pasta": "arena-forge/assets/poseidon-v13",
+      "flag": "sculptV13",
+      "relatorio": "docs/sculpture-studio-guardian-tides.md",
+      "commit": "a95e077"
+    },
+    {
+      "id": "v14",
+      "nome": "V14",
+      "pasta": "arena-forge/assets/poseidon-v14",
+      "flag": "sculptV14",
+      "relatorio": "docs/sculpture-studio-guardian-tides-v14.md",
+      "commit": "a95e077"
+    },
+    {
+      "id": "v14-1",
+      "nome": "V14.1",
+      "pasta": "arena-forge/assets/poseidon-v14-1",
+      "flag": "sculptV141",
+      "relatorio": "docs/sculpture-studio-guardian-tides-v14-1.md",
+      "commit": "a95e077"
+    }
+  ],
+  "atual": "v14-1",
+  "anterior": "v14",
+  "capturas": {
+    "pasta": "docs/img/sculpture-studio/v14-1",
+    "grupos": {
+      "Silhueta geral": [
+        "compare-folha-corpo.png",
+        "compare-tres-quartos.png"
+      ],
+      "Rosto": [
+        "compare-rosto-frente.png",
+        "compare-rosto-tres-quartos.png"
+      ],
+      "Cabelo": [
+        "compare-rosto-perfil.png",
+        "compare-rosto-costas.png"
+      ],
+      "Mãos": [
+        "compare-mao-direita.png",
+        "compare-mao-esquerda.png",
+        "compare-mao-esquerda-frente.png"
+      ],
+      "Manto": [
+        "compare-costas.png",
+        "compare-esquerda.png",
+        "compare-torso-frente.png"
+      ],
+      "Ondas": [
+        "compare-onda-lado.png",
+        "compare-onda-costas.png",
+        "compare-pedestal.png",
+        "compare-pedestal-frente.png"
+      ],
+      "Materiais": [
+        "material-frente.png",
+        "material-costas.png",
+        "material-esquerda.png",
+        "material-direita.png",
+        "material-tres-quartos.png"
+      ],
+      "No mundo": [
+        "mundo-cinematica-chave0.png",
+        "mundo-cinematica-chave1.png",
+        "mundo-cinematica-chave2.png",
+        "mundo-partida.png"
+      ]
+    }
+  },
+  "testes": [
+    {
+      "nome": "V14.1 (inspetor e mundo)",
+      "script": "tools/test-sculpture-v14-1.py",
+      "esperado": 8
+    },
+    {
+      "nome": "V14 (regressão)",
+      "script": "tools/test-sculpture-v14.py",
+      "esperado": 8
+    },
+    {
+      "nome": "V13 (regressão)",
+      "script": "tools/test-sculpture-studio.py",
+      "esperado": 15
+    }
+  ],
+  "criteriosArte": [
+    "Silhueta legível nas chaves 0, 1 e 2 da cinemática; coroa, cabelo e tridente não batem no entablamento nem no teto",
+    "Figura ereta, peso na perna de trás, pé da frente na onda; peito girado para a escadaria",
+    "Tridente vertical perto do ombro de fora; mão com cinco dedos segurando o cabo de verdade",
+    "A outra mão controla o manto, com contato real entre dedos e pano",
+    "Rosto severo e sereno, mais velho; cabelo e barba em mechas; coroa de louros; sem brilho nos olhos",
+    "Panejamento assimétrico sobre um ombro; cinto de escamas; ouro só nos acentos",
+    "Ondas esculpidas (não líquido); base plana ligada ao plinto",
+    "Nada lê como boneco de esferas, cilindros ou cubos",
+    "Marfim envelhecido, mármore de veios verde-azulados, ouro gasto só no tridente, cinto e entalhes"
+  ],
+  "proximo": "Revisão artística do autor na aba Homologação do Sculpture Studio"
+}

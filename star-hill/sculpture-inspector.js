@@ -5,6 +5,7 @@
 import * as THREE from './vendor/three-0.160.0.module.min.js';
 import {OrbitControls} from './vendor/OrbitControls-0.160.0.js';
 import {GLTFLoader} from './vendor/GLTFLoader-0.160.0.js';
+import {css as projCss, renderHomologation, renderProjects} from './sculpture-projects.js?v=20261108-sp2';
 
 const BASE = '../arena-forge/assets/poseidon-v13/';
 const LODS = [['lod0', 'LOD0 · desktop (texturas 2048)'], ['lod1', 'LOD1 · médio'], ['lod2', 'LOD2 · distante'], ['mobile', 'Mobile (LOD1 + 512²)'],
@@ -33,9 +34,14 @@ const css = `
 let st = null;   // estado do inspetor (um por montagem)
 
 export async function mountSculpture(host, ctx, nav) {
-  if (!document.querySelector('#ss-style')) document.head.append(Object.assign(document.createElement('style'), {id: 'ss-style', textContent: css}));
+  if (!document.querySelector('#ss-style')) document.head.append(Object.assign(document.createElement('style'), {id: 'ss-style', textContent: css + projCss}));
   st?.dispose();
-  host.innerHTML = `${nav}<section class="ss" aria-label="Sculpture Studio">
+  host.innerHTML = `${nav}<div class="ss-tabs" role="group" aria-label="Sculpture Studio">
+      <button class="secondary" data-ss-tab="inspetor" aria-pressed="true">Inspetor</button>
+      <button class="secondary" data-ss-tab="projetos" aria-pressed="false">Projetos</button>
+      <button class="secondary" data-ss-tab="homologacao" aria-pressed="false">Homologação</button></div>
+    <div class="ss-proj" data-ss="proj" hidden></div>
+    <section class="ss" aria-label="Sculpture Studio">
     <div class="ss-col">
       <fieldset><legend>Modelo</legend>
         <label>GLB do Sculpture Studio <select data-ss="lod">${LODS.map(([k, l]) => `<option value="${k}">${l}</option>`).join('')}</select></label>
@@ -67,12 +73,22 @@ export async function mountSculpture(host, ctx, nav) {
       <fieldset><legend>Texturas</legend><div class="ss-tex" data-ss="tex"></div></fieldset>
       <fieldset><legend>Captura</legend><button data-ss-act="shot">Salvar PNG da vista</button></fieldset>
       <p class="ss-note">Escultura gerada por script no Blender (base anatômica CC0). Aprovação artística é do autor: este inspetor só mede e mostra.</p>
-    </div></section>`;
+    </div><div class="ss-hom" data-ss="hom"></div></section>`;
   st = createInspector(host.querySelector('[data-ss="stage"]'), host);
   try {
     const proj = await ctx.api(`producao?id=${PID}`);
     host.querySelector('[data-ss="ab"]').insertAdjacentHTML('beforeend', proj.artboards.map(b => `<option value="${esc(b.arquivo)}">${esc(b.nome)} v${b.versao}</option>`).join(''));
   } catch { /* sem projeto de produção: o seletor fica só com "Nenhum" */ }
+  const sec = host.querySelector('section.ss'), proj = host.querySelector('[data-ss="proj"]');
+  const tab = async (t, id = 'guardian-tides') => {
+    host.querySelectorAll('[data-ss-tab]').forEach(b => b.setAttribute('aria-pressed', b.dataset.ssTab === t));
+    sec.hidden = t === 'projetos'; proj.hidden = t !== 'projetos'; sec.classList.toggle('hom', t === 'homologacao');
+    if (t === 'projetos') return renderProjects(proj, pid => tab('homologacao', pid));
+    if (t === 'homologacao') return renderHomologation(host.querySelector('[data-ss="hom"]'), id, st);
+    st.setSpin(false);
+  };
+  host.querySelector('.ss-tabs').onclick = e => { const b = e.target.closest('[data-ss-tab]'); if (b) tab(b.dataset.ssTab); };
+  st.tab = tab;
   await st.load(BASE + 'guardian-tides-lod0.glb', 'guardian-tides-lod0.glb');
   st.compareLods();
 }
@@ -226,7 +242,8 @@ function createInspector(stage, root) {
   };
   root.addEventListener('click', onClick); root.addEventListener('change', onInput); root.addEventListener('input', onInput);
   frame();
-  const api = {load, compareLods, view, stats: () => model && stats(model), renderer,
+  const setSpin = on => { spin = on; root.querySelector('[data-ss-act="spin"]')?.setAttribute('aria-pressed', on); };
+  const api = {load, compareLods, view, setSpin, stats: () => model && stats(model), renderer,
     dispose() { cancelAnimationFrame(raf); ro.disconnect(); root.removeEventListener('click', onClick); root.removeEventListener('change', onInput); root.removeEventListener('input', onInput); if (model) dispose(model); renderer.dispose(); controls.dispose(); }};
   window.__sculptureStudio = api;   // usado pelos testes (tools/test-sculpture-studio.py)
   return api;

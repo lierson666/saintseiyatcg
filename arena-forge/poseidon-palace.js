@@ -11,7 +11,7 @@ import {attachPoseidonPaintedMaps} from './poseidon-painted-maps.js';
 import {attachPoseidonBattlefieldPainting} from './poseidon-battlefield-paint.js';
 import {addPoseidonV6Sculptures} from './poseidon-v6-sculpture.js';
 import {loadPoseidonSculptGLB} from './poseidon-v7-glb-loader.js';
-import {guardianFlag,guardianUrl, loadGuardianTides} from './poseidon-v13-guardian.js';
+import {GUARDIAN_DEPTHS,depthsClayFlag,guardianFlag,guardianUrl, loadGuardianTides} from './poseidon-v13-guardian.js';
 // Abertura padrão de Poseidon (editável no Arena Forge → Produção → Cinemática; o jogo lê arena-forge/cinematics/poseidon.json).
 // Cada chave: pos, look (ponto focal), fov, roll (°), dur (ms até chegar nela; na primeira, tempo parado no plano de abertura), ease, stage, light (1 = luz da partida), vfx, sound.
 // A última chave é sempre a câmera competitiva (bloqueada): a cinemática termina exatamente nela.
@@ -217,6 +217,14 @@ export function createPoseidonPalace(THREE, {quality = 'high', reduceMotion = fa
     loadGuardianTides(THREE,{parent:G.landmark,material:M.platform,baseUrl:import.meta.url,url:guardianUrl()})
       .then(v=>{if(guardianV13Disposed){v.dispose();return;}guardianV13=v;root.userData.guardianV13='ready';})
       .catch(err=>{root.userData.guardianV13='unavailable';console.warn('[POSEIDON V13] guardian GLB not loaded',err);});
+  }
+  // Posição B (só desenvolvimento): prévia em argila do Guardião das Profundezas, apenas com ?sculptDepthsClay=1.
+  let guardianB=null,guardianBDisposed=false;
+  if(depthsClayFlag()){
+    root.userData.guardianB='loading';
+    loadGuardianTides(THREE,{parent:G.landmark,material:M.platform,baseUrl:import.meta.url,...GUARDIAN_DEPTHS})
+      .then(v=>{if(guardianBDisposed){v.dispose();return;}v.root.name='GUARDIAN_DEPTHS_CLAY_DEV';guardianB=v;root.userData.guardianB='ready';})
+      .catch(err=>{root.userData.guardianB='unavailable';console.warn('[POSEIDON] guardian B clay not loaded',err);});
   }
 
   // Pórtico: 2 fileiras de 4 colunas, simétricas no eixo x=0 (vão central largo para a escadaria).
@@ -510,5 +518,5 @@ export function createPoseidonPalace(THREE, {quality = 'high', reduceMotion = fa
     setLight(k){ hemi.intensity=base.hemi*k; key.intensity=base.key*k; rim.intensity=base.rim*k; warm.intensity=base.warm*k; front.intensity=base.front*k; },
     update(t){ if(reduceMotion) return; shared.uTime.value=t; beams.forEach((b,i)=>{b.rotation.z=b.userData.tilt+Math.sin(t*.07+i*1.7)*.012;});
       flames.forEach((f,i)=>{const k=1+Math.sin(t*5+i*2.1)*.08+Math.sin(t*11.3+i)*.04;f.scale.set(1,k,1);}); },
-    dispose(){ guardianV13Disposed=true;guardianV13?.dispose(); portalV9Disposed=true;if(portalInstances)G.landmark.remove(portalInstances);portalV9?.dispose();capV8Disposed=true;if(capInstances)G.landmark.remove(capInstances);capV8?.dispose();v7Disposed=true;glbV7?.dispose();paintedMaps?.dispose();battlePainting?.dispose();root.traverse(n=>{ if(n.isMesh && n.geometry!==unitBox) n.geometry.dispose(); }); new Set(owned).forEach(o=>o.dispose()); root.material.dispose(); }};
+    dispose(){ guardianV13Disposed=true;guardianV13?.dispose(); guardianBDisposed=true;guardianB?.dispose(); portalV9Disposed=true;if(portalInstances)G.landmark.remove(portalInstances);portalV9?.dispose();capV8Disposed=true;if(capInstances)G.landmark.remove(capInstances);capV8?.dispose();v7Disposed=true;glbV7?.dispose();paintedMaps?.dispose();battlePainting?.dispose();root.traverse(n=>{ if(n.isMesh && n.geometry!==unitBox) n.geometry.dispose(); }); new Set(owned).forEach(o=>o.dispose()); root.material.dispose(); }};
 }

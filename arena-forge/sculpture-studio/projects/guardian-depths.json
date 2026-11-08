@@ -1,0 +1,144 @@
+{
+  "id": "guardian-depths",
+  "nome": "Guardião das Profundezas",
+  "nome_en": "Guardian of the Depths",
+  "assetId": "POS-MON-V10-002",
+  "arena": "poseidon",
+  "posicao": {
+    "lado": "direita",
+    "ancora": [
+      10.8,
+      4.41,
+      -34.8
+    ]
+  },
+  "estagio": "CONCEPT",
+  "proximo": "Revisão de silhueta pelo autor (prévia em argila); só depois a modelagem detalhada",
+  "nota": "Prévia em argila para revisão de silhueta. Sem materiais, sem LODs, sem versão homologável.",
+  "fontes": [
+    "docs/art-bible/POSEIDON_V11_SCULPTURE_BIBLE.md",
+    "docs/art-bible/POSEIDON_V10_GUARDIAN_ART_PRODUCTION.md"
+  ],
+  "etapas": {
+    "referencias": {
+      "estado": "feito",
+      "artefatos": [
+        "docs/art-bible/POSEIDON_V11_SCULPTURE_BIBLE.md",
+        "docs/art-bible/POSEIDON_V10_GUARDIAN_ART_PRODUCTION.md"
+      ]
+    },
+    "modelagem": {
+      "estado": "andamento",
+      "artefatos": [
+        "arena-forge/sculpture-studio/guardian_depths.py",
+        "arena-forge/sculpture-studio/sculpt_kit.py"
+      ]
+    },
+    "rig_pose": {
+      "estado": "andamento",
+      "artefatos": [
+        "arena-forge/sculpture-studio/guardian_depths.py"
+      ]
+    },
+    "materiais": {
+      "estado": "pendente",
+      "artefatos": []
+    },
+    "escultura": {
+      "estado": "pendente",
+      "artefatos": []
+    },
+    "lods": {
+      "estado": "pendente",
+      "artefatos": []
+    },
+    "exportacao": {
+      "estado": "andamento",
+      "artefatos": [
+        "arena-forge/assets/poseidon-depths-clay/guardian-depths-clay.glb"
+      ]
+    },
+    "comparacao": {
+      "estado": "feito",
+      "artefatos": [
+        "arena-forge/sculpture-studio/sheet_ab.py",
+        "docs/img/sculpture-studio/guardian-depths/folha-ab-silhueta-frente.png"
+      ]
+    },
+    "validacao": {
+      "estado": "andamento",
+      "artefatos": [
+        "tools/test-sculpture-homologacao.py"
+      ]
+    },
+    "versionamento": {
+      "estado": "pendente",
+      "artefatos": []
+    }
+  },
+  "glb": "guardian-depths-{lod}.glb",
+  "prefixoPartes": "DEPTHS__",
+  "partes": [
+    "PEDESTAL",
+    "WAVES",
+    "BODY",
+    "HAIR",
+    "CLOTH",
+    "TRIDENT",
+    "DETAILS"
+  ],
+  "materiais": [
+    "STATUE_AGED_IVORY",
+    "STATUE_DEEP_MARBLE",
+    "STATUE_ANCIENT_GOLD"
+  ],
+  "orcamento": {
+    "lod0": [
+      15000,
+      30000
+    ],
+    "lod1": [
+      5000,
+      10000
+    ],
+    "lod2": [
+      500,
+      3000
+    ],
+    "mobile": [
+      5000,
+      10000
+    ],
+    "texturaMobile": 512,
+    "altura": [
+      8.0,
+      10.5
+    ],
+    "base": 4.0
+  },
+  "versoes": [],
+  "atual": null,
+  "previas": [
+    "docs/img/sculpture-studio/guardian-depths/folha-ab-silhueta-frente.png",
+    "docs/img/sculpture-studio/guardian-depths/folha-ab-silhueta-tres-quartos.png",
+    "docs/img/sculpture-studio/guardian-depths/folha-ab-argila-tres-quartos.png",
+    "docs/img/sculpture-studio/guardian-depths/depths-argila-frente.png",
+    "docs/img/sculpture-studio/guardian-depths/depths-argila-esquerda.png",
+    "docs/img/sculpture-studio/guardian-depths/depths-argila-costas.png",
+    "docs/img/sculpture-studio/guardian-depths/depths-silhueta-frente.png",
+    "docs/img/sculpture-studio/guardian-depths/depths-silhueta-esquerda.png",
+    "docs/img/sculpture-studio/guardian-depths/mundo-ab-chave0.png",
+    "docs/img/sculpture-studio/guardian-depths/mundo-ab-chave1.png",
+    "docs/img/sculpture-studio/guardian-depths/mundo-ab-chave2.png"
+  ],
+  "criteriosArte": [
+    "Silhueta em triângulo largo, diferente da vertical do Guardião das Marés; nada espelhado",
+    "Joelho dobrado, tronco em contrarrotação; postura vigilante e imóvel",
+    "Tridente do lado de fora, na diagonal, com a ponteira apoiada no pedestal",
+    "A outra mão estendida para fora, calma e de comando",
+    "Mandíbula mais larga, cabelo preso, mais jovem; rosto não é cópia do Guardião das Marés",
+    "Capa marinha dobrada sobre as costas e a cintura; ombreira com concha entalhada",
+    "Pedestal próprio: volutas de náutilo, onda em serpente, concha; massa estável, sem pontas soltas",
+    "Coroa, cabelo e tridente não batem no entablamento nem no teto nas chaves 0, 1 e 2"
+  ]
+}
