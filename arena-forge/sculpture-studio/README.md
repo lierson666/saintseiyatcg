@@ -32,6 +32,13 @@ B="$HOME/Applications/Blender 4.5 LTS.app/Contents/MacOS/Blender"
 "$B" -b --factory-startup --python arena-forge/sculpture-studio/guardian_tides_build.py -- --stage game
 ```
 
+**Build genérico de outro projeto.** Lê a seção `build` de `projects/<id>.json`: prefixo e nomes das partes, objetos do high poly por parte, materiais, orçamento do LOD0, pivô, partes de casca (`fechar`) e arquivos. Sem `--projeto`, o build usa os valores do Guardião das Marés, e a V14.1 sai com os mesmos hashes.
+
+```bash
+"$B" -b --factory-startup --python arena-forge/sculpture-studio/guardian_depths.py -- v1
+"$B" -b --factory-startup --python arena-forge/sculpture-studio/guardian_tides_build.py -- --stage none --projeto guardian-depths --versao v1
+```
+
 **Renders de argila do quality gate.**
 
 ```bash
@@ -52,9 +59,9 @@ B="$HOME/Applications/Blender 4.5 LTS.app/Contents/MacOS/Blender"
 | `guardian_tides_build.py` | Montagem, LOD0/1/2, atlas UV por material, bake, acabamento pintado e exportação GLB. |
 | `gate_renders.py` | Imagens de argila do quality gate em `docs/img/sculpture-studio/`. |
 | `fetch_assets.py` | Baixa a base CC0 e confere o SHA-256. |
-| `sculpt_kit.py` | Kit genérico para qualquer escultura: figura com rig, pose descrita como dados, escultura em repouso, punho, apoio no chão, saia por envelope, folha de pano, calota de concha e vistas de silhueta. |
+| `sculpt_kit.py` | Kit genérico para qualquer escultura: figura com rig, pose descrita como dados, escultura em repouso, punho, apoio no chão, saia por envelope, folha de pano, calota de concha, tira em volta de membro (`strap`), faixa sobre a pele (`ribbon`) e vistas de silhueta. |
 | `sheet_ab.py` | Folha lado a lado de duas esculturas, com a mesma câmera e a mesma escala. Roda fora do Blender. |
-| `guardian_depths.py` | Guardião das Profundezas: prévia em argila (`-- clay`, `-- shots`), GLB de argila para composição (`-- glb`) e vistas da V14.1 das Marés com a mesma câmera (`-- tides`). |
+| `guardian_depths.py` | Guardião das Profundezas: prévia em argila (`-- clay`, `-- shots`), GLB de argila para composição (`-- glb`), vistas da V14.1 das Marés com a mesma câmera (`-- tides`) e a V1 detalhada (`-- v1`), fonte do build genérico. |
 | `projects/*.json` | Um projeto por escultura, com fontes, as 10 etapas, versões, orçamento, capturas, testes e critérios de arte. `index.json` e as homologações são gerados. |
 
 ### `guardian_tides_body.py`
@@ -130,6 +137,6 @@ O estado técnico (`TECHNICALLY_VALIDATED`) sai das medições. O estado artíst
 | Onde | Como |
 | --- | --- |
 | No STAR HILL | Arena Forge → **Sculpture Studio** (`#arenas/escultura`). Tem três abas. **Inspetor:** GLB com giro 360°, vistas, wireframe, modos de material, artboard, escala e pivô, LODs, métricas e captura. **Projetos:** quadro por escultura, com estágio e etapas. **Homologação:** 360°, comparação com a versão anterior, LODs, verificações, testes, critérios de arte e capturas. |
-| Posição B no palácio | `?sculptDepthsClay=1` carrega a prévia em argila do Guardião das Profundezas (DEV) em (10,8; 4,41; −34,8). Pode ser combinada com `?sculptV141=1`. |
+| Posição B no palácio | `?sculptDepthsClay=1` carrega a prévia em argila do Guardião das Profundezas (DEV) em (10,8; 4,41; −34,8). `?sculptDepthsV1=1` carrega a V1 com materiais. As duas podem ser combinadas com `?sculptV141=1`. |
 | No mundo, só em desenvolvimento | `playtest/divine/?arena=poseidon&arenaPreview=poseidon-palace&sculptV13=1`. Sem `sculptV13=1`, nada é carregado. |
 | Teste automático | `uv run -q --with playwright python tools/test-sculpture-studio.py 8770` |

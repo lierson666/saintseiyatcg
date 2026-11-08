@@ -48,7 +48,7 @@ try:
         page.click('[data-ss-tab="projetos"]')
         page.wait_for_selector('.ss-card[data-proj="guardian-depths"]', timeout=30000)
         cards = page.evaluate("[...document.querySelectorAll('.ss-card')].map(c => [c.dataset.proj, c.querySelector('.ss-pipe .now')?.textContent])")
-        ok(f'Projetos: dois projetos com estágio ({cards})', dict(cards).get('guardian-tides') == 'ART_REVIEW' and dict(cards).get('guardian-depths') == 'MODELING')
+        ok(f'Projetos: dois projetos com estágio ({cards})', dict(cards).get('guardian-tides') == 'ART_REVIEW' and dict(cards).get('guardian-depths') == 'ART_REVIEW')
         ok('Projetos: aprovação de silhueta registrada no Guardião das Profundezas', 'APPROVED' in page.locator('.ss-card[data-proj="guardian-depths"] [data-aprov="silhueta"]').text_content())
         ok('Projetos: o Guardião das Profundezas mostra a prévia em argila', page.locator('.ss-card[data-proj="guardian-depths"] .ss-gal img').count() >= 8)
         page.click('[data-open="guardian-tides"]')

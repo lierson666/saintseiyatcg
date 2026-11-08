@@ -1,0 +1,332 @@
+{
+  "projeto": "guardian-depths",
+  "assetId": "POS-MON-V10-002",
+  "versao": "v1",
+  "data": "2026-11-08T18:41:18",
+  "status": "TECHNICALLY_VALIDATED / ART_REVIEW_PENDING",
+  "tecnico": {
+    "status": "TECHNICALLY_VALIDATED",
+    "checks": [
+      {
+        "id": "arquivos",
+        "nome": "Os 4 GLB existem (LOD0, LOD1, LOD2, Mobile)",
+        "ok": true,
+        "detalhe": "ok"
+      },
+      {
+        "id": "hashes",
+        "nome": "SHA-256 dos GLB batem com SHA256SUMS",
+        "ok": true,
+        "detalhe": "ok"
+      },
+      {
+        "id": "lod0-estrutura",
+        "nome": "lod0: auditoria estrutural limpa",
+        "ok": true,
+        "detalhe": "STRUCTURE_VALID_ART_REVIEW_PENDING"
+      },
+      {
+        "id": "lod0-orcamento",
+        "nome": "lod0: triângulos entre 15000 e 30000",
+        "ok": true,
+        "detalhe": "28993"
+      },
+      {
+        "id": "lod0-partes",
+        "nome": "lod0: as 9 partes nomeadas",
+        "ok": true,
+        "detalhe": "ok"
+      },
+      {
+        "id": "lod0-materiais",
+        "nome": "lod0: materiais STATUE_AGED_IVORY, STATUE_DEEP_MARBLE, STATUE_ANCIENT_GOLD",
+        "ok": true,
+        "detalhe": "STATUE_AGED_IVORY, STATUE_ANCIENT_GOLD, STATUE_DEEP_MARBLE"
+      },
+      {
+        "id": "lod0-escala",
+        "nome": "lod0: altura 8.0–10.5 m, largura até 5.6 m, profundidade até 4.0 m, pivô no chão",
+        "ok": true,
+        "detalhe": "5.29 × 8.97 × 3.83 m, pivô y -0.000"
+      },
+      {
+        "id": "lod1-estrutura",
+        "nome": "lod1: auditoria estrutural limpa",
+        "ok": true,
+        "detalhe": "STRUCTURE_VALID_ART_REVIEW_PENDING"
+      },
+      {
+        "id": "lod1-orcamento",
+        "nome": "lod1: triângulos entre 5000 e 10000",
+        "ok": true,
+        "detalhe": "8692"
+      },
+      {
+        "id": "lod1-partes",
+        "nome": "lod1: as 9 partes nomeadas",
+        "ok": true,
+        "detalhe": "ok"
+      },
+      {
+        "id": "lod1-materiais",
+        "nome": "lod1: materiais STATUE_AGED_IVORY, STATUE_DEEP_MARBLE, STATUE_ANCIENT_GOLD",
+        "ok": true,
+        "detalhe": "STATUE_AGED_IVORY__L1, STATUE_ANCIENT_GOLD__L1, STATUE_DEEP_MARBLE__L1"
+      },
+      {
+        "id": "lod1-escala",
+        "nome": "lod1: altura 8.0–10.5 m, largura até 5.6 m, profundidade até 4.0 m, pivô no chão",
+        "ok": true,
+        "detalhe": "5.29 × 8.97 × 3.83 m, pivô y 0.000"
+      },
+      {
+        "id": "lod1-silhueta",
+        "nome": "lod1: caixa de cada peça a até 10 cm da do LOD0",
+        "ok": true,
+        "detalhe": "pior: DEPTHS__DETAILS 0.00 m"
+      },
+      {
+        "id": "lod2-estrutura",
+        "nome": "lod2: auditoria estrutural limpa",
+        "ok": true,
+        "detalhe": "STRUCTURE_VALID_ART_REVIEW_PENDING"
+      },
+      {
+        "id": "lod2-orcamento",
+        "nome": "lod2: triângulos entre 500 e 3000",
+        "ok": true,
+        "detalhe": "2679"
+      },
+      {
+        "id": "lod2-partes",
+        "nome": "lod2: as 9 partes nomeadas",
+        "ok": true,
+        "detalhe": "ok"
+      },
+      {
+        "id": "lod2-materiais",
+        "nome": "lod2: materiais STATUE_AGED_IVORY, STATUE_DEEP_MARBLE, STATUE_ANCIENT_GOLD",
+        "ok": true,
+        "detalhe": "STATUE_AGED_IVORY__L2, STATUE_ANCIENT_GOLD__L2, STATUE_DEEP_MARBLE__L2"
+      },
+      {
+        "id": "lod2-escala",
+        "nome": "lod2: altura 8.0–10.5 m, largura até 5.6 m, profundidade até 4.0 m, pivô no chão",
+        "ok": true,
+        "detalhe": "5.29 × 8.97 × 3.88 m, pivô y 0.000"
+      },
+      {
+        "id": "lod2-silhueta",
+        "nome": "lod2: caixa de cada peça a até 10 cm da do LOD0",
+        "ok": true,
+        "detalhe": "pior: DEPTHS__PEDESTAL 0.08 m"
+      },
+      {
+        "id": "mobile-estrutura",
+        "nome": "mobile: auditoria estrutural limpa",
+        "ok": true,
+        "detalhe": "STRUCTURE_VALID_ART_REVIEW_PENDING"
+      },
+      {
+        "id": "mobile-orcamento",
+        "nome": "mobile: triângulos entre 5000 e 10000",
+        "ok": true,
+        "detalhe": "8692"
+      },
+      {
+        "id": "mobile-partes",
+        "nome": "mobile: as 9 partes nomeadas",
+        "ok": true,
+        "detalhe": "ok"
+      },
+      {
+        "id": "mobile-materiais",
+        "nome": "mobile: materiais STATUE_AGED_IVORY, STATUE_DEEP_MARBLE, STATUE_ANCIENT_GOLD",
+        "ok": true,
+        "detalhe": "STATUE_AGED_IVORY__L1, STATUE_ANCIENT_GOLD__L1, STATUE_DEEP_MARBLE__L1"
+      },
+      {
+        "id": "mobile-escala",
+        "nome": "mobile: altura 8.0–10.5 m, largura até 5.6 m, profundidade até 4.0 m, pivô no chão",
+        "ok": true,
+        "detalhe": "5.29 × 8.97 × 3.83 m, pivô y 0.000"
+      },
+      {
+        "id": "mobile-silhueta",
+        "nome": "mobile: caixa de cada peça a até 10 cm da do LOD0",
+        "ok": true,
+        "detalhe": "pior: DEPTHS__DETAILS 0.00 m"
+      },
+      {
+        "id": "mobile-texturas",
+        "nome": "mobile: texturas até 512²",
+        "ok": true,
+        "detalhe": "512 px"
+      },
+      {
+        "id": "capturas",
+        "nome": "Capturas de revisão presentes (rosto, cabelo, mãos, manto, ondas, materiais, mundo)",
+        "ok": true,
+        "detalhe": "ok"
+      }
+    ]
+  },
+  "artistico": {
+    "status": "ART_REVIEW_PENDING",
+    "revisor": null,
+    "data": null,
+    "notas": ""
+  },
+  "criteriosArte": [
+    {
+      "criterio": "Silhueta em triângulo largo, diferente da vertical do Guardião das Marés; nada espelhado",
+      "estado": "pendente"
+    },
+    {
+      "criterio": "Joelho dobrado, tronco em contrarrotação; postura vigilante e imóvel",
+      "estado": "pendente"
+    },
+    {
+      "criterio": "Tridente do lado de fora, na diagonal, com a ponteira apoiada no pedestal",
+      "estado": "pendente"
+    },
+    {
+      "criterio": "A outra mão estendida para fora, calma e de comando",
+      "estado": "pendente"
+    },
+    {
+      "criterio": "Mandíbula mais larga, cabelo preso, mais jovem; rosto não é cópia do Guardião das Marés",
+      "estado": "pendente"
+    },
+    {
+      "criterio": "Capa marinha dobrada sobre as costas e a cintura; ombreira com concha entalhada",
+      "estado": "pendente"
+    },
+    {
+      "criterio": "Pedestal próprio: volutas de náutilo, onda em serpente, concha; massa estável, sem pontas soltas",
+      "estado": "pendente"
+    },
+    {
+      "criterio": "Coroa, cabelo e tridente não batem no entablamento nem no teto nas chaves 0, 1 e 2",
+      "estado": "pendente"
+    }
+  ],
+  "lods": [
+    {
+      "lod": "lod0",
+      "arquivo": "arena-forge/assets/poseidon-depths-v1/guardian-depths-lod0.glb",
+      "tri": 28993,
+      "malhas": 9,
+      "materiais": 3,
+      "texturaMax": 2048,
+      "altura": 8.97,
+      "largura": 5.29,
+      "profundidade": 3.83,
+      "pivoY": -0.0,
+      "sha256": "94480011ec70e41eb2ba7e151107237703fc8d70e58ecea55f04a2846c6462f0",
+      "bytes": 3481368,
+      "gate": "STRUCTURE_VALID_ART_REVIEW_PENDING"
+    },
+    {
+      "lod": "lod1",
+      "arquivo": "arena-forge/assets/poseidon-depths-v1/guardian-depths-lod1.glb",
+      "tri": 8692,
+      "malhas": 9,
+      "materiais": 3,
+      "texturaMax": 1024,
+      "altura": 8.97,
+      "largura": 5.29,
+      "profundidade": 3.83,
+      "pivoY": 0,
+      "sha256": "2533361023f1ead2e6a0a435b9f98c5f889a19bd4ca40f3dc06a1166106a923e",
+      "bytes": 1325052,
+      "gate": "STRUCTURE_VALID_ART_REVIEW_PENDING"
+    },
+    {
+      "lod": "lod2",
+      "arquivo": "arena-forge/assets/poseidon-depths-v1/guardian-depths-lod2.glb",
+      "tri": 2679,
+      "malhas": 9,
+      "materiais": 3,
+      "texturaMax": 1024,
+      "altura": 8.97,
+      "largura": 5.29,
+      "profundidade": 3.88,
+      "pivoY": 0,
+      "sha256": "34202b8003cc73f964bdbaf881a3c1d5816d04551347922d7a1ecec562f9e1d5",
+      "bytes": 1018936,
+      "gate": "STRUCTURE_VALID_ART_REVIEW_PENDING"
+    },
+    {
+      "lod": "mobile",
+      "arquivo": "arena-forge/assets/poseidon-depths-v1/guardian-depths-mobile.glb",
+      "tri": 8692,
+      "malhas": 9,
+      "materiais": 3,
+      "texturaMax": 512,
+      "altura": 8.97,
+      "largura": 5.29,
+      "profundidade": 3.83,
+      "pivoY": 0,
+      "sha256": "9cabcbc2994ae5c4e6adc83b016397f8b0f76189bf0d27a5e86d1b482fa40052",
+      "bytes": 532108,
+      "gate": "STRUCTURE_VALID_ART_REVIEW_PENDING"
+    }
+  ],
+  "comparacao": {
+    "versao": null,
+    "lods": []
+  },
+  "testes": [
+    {
+      "nome": "Profundezas V1 (inspetor e mundo)",
+      "script": "tools/test-sculpture-depths-v1.py",
+      "passou": 9,
+      "esperado": 9,
+      "errosDePagina": "nenhum",
+      "ok": true
+    },
+    {
+      "nome": "Homologação, projetos e posição B",
+      "script": "tools/test-sculpture-homologacao.py",
+      "passou": 15,
+      "esperado": 15,
+      "errosDePagina": "nenhum",
+      "ok": true
+    }
+  ],
+  "capturas": {
+    "pasta": "docs/img/sculpture-studio/guardian-depths",
+    "grupos": {
+      "Silhueta geral": [
+        "v1-silhueta-frente.png",
+        "v1-silhueta-tres-quartos.png",
+        "v1-silhueta-esquerda.png"
+      ],
+      "Argila (V1)": [
+        "v1-argila-frente.png",
+        "v1-argila-tres-quartos.png",
+        "v1-argila-esquerda.png",
+        "v1-argila-direita.png",
+        "v1-argila-costas.png"
+      ],
+      "Prévia aprovada (argila)": [
+        "depths-argila-tres-quartos.png",
+        "depths-silhueta-frente.png"
+      ],
+      "Materiais": [
+        "v1-material-frente.png",
+        "v1-material-costas.png",
+        "v1-material-esquerda.png",
+        "v1-material-direita.png",
+        "v1-material-tres-quartos.png"
+      ],
+      "No mundo": [
+        "v1-mundo-chave0.png",
+        "v1-mundo-chave1.png",
+        "v1-mundo-chave2.png",
+        "v1-mundo-partida.png"
+      ]
+    }
+  }
+}

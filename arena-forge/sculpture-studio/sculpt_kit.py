@@ -10,6 +10,8 @@ Junta, com nomes neutros, as peças do pipeline que já existiam e que não depe
   envelope_skirt(...)       saia ou faixa por envelope da malha posada (não vira bermuda entre as pernas)
   sheet(...)                folha de pano paramétrica (capa, faixa) com dobras e colisão simples com o corpo
   scallop_cap(...)          calota de concha com nervuras (ombreira, ornamento)
+  strap(...)                tira chata em volta de membro ou quadril (sandália, bracelete, cinto)
+  ribbon(...)               faixa chata que corre sobre a pele (a tiracolo)
   silhouette_shots(...)     renders de silhueta preta e de argila, mesma câmera para todas as esculturas
 Nada aqui escreve arquivos de outro projeto. Cada escultura tem o seu script (ex.: guardian_depths.py).
 """
@@ -163,6 +165,67 @@ def sheet(name, top, down, length, rows=50, spread=0.25, back=0.18, folds=(7, 0.
     ob = mesh_from_bm(name, bm)
     sm = ob.modifiers.new('suave', 'SMOOTH'); sm.factor = 0.5; sm.iterations = 3
     apply_modifiers(ob)
+    for p in ob.data.polygons: p.use_smooth = True
+    return ob
+
+
+def strap(name, tree, center, axis, width=0.014, thick=0.004, n=64, lift=0.0015, reach=0.3, max_ratio=1.3):
+    """Tira chata em volta de um membro ou do quadril (sandália, bracelete, cinto). Raios saem de fora e vão até o
+    eixo, no plano perpendicular a `axis`, contra a malha `tree` (posed_bvh). A tira segue a superfície tocada; um
+    raio que erra ou acerta longe demais (peito do pé no plano do tornozelo) fica no raio mediano × `max_ratio`."""
+    axis = Vector(axis).normalized(); c = Vector(center)
+    a = axis.orthogonal().normalized(); b = axis.cross(a)
+    dirs = [a * math.cos(2 * math.pi * k / n) + b * math.sin(2 * math.pi * k / n) for k in range(n)]
+    rad = []
+    for d in dirs:
+        hit = tree.ray_cast(c + d * reach, -d, reach)
+        rad.append((hit[0] - c).dot(d) if hit[0] is not None else None)
+    ok = [r for r in rad if r is not None and r > 0]
+    med = float(np.median(ok)) if ok else 0.05
+    rad = [min(r, med * max_ratio) if (r is not None and r > 0) else med for r in rad]
+    for _ in range(2): rad = [(rad[k - 1] + 2 * rad[k] + rad[(k + 1) % n]) / 4 for k in range(n)]
+    bm = bmesh.new(); lo, hi = [], []
+    for d, r in zip(dirs, rad):
+        p = c + d * (r + lift)
+        lo.append(bm.verts.new(p - axis * width / 2)); hi.append(bm.verts.new(p + axis * width / 2))
+    for k in range(n):
+        j = (k + 1) % n
+        bm.faces.new((lo[k], lo[j], hi[j], hi[k]))
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces[:])
+    bmesh.ops.solidify(bm, geom=bm.faces[:], thickness=thick)
+    ob = mesh_from_bm(name, bm)
+    bv = ob.modifiers.new('chanfro', 'BEVEL'); bv.width = thick * 0.35; bv.segments = 2; apply_modifiers(ob)
+    for p in ob.data.polygons: p.use_smooth = True
+    return ob
+
+
+def ribbon(name, tree, pts, width, thick=0.004, lift=0.004, n=60):
+    """Faixa chata que corre sobre a pele (talabarte, faixa a tiracolo): a linha por `pts` é reamostrada, cada ponto
+    vai à superfície mais próxima de `tree` (posed_bvh) e a largura fica no plano tangente."""
+    pts = [Vector(p) for p in pts]
+    seg = [(b - a).length for a, b in zip(pts, pts[1:])]; total = sum(seg)
+    line = []
+    for k in range(n):
+        s, i = total * k / (n - 1), 0
+        while i < len(seg) - 1 and s > seg[i]: s -= seg[i]; i += 1
+        line.append(pts[i].lerp(pts[i + 1], min(s / seg[i], 1.0)))
+    surf, nrm = [], []
+    for p in line:
+        h = tree.find_nearest(p, 0.3)
+        surf.append(h[0] if h[0] is not None else p); nrm.append(h[1] if h[0] is not None else Vector((0, -1, 0)))
+    for _ in range(3):   # normais suaves ao longo da faixa: sem torção nas emendas de faces
+        nrm = [(nrm[max(i - 1, 0)] + nrm[i] * 2 + nrm[min(i + 1, n - 1)]).normalized() for i in range(n)]
+    bm = bmesh.new(); L, R = [], []
+    for i, (q, nn) in enumerate(zip(surf, nrm)):
+        t = (surf[min(i + 1, n - 1)] - surf[max(i - 1, 0)]).normalized()
+        side = t.cross(nn).normalized(); q = q + nn * lift
+        L.append(bm.verts.new(q - side * width / 2)); R.append(bm.verts.new(q + side * width / 2))
+    for i in range(n - 1):
+        bm.faces.new((L[i], R[i], R[i + 1], L[i + 1]))
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces[:])
+    bmesh.ops.solidify(bm, geom=bm.faces[:], thickness=thick)
+    ob = mesh_from_bm(name, bm)
+    sm = ob.modifiers.new('suave', 'SMOOTH'); sm.factor = 0.5; sm.iterations = 2; apply_modifiers(ob)
     for p in ob.data.polygons: p.use_smooth = True
     return ob
 

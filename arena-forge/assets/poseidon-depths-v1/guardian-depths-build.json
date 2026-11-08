@@ -1,0 +1,65 @@
+{
+  "hiPoly": {
+    "DEPTHS__BODY": 208830,
+    "DEPTHS__FACE": 105922,
+    "DEPTHS__HAND_GRIP": 24976,
+    "DEPTHS__HAIR": 139152,
+    "DEPTHS__CLOTH": 46132,
+    "DEPTHS__TRIDENT": 3858,
+    "DEPTHS__PEDESTAL": 5756,
+    "DEPTHS__WAVES": 181796,
+    "DEPTHS__DETAILS": 23048
+  },
+  "lod0": {
+    "DEPTHS__BODY": 6000,
+    "DEPTHS__FACE": 2599,
+    "DEPTHS__HAND_GRIP": 1400,
+    "DEPTHS__HAIR": 3200,
+    "DEPTHS__CLOTH": 6000,
+    "DEPTHS__TRIDENT": 1799,
+    "DEPTHS__PEDESTAL": 1600,
+    "DEPTHS__WAVES": 4000,
+    "DEPTHS__DETAILS": 2399,
+    "total": 28997
+  },
+  "lod1": {
+    "DEPTHS__BODY": 1799,
+    "DEPTHS__FACE": 779,
+    "DEPTHS__HAND_GRIP": 419,
+    "DEPTHS__HAIR": 960,
+    "DEPTHS__CLOTH": 1799,
+    "DEPTHS__TRIDENT": 540,
+    "DEPTHS__PEDESTAL": 480,
+    "DEPTHS__WAVES": 1200,
+    "DEPTHS__DETAILS": 720,
+    "total": 8696
+  },
+  "lod2": {
+    "DEPTHS__BODY": 508,
+    "DEPTHS__FACE": 221,
+    "DEPTHS__HAND_GRIP": 150,
+    "DEPTHS__HAIR": 272,
+    "DEPTHS__CLOTH": 509,
+    "DEPTHS__TRIDENT": 244,
+    "DEPTHS__PEDESTAL": 150,
+    "DEPTHS__WAVES": 426,
+    "DEPTHS__DETAILS": 199,
+    "total": 2679
+  },
+  "scale": 3.3,
+  "grip": {
+    "grip_center": [
+      0.41221120953559875,
+      -0.40150561928749084,
+      1.0621449947357178
+    ],
+    "grip_axis": [
+      0.43510133028030396,
+      0.07030174136161804,
+      0.8976327180862427
+    ],
+    "grip_radius": 0.010323485228442716,
+    "seconds": 13.6
+  },
+  "generated": "2026-11-08 18:39"
+}

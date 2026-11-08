@@ -47,6 +47,31 @@ LOD0 = {  # orçamento de triângulos por parte (LOD0 ~29k); LOD1 = 30 %, LOD2 =
     'TIDES__CLOTH': 5200, 'TIDES__TRIDENT': 1800, 'TIDES__DETAILS': 1400, 'TIDES__PEDESTAL': 1600, 'TIDES__WAVES': 4000,
 }
 LOD_FACTORS = {0: 1.0, 1: 0.30, 2: 0.085}
+# Especificação do build. Os valores abaixo são os do Guardião das Marés; outro projeto troca tudo por configure(),
+# lendo a seção "build" do seu JSON em projects/ (ex.: --projeto guardian-depths). Nada aqui é específico de Poseidon
+# além destes padrões.
+PREFIX, ROOT_NAME, STEM = 'TIDES__', 'GUARDIAN_TIDES', 'guardian-tides'
+PIVOT = (CENTER.x, CENTER.y, H)                               # centro da base do plinto, em unidades do corpo
+BODY_NAME, SPLIT, EYES_PART = 'TIDES__BODY', ['TIDES__FACE', 'TIDES__HAND_GRIP'], 'TIDES__FACE'
+HI_GROUPS = {  # parte do GLB → objetos do high poly (os que não existirem são ignorados)
+    'TIDES__HAIR_BEARD': ['TIDES__HAIR_BEARD'], 'TIDES__CLOTH': ['TIDES__CLOTH'], 'TIDES__TRIDENT': ['TIDES__TRIDENT'],
+    'TIDES__PEDESTAL': ['TIDES__PEDESTAL', 'TIDES__HIPPOCAMPUS'], 'TIDES__WAVES': ['TIDES__WAVES'],
+    'TIDES__DETAILS': ['TIDES__LAUREL', 'TIDES__PEDESTAL_GOLD', 'TIDES__BELT'],
+}
+DROP = ['TIDES_COLLIDER']
+CLOSE = []   # partes com vértices duplicados (pano com solidify) que travam a decimação: funde os duplicados antes
+
+
+def configure(build):
+    """Troca a especificação pela seção "build" de um projeto (projects/<id>.json)."""
+    global PREFIX, ROOT_NAME, STEM, PIVOT, BODY_NAME, SPLIT, EYES_PART, HI_GROUPS, DROP, MATERIALS, LOD0, TEX, CLOSE
+    PREFIX, ROOT_NAME, STEM = build['prefixo'], build['raiz'], build['arquivo']
+    PIVOT = tuple(build['pivo']); BODY_NAME = build['corpo']
+    SPLIT, EYES_PART = build.get('separar', []), build.get('olhos', build['corpo'])
+    HI_GROUPS, DROP = build['grupos'], build.get('descartar', [])
+    MATERIALS, LOD0 = build['materiais'], dict(build['lod0'])
+    TEX = {**TEX, **build.get('texturas', {})}
+    CLOSE = build.get('fechar', [])
 
 
 # ───────────────────────────── etapa 1: escultura ─────────────────────────────
@@ -103,7 +128,7 @@ def _freeze(o):
     o.parent = None; o.matrix_world = mw
     o.data.transform(mw); o.matrix_world = Matrix.Identity(4)
     for g in o.vertex_groups[:]:
-        if not g.name.startswith('TIDES__'): o.vertex_groups.remove(g)
+        if not g.name.startswith(PREFIX): o.vertex_groups.remove(g)
     return o
 
 
@@ -204,7 +229,7 @@ def hi_poly():
     """Congela todas as peças no quadro final (pose + pano assentado). Retorna {parte: [objetos high]}."""
     s = bpy.context.scene; s.frame_set(SETTLE)
     O = bpy.data.objects
-    body = O['TIDES__BODY']
+    body = O[BODY_NAME]
     mr = next((m for m in body.modifiers if m.type == 'MULTIRES'), None)
     low_body = _copy(body, 'LOW_BODY_BASE')
     if mr:
@@ -212,18 +237,16 @@ def hi_poly():
         low_mr = next(m for m in low_body.modifiers if m.type == 'MULTIRES'); low_mr.levels = 0; _freeze(low_body)
     else:   # V14: multires já aplicado no corpo; a base do low poly é a mesma malha, decimada depois
         _freeze(body); _freeze(low_body)
-    hi = {}
-    split = _split(body, ['TIDES__FACE', 'TIDES__HAND_GRIP'])
-    hi['TIDES__BODY'] = [body]; hi['TIDES__FACE'] = [split['TIDES__FACE']]; hi['TIDES__HAND_GRIP'] = [split['TIDES__HAND_GRIP']]
+    hi = {BODY_NAME: [body]}
+    split = _split(body, SPLIT)
+    for n in SPLIT: hi[n] = [split[n]]
     eyes = [o for o in O if o.name.startswith('GEO-body_male_realistic.eye')]
     for e in eyes:
-        _freeze(e); hi['TIDES__FACE'].append(e)
-    for name in ('TIDES__HAIR_BEARD', 'TIDES__CLOTH', 'TIDES__TRIDENT', 'TIDES__PEDESTAL', 'TIDES__WAVES'):
-        hi[name] = [_freeze(O[name])]
-    hi['TIDES__DETAILS'] = [_freeze(O['TIDES__LAUREL']), _freeze(O['TIDES__PEDESTAL_GOLD'])]
-    if O.get('TIDES__BELT'): hi['TIDES__DETAILS'].append(_freeze(O['TIDES__BELT']))            # V14
-    if O.get('TIDES__HIPPOCAMPUS'): hi['TIDES__PEDESTAL'].append(_freeze(O['TIDES__HIPPOCAMPUS']))
-    for n in ('TIDES_COLLIDER',):
+        _freeze(e); hi[EYES_PART].append(e)
+    for part, names in HI_GROUPS.items():
+        objs = [_freeze(O[n]) for n in names if O.get(n)]
+        if objs: hi[part] = objs
+    for n in DROP:
         if O.get(n): bpy.data.objects.remove(O[n])
     return hi, low_body
 
@@ -232,11 +255,11 @@ def low_poly(hi, low_body, lod):
     f = LOD_FACTORS[lod]
     low = {}
     lb = _copy(low_body, f'L{lod}_BODY')
-    parts = _split(lb, ['TIDES__FACE', 'TIDES__HAND_GRIP'])
-    src = {'TIDES__BODY': [lb], 'TIDES__FACE': [parts['TIDES__FACE']], 'TIDES__HAND_GRIP': [parts['TIDES__HAND_GRIP']]}
+    parts = _split(lb, SPLIT)
+    src = {BODY_NAME: [lb], **{n: [parts[n]] for n in SPLIT}}
     for name, objs in hi.items():
         if name in src:
-            if name == 'TIDES__FACE':
+            if name == EYES_PART:
                 src[name] += [_copy(e, f'L{lod}_{e.name}') for e in objs if 'eye' in e.name]
             continue
         src[name] = [_copy(o, f'L{lod}_{o.name}') for o in objs]
@@ -258,7 +281,11 @@ def low_poly(hi, low_body, lod):
         o = objs[0] if len(objs) == 1 else _join(objs, f'L{lod}_{name}')
         for g in o.vertex_groups[:]: o.vertex_groups.remove(g)
         o.name = f'L{lod}_{name}'
+        if name in CLOSE:   # o remesh de voxel apagava a capa (casca fina não é volume); fundir duplicados destrava o colapso
+            bm = bmesh.new(); bm.from_mesh(o.data); bmesh.ops.remove_doubles(bm, verts=bm.verts[:], dist=1e-5); bm.to_mesh(o.data); bm.free()
         low[name] = _decimate_keep_shape(o, max(int(LOD0[name] * f), 150))
+        if name in CLOSE:   # a casca fina decimada vira faces para dentro; o bake erra o high nelas e sai em retalhos
+            bm = bmesh.new(); bm.from_mesh(o.data); bmesh.ops.recalc_face_normals(bm, faces=bm.faces[:]); bm.to_mesh(o.data); bm.free()
     return low
 
 
@@ -416,13 +443,13 @@ def gltf_material(mat, im_c, im_n, im_o):
 
 def world_transform():
     """Unidades do corpo → metros; pivô no centro da base do plinto."""
-    return Matrix.Scale(SCALE, 4) @ Matrix.Translation(Vector((-CENTER.x, -CENTER.y, H)))
+    return Matrix.Scale(SCALE, 4) @ Matrix.Translation(Vector((-PIVOT[0], -PIVOT[1], PIVOT[2])))
 
 
 def export_lod(parts, path, tex_size=None):
     """Monta GUARDIAN_TIDES > TIDES__* em escala de mundo e exporta GLB (só esses objetos)."""
     M = world_transform()
-    root = link(bpy.data.objects.new('GUARDIAN_TIDES', None))
+    root = link(bpy.data.objects.new(ROOT_NAME, None))
     objs = []
     for name, o in parts.items():
         e = _copy(o, name + '_EXPORT')
@@ -455,7 +482,7 @@ def stage_game(lods=(0, 1, 2), src=None, out=None, game_blend=None):
     out = out or OUT
     game_blend = game_blend or WORK / 'guardian-tides-game.blend'
     bpy.ops.wm.open_mainfile(filepath=str(src))
-    if bpy.data.objects.get('TIDES__BELT'): LOD0['TIDES__DETAILS'] = 2400   # V14: cinto de escamas divide o orçamento com a coroa
+    if PREFIX == 'TIDES__' and bpy.data.objects.get('TIDES__BELT'): LOD0['TIDES__DETAILS'] = 2400   # V14: cinto de escamas divide o orçamento com a coroa
     s = bpy.context.scene
     s.render.engine = 'CYCLES'; s.cycles.device = 'CPU'; s.cycles.samples = 24
     s.world = s.world or bpy.data.worlds.new('BAKE')
@@ -469,11 +496,11 @@ def stage_game(lods=(0, 1, 2), src=None, out=None, game_blend=None):
     for lod in lods:
         report[f'lod{lod}'] = {n: tris(o) for n, o in low[lod].items()}
         report[f'lod{lod}']['total'] = sum(report[f'lod{lod}'].values())
-        export_lod(low[lod], out / f'guardian-tides-lod{lod}.glb')
-    export_lod(low[1], out / 'guardian-tides-mobile.glb', tex_size=512)
+        export_lod(low[lod], out / f'{STEM}-lod{lod}.glb')
+    export_lod(low[1], out / f'{STEM}-mobile.glb', tex_size=512)
     meta = json.loads(s.get('tides_meta', '{}'))
     report.update(scale=SCALE, grip=meta, generated=time.strftime('%Y-%m-%d %H:%M'))
-    (out / 'guardian-tides-build.json').write_text(json.dumps(report, indent=2, ensure_ascii=False))
+    (out / f'{STEM}-build.json').write_text(json.dumps(report, indent=2, ensure_ascii=False))
     bpy.ops.wm.save_as_mainfile(filepath=str(game_blend))
     print('GAME ok', json.dumps({k: v.get('total') for k, v in report.items() if isinstance(v, dict) and 'total' in v}))
 
@@ -487,6 +514,12 @@ if __name__ == '__main__':
     if stage == 'game-v14':
         stage_game(src=WORK / 'guardian-tides-v14-sculpt.blend', out=OUT.parent / 'poseidon-v14',
                    game_blend=WORK / 'guardian-tides-v14-game.blend')
+    if '--projeto' in argv:   # build genérico: python ... -- --projeto guardian-depths --versao v1
+        pj = json.loads((Path(__file__).resolve().parent / 'projects' / f"{argv[argv.index('--projeto') + 1]}.json").read_text())
+        ver = argv[argv.index('--versao') + 1]
+        b = pj['build']; configure(b)
+        stage_game(src=WORK / b['fonte'].format(versao=ver), out=Path(__file__).resolve().parents[2] / b['saida'].format(versao=ver),
+                   game_blend=WORK / b['jogo'].format(versao=ver))
     if stage == 'game-v14-1':
         stage_game(src=WORK / 'guardian-tides-v14-1-sculpt.blend', out=OUT.parent / 'poseidon-v14-1',
                    game_blend=WORK / 'guardian-tides-v14-1-game.blend')

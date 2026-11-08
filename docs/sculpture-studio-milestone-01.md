@@ -9,7 +9,7 @@ Gerado de `arena-forge/sculpture-studio/projects/*.json` em [docs/art-bible/SCUL
 | Asset | Versão | Estágio | Homologação |
 | --- | --- | --- | --- |
 | Guardião das Marés (`POS-MON-V10-001`) | V14.1 | ART_REVIEW | `TECHNICALLY_VALIDATED / ART_REVIEW_PENDING` |
-| Guardião das Profundezas (`POS-MON-V10-002`) | prévia em argila | MODELING | silhueta aprovada pelo autor em 08/11/2026; sem homologação |
+| Guardião das Profundezas (`POS-MON-V10-002`) | V1 | ART_REVIEW | `TECHNICALLY_VALIDATED / ART_REVIEW_PENDING` (silhueta aprovada em 08/11/2026). Detalhes em [sculpture-studio-guardian-depths-v1.md](sculpture-studio-guardian-depths-v1.md) |
 
 **APPROVED** só existe com a revisão do autor registrada no projeto. **PUBLISHED** só existe com publicação oficial. Nenhum dos dois está nesses estágios.
 
@@ -50,7 +50,7 @@ Gerado de `arena-forge/sculpture-studio/projects/*.json` em [docs/art-bible/SCUL
 | Aba **Projetos** e aba **Homologação** | Leem só os JSON. Não há nada específico de Poseidon na interface. |
 
 **Ainda falta, e ficou registrado:**
-- O build de materiais, LODs e GLB continua com nomes `TIDES__*`. Generalizar é o próximo passo, antes do Guardião das Profundezas passar de CONCEPT para MODELING.
+- ~~O build de materiais, LODs e GLB continua com nomes `TIDES__*`.~~ Generalizado em 08/11/2026: o build lê a seção `build` do projeto (`--projeto <id> --versao <v>`). A V14.1 refeita pelo build novo saiu com os mesmos 4 hashes.
 - A revisão artística ainda é registrada à mão no campo `artistico` do projeto. Não há botão para isso.
 
 ## Missão 3 · Guardião das Profundezas

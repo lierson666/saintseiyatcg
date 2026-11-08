@@ -133,8 +133,9 @@ def homologate(proj, versao, port):
         check(f'{l}-partes', f'{l}: as {len(partes)} partes nomeadas', not falta, ', '.join(falta) or 'ok')
         mats = [m.split('__')[0] for m in fa['materiais']]
         check(f'{l}-materiais', f'{l}: materiais {", ".join(proj["materiais"])}', sorted(mats) == sorted(proj['materiais']), ', '.join(fa['materiais']))
-        check(f'{l}-escala', f'{l}: altura {b["altura"][0]}–{b["altura"][1]} m, base até {b["base"]} m, pivô no chão',
-              b['altura'][0] <= h <= b['altura'][1] and w <= b['base'] and d <= b['base'] and abs(fa['min'][1]) < 0.05,
+        lw = b.get('largura', b['base'])   # figura mais larga que a base (tridente na diagonal): limite próprio no projeto
+        check(f'{l}-escala', f'{l}: altura {b["altura"][0]}–{b["altura"][1]} m, largura até {lw} m, profundidade até {b["base"]} m, pivô no chão',
+              b['altura'][0] <= h <= b['altura'][1] and w <= lw and d <= b['base'] and abs(fa['min'][1]) < 0.05,
               f'{w:.2f} × {h:.2f} × {d:.2f} m, pivô y {fa["min"][1]:.3f}')
         if l == 'lod0': ref = fa['caixas']
         else:   # silhueta: a caixa de cada peça não pode encolher em relação ao LOD0 (ponta do tridente, cabelo, base)

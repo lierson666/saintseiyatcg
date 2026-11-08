@@ -11,7 +11,7 @@ import {attachPoseidonPaintedMaps} from './poseidon-painted-maps.js';
 import {attachPoseidonBattlefieldPainting} from './poseidon-battlefield-paint.js';
 import {addPoseidonV6Sculptures} from './poseidon-v6-sculpture.js';
 import {loadPoseidonSculptGLB} from './poseidon-v7-glb-loader.js';
-import {GUARDIAN_DEPTHS,depthsClayFlag,guardianFlag,guardianUrl, loadGuardianTides} from './poseidon-v13-guardian.js';
+import {GUARDIAN_DEPTHS,depthsClayFlag,depthsUrl,guardianFlag,guardianUrl, loadGuardianTides} from './poseidon-v13-guardian.js';
 // Abertura padrão de Poseidon (editável no Arena Forge → Produção → Cinemática; o jogo lê arena-forge/cinematics/poseidon.json).
 // Cada chave: pos, look (ponto focal), fov, roll (°), dur (ms até chegar nela; na primeira, tempo parado no plano de abertura), ease, stage, light (1 = luz da partida), vfx, sound.
 // A última chave é sempre a câmera competitiva (bloqueada): a cinemática termina exatamente nela.
@@ -218,13 +218,13 @@ export function createPoseidonPalace(THREE, {quality = 'high', reduceMotion = fa
       .then(v=>{if(guardianV13Disposed){v.dispose();return;}guardianV13=v;root.userData.guardianV13='ready';})
       .catch(err=>{root.userData.guardianV13='unavailable';console.warn('[POSEIDON V13] guardian GLB not loaded',err);});
   }
-  // Posição B (só desenvolvimento): prévia em argila do Guardião das Profundezas, apenas com ?sculptDepthsClay=1.
+  // Posição B (só desenvolvimento): Guardião das Profundezas, apenas com ?sculptDepthsClay=1 (argila) ou ?sculptDepthsV1=1 (V1).
   let guardianB=null,guardianBDisposed=false;
   if(depthsClayFlag()){
     root.userData.guardianB='loading';
-    loadGuardianTides(THREE,{parent:G.landmark,material:M.platform,baseUrl:import.meta.url,...GUARDIAN_DEPTHS})
-      .then(v=>{if(guardianBDisposed){v.dispose();return;}v.root.name='GUARDIAN_DEPTHS_CLAY_DEV';guardianB=v;root.userData.guardianB='ready';})
-      .catch(err=>{root.userData.guardianB='unavailable';console.warn('[POSEIDON] guardian B clay not loaded',err);});
+    loadGuardianTides(THREE,{parent:G.landmark,material:M.platform,baseUrl:import.meta.url,...GUARDIAN_DEPTHS,url:depthsUrl()})
+      .then(v=>{if(guardianBDisposed){v.dispose();return;}v.root.name=depthsUrl()===GUARDIAN_DEPTHS.url?'GUARDIAN_DEPTHS_CLAY_DEV':'GUARDIAN_DEPTHS_V1_DEV';guardianB=v;root.userData.guardianB='ready';})
+      .catch(err=>{root.userData.guardianB='unavailable';console.warn('[POSEIDON] guardian B not loaded',err);});
   }
 
   // Pórtico: 2 fileiras de 4 colunas, simétricas no eixo x=0 (vão central largo para a escadaria).

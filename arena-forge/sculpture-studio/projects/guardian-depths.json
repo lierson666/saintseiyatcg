@@ -12,9 +12,9 @@
       -34.8
     ]
   },
-  "estagio": "MODELING",
-  "proximo": "Generalizar o build de materiais/LODs (hoje com nomes TIDES__) e começar a modelagem detalhada sobre a silhueta aprovada",
-  "nota": "Silhueta aprovada pelo autor em 08/11/2026. Modelagem detalhada ainda não começou.",
+  "estagio": "ART_REVIEW",
+  "proximo": "Revisão artística da V1 pelo autor (aba Homologação); depois, as passadas manuais listadas no relatório",
+  "nota": "Silhueta aprovada pelo autor em 08/11/2026. V1 (modelagem detalhada, materiais e LODs) homologada tecnicamente; revisão artística pendente.",
   "fontes": [
     "docs/art-bible/POSEIDON_V11_SCULPTURE_BIBLE.md",
     "docs/art-bible/POSEIDON_V10_GUARDIAN_ART_PRODUCTION.md"
@@ -28,33 +28,40 @@
       ]
     },
     "modelagem": {
-      "estado": "andamento",
+      "estado": "feito",
       "artefatos": [
         "arena-forge/sculpture-studio/guardian_depths.py",
         "arena-forge/sculpture-studio/sculpt_kit.py"
       ]
     },
     "rig_pose": {
-      "estado": "andamento",
+      "estado": "feito",
       "artefatos": [
         "arena-forge/sculpture-studio/guardian_depths.py"
       ]
     },
     "materiais": {
-      "estado": "pendente",
-      "artefatos": []
+      "estado": "feito",
+      "artefatos": [
+        "arena-forge/sculpture-studio/guardian_tides_build.py"
+      ]
     },
     "escultura": {
-      "estado": "pendente",
-      "artefatos": []
-    },
-    "lods": {
-      "estado": "pendente",
-      "artefatos": []
-    },
-    "exportacao": {
       "estado": "andamento",
       "artefatos": [
+        "arena-forge/sculpture-studio/guardian_depths.py"
+      ]
+    },
+    "lods": {
+      "estado": "feito",
+      "artefatos": [
+        "arena-forge/assets/poseidon-depths-v1/guardian-depths-build.json"
+      ]
+    },
+    "exportacao": {
+      "estado": "feito",
+      "artefatos": [
+        "arena-forge/assets/poseidon-depths-v1/guardian-depths-lod0.glb",
         "arena-forge/assets/poseidon-depths-clay/guardian-depths-clay.glb"
       ]
     },
@@ -68,12 +75,16 @@
     "validacao": {
       "estado": "andamento",
       "artefatos": [
-        "tools/test-sculpture-homologacao.py"
+        "tools/test-sculpture-depths-v1.py",
+        "tools/test-sculpture-homologacao.py",
+        "tools/sculpture-homologate.py"
       ]
     },
     "versionamento": {
-      "estado": "pendente",
-      "artefatos": []
+      "estado": "feito",
+      "artefatos": [
+        "arena-forge/assets/poseidon-depths-v1/SHA256SUMS"
+      ]
     }
   },
   "glb": "guardian-depths-{lod}.glb",
@@ -82,8 +93,10 @@
     "PEDESTAL",
     "WAVES",
     "BODY",
+    "FACE",
     "HAIR",
     "CLOTH",
+    "HAND_GRIP",
     "TRIDENT",
     "DETAILS"
   ],
@@ -114,10 +127,20 @@
       8.0,
       10.5
     ],
-    "base": 4.0
+    "base": 4.0,
+    "largura": 5.6
   },
-  "versoes": [],
-  "atual": null,
+  "versoes": [
+    {
+      "id": "v1",
+      "nome": "V1",
+      "pasta": "arena-forge/assets/poseidon-depths-v1",
+      "flag": "sculptDepthsV1",
+      "relatorio": "docs/sculpture-studio-guardian-depths-v1.md",
+      "commit": null
+    }
+  ],
+  "atual": "v1",
   "previas": [
     "docs/img/sculpture-studio/guardian-depths/folha-ab-silhueta-frente.png",
     "docs/img/sculpture-studio/guardian-depths/folha-ab-silhueta-tres-quartos.png",
@@ -153,5 +176,134 @@
       ],
       "commit": "8feb47c"
     }
-  }
+  },
+  "build": {
+    "nota": "Lido por guardian_tides_build.py -- --projeto guardian-depths --versao v1 (build genérico de LODs, bake e GLB).",
+    "prefixo": "DEPTHS__",
+    "raiz": "GUARDIAN_DEPTHS",
+    "arquivo": "guardian-depths",
+    "fonte": "guardian-depths-{versao}-sculpt.blend",
+    "jogo": "guardian-depths-{versao}-game.blend",
+    "saida": "arena-forge/assets/poseidon-depths-{versao}",
+    "pivo": [
+      0.04,
+      -0.14,
+      0.55
+    ],
+    "corpo": "DEPTHS__BODY",
+    "separar": [
+      "DEPTHS__FACE",
+      "DEPTHS__HAND_GRIP"
+    ],
+    "olhos": "DEPTHS__FACE",
+    "grupos": {
+      "DEPTHS__HAIR": [
+        "DEPTHS__HAIR",
+        "DEPTHS__BAND"
+      ],
+      "DEPTHS__CLOTH": [
+        "DEPTHS__KILT",
+        "DEPTHS__CAPE",
+        "DEPTHS__SASH"
+      ],
+      "DEPTHS__TRIDENT": [
+        "DEPTHS__TRIDENT"
+      ],
+      "DEPTHS__PEDESTAL": [
+        "DEPTHS__PEDESTAL"
+      ],
+      "DEPTHS__WAVES": [
+        "DEPTHS__WAVES"
+      ],
+      "DEPTHS__DETAILS": [
+        "DEPTHS__PAULDRON",
+        "DEPTHS__PEDESTAL_ORN",
+        "DEPTHS__BELT",
+        "DEPTHS__BUCKLE",
+        "DEPTHS__SANDAL_L0.88",
+        "DEPTHS__SANDAL_L0.76",
+        "DEPTHS__SANDAL_R0.88",
+        "DEPTHS__SANDAL_R0.76",
+        "DEPTHS__CUFF_R",
+        "DEPTHS__ARMBAND_R"
+      ]
+    },
+    "materiais": {
+      "STATUE_AGED_IVORY": [
+        "DEPTHS__BODY",
+        "DEPTHS__FACE",
+        "DEPTHS__HAND_GRIP",
+        "DEPTHS__HAIR",
+        "DEPTHS__CLOTH"
+      ],
+      "STATUE_DEEP_MARBLE": [
+        "DEPTHS__PEDESTAL",
+        "DEPTHS__WAVES"
+      ],
+      "STATUE_ANCIENT_GOLD": [
+        "DEPTHS__TRIDENT",
+        "DEPTHS__DETAILS"
+      ]
+    },
+    "lod0": {
+      "DEPTHS__BODY": 6000,
+      "DEPTHS__FACE": 2600,
+      "DEPTHS__HAND_GRIP": 1400,
+      "DEPTHS__HAIR": 3200,
+      "DEPTHS__CLOTH": 6000,
+      "DEPTHS__TRIDENT": 1800,
+      "DEPTHS__DETAILS": 2400,
+      "DEPTHS__PEDESTAL": 1600,
+      "DEPTHS__WAVES": 4000
+    },
+    "fechar": [
+      "DEPTHS__CLOTH"
+    ]
+  },
+  "capturas": {
+    "pasta": "docs/img/sculpture-studio/guardian-depths",
+    "grupos": {
+      "Silhueta geral": [
+        "v1-silhueta-frente.png",
+        "v1-silhueta-tres-quartos.png",
+        "v1-silhueta-esquerda.png"
+      ],
+      "Argila (V1)": [
+        "v1-argila-frente.png",
+        "v1-argila-tres-quartos.png",
+        "v1-argila-esquerda.png",
+        "v1-argila-direita.png",
+        "v1-argila-costas.png"
+      ],
+      "Prévia aprovada (argila)": [
+        "depths-argila-tres-quartos.png",
+        "depths-silhueta-frente.png"
+      ],
+      "Materiais": [
+        "v1-material-frente.png",
+        "v1-material-costas.png",
+        "v1-material-esquerda.png",
+        "v1-material-direita.png",
+        "v1-material-tres-quartos.png"
+      ],
+      "No mundo": [
+        "v1-mundo-chave0.png",
+        "v1-mundo-chave1.png",
+        "v1-mundo-chave2.png",
+        "v1-mundo-partida.png"
+      ]
+    }
+  },
+  "testes": [
+    {
+      "nome": "Profundezas V1 (inspetor e mundo)",
+      "script": "tools/test-sculpture-depths-v1.py",
+      "esperado": 9
+    },
+    {
+      "nome": "Homologação, projetos e posição B",
+      "script": "tools/test-sculpture-homologacao.py",
+      "esperado": 15
+    }
+  ]
 }

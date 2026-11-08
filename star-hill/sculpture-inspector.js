@@ -10,7 +10,8 @@ import {css as projCss, renderHomologation, renderProjects} from './sculpture-pr
 const BASE = '../arena-forge/assets/poseidon-v13/';
 const LODS = [['lod0', 'LOD0 · desktop (texturas 2048)'], ['lod1', 'LOD1 · médio'], ['lod2', 'LOD2 · distante'], ['mobile', 'Mobile (LOD1 + 512²)'],
   ['../poseidon-v14/guardian-tides-lod0', 'V14 · LOD0 (revisão)'], ['../poseidon-v14/guardian-tides-lod1', 'V14 · LOD1'], ['../poseidon-v14/guardian-tides-lod2', 'V14 · LOD2'], ['../poseidon-v14/guardian-tides-mobile', 'V14 · Mobile'],
-  ['../poseidon-v14-1/guardian-tides-lod0', 'V14.1 · LOD0 (revisão)'], ['../poseidon-v14-1/guardian-tides-lod1', 'V14.1 · LOD1'], ['../poseidon-v14-1/guardian-tides-lod2', 'V14.1 · LOD2'], ['../poseidon-v14-1/guardian-tides-mobile', 'V14.1 · Mobile']];
+  ['../poseidon-v14-1/guardian-tides-lod0', 'V14.1 · LOD0 (revisão)'], ['../poseidon-v14-1/guardian-tides-lod1', 'V14.1 · LOD1'], ['../poseidon-v14-1/guardian-tides-lod2', 'V14.1 · LOD2'], ['../poseidon-v14-1/guardian-tides-mobile', 'V14.1 · Mobile'],
+  ['../poseidon-depths-v1/guardian-depths-lod0', 'Profundezas V1 · LOD0'], ['../poseidon-depths-v1/guardian-depths-lod1', 'Profundezas V1 · LOD1'], ['../poseidon-depths-v1/guardian-depths-lod2', 'Profundezas V1 · LOD2'], ['../poseidon-depths-v1/guardian-depths-mobile', 'Profundezas V1 · Mobile']];
 const VIEWS = {frente: [0, 0, 1], costas: [0, 0, -1], esquerda: [1, 0, 0], direita: [-1, 0, 0], 'tres-quartos': [-0.7, 0.18, 1]};
 const MODES = [['textura', 'Materiais'], ['argila', 'Argila'], ['normais', 'Normais'], ['base', 'Só cor base'], ['ao', 'Só AO']];
 const PID = 'poseidon-palace';

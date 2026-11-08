@@ -37,6 +37,7 @@ import sculpt_kit as K
 
 WORK = Path.home() / 'worktrees/sstcg-tools/sculpt-work'
 DST = WORK / 'guardian-depths-clay.blend'
+DST_V1 = WORK / 'guardian-depths-v1-sculpt.blend'      # V1: modelagem detalhada (fonte do build de LODs)
 IMG = ROOT / 'docs/img/sculpture-studio/guardian-depths'
 P = 'DEPTHS'
 LOG = {}
@@ -129,7 +130,9 @@ def garments(body, arm):
     top = root.z + 0.06
     bottom = (W('thigh.L').z + W('shin.L').z) / 2 - 0.02          # meia coxa da perna da frente
     keep = lambda co: (np.abs(co[:, 0] - root.x) < 0.24) & (co[:, 2] < top + 0.05)
-    kilt = K.envelope_skirt(f'{P}__KILT', body, top, bottom, rows=36, nb=96, ease=0.014, flare=0.07, folds=(13, 0.008),
+    v1 = LOG.get('versao') == 'v1'
+    kilt = K.envelope_skirt(f'{P}__KILT', body, top, bottom, rows=56 if v1 else 36, nb=160 if v1 else 96, ease=0.014, flare=0.07,
+                            folds=(19, 0.009) if v1 else (13, 0.008),
                             center=(root.x, root.y + 0.01), keep=keep)
     # capa: do ombro de dentro ao de fora pelas costas, cai e abre para fora e para trás (vento do mar)
     sR, sL = W('upper_arm.R'), W('upper_arm.L'); ch = W('chest', 0.6)
@@ -138,18 +141,45 @@ def garments(body, arm):
         t = k / 24
         p = sR.lerp(sL, t) + Vector((0, 0.07 + 0.03 * math.sin(math.pi * t), 0.035 * math.sin(math.pi * t)))
         top_pts.append(p.lerp(Vector((p.x, ch.y + 0.09, p.z)), 0.4))
-    cape = K.sheet(f'{P}__CAPE', top_pts, down=(0.10, 0.22, -1.0), length=0.95, rows=56, spread=0.42, back=(0.16, 0.24, 0.0),
-                   folds=(9, 0.028), body=body, gap=0.018)
+    cape = K.sheet(f'{P}__CAPE', top_pts, down=(0.10, 0.22, -1.0), length=0.95, rows=90 if v1 else 56, spread=0.42, back=(0.16, 0.24, 0.0),
+                   folds=(11, 0.03) if v1 else (9, 0.028), body=body, gap=0.018, thickness=0.011 if v1 else 0.009)
     # faixa da capa dobrada na cintura (o pano volta pela frente e entra no cinto)
     sash_pts = [Vector(p) for p in ((sL.x + 0.02, sL.y + 0.02, sL.z - 0.02), (0.10, -0.12, 1.15), (0.0, -0.13, 1.02), (-0.12, -0.10, top - 0.01))]
-    sash = K.sheet(f'{P}__SASH', [p + Vector((0, 0, 0.03 * k)) for k, p in enumerate(sash_pts)], down=(0, 0, -1), length=0.07, rows=6,
-                   spread=0.0, back=(0, -0.01, 0), folds=(5, 0.006), body=body, gap=0.014)
+    if v1:   # V1: faixa chata sobre a pele, a tiracolo; a da argila era uma folha curta que saía em cacos no peito
+        sash = K.ribbon(f'{P}__SASH', K.posed_bvh(body), sash_pts, width=0.06, thick=0.006, lift=0.006, n=70)
+    else:
+        sash = K.sheet(f'{P}__SASH', [p + Vector((0, 0, 0.03 * k)) for k, p in enumerate(sash_pts)], down=(0, 0, -1), length=0.07, rows=6,
+                       spread=0.0, back=(0, -0.01, 0), folds=(5, 0.006), body=body, gap=0.014)
     # ombreira de concha no ombro de fora (lado do tridente)
     sh = W('upper_arm.L', 0.12)
     n = (sh - Vector((ch.x, ch.y, sh.z - 0.05))).normalized()
     pauldron = K.scallop_cap(f'{P}__PAULDRON', sh + n * 0.035, n, 0.085, ribs=13, depth=0.45)
     LOG['saia'] = [round(top, 3), round(bottom, 3)]
-    return [kilt, cape, sash, pauldron]
+    return [kilt, cape, sash, pauldron] + (details_v1(body, arm, kilt, top) if v1 else [])
+
+
+def details_v1(body, arm, kilt, top):
+    """V1: cinto sobre a saia com fivela de concha, tiras de sandália nos tornozelos e braceletes."""
+    pb, M = arm.pose.bones, arm.matrix_world
+    W = lambda b, t=0.0: M @ pb[b].head.lerp(pb[b].tail, t)
+    axis = lambda b: (W(b, 1.0) - W(b)).normalized()
+    root = W('root'); up = (W('chest') - root).normalized()
+    kt, bt = K.posed_bvh(kilt), K.posed_bvh(body)
+    belt_c = Vector((root.x, root.y + 0.01, top - 0.018))
+    belt = K.strap(f'{P}__BELT', kt, belt_c, up, width=0.034, thick=0.007, n=96, lift=0.001)
+    # fivela: na frente do cinto, para onde o quadril aponta (giro do quadril: +8°)
+    a = math.radians(8); fwd = Vector((math.sin(a), -math.cos(a), 0))
+    hit = kt.ray_cast(belt_c + fwd * 0.3, -fwd, 0.3)
+    buckle = K.scallop_cap(f'{P}__BUCKLE', (hit[0] if hit[0] is not None else belt_c + fwd * 0.17) + fwd * 0.008, fwd, 0.03, ribs=11, depth=0.5)
+    straps = []
+    for side in 'LR':                                   # sandália: duas tiras no tornozelo (a do peito do pé saía em laço)
+        for t, w in ((0.88, 0.010), (0.76, 0.009)):
+            straps.append(K.strap(f'{P}__SANDAL_{side}{t}', bt, W(f'shin.{side}', t), axis(f'shin.{side}'), width=w, thick=0.003))
+    cuffs = [K.strap(f'{P}__CUFF_R', bt, W('forearm.R', 0.80), axis('forearm.R'), width=0.04, thick=0.005),       # mão de comando
+             K.strap(f'{P}__ARMBAND_R', bt, W('upper_arm.R', 0.62), axis('upper_arm.R'), width=0.018, thick=0.004)]
+    objs = [belt, buckle] + straps + cuffs
+    LOG['detalhes_v1'] = len(objs)
+    return objs
 
 
 # ───────────────────────── pedestal próprio ─────────────────────────
@@ -256,6 +286,15 @@ def waves(front_foot, step):
     rm = ob.modifiers.new('fundir', 'REMESH'); rm.mode = 'VOXEL'; rm.voxel_size = 0.004
     sm = ob.modifiers.new('polir', 'SMOOTH'); sm.factor = 0.7; sm.iterations = 4
     apply_modifiers(ob)
+    if LOG.get('versao') == 'v1':
+        # V1: a água baixa (abaixo de 6 cm) não passa da borda da laje; na argila o degrau e a ondulação saíam
+        # como chapas finas para fora do tambor. As volutas (mais altas) não mudam.
+        co = np.empty(len(ob.data.vertices) * 3); ob.data.vertices.foreach_get('co', co); co = co.reshape(-1, 3)
+        e = np.hypot((co[:, 0] - CX) / (RX + 0.02), (co[:, 1] - CY) / (RY + 0.02))
+        m = (co[:, 2] < 0.06) & (e > 1.0)
+        co[m, 0] = CX + (co[m, 0] - CX) / e[m]; co[m, 1] = CY + (co[m, 1] - CY) / e[m]
+        ob.data.vertices.foreach_set('co', co.ravel()); ob.data.update()
+        LOG['agua_presa_na_borda'] = int(m.sum())
     for p in ob.data.polygons: p.use_smooth = True
     return ob
 
@@ -268,6 +307,12 @@ def stage_clay():
     body, eyes, arm, frames = K.figure(P)
     LOG['corpo_mm'] = round(K.sculpt_rest(body, BODY) * 3300, 1)
     LOG['rosto_mm'] = round(K.sculpt_rest(body, FACE) * 3300, 1)
+    if LOG.get('versao') == 'v1':   # partes do corpo pelo repouso (índices da malha base), como no build do Guardião das Marés
+        rest = np.array([v.co[:] for v in body.data.vertices])
+        for name, mask in {f'{P}__FACE': (rest[:, 2] > 1.455) & (rest[:, 1] < 0.0) & (np.abs(rest[:, 0]) < 0.1),
+                           f'{P}__HAND_GRIP': (rest[:, 0] > 0.33) & (rest[:, 2] < 0.95)}.items():
+            g = body.vertex_groups.new(name=name); g.add([int(i) for i in np.where(mask)[0]], 1.0, 'REPLACE')
+            LOG[name] = int(mask.sum())
     hr, band = hair(body, arm)
     K.attach_eyes(eyes, arm)
     K.pose(arm, POSE)
@@ -289,8 +334,9 @@ def stage_clay():
     wv = waves(feet['L'], step)
     LOG['segundos'] = round(time.time() - t0, 1)
     bpy.context.scene['depths_clay'] = json.dumps(LOG)
+    bpy.context.scene['tides_meta'] = json.dumps({'grip_center': list(c), 'grip_axis': list(a), 'grip_radius': r, 'seconds': LOG['segundos']})  # chave lida pelo build
     WORK.mkdir(parents=True, exist_ok=True)
-    bpy.ops.wm.save_as_mainfile(filepath=str(DST))
+    bpy.ops.wm.save_as_mainfile(filepath=str(DST_V1 if LOG.get('versao') == 'v1' else DST))
     print('DEPTHS ok', LOG)
 
 
@@ -349,6 +395,10 @@ if __name__ == '__main__':
     argv = sys.argv[sys.argv.index('--') + 1:] if '--' in sys.argv else []
     if 'glb' in argv:
         stage_glb()
+    elif 'v1' in argv:      # modelagem detalhada; o build genérico faz LODs e GLB: guardian_tides_build.py -- --projeto guardian-depths --versao v1
+        LOG['versao'] = 'v1'
+        if 'shots' not in argv: stage_clay()
+        stage_shots(DST_V1, 'v1')
     elif 'tides' in argv:   # só leitura: renderiza a V14.1 do Guardião das Marés com a mesma câmera, para a folha A × B
         stage_shots(WORK / 'guardian-tides-v14-1-sculpt.blend', 'tides')
     else:
