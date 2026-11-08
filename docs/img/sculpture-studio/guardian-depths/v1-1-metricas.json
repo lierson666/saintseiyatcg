@@ -1,0 +1,118 @@
+{
+  "semFlags:chave1": {
+    "gpuMsMundo": 5.13,
+    "px": [
+      1600,
+      900
+    ],
+    "drawCalls": 199,
+    "texturas": 9,
+    "geometrias": 156,
+    "fps": 42,
+    "cargaGlb": []
+  },
+  "semFlags:partida": {
+    "gpuMsMundo": 3.16,
+    "px": [
+      1600,
+      900
+    ],
+    "drawCalls": 125,
+    "texturas": 7,
+    "geometrias": 61,
+    "fps": 30,
+    "cargaGlb": []
+  },
+  "v141+v1:chave1": {
+    "gpuMsMundo": 5.62,
+    "px": [
+      1600,
+      900
+    ],
+    "drawCalls": 223,
+    "texturas": 27,
+    "geometrias": 186,
+    "fps": 43,
+    "cargaGlb": [
+      [
+        "poseidon-v14-1/guardian-tides-lod0.glb",
+        42,
+        5468028
+      ],
+      [
+        "poseidon-depths-v1/guardian-depths-lod0.glb",
+        37,
+        3481668
+      ]
+    ]
+  },
+  "v141+v1:partida": {
+    "gpuMsMundo": 3.27,
+    "px": [
+      1600,
+      900
+    ],
+    "drawCalls": 125,
+    "texturas": 7,
+    "geometrias": 63,
+    "fps": 30,
+    "cargaGlb": [
+      [
+        "poseidon-v14-1/guardian-tides-lod0.glb",
+        35,
+        5468028
+      ],
+      [
+        "poseidon-depths-v1/guardian-depths-lod0.glb",
+        37,
+        3481668
+      ]
+    ]
+  },
+  "v141+v11:chave1": {
+    "gpuMsMundo": 5.81,
+    "px": [
+      1600,
+      900
+    ],
+    "drawCalls": 223,
+    "texturas": 27,
+    "geometrias": 186,
+    "fps": 43,
+    "cargaGlb": [
+      [
+        "poseidon-v14-1/guardian-tides-lod0.glb",
+        35,
+        5468028
+      ],
+      [
+        "poseidon-depths-v1-1/guardian-depths-lod0.glb",
+        36,
+        3490888
+      ]
+    ]
+  },
+  "v141+v11:partida": {
+    "gpuMsMundo": 3.27,
+    "px": [
+      1600,
+      900
+    ],
+    "drawCalls": 124,
+    "texturas": 7,
+    "geometrias": 63,
+    "fps": 25,
+    "cargaGlb": [
+      [
+        "poseidon-v14-1/guardian-tides-lod0.glb",
+        20,
+        5468028
+      ],
+      [
+        "poseidon-depths-v1-1/guardian-depths-lod0.glb",
+        17,
+        3490888
+      ]
+    ]
+  }
+}

@@ -13,8 +13,8 @@
     ]
   },
   "estagio": "ART_REVIEW",
-  "proximo": "Revisão artística da V1 pelo autor (aba Homologação); depois, as passadas manuais listadas no relatório",
-  "nota": "Silhueta aprovada pelo autor em 08/11/2026. V1 (modelagem detalhada, materiais e LODs) homologada tecnicamente; revisão artística pendente.",
+  "proximo": "Revisão artística da V1.1 pelo autor (aba Homologação e folha gate/folha-v1-x-v1-1.png)",
+  "nota": "Silhueta aprovada pelo autor em 08/11/2026. V1.1 (passada escultórica: rosto, cabelo, ondas, saia, capa, cinto, faixa, mão, friso) homologada tecnicamente; revisão artística pendente.",
   "fontes": [
     "docs/art-bible/POSEIDON_V11_SCULPTURE_BIBLE.md",
     "docs/art-bible/POSEIDON_V10_GUARDIAN_ART_PRODUCTION.md"
@@ -47,7 +47,7 @@
       ]
     },
     "escultura": {
-      "estado": "andamento",
+      "estado": "feito",
       "artefatos": [
         "arena-forge/sculpture-studio/guardian_depths.py"
       ]
@@ -55,26 +55,27 @@
     "lods": {
       "estado": "feito",
       "artefatos": [
-        "arena-forge/assets/poseidon-depths-v1/guardian-depths-build.json"
+        "arena-forge/assets/poseidon-depths-v1-1/guardian-depths-build.json"
       ]
     },
     "exportacao": {
       "estado": "feito",
       "artefatos": [
-        "arena-forge/assets/poseidon-depths-v1/guardian-depths-lod0.glb",
-        "arena-forge/assets/poseidon-depths-clay/guardian-depths-clay.glb"
+        "arena-forge/assets/poseidon-depths-v1-1/guardian-depths-lod0.glb",
+        "arena-forge/assets/poseidon-depths-v1/guardian-depths-lod0.glb"
       ]
     },
     "comparacao": {
       "estado": "feito",
       "artefatos": [
         "arena-forge/sculpture-studio/sheet_ab.py",
-        "docs/img/sculpture-studio/guardian-depths/folha-ab-silhueta-frente.png"
+        "docs/img/sculpture-studio/guardian-depths/gate/folha-v1-x-v1-1.png"
       ]
     },
     "validacao": {
       "estado": "andamento",
       "artefatos": [
+        "tools/test-sculpture-depths-v1-1.py",
         "tools/test-sculpture-depths-v1.py",
         "tools/test-sculpture-homologacao.py",
         "tools/sculpture-homologate.py"
@@ -83,6 +84,7 @@
     "versionamento": {
       "estado": "feito",
       "artefatos": [
+        "arena-forge/assets/poseidon-depths-v1-1/SHA256SUMS",
         "arena-forge/assets/poseidon-depths-v1/SHA256SUMS"
       ]
     }
@@ -137,10 +139,18 @@
       "pasta": "arena-forge/assets/poseidon-depths-v1",
       "flag": "sculptDepthsV1",
       "relatorio": "docs/sculpture-studio-guardian-depths-v1.md",
+      "commit": "4e4bf85"
+    },
+    {
+      "id": "v1-1",
+      "nome": "V1.1",
+      "pasta": "arena-forge/assets/poseidon-depths-v1-1",
+      "flag": "sculptDepthsV11",
+      "relatorio": "docs/sculpture-studio-guardian-depths-v1-1.md",
       "commit": null
     }
   ],
-  "atual": "v1",
+  "atual": "v1-1",
   "previas": [
     "docs/img/sculpture-studio/guardian-depths/folha-ab-silhueta-frente.png",
     "docs/img/sculpture-studio/guardian-depths/folha-ab-silhueta-tres-quartos.png",
@@ -210,7 +220,8 @@
         "DEPTHS__TRIDENT"
       ],
       "DEPTHS__PEDESTAL": [
-        "DEPTHS__PEDESTAL"
+        "DEPTHS__PEDESTAL",
+        "DEPTHS__FRIEZE"
       ],
       "DEPTHS__WAVES": [
         "DEPTHS__WAVES"
@@ -258,45 +269,75 @@
     },
     "fechar": [
       "DEPTHS__CLOTH"
+    ],
+    "somenteAlta": [
+      "DEPTHS__FRIEZE"
     ]
   },
   "capturas": {
     "pasta": "docs/img/sculpture-studio/guardian-depths",
     "grupos": {
+      "Folha V1 × V1.1 (argila)": [
+        "gate/folha-v1-x-v1-1.png"
+      ],
       "Silhueta geral": [
-        "v1-silhueta-frente.png",
-        "v1-silhueta-tres-quartos.png",
-        "v1-silhueta-esquerda.png"
+        "gate/compare-silhueta-frente.png",
+        "gate/compare-frente.png",
+        "gate/compare-tres-quartos.png"
       ],
-      "Argila (V1)": [
-        "v1-argila-frente.png",
-        "v1-argila-tres-quartos.png",
-        "v1-argila-esquerda.png",
-        "v1-argila-direita.png",
-        "v1-argila-costas.png"
+      "Rosto": [
+        "gate/compare-rosto.png",
+        "gate/compare-rosto-perfil.png"
       ],
-      "Prévia aprovada (argila)": [
-        "depths-argila-tres-quartos.png",
-        "depths-silhueta-frente.png"
+      "Cabelo": [
+        "gate/compare-cabelo.png"
+      ],
+      "Mãos": [
+        "gate/compare-mao-comando.png",
+        "gate/compare-mao-tridente.png"
+      ],
+      "Cinto, saia e capa": [
+        "gate/compare-cinto.png",
+        "gate/compare-saia.png",
+        "gate/compare-capa.png",
+        "gate/compare-costas.png"
+      ],
+      "Ondas e pedestal": [
+        "gate/compare-ondas.png",
+        "gate/compare-pedestal.png",
+        "gate/compare-esquerda.png",
+        "gate/compare-direita.png"
       ],
       "Materiais": [
-        "v1-material-frente.png",
-        "v1-material-costas.png",
-        "v1-material-esquerda.png",
-        "v1-material-direita.png",
-        "v1-material-tres-quartos.png"
+        "v1-1-material-frente.png",
+        "v1-1-material-costas.png",
+        "v1-1-material-esquerda.png",
+        "v1-1-material-direita.png",
+        "v1-1-material-tres-quartos.png",
+        "v1-1-inspetor-argila.png",
+        "v1-1-inspetor-wireframe.png"
       ],
       "No mundo": [
-        "v1-mundo-chave0.png",
-        "v1-mundo-chave1.png",
-        "v1-mundo-chave2.png",
-        "v1-mundo-partida.png"
+        "v1-1-mundo-chave0.png",
+        "v1-1-mundo-chave1.png",
+        "v1-1-mundo-chave2.png",
+        "v1-1-mundo-close-profundezas.png",
+        "v1-1-mundo-close-mares.png",
+        "v1-1-mundo-duas.png",
+        "v1-1-mundo-partida.png",
+        "v1-1-partida-cartas.png",
+        "v1-1-celular.png"
       ]
     }
   },
   "testes": [
     {
-      "nome": "Profundezas V1 (inspetor e mundo)",
+      "nome": "Profundezas V1.1 (inspetor, mundo, celular e métricas)",
+      "script": "tools/test-sculpture-depths-v1-1.py",
+      "esperado": 12
+    },
+    {
+      "nome": "Profundezas V1 (regressão)",
       "script": "tools/test-sculpture-depths-v1.py",
       "esperado": 9
     },
@@ -305,5 +346,6 @@
       "script": "tools/test-sculpture-homologacao.py",
       "esperado": 15
     }
-  ]
+  ],
+  "anterior": "v1"
 }

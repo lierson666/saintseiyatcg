@@ -103,9 +103,10 @@ def ground(arm, body, z=0.0, feet=('foot.L', 'foot.R')):
     return dz
 
 
-def envelope_skirt(name, body, top, bottom, rows=40, nb=96, ease=0.012, flare=0.10, folds=(11, 0.010), hem_wave=0.02, center=None, keep=None):
+def envelope_skirt(name, body, top, bottom, rows=40, nb=96, ease=0.012, flare=0.10, folds=(11, 0.010), hem_wave=0.02, center=None, keep=None, fold_fn=None):
     """Saia por envelope da malha posada: a cada altura, o contorno visto de cima (raio máximo por ângulo,
-    fechado entre as pernas) + folga + dobras verticais. `keep(co)` filtra que vértices do corpo contam."""
+    fechado entre as pernas) + folga + dobras verticais. `keep(co)` filtra que vértices do corpo contam.
+    `fold_fn(a, v)` → (dr, dz) troca as dobras senoidais iguais por dobras próprias (ângulo a, altura v de 0 a 1)."""
     co = posed_mesh([body])
     if keep is not None: co = co[keep(co)]
     bm = bmesh.new(); grid = []
@@ -122,8 +123,12 @@ def envelope_skirt(name, body, top, bottom, rows=40, nb=96, ease=0.012, flare=0.
         row = []
         for k in range(nb):
             a = -math.pi + 2 * math.pi * (k + 0.5) / nb
-            rr = env[k] + ease + flare * v ** 1.5 + folds[1] * (0.3 + v) * math.sin(folds[0] * a + 1.7 * v)
-            zz = z - (hem_wave * v ** 3 * math.sin(3 * a)) if i == rows else z
+            if fold_fn:
+                dr, dz = fold_fn(a, v)
+                rr, zz = env[k] + ease + flare * v ** 1.5 + dr, z + dz
+            else:
+                rr = env[k] + ease + flare * v ** 1.5 + folds[1] * (0.3 + v) * math.sin(folds[0] * a + 1.7 * v)
+                zz = z - (hem_wave * v ** 3 * math.sin(3 * a)) if i == rows else z
             row.append(bm.verts.new((cx + rr * math.cos(a), cy + rr * math.sin(a), zz)))
         grid.append(row)
     for i in range(rows):
@@ -135,10 +140,11 @@ def envelope_skirt(name, body, top, bottom, rows=40, nb=96, ease=0.012, flare=0.
     return ob
 
 
-def sheet(name, top, down, length, rows=50, spread=0.25, back=0.18, folds=(7, 0.02), body=None, gap=0.012, thickness=0.009):
+def sheet(name, top, down, length, rows=50, spread=0.25, back=0.18, folds=(7, 0.02), body=None, gap=0.012, thickness=0.009, fold_fn=None):
     """Folha de pano: borda de cima em `top` (lista de pontos), cai na direção `down` por `length`, abrindo para os
     lados (`spread`, ao longo da borda) e para trás (`back`, vetor). Dobras ao longo da largura crescem para baixo.
-    Com `body`, o pano é empurrado para fora da pele (colisão simples, sem simulação)."""
+    Com `body`, o pano é empurrado para fora da pele (colisão simples, sem simulação). `fold_fn(u, v)` → deslocamento
+    (vetor) no lugar das dobras senoidais iguais (u de 0 a 1 ao longo da borda, v de 0 a 1 para baixo)."""
     top = [Vector(p) for p in top]; n = len(top)
     down = Vector(down).normalized(); back = Vector(back)
     mid = sum(top, Vector()) / n
@@ -150,7 +156,10 @@ def sheet(name, top, down, length, rows=50, spread=0.25, back=0.18, folds=(7, 0.
         for j, p in enumerate(top):
             u = j / (n - 1) - 0.5
             q = p + (p - mid) * spread * v * 2 + down * length * v + back * v ** 1.2
-            q += back.normalized() * folds[1] * v * math.sin(folds[0] * math.pi * (u + 0.5) + 2 * v)
+            if fold_fn:
+                q += fold_fn(u + 0.5, v)
+            else:
+                q += back.normalized() * folds[1] * v * math.sin(folds[0] * math.pi * (u + 0.5) + 2 * v)
             if tree:
                 hit = tree.find_nearest(q, 0.08)
                 if hit[0] is not None:
@@ -169,7 +178,7 @@ def sheet(name, top, down, length, rows=50, spread=0.25, back=0.18, folds=(7, 0.
     return ob
 
 
-def strap(name, tree, center, axis, width=0.014, thick=0.004, n=64, lift=0.0015, reach=0.3, max_ratio=1.3):
+def strap(name, tree, center, axis, width=0.014, thick=0.004, n=64, lift=0.0015, reach=0.3, max_ratio=1.3, envelope=0):
     """Tira chata em volta de um membro ou do quadril (sandália, bracelete, cinto). Raios saem de fora e vão até o
     eixo, no plano perpendicular a `axis`, contra a malha `tree` (posed_bvh). A tira segue a superfície tocada; um
     raio que erra ou acerta longe demais (peito do pé no plano do tornozelo) fica no raio mediano × `max_ratio`."""
@@ -183,7 +192,9 @@ def strap(name, tree, center, axis, width=0.014, thick=0.004, n=64, lift=0.0015,
     ok = [r for r in rad if r is not None and r > 0]
     med = float(np.median(ok)) if ok else 0.05
     rad = [min(r, med * max_ratio) if (r is not None and r > 0) else med for r in rad]
-    for _ in range(2): rad = [(rad[k - 1] + 2 * rad[k] + rad[(k + 1) % n]) / 4 for k in range(n)]
+    if envelope:   # tira sobre pano pregueado: passa por cima das pregas (máximo na janela), sem serrilhar a borda
+        rad = [max(rad[(k + j) % n] for j in range(-envelope, envelope + 1)) for k in range(n)]
+    for _ in range(2 + 2 * bool(envelope)): rad = [(rad[k - 1] + 2 * rad[k] + rad[(k + 1) % n]) / 4 for k in range(n)]
     bm = bmesh.new(); lo, hi = [], []
     for d, r in zip(dirs, rad):
         p = c + d * (r + lift)
@@ -199,7 +210,7 @@ def strap(name, tree, center, axis, width=0.014, thick=0.004, n=64, lift=0.0015,
     return ob
 
 
-def ribbon(name, tree, pts, width, thick=0.004, lift=0.004, n=60):
+def ribbon(name, tree, pts, width, thick=0.004, lift=0.004, n=60, smooth=2, conform=False):
     """Faixa chata que corre sobre a pele (talabarte, faixa a tiracolo): a linha por `pts` é reamostrada, cada ponto
     vai à superfície mais próxima de `tree` (posed_bvh) e a largura fica no plano tangente."""
     pts = [Vector(p) for p in pts]
@@ -213,19 +224,28 @@ def ribbon(name, tree, pts, width, thick=0.004, lift=0.004, n=60):
     for p in line:
         h = tree.find_nearest(p, 0.3)
         surf.append(h[0] if h[0] is not None else p); nrm.append(h[1] if h[0] is not None else Vector((0, -1, 0)))
-    for _ in range(3):   # normais suaves ao longo da faixa: sem torção nas emendas de faces
+    for _ in range(8):   # normais suaves ao longo da faixa: sem torção nas emendas de faces
         nrm = [(nrm[max(i - 1, 0)] + nrm[i] * 2 + nrm[min(i + 1, n - 1)]).normalized() for i in range(n)]
     bm = bmesh.new(); L, R = [], []
     for i, (q, nn) in enumerate(zip(surf, nrm)):
-        t = (surf[min(i + 1, n - 1)] - surf[max(i - 1, 0)]).normalized()
+        ref = line if conform else surf   # a superfície projetada pula entre faces: a tangente vem da linha suave
+        t = (ref[min(i + 1, n - 1)] - ref[max(i - 1, 0)]).normalized()
         side = t.cross(nn).normalized(); q = q + nn * lift
-        L.append(bm.verts.new(q - side * width / 2)); R.append(bm.verts.new(q + side * width / 2))
+        ends = [q - side * width / 2, q + side * width / 2]
+        if conform:   # as bordas também assentam na pele (no esterno a faixa reta afundava e saía em cacos)
+            for e in range(2):
+                h = tree.find_nearest(ends[e], 0.05)
+                if h[0] is not None: ends[e] = h[0] + h[1] * lift
+        L.append(bm.verts.new(ends[0])); R.append(bm.verts.new(ends[1]))
     for i in range(n - 1):
         bm.faces.new((L[i], R[i], R[i + 1], L[i + 1]))
     bmesh.ops.recalc_face_normals(bm, faces=bm.faces[:])
     bmesh.ops.solidify(bm, geom=bm.faces[:], thickness=thick)
     ob = mesh_from_bm(name, bm)
-    sm = ob.modifiers.new('suave', 'SMOOTH'); sm.factor = 0.5; sm.iterations = 2; apply_modifiers(ob)
+    if smooth:
+        sm = ob.modifiers.new('suave', 'SMOOTH'); sm.factor = 0.5; sm.iterations = smooth; apply_modifiers(ob)
+    else:   # faixa chata: só chanfro nas quinas, sem encolher a seção
+        bv = ob.modifiers.new('chanfro', 'BEVEL'); bv.width = thick * 0.3; bv.segments = 2; apply_modifiers(ob)
     for p in ob.data.polygons: p.use_smooth = True
     return ob
 

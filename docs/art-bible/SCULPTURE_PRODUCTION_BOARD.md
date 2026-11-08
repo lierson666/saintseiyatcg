@@ -6,5 +6,5 @@ Estágios: CONCEPT → MODELING → TECHNICAL_QA → ART_REVIEW → APPROVED →
 
 | Asset | Versão | Estágio | Homologação | Próximo passo |
 | --- | --- | --- | --- | --- |
-| Guardião das Profundezas (`POS-MON-V10-002`) | v1 | ~~CONCEPT~~ → ~~MODELING~~ → ~~TECHNICAL_QA~~ → **ART_REVIEW** → APPROVED → PUBLISHED | TECHNICALLY_VALIDATED / ART_REVIEW_PENDING | Revisão artística da V1 pelo autor (aba Homologação); depois, as passadas manuais listadas no relatório |
+| Guardião das Profundezas (`POS-MON-V10-002`) | v1-1 | ~~CONCEPT~~ → ~~MODELING~~ → ~~TECHNICAL_QA~~ → **ART_REVIEW** → APPROVED → PUBLISHED | TECHNICALLY_VALIDATED / ART_REVIEW_PENDING | Revisão artística da V1.1 pelo autor (aba Homologação e folha gate/folha-v1-x-v1-1.png) |
 | Guardião das Marés (`POS-MON-V10-001`) | v14-1 | ~~CONCEPT~~ → ~~MODELING~~ → ~~TECHNICAL_QA~~ → **ART_REVIEW** → APPROVED → PUBLISHED | TECHNICALLY_VALIDATED / ART_REVIEW_PENDING | Revisão artística do autor na aba Homologação do Sculpture Studio |

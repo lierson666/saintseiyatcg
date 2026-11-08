@@ -59,12 +59,13 @@ HI_GROUPS = {  # parte do GLB → objetos do high poly (os que não existirem s�
     'TIDES__DETAILS': ['TIDES__LAUREL', 'TIDES__PEDESTAL_GOLD', 'TIDES__BELT'],
 }
 DROP = ['TIDES_COLLIDER']
+HIGH_ONLY = []   # objetos só do high poly (relevo fino): entram no bake de normais, não na malha dos LODs
 CLOSE = []   # partes com vértices duplicados (pano com solidify) que travam a decimação: funde os duplicados antes
 
 
 def configure(build):
     """Troca a especificação pela seção "build" de um projeto (projects/<id>.json)."""
-    global PREFIX, ROOT_NAME, STEM, PIVOT, BODY_NAME, SPLIT, EYES_PART, HI_GROUPS, DROP, MATERIALS, LOD0, TEX, CLOSE
+    global PREFIX, ROOT_NAME, STEM, PIVOT, BODY_NAME, SPLIT, EYES_PART, HI_GROUPS, DROP, MATERIALS, LOD0, TEX, CLOSE, HIGH_ONLY
     PREFIX, ROOT_NAME, STEM = build['prefixo'], build['raiz'], build['arquivo']
     PIVOT = tuple(build['pivo']); BODY_NAME = build['corpo']
     SPLIT, EYES_PART = build.get('separar', []), build.get('olhos', build['corpo'])
@@ -72,6 +73,7 @@ def configure(build):
     MATERIALS, LOD0 = build['materiais'], dict(build['lod0'])
     TEX = {**TEX, **build.get('texturas', {})}
     CLOSE = build.get('fechar', [])
+    HIGH_ONLY = build.get('somenteAlta', [])
 
 
 # ───────────────────────────── etapa 1: escultura ─────────────────────────────
@@ -262,7 +264,7 @@ def low_poly(hi, low_body, lod):
             if name == EYES_PART:
                 src[name] += [_copy(e, f'L{lod}_{e.name}') for e in objs if 'eye' in e.name]
             continue
-        src[name] = [_copy(o, f'L{lod}_{o.name}') for o in objs]
+        src[name] = [_copy(o, f'L{lod}_{o.name}') for o in objs if o.name not in HIGH_ONLY]
     for name, objs in src.items():
         if name == 'TIDES__DETAILS' and any('BELT' in x.name for x in objs):
             # V14: cada peça com a sua cota; juntas, o corte de ilhas jogava fora a coroa e os ouros

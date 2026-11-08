@@ -3,6 +3,10 @@
   python3 arena-forge/sculpture-studio/sheet_ab.py <pasta> <tag-esquerda> <tag-direita> [vistas...]
 Lê <pasta>/<tag>-<modo>-<vista>.png (modo = silhueta e argila, como sculpt_kit.silhouette_shots grava) e grava
 <pasta>/folha-ab-<modo>-<vista>.png. No palácio, a escultura da esquerda do mundo vai à esquerda da folha.
+
+Quality gate entre versões (os 15 quadros de guardian_depths.py -- gate):
+  python3 arena-forge/sculpture-studio/sheet_ab.py --gate <pasta-gate> <versão-a> <versão-b>
+Grava <pasta-gate>/compare-<quadro>.png (lado a lado) e <pasta-gate>/folha-<a>-x-<b>.png (todos os quadros numa folha).
 """
 import sys
 from pathlib import Path
@@ -23,5 +27,29 @@ def main(folder, a, b, views=('frente', 'tres-quartos', 'esquerda', 'costas')):
     print('folhas em', folder)
 
 
-if __name__ == '__main__':
+GATE = ['frente', 'costas', 'esquerda', 'direita', 'tres-quartos', 'rosto', 'rosto-perfil', 'cabelo', 'mao-comando', 'mao-tridente',
+        'cinto', 'saia', 'capa', 'pedestal', 'ondas', 'silhueta-frente']
+
+
+def gate(folder, a, b, cell=360):
+    folder = Path(folder); pairs = []
+    for n in GATE:
+        ia, ib = Image.open(folder / f'{a}-{n}.png').convert('RGB'), Image.open(folder / f'{b}-{n}.png').convert('RGB')
+        o = Image.new('RGB', (ia.width + ib.width + 10, ia.height + 44), (12, 14, 20))
+        o.paste(ia, (0, 44)); o.paste(ib, (ia.width + 10, 44))
+        d = ImageDraw.Draw(o)
+        d.text((12, 12), f'{a.upper()} · {n}', fill=(214, 181, 116)); d.text((ia.width + 22, 12), f'{b.upper()} · {n}', fill=(214, 181, 116))
+        o.save(folder / f'compare-{n}.png'); pairs.append(o)
+    cols = 4; rows = -(-len(pairs) // cols)
+    sheet = Image.new('RGB', (cols * cell * 2, rows * (cell + 30)), (12, 14, 20))
+    for i, o in enumerate(pairs):
+        t = o.copy(); t.thumbnail((cell * 2, cell + 30))
+        sheet.paste(t, ((i % cols) * cell * 2, (i // cols) * (cell + 30)))
+    sheet.save(folder / f'folha-{a}-x-{b}.png')
+    print('gate em', folder)
+
+
+if __name__ == '__main__' and sys.argv[1] == '--gate':
+    gate(sys.argv[2], sys.argv[3], sys.argv[4])
+elif __name__ == '__main__':
     main(sys.argv[1], sys.argv[2], sys.argv[3], *([sys.argv[4:]] if len(sys.argv) > 4 else []))

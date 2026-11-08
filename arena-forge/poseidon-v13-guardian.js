@@ -8,11 +8,15 @@ export const GUARDIAN_TIDES = {position: [-10.8, 4.41, -34.8], url: './assets/po
 // Posição B (direita do mundo): Guardião das Profundezas. Só a prévia em argila existe (DEV), atrás de ?sculptDepthsClay=1.
 export const GUARDIAN_DEPTHS = {position: [10.8, 4.41, -34.8], url: './assets/poseidon-depths-clay/guardian-depths-clay.glb', yaw: 0, dev: true};
 export function depthsClayFlag() {
-  try { const q = new URLSearchParams(location.search); return q.get('sculptDepthsClay') === '1' || q.get('sculptDepthsV1') === '1'; } catch { return false; }
+  try { const q = new URLSearchParams(location.search); return ['sculptDepthsClay', 'sculptDepthsV1', 'sculptDepthsV11'].some(k => q.get(k) === '1'); } catch { return false; }
 }
-// V1 (modelagem detalhada, materiais e LODs) com ?sculptDepthsV1=1; senão a prévia em argila.
+// V1.1 com ?sculptDepthsV11=1, V1 com ?sculptDepthsV1=1; senão a prévia em argila.
 export function depthsUrl() {
-  try { if (new URLSearchParams(location.search).get('sculptDepthsV1') === '1') return './assets/poseidon-depths-v1/guardian-depths-lod0.glb'; } catch {}
+  try {
+    const q = new URLSearchParams(location.search);
+    if (q.get('sculptDepthsV11') === '1') return './assets/poseidon-depths-v1-1/guardian-depths-lod0.glb';
+    if (q.get('sculptDepthsV1') === '1') return './assets/poseidon-depths-v1/guardian-depths-lod0.glb';
+  } catch {}
   return GUARDIAN_DEPTHS.url;
 }
 
