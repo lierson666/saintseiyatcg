@@ -729,7 +729,7 @@
   "s": "Armadura da Precisão Divina",
   "h": [
    "Golpe Celestial — Sempre que o Devoto equipado declara um Golpe contra um Devoto inimigo, ele recebe +2 ATQ até o fim da sua rodada.",
-   "Pontaria Divina — Sempre que o Devoto equipado derrota um Devoto inimigo em combate, compre uma carta. Essa habilidade ativa apenas uma vez por ciclo."
+   "Pontaria Divina — Sempre que o Devoto equipado derrota um Devoto inimigo em combate, compre uma carta. Essa habilidade ativa apenas uma vez até o início da sua próxima rodada."
   ],
   "f": "\"O Olimpo não erra. Apenas espera.\""
  },

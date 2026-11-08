@@ -745,7 +745,7 @@ Se um Strike causar Soul zero aos dois Gods simultaneamente por efeitos aplicáv
 - **“Until the end of this round” / “até o fim desta rodada”, “this round” / “nesta rodada”:** termina no Cleanup do Round em andamento, seja de quem for.
 - **“Until the end of its controller's next round” / “até o fim da próxima rodada do controlador dele”:** termina no Cleanup do próximo Round do controlador daquele Devotee.
 - **“Once each round” / “uma vez por rodada”:** renova em todo Cleanup, portanto pode ser usado de novo no Round do adversário.
-- **“Once each cycle” / “uma vez por ciclo”:** renova só no início do Round do dono da carta. Pode ser usado no Round de qualquer jogador, mas só uma vez entre um início e o outro. Vale para os efeitos fortes de compra, Latent, Selo, moagem e Preparar.
+- **“Once until the start of your next round” / “uma vez até o início da sua próxima rodada”** (antes “once each cycle” / “uma vez por ciclo”; o nome mudou em 08/11/2026, autor, a regra não): renova só no início do Round do dono da carta. Pode ser usado no Round de qualquer jogador, mas só uma vez entre um início e o outro. Vale para os efeitos fortes de compra, Latent, Selo, moagem e Preparar.
 - Contagens de Round dobram em relação às antigas: o Round 12 de hoje corresponde ao antigo Round 6.
 - “During your opponent's turn” volta a valer literalmente.
 - **Distribuir dano** (“distribute N damage among …”): cada alvo escolhido recebe pelo menos 1 (autor, 30/10/2026).

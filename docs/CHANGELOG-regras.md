@@ -4,6 +4,13 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-11-08 — Glossário (guia, linha do “once each cycle”) — “uma vez por ciclo” vira “uma vez até o início da sua próxima rodada”
+
+- **Antes:** “Once each cycle” / “uma vez por ciclo”.
+- **Depois:** “Once until the start of your next round” / “uma vez até o início da sua próxima rodada”. Mesma regra: renova só no início do Round do dono e pode ser usada no Round de qualquer jogador.
+- **Motivo:** autor, 08/11/2026: a palavra “ciclo” saiu do jogo.
+- **Feito:** guia, 114 textos em 55 cartas de cards.json (EN/PT, Awaken e Poderes), rascunhos PT de Hades e Artemis. O motor não muda (`cycleOwner` em `core.js`). Snapshots de `data/registry/` e `notas_pt` ficam como estão.
+
 ## 2026-11-07 — Domain ares-v6-334 — The Arena of Blood: a Ressonância fere Ares
 
 - **Antes:** Resonance — Ares: {2}{C}: Devotee aliado alvo recebe +2 @ATK e @Impulse até o fim da sua rodada.

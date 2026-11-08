@@ -82,7 +82,7 @@
       "equipar_custo": 5,
       "keywords_en": [],
       "habilidades_en": [
-        "Resonance — Pegasus Seiya: Once each cycle, after Pegasus Seiya survives a Strike, you may Prepare him. (With a @Seal counter, remove one instead.) He cannot declare another Strike this round."
+        "Resonance — Pegasus Seiya: Once until the start of your next round, after Pegasus Seiya survives a Strike, you may Prepare him. (With a @Seal counter, remove one instead.) He cannot declare another Strike this round."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -97,7 +97,7 @@
       "nome_exibicao_pt": "ARMADURA DE PÉGASO V2",
       "subtitulo_pt": "As Asas da Esperança",
       "habilidades_pt": [
-        "Ressonância — Seiya de Pégaso: Uma vez por ciclo, depois que Seiya de Pégaso sobrevive a um Golpe, você pode Prepará-lo. (Com marcador de @Selo, tire um em vez disso.) Ele não pode declarar outro Golpe nesta rodada."
+        "Ressonância — Seiya de Pégaso: Uma vez até o início da sua próxima rodada, depois que Seiya de Pégaso sobrevive a um Golpe, você pode Prepará-lo. (Com marcador de @Selo, tire um em vez disso.) Ele não pode declarar outro Golpe nesta rodada."
       ],
       "tagline_pt": "As Asas da Esperança",
       "auto_equip_pt": ["Seiya de Pégaso"]
@@ -221,7 +221,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Diamond Dust — Once each cycle, when Cygnus Hyoga deals Strike damage to an enemy Devotee, put 1 @Seal counter on that Devotee.",
+        "Diamond Dust — Once until the start of your next round, when Cygnus Hyoga deals Strike damage to an enemy Devotee, put 1 @Seal counter on that Devotee.",
         "Ice Ring When Cygnus Hyoga declares a Strike against an enemy Devotee that already has a @Seal counter, prevent all retaliatory Strike damage from that Devotee during this Strike."
       ],
       "habilidade_awaken_en": "",
@@ -230,7 +230,7 @@
       "nome_exibicao_pt": "HYOGA DE CISNE",
       "subtitulo_pt": "A Determinação Congelada",
       "habilidades_pt": [
-        "Pó de Diamante — Uma vez por ciclo, quando Hyoga de Cisne causa dano de Golpe a um Devoto inimigo, coloque 1 marcador de @Selo nesse Devoto.",
+        "Pó de Diamante — Uma vez até o início da sua próxima rodada, quando Hyoga de Cisne causa dano de Golpe a um Devoto inimigo, coloque 1 marcador de @Selo nesse Devoto.",
         "CÍRCULO DE GELO — Quando Hyoga de Cisne declara um Golpe contra um Devoto inimigo que já tem um marcador de @Selo, previna todo o dano de revide desse Devoto durante esse Golpe."
       ],
       "tagline_pt": "A Determinação Congelada",
@@ -263,7 +263,7 @@
       "equipar_custo": 5,
       "keywords_en": [],
       "habilidades_en": [
-        "Freezing Aura — Once each cycle, when equipped Devotee deals Strike damage to an enemy Devotee, choose one: Put 1 @Seal counter on that Devotee; or, if that Devotee had a @Seal counter when the Strike began, draw a card.",
+        "Freezing Aura — Once until the start of your next round, when equipped Devotee deals Strike damage to an enemy Devotee, choose one: Put 1 @Seal counter on that Devotee; or, if that Devotee had a @Seal counter when the Strike began, draw a card.",
         "Resonance — Cygnus Hyoga: If the defending Devotee has a @Seal counter when the Strike begins, Cygnus Hyoga gets +2 @ATK during that Strike."
       ],
       "habilidade_awaken_en": "",
@@ -279,7 +279,7 @@
       "nome_exibicao_pt": "ARMADURA DE CISNE V2",
       "subtitulo_pt": "O Gelo Eterno",
       "habilidades_pt": [
-        "Aura Congelante — Uma vez por ciclo, quando o Devoto equipado causa dano de Golpe a um Devoto inimigo, escolha um: coloque 1 marcador de @Selo nesse Devoto; ou, se esse Devoto tinha um marcador de @Selo quando o Golpe começou, compre uma carta.",
+        "Aura Congelante — Uma vez até o início da sua próxima rodada, quando o Devoto equipado causa dano de Golpe a um Devoto inimigo, escolha um: coloque 1 marcador de @Selo nesse Devoto; ou, se esse Devoto tinha um marcador de @Selo quando o Golpe começou, compre uma carta.",
         "Ressonância — Hyoga de Cisne: Se o Devoto defensor tiver um marcador de @Selo quando o Golpe começar, Hyoga de Cisne recebe +2 @ATQ durante esse Golpe."
       ],
       "tagline_pt": "O Gelo Eterno",
@@ -312,7 +312,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "ROLLING DEFENSE — Once each cycle, when an enemy Devotee declares a Strike against your God or another friendly Saint, you may make Andromeda Shun Unprepared. If you do, that Strike deals no damage.",
+        "ROLLING DEFENSE — Once until the start of your next round, when an enemy Devotee declares a Strike against your God or another friendly Saint, you may make Andromeda Shun Unprepared. If you do, that Strike deals no damage.",
         "Brotherhood — Other friendly Saints get +1 @HP."
       ],
       "habilidade_awaken_en": "",
@@ -321,7 +321,7 @@
       "nome_exibicao_pt": "SHUN DE ANDRÔMEDA",
       "subtitulo_pt": "O Protetor Gentil",
       "habilidades_pt": [
-        "DEFESA CIRCULAR — Uma vez por ciclo, quando um Devoto inimigo declara um Golpe contra seu Deus ou outro Cavaleiro aliado, você pode deixar Shun de Andrômeda Despreparado. Se fizer isso, esse Golpe não causa dano.",
+        "DEFESA CIRCULAR — Uma vez até o início da sua próxima rodada, quando um Devoto inimigo declara um Golpe contra seu Deus ou outro Cavaleiro aliado, você pode deixar Shun de Andrômeda Despreparado. Se fizer isso, esse Golpe não causa dano.",
         "Irmandade — Outros Cavaleiros aliados recebem +1 @PV."
       ],
       "tagline_pt": "O Protetor Gentil"
@@ -1051,7 +1051,7 @@
       "habilidades_en": [
         "Nimble",
         "Marble Wall — Once each round, when Lizard Misty would take Strike damage, you may pay {1}{C}. If you do, prevent up to 3 of that damage.",
-        "Untouchable — Once each cycle, if Marble Wall prevented all Strike damage that would be dealt to Lizard Misty, you may Prepare him. (With a @Seal counter, remove one instead.) He cannot declare another Strike this round."
+        "Untouchable — Once until the start of your next round, if Marble Wall prevented all Strike damage that would be dealt to Lizard Misty, you may Prepare him. (With a @Seal counter, remove one instead.) He cannot declare another Strike this round."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -1061,7 +1061,7 @@
       "habilidades_pt": [
         "Ágil",
         "Muralha de Mármore — Uma vez por rodada, quando Misty de Lagarto sofreria dano de Golpe, você pode pagar {1}{C}. Se fizer isso, previna até 3 desse dano.",
-        "Intocável — Uma vez por ciclo, se a Muralha de Mármore preveniu todo o dano de Golpe que seria causado a Misty de Lagarto, você pode Prepará-lo. (Com marcador de @Selo, tire um em vez disso.) Ele não pode declarar outro Golpe nesta rodada."
+        "Intocável — Uma vez até o início da sua próxima rodada, se a Muralha de Mármore preveniu todo o dano de Golpe que seria causado a Misty de Lagarto, você pode Prepará-lo. (Com marcador de @Selo, tire um em vez disso.) Ele não pode declarar outro Golpe nesta rodada."
       ],
       "tagline_pt": "A Beleza Intocável"
     },
@@ -1092,7 +1092,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Medusa Shield — Once each cycle, when an enemy Devotee declares a Strike against Perseus Algol, you may pay {2}{C}. If you do, that Devotee cannot be Prepared or declare another Strike until the end of its controller's next round.",
+        "Medusa Shield — Once until the start of your next round, when an enemy Devotee declares a Strike against Perseus Algol, you may pay {2}{C}. If you do, that Devotee cannot be Prepared or declare another Strike until the end of its controller's next round.",
         "Stone Gaze — Whenever Perseus Algol survives a Strike as a defender, he gets +1 @ATK / +1 @HP until the end of your next round."
       ],
       "habilidade_awaken_en": "",
@@ -1101,7 +1101,7 @@
       "nome_exibicao_pt": "ALGOL DE PERSEU",
       "subtitulo_pt": "O Olhar Petrificante",
       "habilidades_pt": [
-        "Escudo da Medusa — Uma vez por ciclo, quando um Devoto inimigo declara um Golpe contra Algol de Perseu, você pode pagar {2}{C}. Se fizer isso, esse Devoto não pode ser Preparado nem declarar outro Golpe até o fim da próxima rodada do controlador dele.",
+        "Escudo da Medusa — Uma vez até o início da sua próxima rodada, quando um Devoto inimigo declara um Golpe contra Algol de Perseu, você pode pagar {2}{C}. Se fizer isso, esse Devoto não pode ser Preparado nem declarar outro Golpe até o fim da próxima rodada do controlador dele.",
         "Olhar de Pedra — Sempre que Algol de Perseu sobrevive a um Golpe como defensor, ele recebe +1 @ATQ / +1 @PV até o fim da sua próxima rodada."
       ],
       "tagline_pt": "O Olhar Petrificante"
@@ -3215,7 +3215,7 @@
       "keywords_en": [],
       "habilidades_en": [
         "Black Wing Formation — Once each round, when Crow Jamian declares a Strike against an enemy Devotee, you may pay {1}{C}. If you do, that Devotee gets -1 @ATK during that Strike.",
-        "Crow’s Escape — Once each cycle, when Crow Jamian survives a Strike as a defender, you may Prepare him. (With a @Seal counter, remove one instead.) He cannot declare another Strike this round."
+        "Crow’s Escape — Once until the start of your next round, when Crow Jamian survives a Strike as a defender, you may Prepare him. (With a @Seal counter, remove one instead.) He cannot declare another Strike this round."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -3224,7 +3224,7 @@
       "subtitulo_pt": "As Asas Negras",
       "habilidades_pt": [
         "Formação das Asas Negras — Uma vez por rodada, quando Jamian de Corvo declara um Golpe contra um Devoto inimigo, você pode pagar {1}{C}. Se fizer isso, esse Devoto recebe -1 @ATQ durante esse Golpe.",
-        "Fuga do Corvo — Uma vez por ciclo, quando Jamian de Corvo sobrevive a um Golpe como defensor, você pode Prepará-lo. (Com marcador de @Selo, tire um em vez disso.) Ele não pode declarar outro Golpe nesta rodada."
+        "Fuga do Corvo — Uma vez até o início da sua próxima rodada, quando Jamian de Corvo sobrevive a um Golpe como defensor, você pode Prepará-lo. (Com marcador de @Selo, tire um em vez disso.) Ele não pode declarar outro Golpe nesta rodada."
       ],
       "tagline_pt": "As Asas Negras"
     },
@@ -3920,7 +3920,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "COSMO OF HOPE — Divine Power\nOnce each cycle, when an Athena Devotee you control survives a Strike, gain {1}{L}.",
+        "COSMO OF HOPE — Divine Power\nOnce until the start of your next round, when an Athena Devotee you control survives a Strike, gain {1}{L}.",
         "HEALING LIGHT — Divine Command\nCost: {1}{C}. Activate only during your round, once each round.\nRemove 1 damage from target friendly Devotee.\nAwakened: remove 2 damage instead and gain {1}{S}."
       ],
       "habilidade_awaken_en": "DIVINE PROTECTION — Awaken 5\nAthena Devotees you control get +1 @Power and +1 @HP.\nWhen an Athena Devotee you control would be destroyed, you may pay {3}{C}. If you do, prevent that destruction and leave it with 1 @HP.",
@@ -3930,7 +3930,7 @@
       "subtitulo_pt": "SAORI KIDO",
       "tagline_pt": "Saori Kido",
       "habilidades_pt": [
-        "COSMO DA ESPERANÇA — Poder Divino\nUma vez por ciclo, quando um Devoto de Athena que você controla sobrevive a um Golpe, ganhe {1}{L}.",
+        "COSMO DA ESPERANÇA — Poder Divino\nUma vez até o início da sua próxima rodada, quando um Devoto de Athena que você controla sobrevive a um Golpe, ganhe {1}{L}.",
         "LUZ CURADORA — Comando Divino\nCusto: {1}{C}. Ative apenas durante a sua rodada, uma vez por rodada.\nRemova 1 de dano do Devoto aliado alvo.\nDesperto: remova 2 de dano em vez disso e ganhe {1}{S}."
       ],
       "habilidade_awaken_pt": "PROTEÇÃO DIVINA — Despertar 5\nDevotos de Athena que você controla recebem +1 de Poder e +1 @PV.\nQuando um Devoto de Athena que você controla seria destruído, você pode pagar {3}{C}. Se fizer isso, previna essa destruição e deixe-o com 1 @PV.",
@@ -3960,7 +3960,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "WATER PRISON — Divine Power\nOnce each cycle, when an enemy Devotee declares a Strike, you may pay {2}{C}. If you do, @Seal that Devotee.",
+        "WATER PRISON — Divine Power\nOnce until the start of your next round, when an enemy Devotee declares a Strike, you may pay {2}{C}. If you do, @Seal that Devotee.",
         "BINDING TIDE — Divine Command\nCost: {1}{C}. Activate only during your round, once each round.\nPut a @Seal counter on target enemy Devotee with cost 2 or less.\nAwakened: that Devotee can have any cost."
       ],
       "habilidade_awaken_en": "PRESSURE OF THE DEEP — Awaken 4\nWhenever an enemy Devotee becomes @Sealed, its controller mills two cards and you draw a card.",
@@ -3969,7 +3969,7 @@
       "nome_exibicao_pt": "POSEIDON",
       "subtitulo_pt": "Maré Alta",
       "habilidades_pt": [
-        "PRISÃO DE ÁGUA — Poder Divino\nUma vez por ciclo, quando um Devoto inimigo declara um Golpe, você pode pagar {2}{C}. Se fizer isso, Sele esse Devoto.",
+        "PRISÃO DE ÁGUA — Poder Divino\nUma vez até o início da sua próxima rodada, quando um Devoto inimigo declara um Golpe, você pode pagar {2}{C}. Se fizer isso, Sele esse Devoto.",
         "MARÉ QUE PRENDE — Comando Divino\nCusto: {1}{C}. Ative apenas durante a sua rodada, uma vez por rodada.\nColoque 1 marcador de @Selo no Devoto inimigo alvo de custo 2 ou menos.\nDesperto: o Devoto pode ter qualquer custo."
       ],
       "tagline_pt": "Maré Alta",
@@ -4001,7 +4001,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "OFFERING OF LIFE — Divine Power\nOnce each cycle, when a Devotee you control is defeated, you may lose {2}{S}. If you do, draw a card and gain {1}{L}.",
+        "OFFERING OF LIFE — Divine Power\nOnce until the start of your next round, when a Devotee you control is defeated, you may lose {2}{S}. If you do, draw a card and gain {1}{L}.",
         "DARK TOUCH — Divine Command\nCost: {1}{C}. Activate only during your round, once each round.\nTarget enemy Devotee gets -1 @ATK / -1 @HP until the end of your round.\nAwakened: -2 @ATK / -2 @HP instead."
       ],
       "habilidade_awaken_en": "KING OF TARTARUS — Awaken 7\nWhenever a Devotee returns from your Tartarus to the Battlefield under your control, the enemy God loses {1}{S} and Hades gains {1}{S}.",
@@ -4011,7 +4011,7 @@
       "subtitulo_pt": "Portador da Morte",
       "tagline_pt": "Portador da Morte",
       "habilidades_pt": [
-        "OFERENDA DE VIDA — Poder Divino\nUma vez por ciclo, quando um Devoto que você controla é derrotado, você pode perder {2}{S}. Se fizer isso, compre uma carta e ganhe {1}{L}.",
+        "OFERENDA DE VIDA — Poder Divino\nUma vez até o início da sua próxima rodada, quando um Devoto que você controla é derrotado, você pode perder {2}{S}. Se fizer isso, compre uma carta e ganhe {1}{L}.",
         "TOQUE SOMBRIO — Comando Divino\nCusto: {1}{C}. Ative apenas durante a sua rodada, uma vez por rodada.\nO Devoto inimigo alvo recebe -1 @ATQ / -1 @PV até o fim da sua rodada.\nDesperto: -2 @ATQ / -2 @PV em vez disso."
       ],
       "habilidade_awaken_pt": "REI DO TÁRTARO — Despertar 7\nSempre que um Devoto volta do seu Tártaro para o Campo de Batalha sob seu controle, o Deus inimigo perde {1}{S} e Hades ganha {1}{S}.",
@@ -4045,7 +4045,7 @@
         "MOON HARVEST — Divine Power\nOnce each round, when you place a card as a Cosmo Base, you may ignore its Cosmoble requirement. If you do, lose {2}{S}.",
         "HUNTRESS TRAINING — Divine Command\nCost: {1}{C}. Activate only during your round, once each round.\nTarget friendly Devotee gets +1 @ATK / +1 @HP until the end of your round.\nAwakened: put a @Training counter on it instead."
       ],
-      "habilidade_awaken_en": "MOONLIGHT BLESSING — Awaken 3\nOnce each cycle, when you would gain Latent Cosmo, gain an additional {1}{L}, up to the normal limit of 3.",
+      "habilidade_awaken_en": "MOONLIGHT BLESSING — Awaken 3\nOnce until the start of your next round, when you would gain Latent Cosmo, gain an additional {1}{L}, up to the normal limit of 3.",
       "ultimate_en": "MOON AWAKENING — Ultimate\nCost: {9}{C}\nChoose up to five Cosmo Bases you control.\nUntil the end of this round, they become 3/3 Moon Spirit Devotees with @Impulse, @Long Range and @Pierce, in addition to being Cosmo Bases.\nThose Cosmo Bases cannot produce Cosmo while transformed.\nAt the end of this round, they stop being Devotees and remain on the Battlefield as Cosmo Bases.",
       "notas_pt": "Versão nova fornecida pelo autor em 24/10/2026; texto preservado.",
       "nome_exibicao_pt": "ÁRTEMIS",
@@ -4055,7 +4055,7 @@
         "COLHEITA LUNAR — Poder Divino\nUma vez por rodada, quando você colocar uma carta como Base de Cosmo, você pode ignorar o requisito de Cosmável dela. Se fizer isso, perca {2}{S}.",
         "TREINO DA CAÇA — Comando Divino\nCusto: {1}{C}. Ative apenas durante a sua rodada, uma vez por rodada.\nO Devoto aliado alvo recebe +1 @ATQ / +1 @PV até o fim da sua rodada.\nDesperto: coloque 1 marcador de @Treinamento nele em vez disso."
       ],
-      "habilidade_awaken_pt": "BÊNÇÃO DO LUAR — Despertar 3\nUma vez por ciclo, quando você ganharia Cosmo Latente, ganhe {1}{L} adicional, até o limite normal de 3.",
+      "habilidade_awaken_pt": "BÊNÇÃO DO LUAR — Despertar 3\nUma vez até o início da sua próxima rodada, quando você ganharia Cosmo Latente, ganhe {1}{L} adicional, até o limite normal de 3.",
       "ultimate_pt": "DESPERTAR DA LUA — Supremo\nCusto: {9}{C}\nEscolha até cinco Bases de Cosmo que você controla.\nAté o fim desta rodada, elas se tornam Devotos Espíritos Lunares 3/3 com @Impulso, @Longo Alcance e @Perfurar, além de continuarem sendo Bases de Cosmo.\nEssas Bases de Cosmo não podem produzir Cosmo enquanto estiverem transformadas.\nNo fim desta rodada, elas deixam de ser Devotos e permanecem no Campo de Batalha como Bases de Cosmo.",
       "flavour_pt": "“Olhe para o céu… esse é o reino que você nunca alcançará.”"
     },
@@ -4083,7 +4083,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "BLOODLUST — Divine Power\nCost: {3}{C}\nOnce each cycle, choose a Devotee you control. Prepare it. (With a @Seal counter, remove one instead.) It gets +1 @Power until the end of this round. It can't declare a Strike against a God this round.",
+        "BLOODLUST — Divine Power\nCost: {3}{C}\nOnce until the start of your next round, choose a Devotee you control. Prepare it. (With a @Seal counter, remove one instead.) It gets +1 @Power until the end of this round. It can't declare a Strike against a God this round.",
         "BLOOD TOLL — Divine Command\nCost: {1}{C}. Activate only during your round, once each round.\nDeal 1 damage to target enemy Devotee. Ares loses {1}{S}."
       ],
       "habilidade_awaken_en": "BUTCHERY — Awaken 7\nWhenever a Devotee you control destroys an enemy Devotee during a Strike, the enemy God loses {1}{S}.",
@@ -4093,7 +4093,7 @@
       "subtitulo_pt": "Movido pelo Ódio",
       "tagline_pt": "Movido pelo Ódio",
       "habilidades_pt": [
-        "SEDE DE SANGUE — Poder Divino\nCusto: {3}{C}\nUma vez por ciclo, escolha um Devoto que você controla. Prepare-o. (Com marcador de @Selo, tire um em vez disso.) Ele recebe +1 de Poder até o fim da sua rodada. Ele não pode declarar um Golpe contra um Deus nesta rodada.",
+        "SEDE DE SANGUE — Poder Divino\nCusto: {3}{C}\nUma vez até o início da sua próxima rodada, escolha um Devoto que você controla. Prepare-o. (Com marcador de @Selo, tire um em vez disso.) Ele recebe +1 de Poder até o fim da sua rodada. Ele não pode declarar um Golpe contra um Deus nesta rodada.",
         "TRIBUTO DE SANGUE — Comando Divino\nCusto: {1}{C}. Ative apenas durante a sua rodada, uma vez por rodada.\nCause 1 de dano ao Devoto inimigo alvo. Ares perde {1}{S}."
       ],
       "habilidade_awaken_pt": "CARNIFICINA — Despertar 7\nSempre que um Devoto que você controla destrói um Devoto inimigo durante um Golpe, o Deus inimigo perde {1}{S}.",
@@ -4130,7 +4130,7 @@
         "Pierce",
         "When Sea Dragon Kanon enters the Battlefield, return target Devotee to its owner's hand.",
         "Golden Triangle — {2}{C}, {T}: Return target enemy Devotee to its owner's hand. If that Devotee had a @Seal counter, its controller mills two cards.",
-        "Emperor's Shadow — Once each cycle, when Sea Dragon Kanon deals Strike damage to an enemy Devotee, you may put 1 @Seal counter on another target enemy Devotee."
+        "Emperor's Shadow — Once until the start of your next round, when Sea Dragon Kanon deals Strike damage to an enemy Devotee, you may put 1 @Seal counter on another target enemy Devotee."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -4141,7 +4141,7 @@
         "Perfurar",
         "Quando Kanon de Dragão Marinho entra no Campo de Batalha, devolva o Devoto alvo à mão do dono.",
         "Triângulo Dourado — {2}{C}, {T}: Devolva o Devoto inimigo alvo à mão do dono. Se esse Devoto tinha um marcador de @Selo, seu controlador envia ao Tártaro as 2 cartas do topo do deck.",
-        "Sombra do Imperador — Uma vez por ciclo, quando Kanon de Dragão Marinho causa dano de Golpe a um Devoto inimigo, você pode colocar 1 marcador de @Selo em outro Devoto inimigo alvo."
+        "Sombra do Imperador — Uma vez até o início da sua próxima rodada, quando Kanon de Dragão Marinho causa dano de Golpe a um Devoto inimigo, você pode colocar 1 marcador de @Selo em outro Devoto inimigo alvo."
       ],
       "tagline_pt": "O Mestre Oculto das Profundezas"
     },
@@ -4405,7 +4405,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Aurora Borealis — Once each cycle, when Kraken Isaac deals Strike damage to an enemy Devotee, put 1 @Seal counter on that Devotee.",
+        "Aurora Borealis — Once until the start of your next round, when Kraken Isaac deals Strike damage to an enemy Devotee, put 1 @Seal counter on that Devotee.",
         "Frozen Vengeance — Whenever Kraken Isaac declares a Strike against an enemy Devotee that already has a @Seal counter, he gets +2 @ATK during that Strike.",
         "Frozen Brotherhood — Whenever Kraken Isaac declares a Strike against Cygnus Hyoga, both Devotees get +2 @ATK during that Strike. If either Devotee survives, remove 1 @Seal counter from each surviving Devotee."
       ],
@@ -4415,7 +4415,7 @@
       "nome_exibicao_pt": "ISAAK DE KRAKEN",
       "subtitulo_pt": "A Vingança Gelada do Ártico",
       "habilidades_pt": [
-        "Aurora Boreal — Uma vez por ciclo, quando Isaak de Kraken causa dano de Golpe a um Devoto inimigo, coloque 1 marcador de @Selo nesse Devoto.",
+        "Aurora Boreal — Uma vez até o início da sua próxima rodada, quando Isaak de Kraken causa dano de Golpe a um Devoto inimigo, coloque 1 marcador de @Selo nesse Devoto.",
         "Vingança Gelada — Sempre que Isaak de Kraken declara um Golpe contra um Devoto inimigo que já tem um marcador de @Selo, ele recebe +2 @ATQ durante esse Golpe.",
         "Irmandade Gelada — Sempre que Isaak de Kraken declara um Golpe contra Hyoga de Cisne, ambos os Devotos recebem +2 @ATQ durante esse Golpe. Se qualquer um dos Devotos sobreviver, remova 1 marcador de @Selo de cada Devoto sobrevivente."
       ],
@@ -4500,7 +4500,7 @@
       "keywords_en": [],
       "habilidades_en": [
         "Ocean's Herald — When Mermaid Thetis enters the Battlefield, look at the top 3 cards of your deck. You may reveal a Marina General or Scale from among them and put it into your hand. Put the remaining cards on the bottom of your deck in any order.",
-        "Devotion to Poseidon — Once each cycle, when your God would take Strike damage, you may pay {1}{C} and make Mermaid Thetis Unprepared. If you do, prevent up to 2 of that damage.",
+        "Devotion to Poseidon — Once until the start of your next round, when your God would take Strike damage, you may pay {1}{C} and make Mermaid Thetis Unprepared. If you do, prevent up to 2 of that damage.",
         "Emperor's Favor — While your God is Poseidon, Mermaid Thetis gets +0 @ATK / +1 @HP."
       ],
       "habilidade_awaken_en": "",
@@ -4510,7 +4510,7 @@
       "subtitulo_pt": "A Voz Leal do Imperador dos Mares",
       "habilidades_pt": [
         "Arauto do Oceano — Quando Thetis de Sereia entra no Campo de Batalha, olhe as 3 cartas do topo do seu deck. Você pode revelar um General Marina ou uma Escama dentre elas e pôr essa carta na sua mão. Ponha as cartas restantes no fundo do deck em qualquer ordem.",
-        "Devoção a Poseidon — Uma vez por ciclo, quando seu Deus sofreria dano de Golpe, você pode pagar {1}{C} e deixar Thetis de Sereia Despreparada. Se fizer isso, previna até 2 desse dano.",
+        "Devoção a Poseidon — Uma vez até o início da sua próxima rodada, quando seu Deus sofreria dano de Golpe, você pode pagar {1}{C} e deixar Thetis de Sereia Despreparada. Se fizer isso, previna até 2 desse dano.",
         "Favor do Imperador — Enquanto seu Deus for Poseidon, Thetis de Sereia recebe +0 @ATQ / +1 @PV."
       ],
       "tagline_pt": "A Voz Leal do Imperador dos Mares"
@@ -4543,7 +4543,7 @@
       "keywords_en": [],
       "habilidades_en": [
         "Ocean's Blessing — Once each round, when equipped Devotee would take Strike damage, you may pay {1}{C}. If you do, prevent up to 2 of that damage.",
-        "Resonance — Mermaid Thetis: Whenever Mermaid Thetis prevents Strike damage with Ocean's Blessing or Devotion to Poseidon, you may draw a card, then discard a card. This ability triggers only once each cycle."
+        "Resonance — Mermaid Thetis: Whenever Mermaid Thetis prevents Strike damage with Ocean's Blessing or Devotion to Poseidon, you may draw a card, then discard a card. This ability triggers only once until the start of your next round."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -4559,7 +4559,7 @@
       "subtitulo_pt": "A Pérola dos Sete Mares",
       "habilidades_pt": [
         "Bênção do Oceano — Uma vez por rodada, quando o Devoto equipado sofreria dano de Golpe, você pode pagar {1}{C}. Se fizer isso, previna até 2 desse dano.",
-        "Ressonância — Thetis de Sereia: Sempre que Thetis de Sereia previne dano de Golpe com a Bênção do Oceano ou a Devoção a Poseidon, você pode comprar uma carta e depois descartar uma carta. Esta habilidade só dispara uma vez por ciclo."
+        "Ressonância — Thetis de Sereia: Sempre que Thetis de Sereia previne dano de Golpe com a Bênção do Oceano ou a Devoção a Poseidon, você pode comprar uma carta e depois descartar uma carta. Esta habilidade só dispara uma vez até o início da sua próxima rodada."
       ],
       "tagline_pt": "A Pérola dos Sete Mares",
       "auto_equip_pt": ["Thetis de Sereia"]
@@ -4593,7 +4593,7 @@
       "habilidades_en": [
         "Divine Awakening — When Julian Solo enters the Battlefield, you may put 1 @Seal counter on target enemy Devotee.",
         "Vessel of Poseidon — While your God is Poseidon and is Awakened, Julian Solo gets +2 @ATK / +1 @HP.",
-        "The Emperor's Will — Once each cycle, whenever an enemy Devotee becomes @Sealed, you may pay {1}{C}. If you do, draw a card, then discard a card."
+        "The Emperor's Will — Once until the start of your next round, whenever an enemy Devotee becomes @Sealed, you may pay {1}{C}. If you do, draw a card, then discard a card."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -4603,7 +4603,7 @@
       "habilidades_pt": [
         "Despertar Divino — Quando Julian Solo entra no Campo de Batalha, você pode colocar 1 marcador de @Selo no Devoto inimigo alvo.",
         "Receptáculo de Poseidon — Enquanto seu Deus for Poseidon e estiver Desperto, Julian Solo recebe +2 @ATQ / +1 @PV.",
-        "A Vontade do Imperador — Uma vez por ciclo, sempre que um Devoto inimigo fica @Selado, você pode pagar {1}{C}. Se fizer isso, compre uma carta e depois descarte uma carta."
+        "A Vontade do Imperador — Uma vez até o início da sua próxima rodada, sempre que um Devoto inimigo fica @Selado, você pode pagar {1}{C}. Se fizer isso, compre uma carta e depois descarte uma carta."
       ],
       "tagline_pt": "O Corpo Mortal de um Deus"
     },
@@ -4635,7 +4635,7 @@
       "keywords_en": [],
       "habilidades_en": [
         "Abyssal Ritual — {1}{C}, {T}: Target enemy Devotee with a @Seal counter gets -1 @ATK until the end of your round.",
-        "Whispers Below — Once each cycle, when an enemy Devotee becomes @Sealed, you may look at the top card of your deck. You may put that card on the bottom of your deck."
+        "Whispers Below — Once until the start of your next round, when an enemy Devotee becomes @Sealed, you may look at the top card of your deck. You may put that card on the bottom of your deck."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -4644,7 +4644,7 @@
       "subtitulo_pt": "Guardião das Profundezas Esquecidas",
       "habilidades_pt": [
         "Ritual Abissal — {1}{C}, {T}: O Devoto inimigo alvo com um marcador de @Selo recebe -1 @ATQ até o fim da sua rodada.",
-        "Sussurros Abaixo — Uma vez por ciclo, quando um Devoto inimigo fica @Selado, você pode olhar a carta do topo do seu deck. Você pode pô-la no fundo do deck."
+        "Sussurros Abaixo — Uma vez até o início da sua próxima rodada, quando um Devoto inimigo fica @Selado, você pode olhar a carta do topo do seu deck. Você pode pô-la no fundo do deck."
       ],
       "tagline_pt": "Guardião das Profundezas Esquecidas"
     },
@@ -4839,7 +4839,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Tidal Thrust — Once each cycle, when Marina Spearman declares a Strike against an enemy Devotee with a @Seal counter, Marina Spearman gets +1 @ATK during that Strike."
+        "Tidal Thrust — Once until the start of your next round, when Marina Spearman declares a Strike against an enemy Devotee with a @Seal counter, Marina Spearman gets +1 @ATK during that Strike."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -4847,7 +4847,7 @@
       "nome_exibicao_pt": "LANCEIRO MARINA",
       "subtitulo_pt": "A Lança que Perfura as Ondas",
       "habilidades_pt": [
-        "Estocada da Maré — Uma vez por ciclo, quando o Lanceiro Marina declara um Golpe contra um Devoto inimigo com um marcador de @Selo, o Lanceiro Marina recebe +1 @ATQ durante esse Golpe."
+        "Estocada da Maré — Uma vez até o início da sua próxima rodada, quando o Lanceiro Marina declara um Golpe contra um Devoto inimigo com um marcador de @Selo, o Lanceiro Marina recebe +1 @ATQ durante esse Golpe."
       ],
       "tagline_pt": "A Lança que Perfura as Ondas"
     },
@@ -4878,7 +4878,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Relentless Advance — Once each cycle, when Marina Vanguard defeats an enemy Devotee with a Strike, you may Prepare Marina Vanguard. (With a @Seal counter, remove one instead.) It cannot declare another Strike this round."
+        "Relentless Advance — Once until the start of your next round, when Marina Vanguard defeats an enemy Devotee with a Strike, you may Prepare Marina Vanguard. (With a @Seal counter, remove one instead.) It cannot declare another Strike this round."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -4886,7 +4886,7 @@
       "nome_exibicao_pt": "VANGUARDA MARINA",
       "subtitulo_pt": "O Primeiro a Erguer-se, o Último a Cair",
       "habilidades_pt": [
-        "Avanço Implacável — Uma vez por ciclo, quando a Vanguarda Marina derrota um Devoto inimigo com um Golpe, você pode Prepará-la. (Com marcador de @Selo, tire um em vez disso.) Ela não pode declarar outro Golpe nesta rodada."
+        "Avanço Implacável — Uma vez até o início da sua próxima rodada, quando a Vanguarda Marina derrota um Devoto inimigo com um Golpe, você pode Prepará-la. (Com marcador de @Selo, tire um em vez disso.) Ela não pode declarar outro Golpe nesta rodada."
       ],
       "tagline_pt": "O Primeiro a Erguer-se, o Último a Cair"
     },
@@ -5118,7 +5118,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Oceanic Insight — Once each cycle, whenever an enemy Devotee becomes @Sealed, you may pay {1}{C}. If you do, draw a card, then discard a card.",
+        "Oceanic Insight — Once until the start of your next round, whenever an enemy Devotee becomes @Sealed, you may pay {1}{C}. If you do, draw a card, then discard a card.",
         "Sacred Waters — {1}{C}, {T}: Remove 1 damage from target friendly Devotee."
       ],
       "habilidade_awaken_en": "",
@@ -5127,7 +5127,7 @@
       "nome_exibicao_pt": "TEMPLO DA SACERDOTISA DO MAR",
       "subtitulo_pt": "Suas Preces Ecoam Pelas Profundezas",
       "habilidades_pt": [
-        "Visão Oceânica — Uma vez por ciclo, sempre que um Devoto inimigo fica @Selado, você pode pagar {1}{C}. Se fizer isso, compre uma carta e depois descarte uma carta.",
+        "Visão Oceânica — Uma vez até o início da sua próxima rodada, sempre que um Devoto inimigo fica @Selado, você pode pagar {1}{C}. Se fizer isso, compre uma carta e depois descarte uma carta.",
         "Águas Sagradas — {1}{C}, {T}: Remova 1 de dano do Devoto aliado alvo."
       ],
       "tagline_pt": "Suas Preces Ecoam Pelas Profundezas"
@@ -5200,7 +5200,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Pearl Divination — Once each cycle, when you cast a Moment or Technique, you may pay {1}{C}. If you do, draw a card, then discard a card.",
+        "Pearl Divination — Once until the start of your next round, when you cast a Moment or Technique, you may pay {1}{C}. If you do, draw a card, then discard a card.",
         "Pearl of Protection — Whenever you discard a card, you may pay {1}{C}. If you do, prevent the next 1 Strike damage that would be dealt to target friendly Devotee this round. This ability triggers only once each round."
       ],
       "habilidade_awaken_en": "",
@@ -5209,7 +5209,7 @@
       "nome_exibicao_pt": "GUARDIÃO DO SANTUÁRIO DA PÉROLA",
       "subtitulo_pt": "A Verdade Mais Profunda Jaz Dentro da Pérola",
       "habilidades_pt": [
-        "Adivinhação da Pérola — Uma vez por ciclo, quando você conjura um Momento ou Técnica, você pode pagar {1}{C}. Se fizer isso, compre uma carta e depois descarte uma carta.",
+        "Adivinhação da Pérola — Uma vez até o início da sua próxima rodada, quando você conjura um Momento ou Técnica, você pode pagar {1}{C}. Se fizer isso, compre uma carta e depois descarte uma carta.",
         "Pérola de Proteção — Sempre que você descarta uma carta, você pode pagar {1}{C}. Se fizer isso, previna os próximos 1 de dano de Golpe que seriam causados ao Devoto aliado alvo nesta rodada. Esta habilidade só dispara uma vez por rodada."
       ],
       "tagline_pt": "A Verdade Mais Profunda Jaz Dentro da Pérola"
@@ -5242,7 +5242,7 @@
       "keywords_en": ["Guardian"],
       "habilidades_en": [
         "Guardian",
-        "Tidal Rejection — Once each cycle, when an enemy casts a Moment or Technique that targets your God or a friendly Devotee, you may pay {2}{C} and make Ancient Sea Guardian Unprepared. If you do, counter that Moment or Technique."
+        "Tidal Rejection — Once until the start of your next round, when an enemy casts a Moment or Technique that targets your God or a friendly Devotee, you may pay {2}{C} and make Ancient Sea Guardian Unprepared. If you do, counter that Moment or Technique."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -5251,7 +5251,7 @@
       "subtitulo_pt": "O Oceano Rejeita Todos os Intrusos",
       "habilidades_pt": [
         "Guardião",
-        "Rejeição da Maré — Uma vez por ciclo, quando um inimigo conjura um Momento ou Técnica que tem como alvo seu Deus ou um Devoto aliado, você pode pagar {2}{C} e deixar o Antigo Guardião do Mar Despreparado. Se fizer isso, anule esse Momento ou Técnica."
+        "Rejeição da Maré — Uma vez até o início da sua próxima rodada, quando um inimigo conjura um Momento ou Técnica que tem como alvo seu Deus ou um Devoto aliado, você pode pagar {2}{C} e deixar o Antigo Guardião do Mar Despreparado. Se fizer isso, anule esse Momento ou Técnica."
       ],
       "tagline_pt": "O Oceano Rejeita Todos os Intrusos"
     },
@@ -5323,7 +5323,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Sacred Interdiction — Once each cycle, when an enemy casts a Moment or Technique, you may pay {2}{C} and make Trident Temple Warden Unprepared. If you do, counter that Moment or Technique unless its controller pays {2}{C}."
+        "Sacred Interdiction — Once until the start of your next round, when an enemy casts a Moment or Technique, you may pay {2}{C} and make Trident Temple Warden Unprepared. If you do, counter that Moment or Technique unless its controller pays {2}{C}."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -5331,7 +5331,7 @@
       "nome_exibicao_pt": "ZELADOR DO TEMPLO DO TRIDENTE",
       "subtitulo_pt": "Nenhum Feitiço Perturbará o Templo Sagrado",
       "habilidades_pt": [
-        "Interdição Sagrada — Uma vez por ciclo, quando um inimigo conjura um Momento ou Técnica, você pode pagar {2}{C} e deixar o Zelador do Templo do Tridente Despreparado. Se fizer isso, anule esse Momento ou Técnica a menos que seu controlador pague {2}{C}."
+        "Interdição Sagrada — Uma vez até o início da sua próxima rodada, quando um inimigo conjura um Momento ou Técnica, você pode pagar {2}{C} e deixar o Zelador do Templo do Tridente Despreparado. Se fizer isso, anule esse Momento ou Técnica a menos que seu controlador pague {2}{C}."
       ],
       "tagline_pt": "Nenhum Feitiço Perturbará o Templo Sagrado"
     },
@@ -5362,7 +5362,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Prophecy of the Abyss — Once each cycle, whenever an opponent mills one or more cards, you may pay {1}{C}. If you do, draw a card.",
+        "Prophecy of the Abyss — Once until the start of your next round, whenever an opponent mills one or more cards, you may pay {1}{C}. If you do, draw a card.",
         "Dark Revelation — When The Drowned Prophet enters the Battlefield, target player mills two cards."
       ],
       "habilidade_awaken_en": "",
@@ -5371,7 +5371,7 @@
       "nome_exibicao_pt": "O PROFETA AFOGADO",
       "subtitulo_pt": "Ele Viu o Fim de Todas as Costas",
       "habilidades_pt": [
-        "Profecia do Abismo — Uma vez por ciclo, sempre que um oponente envia uma ou mais cartas do deck ao Tártaro, você pode pagar {1}{C}. Se fizer isso, compre uma carta.",
+        "Profecia do Abismo — Uma vez até o início da sua próxima rodada, sempre que um oponente envia uma ou mais cartas do deck ao Tártaro, você pode pagar {1}{C}. Se fizer isso, compre uma carta.",
         "Revelação Sombria — Quando O Profeta Afogado entra no Campo de Batalha, o jogador alvo envia ao Tártaro as 2 cartas do topo do seu deck."
       ],
       "tagline_pt": "Ele Viu o Fim de Todas as Costas"
@@ -5404,7 +5404,7 @@
       "keywords_en": [],
       "habilidades_en": [
         "Countercurrent — Once each round, when an enemy casts a Moment or Technique that targets a friendly Marina Devotee, you may pay {1}{C}. If you do, return that Marina Devotee to its owner's hand. If that Moment or Technique has no remaining legal targets, counter it.",
-        "Tactical Retreat — Whenever a friendly Marina Devotee returns to its owner's hand, you may pay {1}{C}. If you do, draw a card, then discard a card. This ability triggers only once each cycle."
+        "Tactical Retreat — Whenever a friendly Marina Devotee returns to its owner's hand, you may pay {1}{C}. If you do, draw a card, then discard a card. This ability triggers only once until the start of your next round."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -5413,7 +5413,7 @@
       "subtitulo_pt": "A Sabedoria do Imperador É uma Arma",
       "habilidades_pt": [
         "Contracorrente — Uma vez por rodada, quando um inimigo conjura um Momento ou Técnica que tem como alvo um Devoto Marina aliado, você pode pagar {1}{C}. Se fizer isso, devolva esse Devoto Marina à mão do dono. Se esse Momento ou Técnica não tiver mais alvos legais, anule-o.",
-        "Retirada Tática — Sempre que um Devoto Marina aliado volta à mão do dono, você pode pagar {1}{C}. Se fizer isso, compre uma carta e depois descarte uma carta. Esta habilidade só dispara uma vez por ciclo."
+        "Retirada Tática — Sempre que um Devoto Marina aliado volta à mão do dono, você pode pagar {1}{C}. Se fizer isso, compre uma carta e depois descarte uma carta. Esta habilidade só dispara uma vez até o início da sua próxima rodada."
       ],
       "tagline_pt": "A Sabedoria do Imperador É uma Arma"
     },
@@ -5590,7 +5590,7 @@
       "keywords_en": [],
       "habilidades_en": [
         "Equipped Devotee gets +1 @ATK.",
-        "Piercing Current — Once each cycle, when equipped Devotee declares a Strike against a @Sealed enemy Devotee, it gets an additional +1 @ATK during that Strike."
+        "Piercing Current — Once until the start of your next round, when equipped Devotee declares a Strike against a @Sealed enemy Devotee, it gets an additional +1 @ATK during that Strike."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -5606,7 +5606,7 @@
       "subtitulo_pt": "Mil Correntes, Um Só Golpe",
       "habilidades_pt": [
         "O Devoto equipado recebe +1 @ATQ.",
-        "Corrente Perfurante — Uma vez por ciclo, quando o Devoto equipado declara um Golpe contra um Devoto inimigo @Selado, ele recebe +1 @ATQ adicional durante esse Golpe."
+        "Corrente Perfurante — Uma vez até o início da sua próxima rodada, quando o Devoto equipado declara um Golpe contra um Devoto inimigo @Selado, ele recebe +1 @ATQ adicional durante esse Golpe."
       ],
       "tagline_pt": "Mil Correntes, Um Só Golpe"
     },
@@ -6335,7 +6335,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Oceanic Tribute — Once each cycle, during your round, you may draw a card. If you do, discard a card and mill four cards.",
+        "Oceanic Tribute — Once until the start of your next round, during your round, you may draw a card. If you do, discard a card and mill four cards.",
         "Resonance — Poseidon: Once each round, when you cast a Moment or Technique, you may pay {2}{C}. If you do, draw a card."
       ],
       "habilidade_awaken_en": "",
@@ -6344,7 +6344,7 @@
       "nome_exibicao_pt": "O SANTUÁRIO SUBMARINO",
       "subtitulo_pt": "O Trono Sob as Ondas",
       "habilidades_pt": [
-        "Tributo Oceânico — Uma vez por ciclo, durante a sua rodada, você pode comprar uma carta. Se fizer isso, descarte uma carta e mile quatro cartas.",
+        "Tributo Oceânico — Uma vez até o início da sua próxima rodada, durante a sua rodada, você pode comprar uma carta. Se fizer isso, descarte uma carta e mile quatro cartas.",
         "Ressonância — Poseidon: Uma vez por rodada, quando você conjura um Momento ou uma Técnica, você pode pagar {2}{C}. Se fizer isso, compre uma carta."
       ],
       "tagline_pt": "O Trono Sob as Ondas"
@@ -6376,7 +6376,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Dimensional Currents — Once each cycle, when you return an enemy Devotee to its owner's hand, its controller mills one card.",
+        "Dimensional Currents — Once until the start of your next round, when you return an enemy Devotee to its owner's hand, its controller mills one card.",
         "Resonance — Poseidon: Once each round, {3}{C}: Return target enemy Devotee with cost 3 or less to its owner's hand."
       ],
       "habilidade_awaken_en": "",
@@ -6385,7 +6385,7 @@
       "nome_exibicao_pt": "O PILAR DO ATLÂNTICO NORTE",
       "subtitulo_pt": "O Domínio do Dragão Marinho",
       "habilidades_pt": [
-        "Correntes Dimensionais — Uma vez por ciclo, quando você devolve um Devoto inimigo para a mão do dono, o controlador dele mila uma carta.",
+        "Correntes Dimensionais — Uma vez até o início da sua próxima rodada, quando você devolve um Devoto inimigo para a mão do dono, o controlador dele mila uma carta.",
         "Ressonância — Poseidon: Uma vez por rodada, {3}{C}: Devolva o Devoto inimigo alvo de custo 3 ou menos para a mão do dono."
       ],
       "tagline_pt": "O Domínio do Dragão Marinho"
@@ -6499,7 +6499,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Frozen Waters — Once each cycle, when an enemy Devotee becomes @Sealed, its controller mills one card.",
+        "Frozen Waters — Once until the start of your next round, when an enemy Devotee becomes @Sealed, its controller mills one card.",
         "Aurora Borealis — Once per game — {2}{C}: Draw a card for each enemy Devotee with a @Seal counter (up to 3)."
       ],
       "habilidade_awaken_en": "",
@@ -6508,7 +6508,7 @@
       "nome_exibicao_pt": "O PILAR DO OCEANO ÁRTICO",
       "subtitulo_pt": "O Domínio do Kraken",
       "habilidades_pt": [
-        "Águas Congeladas — Uma vez por ciclo, quando um Devoto inimigo fica @Selado, seu controlador envia ao Tártaro a carta do topo do deck.",
+        "Águas Congeladas — Uma vez até o início da sua próxima rodada, quando um Devoto inimigo fica @Selado, seu controlador envia ao Tártaro a carta do topo do deck.",
         "Aurora Boreal — Uma vez por jogo — {2}{C}: Compre uma carta para cada Devoto inimigo com um marcador de @Selo (até 3)."
       ],
       "tagline_pt": "O Domínio do Kraken"
@@ -6622,7 +6622,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Crushing Depths — Once each cycle, when an enemy Devotee becomes @Sealed, its controller mills two cards.",
+        "Crushing Depths — Once until the start of your next round, when an enemy Devotee becomes @Sealed, its controller mills two cards.",
         "Resonance — Poseidon: Once each round, {3}{C}: Target opponent mills three cards."
       ],
       "habilidade_awaken_en": "",
@@ -6631,7 +6631,7 @@
       "nome_exibicao_pt": "A FOSSA ABISSAL",
       "subtitulo_pt": "Onde a Luz e a Esperança Desaparecem",
       "habilidades_pt": [
-        "Profundezas Esmagadoras — Uma vez por ciclo, quando um Devoto inimigo fica @Selado, o controlador dele mila duas cartas.",
+        "Profundezas Esmagadoras — Uma vez até o início da sua próxima rodada, quando um Devoto inimigo fica @Selado, o controlador dele mila duas cartas.",
         "Ressonância — Poseidon: Uma vez por rodada, {3}{C}: O oponente alvo mila três cartas."
       ],
       "tagline_pt": "Onde a Luz e a Esperança Desaparecem"
@@ -7509,7 +7509,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Royal Knowledge — Once each cycle, when you cast a Moment or Technique, you may pay {1}{C}. If you do, draw a card, then discard a card.",
+        "Royal Knowledge — Once until the start of your next round, when you cast a Moment or Technique, you may pay {1}{C}. If you do, draw a card, then discard a card.",
         "Emperor's Authority — The first Moment or Technique you cast each round costs {1}{C} less to cast, to a minimum of {1}{B}."
       ],
       "habilidade_awaken_en": "",
@@ -7525,7 +7525,7 @@
       "nome_exibicao_pt": "CETRO REAL ATLANTE",
       "subtitulo_pt": "Autoridade Forjada Sob as Ondas",
       "habilidades_pt": [
-        "Conhecimento Real — Uma vez por ciclo, quando você conjura um Momento ou Técnica, você pode pagar {1}{C}. Se fizer isso, compre uma carta e depois descarte uma carta.",
+        "Conhecimento Real — Uma vez até o início da sua próxima rodada, quando você conjura um Momento ou Técnica, você pode pagar {1}{C}. Se fizer isso, compre uma carta e depois descarte uma carta.",
         "Autoridade do Imperador — O primeiro Momento ou Técnica que você conjura a cada rodada custa {1}{C} a menos para conjurar, até um mínimo de {1}{B}."
       ],
       "tagline_pt": "Autoridade Forjada Sob as Ondas"
@@ -7860,8 +7860,8 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Divine Sovereignty — Once each cycle, when you cast a Moment or Technique, you may pay {1}{C}. If you do, draw a card.",
-        "Oceanic Judgment — {3}{C}: Once each cycle, put 1 @Seal counter on target enemy Devotee.",
+        "Divine Sovereignty — Once until the start of your next round, when you cast a Moment or Technique, you may pay {1}{C}. If you do, draw a card.",
+        "Oceanic Judgment — {3}{C}: Once until the start of your next round, put 1 @Seal counter on target enemy Devotee.",
         "Emperor's Dominion — While your God is Poseidon and is Awakened, the first Moment or Technique you cast each round costs {1}{B} less."
       ],
       "habilidade_awaken_en": "",
@@ -7877,8 +7877,8 @@
       "nome_exibicao_pt": "TRIDENTE DE POSEIDON",
       "subtitulo_pt": "A Autoridade dos Sete Mares",
       "habilidades_pt": [
-        "Soberania Divina — Uma vez por ciclo, quando você conjura um Momento ou Técnica, você pode pagar {1}{C}. Se fizer isso, compre uma carta.",
-        "Julgamento Oceânico — {3}{C}: Uma vez por ciclo, coloque 1 marcador de @Selo no Devoto inimigo alvo.",
+        "Soberania Divina — Uma vez até o início da sua próxima rodada, quando você conjura um Momento ou Técnica, você pode pagar {1}{C}. Se fizer isso, compre uma carta.",
+        "Julgamento Oceânico — {3}{C}: Uma vez até o início da sua próxima rodada, coloque 1 marcador de @Selo no Devoto inimigo alvo.",
         "Domínio do Imperador — Enquanto seu Deus for Poseidon e estiver Desperto, o primeiro Momento ou Técnica que você conjura a cada rodada custa {1}{B} a menos."
       ],
       "tagline_pt": "A Autoridade dos Sete Mares"
@@ -8261,7 +8261,7 @@
       "keywords_en": [],
       "habilidades_en": [
         "Balance of Curse — When Sphinx Pharaoh enters the Battlefield, you may pay {1}{S}. If you do, target enemy God loses {2}{S} and your God gains {2}{S}.",
-        "Dead End Symphony — Once each cycle, whenever you pay Soul to activate an ability, you may pay an additional {1}{S}. If you do, draw 1 card."
+        "Dead End Symphony — Once until the start of your next round, whenever you pay Soul to activate an ability, you may pay an additional {1}{S}. If you do, draw 1 card."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -8270,7 +8270,7 @@
       "subtitulo_pt": "O Juiz das Almas",
       "habilidades_pt": [
         "Balança da Maldição — Quando Pharaó de Esfinge entra no Campo de Batalha, você pode pagar {1}{S}. Se fizer isso, o Deus inimigo alvo perde {2}{S} e seu Deus ganha {2}{S}.",
-        "Sinfonia do Fim — Uma vez por ciclo, sempre que você paga Alma para ativar uma habilidade, você pode pagar {1}{S} adicional. Se fizer isso, compre 1 carta."
+        "Sinfonia do Fim — Uma vez até o início da sua próxima rodada, sempre que você paga Alma para ativar uma habilidade, você pode pagar {1}{S} adicional. Se fizer isso, compre 1 carta."
       ],
       "tagline_pt": "O Juiz das Almas"
     },
@@ -8300,7 +8300,7 @@
       "equipar_custo": 5,
       "keywords_en": [],
       "habilidades_en": [
-        "Resonance — Pharaoh: Once each cycle, whenever Sphinx Pharaoh causes an enemy God to lose Soul through an ability, you may pay {2}{S}. If you do, draw 1 card."
+        "Resonance — Pharaoh: Once until the start of your next round, whenever Sphinx Pharaoh causes an enemy God to lose Soul through an ability, you may pay {2}{S}. If you do, draw 1 card."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -8315,7 +8315,7 @@
       "nome_exibicao_pt": "SÚPLICE DE ESFINGE",
       "subtitulo_pt": "As Balanças dos Condenados",
       "habilidades_pt": [
-        "Ressonância — Pharaó: Uma vez por ciclo, sempre que Pharaó de Esfinge faz o Deus inimigo perder Alma por uma habilidade, você pode pagar {2}{S}. Se fizer isso, compre 1 carta."
+        "Ressonância — Pharaó: Uma vez até o início da sua próxima rodada, sempre que Pharaó de Esfinge faz o Deus inimigo perder Alma por uma habilidade, você pode pagar {2}{S}. Se fizer isso, compre 1 carta."
       ],
       "tagline_pt": "As Balanças dos Condenados",
       "auto_equip_pt": ["Pharaó de Esfinge"],
@@ -8437,7 +8437,7 @@
       "keywords_en": [],
       "habilidades_en": [
         "Eternal Drowsiness — When Hypnos enters the Battlefield, you may pay {2}{S}. If you do, put 2 @Seal counters on each enemy Devotee.",
-        "Eternal Slumber — Once each cycle, when an enemy Devotee loses its last @Seal counter, you may pay {2}{S}. If you do, defeat that Devotee."
+        "Eternal Slumber — Once until the start of your next round, when an enemy Devotee loses its last @Seal counter, you may pay {2}{S}. If you do, defeat that Devotee."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -8446,7 +8446,7 @@
       "subtitulo_pt": "O Sono Eterno",
       "habilidades_pt": [
         "Sonolência Eterna — Quando Hypnos entra no Campo de Batalha, você pode pagar {2}{S}. Se fizer isso, coloque 2 marcadores de @Selo em cada Devoto inimigo.",
-        "Letargia Eterna — Uma vez por ciclo, quando um Devoto inimigo perde seu último marcador de @Selo, você pode pagar {2}{S}. Se fizer isso, derrote esse Devoto."
+        "Letargia Eterna — Uma vez até o início da sua próxima rodada, quando um Devoto inimigo perde seu último marcador de @Selo, você pode pagar {2}{S}. Se fizer isso, derrote esse Devoto."
       ],
       "tagline_pt": "O Sono Eterno"
     },
@@ -8600,7 +8600,7 @@
       "keywords_en": [],
       "habilidades_en": [
         "Pandora's Command — When Pandora enters the Battlefield, you may pay {3}{S}. If you do, search your deck for a Specter card, reveal it, put it into your hand, then shuffle your deck.",
-        "Queen of the Underworld — Once each cycle, when another friendly Devotee is defeated, you may pay {2}{S}. If you do, draw 2 cards."
+        "Queen of the Underworld — Once until the start of your next round, when another friendly Devotee is defeated, you may pay {2}{S}. If you do, draw 2 cards."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -8610,7 +8610,7 @@
       "tagline_pt": "A Voz de Hades",
       "habilidades_pt": [
         "Ordem de Pandora — Quando Pandora entra no Campo de Batalha, você pode pagar {3}{S}. Se fizer isso, procure no seu Deck por uma carta de Espectro, revele-a, coloque-a na sua mão e embaralhe seu Deck.",
-        "Rainha do Mundo dos Mortos — Uma vez por ciclo, quando outro Devoto aliado é derrotado, você pode pagar {2}{S}. Se fizer isso, compre 2 cartas."
+        "Rainha do Mundo dos Mortos — Uma vez até o início da sua próxima rodada, quando outro Devoto aliado é derrotado, você pode pagar {2}{S}. Se fizer isso, compre 2 cartas."
       ]
     },
     {
@@ -8643,7 +8643,7 @@
         "Equipped Devotee gets +2 @ATK / +2 @HP.",
         "Equipped Devotee is @Immune to Artemis and Athena.",
         "Whenever equipped Devotee deals Strike damage to a God, you prepare up to 2 of your Bases and gain {2}{S}.",
-        "Resonance — Pandora: Once each cycle, when Pandora causes you to pay Soul for an ability, your God gains {1}{L}."
+        "Resonance — Pandora: Once until the start of your next round, when Pandora causes you to pay Soul for an ability, your God gains {1}{L}."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -8660,7 +8660,7 @@
         "O Devoto equipado recebe +2 @ATQ / +2 @PV.",
         "O Devoto equipado é @Imune a Artemis e Athena.",
         "Sempre que o Devoto equipado causar dano de Golpe a um Deus, você prepara até 2 das suas Bases e ganha {2}{S}.",
-        "Ressonância — Pandora: Uma vez por ciclo, quando Pandora faz você pagar Alma por uma habilidade, seu Deus ganha {1}{L}."
+        "Ressonância — Pandora: Uma vez até o início da sua próxima rodada, quando Pandora faz você pagar Alma por uma habilidade, seu Deus ganha {1}{L}."
       ],
       "tagline_pt": "O Instrumento da Autoridade Divina"
     },
@@ -8732,7 +8732,7 @@
       "equipar_custo": 5,
       "keywords_en": [],
       "habilidades_en": [
-        "Resonance — Shion: Once each cycle, when Aries Shion returns a Devotee from your Tartarus to the Battlefield, draw 1 card."
+        "Resonance — Shion: Once until the start of your next round, when Aries Shion returns a Devotee from your Tartarus to the Battlefield, draw 1 card."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -8747,7 +8747,7 @@
       "nome_exibicao_pt": "SÚPLICE DE ÁRIES",
       "subtitulo_pt": "A Armadura do Grão-Mestre Ressuscitado",
       "habilidades_pt": [
-        "Ressonância — Shion: Uma vez por ciclo, quando Shion de Áries devolve um Devoto do seu Tártaro para o Campo de Batalha, compre 1 carta."
+        "Ressonância — Shion: Uma vez até o início da sua próxima rodada, quando Shion de Áries devolve um Devoto do seu Tártaro para o Campo de Batalha, compre 1 carta."
       ],
       "tagline_pt": "A Armadura do Grão-Mestre Ressuscitado",
       "auto_equip_pt": ["Shion de Áries, o Cavaleiro Ressuscitado"]
@@ -9796,7 +9796,7 @@
       "keywords_en": [],
       "habilidades_en": [
         "Eternal Devotion — When Elysium Servant enters the Battlefield, your God gains {2}{S}.",
-        "Servant's Sacrifice — Sacrifice Elysium Servant: Draw 1 card. Activate only once each cycle."
+        "Servant's Sacrifice — Sacrifice Elysium Servant: Draw 1 card. Activate only once until the start of your next round."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -9805,7 +9805,7 @@
       "subtitulo_pt": "O Guardião Silencioso do Paraíso",
       "habilidades_pt": [
         "Devoção Eterna — Quando Servo do Elísio entra no Campo de Batalha, seu Deus ganha {2}{S}.",
-        "Sacrifício do Servo — Sacrifique Servo do Elísio: Compre 1 carta. Ative apenas uma vez por ciclo."
+        "Sacrifício do Servo — Sacrifique Servo do Elísio: Compre 1 carta. Ative apenas uma vez até o início da sua próxima rodada."
       ],
       "tagline_pt": "O Guardião Silencioso do Paraíso"
     },
@@ -10670,7 +10670,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Charon's Toll — Once each cycle, during your round, you may lose {3}{S}. If you do, draw a card.",
+        "Charon's Toll — Once until the start of your next round, during your round, you may lose {3}{S}. If you do, draw a card.",
         "Resonance — Hades: Once each round, when you return a Devotee from your Tartarus to your hand, you may pay {1}{C}. If you do, your God gains {2}{S}."
       ],
       "habilidade_awaken_en": "",
@@ -10679,7 +10679,7 @@
       "nome_exibicao_pt": "O RIO AQUERONTE",
       "subtitulo_pt": "A Travessia Entre a Vida e a Morte",
       "habilidades_pt": [
-        "Pedágio de Caronte — Uma vez por ciclo, durante a sua rodada, você pode perder {3}{S}. Se fizer isso, compre uma carta.",
+        "Pedágio de Caronte — Uma vez até o início da sua próxima rodada, durante a sua rodada, você pode perder {3}{S}. Se fizer isso, compre uma carta.",
         "Ressonância — Hades: Uma vez por rodada, quando você devolve um Devoto do seu Tártaro para a sua mão, você pode pagar {1}{C}. Se fizer isso, seu Deus ganha {2}{S}."
       ],
       "tagline_pt": "A Travessia Entre a Vida e a Morte"
@@ -10839,7 +10839,7 @@
       "equipar_custo": 5,
       "keywords_en": [],
       "habilidades_en": [
-        "Resonance — Lune: Once each cycle, whenever an opponent discards a card due to an ability controlled by Balron Lune, draw 1 card and your God loses {1}{S}."
+        "Resonance — Lune: Once until the start of your next round, whenever an opponent discards a card due to an ability controlled by Balron Lune, draw 1 card and your God loses {1}{S}."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -10854,7 +10854,7 @@
       "nome_exibicao_pt": "SÚPLICE DE BALROG",
       "subtitulo_pt": "A Armadura do Julgamento Infernal",
       "habilidades_pt": [
-        "Ressonância — Lune: Uma vez por ciclo, sempre que um oponente descarta uma carta devido a uma habilidade controlada por Lune de Balrog, compre 1 carta e seu Deus perde {1}{S}."
+        "Ressonância — Lune: Uma vez até o início da sua próxima rodada, sempre que um oponente descarta uma carta devido a uma habilidade controlada por Lune de Balrog, compre 1 carta e seu Deus perde {1}{S}."
       ],
       "tagline_pt": "A Armadura do Julgamento Infernal",
       "auto_equip_pt": ["Lune de Balrog"],
@@ -15803,7 +15803,7 @@
       "keywords_en": [],
       "habilidades_en": [
         "Divine Authority — Other friendly Artemis Devotees get +1/+1.",
-        "Lunar Command — Once each cycle, whenever you put one or more @Training counters on a friendly Devotee, draw 1 card."
+        "Lunar Command — Once until the start of your next round, whenever you put one or more @Training counters on a friendly Devotee, draw 1 card."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -15812,7 +15812,7 @@
       "subtitulo_pt": "A Alta Sacerdotisa de Ártemis",
       "habilidades_pt": [
         "Autoridade Divina — Outros Devotos de Ártemis aliados recebem +1 @ATQ / +1 @PV.",
-        "Comando Lunar — Uma vez por ciclo, sempre que você colocar 1 ou mais marcadores de @Treinamento em um Devoto aliado, compre uma carta."
+        "Comando Lunar — Uma vez até o início da sua próxima rodada, sempre que você colocar 1 ou mais marcadores de @Treinamento em um Devoto aliado, compre uma carta."
       ],
       "flavour_pt": "\"Desafiar a Deusa da Lua é desafiar os próprios céus.\"",
       "tagline_pt": "A Alta Sacerdotisa de Ártemis"
@@ -16254,7 +16254,7 @@
       "keywords_en": [],
       "habilidades_en": [
         "Divine Awakening — When Chandra enters the Battlefield, put a @Training counter on another target friendly Devotee.",
-        "Moonlit Communion — Whenever you put one or more @Training counters on another friendly Devotee, you may generate {1}{L}. This ability triggers only once each cycle."
+        "Moonlit Communion — Whenever you put one or more @Training counters on another friendly Devotee, you may generate {1}{L}. This ability triggers only once until the start of your next round."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -16264,7 +16264,7 @@
       "tagline_pt": "O Receptáculo Mortal da Deusa da Lua",
       "habilidades_pt": [
         "Despertar Divino — Quando Chandra entra no Campo de Batalha, coloque 1 marcador de @Treinamento em outro Devoto aliado alvo.",
-        "Comunhão Lunar — Sempre que você colocar 1 ou mais marcadores de @Treinamento em outro Devoto aliado, você pode gerar {1}{L}. Essa habilidade ativa apenas uma vez por ciclo."
+        "Comunhão Lunar — Sempre que você colocar 1 ou mais marcadores de @Treinamento em outro Devoto aliado, você pode gerar {1}{L}. Essa habilidade ativa apenas uma vez até o início da sua próxima rodada."
       ],
       "flavour_pt": "\"Dentro do frágil coração de uma criança, uma deusa ancestral abriu os olhos.\""
     },
@@ -16653,7 +16653,7 @@
       "habilidades_en": [
         "Silver Piercing — Equipped Devotee gets +2/+1 and gains @Pierce.",
         "Divine Hunt — Whenever equipped Devotee declares a Strike against an enemy Devotee, it gets +2/+0 until the end of your round.",
-        "Unerring Aim — Whenever equipped Devotee defeats an enemy Devotee during combat, you may draw 1 card. This ability triggers only once each cycle."
+        "Unerring Aim — Whenever equipped Devotee defeats an enemy Devotee during combat, you may draw 1 card. This ability triggers only once until the start of your next round."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -16670,7 +16670,7 @@
       "habilidades_pt": [
         "Perfuração Prateada — O Devoto equipado recebe +2 @ATQ / +1 @PV e ganha @Perfurar.",
         "Caçada Divina — Sempre que o Devoto equipado declara um Golpe contra um Devoto inimigo, ele recebe +2 @ATQ / +0 @PV até o fim da sua rodada.",
-        "Mira Infalível — Sempre que o Devoto equipado derrota um Devoto inimigo em combate, você pode comprar uma carta. Essa habilidade ativa apenas uma vez por ciclo."
+        "Mira Infalível — Sempre que o Devoto equipado derrota um Devoto inimigo em combate, você pode comprar uma carta. Essa habilidade ativa apenas uma vez até o início da sua próxima rodada."
       ],
       "flavour_pt": "\"Uma vez lançada, a flecha de prata persegue sua presa além do alcance do destino.\"",
       "tagline_pt": "A Flecha que Nunca Erra"
@@ -17783,7 +17783,7 @@
       "keywords_en": [],
       "habilidades_en": [
         "Primal Channeling — {T}: The next Devotee you cast this round costs 1 less.",
-        "Nature's Wisdom — Whenever you cast a Devotee with Casting Cost 5 or greater, you may draw 1 card. This ability triggers only once each cycle."
+        "Nature's Wisdom — Whenever you cast a Devotee with Casting Cost 5 or greater, you may draw 1 card. This ability triggers only once until the start of your next round."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -17792,7 +17792,7 @@
       "subtitulo_pt": "Voz do Mundo Antigo",
       "habilidades_pt": [
         "Canalização Primitiva — {T}: O próximo Devoto que você conjurar nesta rodada custa 1 a menos.",
-        "Sabedoria da Natureza — Sempre que você conjurar um Devoto com custo de Conjuração 5 ou mais, você pode comprar uma carta. Essa habilidade ativa apenas uma vez por ciclo."
+        "Sabedoria da Natureza — Sempre que você conjurar um Devoto com custo de Conjuração 5 ou mais, você pode comprar uma carta. Essa habilidade ativa apenas uma vez até o início da sua próxima rodada."
       ],
       "flavour_pt": "\"Ela não comanda a floresta. Apenas fala, e a floresta responde.\"",
       "tagline_pt": "Voz do Mundo Antigo"
@@ -17914,7 +17914,7 @@
       "keywords_en": [],
       "habilidades_en": [
         "Endless Arrows — Equipped Devotee gets +1/+0.",
-        "Hunter's Supply — Whenever equipped Devotee defeats an enemy Devotee during combat, you may draw 1 card, then discard 1 card. This ability triggers only once each cycle."
+        "Hunter's Supply — Whenever equipped Devotee defeats an enemy Devotee during combat, you may draw 1 card, then discard 1 card. This ability triggers only once until the start of your next round."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -17930,7 +17930,7 @@
       "subtitulo_pt": "Flechas para a Caçada Sem Fim",
       "habilidades_pt": [
         "Flechas Infinitas — O Devoto equipado recebe +1 @ATQ / +0 @PV.",
-        "Suprimento do Caçador — Sempre que o Devoto equipado derrota um Devoto inimigo em combate, você pode comprar uma carta e depois descartar uma carta. Essa habilidade ativa apenas uma vez por ciclo."
+        "Suprimento do Caçador — Sempre que o Devoto equipado derrota um Devoto inimigo em combate, você pode comprar uma carta e depois descartar uma carta. Essa habilidade ativa apenas uma vez até o início da sua próxima rodada."
       ],
       "flavour_pt": "\"Uma verdadeira caçadora nunca conta suas flechas. Conta as presas que escaparam.\"",
       "tagline_pt": "Flechas para a Caçada Sem Fim"
@@ -19055,7 +19055,7 @@
       "keywords_en": [],
       "habilidades_en": [
         "Celestial Strike — Whenever equipped Devotee declares a Strike against an enemy Devotee, it gets +2/+0 until the end of your round.",
-        "Divine Accuracy — Whenever equipped Devotee defeats an enemy Devotee during combat, draw 1 card. This ability triggers only once each cycle."
+        "Divine Accuracy — Whenever equipped Devotee defeats an enemy Devotee during combat, draw 1 card. This ability triggers only once until the start of your next round."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -19071,7 +19071,7 @@
       "subtitulo_pt": "Armadura da Precisão Divina",
       "habilidades_pt": [
         "Golpe Celestial — Sempre que o Devoto equipado declara um Golpe contra um Devoto inimigo, ele recebe +2 @ATQ até o fim da sua rodada.",
-        "Pontaria Divina — Sempre que o Devoto equipado derrota um Devoto inimigo em combate, compre uma carta. Essa habilidade ativa apenas uma vez por ciclo."
+        "Pontaria Divina — Sempre que o Devoto equipado derrota um Devoto inimigo em combate, compre uma carta. Essa habilidade ativa apenas uma vez até o início da sua próxima rodada."
       ],
       "flavour_pt": "\"O Olimpo não erra. Apenas espera.\"",
       "tagline_pt": "Armadura da Precisão Divina"
@@ -19147,7 +19147,7 @@
       "habilidades_en": [
         "Guardian",
         "Lunar Resistance — Whenever the Third Moon Guardian is dealt damage, prevent 1 of that damage.",
-        "Ancient Blessing — Whenever you put one or more @Training counters on the Third Moon Guardian, gain {2}{S}. This ability triggers only once each cycle."
+        "Ancient Blessing — Whenever you put one or more @Training counters on the Third Moon Guardian, gain {2}{S}. This ability triggers only once until the start of your next round."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -19157,7 +19157,7 @@
       "habilidades_pt": [
         "Guardião",
         "Resistência Lunar — Sempre que a Terceira Guardiã Lunar sofrer dano, previna 1 desse dano.",
-        "Bênção Ancestral — Sempre que você colocar 1 ou mais marcadores de @Treinamento na Terceira Guardiã Lunar, ganhe {2}{S}. Essa habilidade ativa apenas uma vez por ciclo."
+        "Bênção Ancestral — Sempre que você colocar 1 ou mais marcadores de @Treinamento na Terceira Guardiã Lunar, ganhe {2}{S}. Essa habilidade ativa apenas uma vez até o início da sua próxima rodada."
       ],
       "flavour_pt": "\"Seu escudo resistiu a tempestades que destruíram reinos inteiros.\"",
       "tagline_pt": "O Escudo Lunar Inquebrável"
@@ -20516,7 +20516,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Research Facility — Once each cycle, you may pay {2}{C}. If you do, draw 1 card, then discard 1 card.",
+        "Research Facility — Once until the start of your next round, you may pay {2}{C}. If you do, draw 1 card, then discard 1 card.",
         "Technological Advancement — The first Equipment card you cast each round costs 1 less Cosmo, to a minimum of 1.",
         "Steel Production — Whenever you cast your second Equipment card in a round, create a 1/1 colorless Steel Recruit Devotee Token."
       ],
@@ -20533,7 +20533,7 @@
       "nome_exibicao_pt": "LABORATÓRIO DA FUNDAÇÃO GRAAD",
       "subtitulo_pt": "Onde a Humanidade Desafia os Deuses",
       "habilidades_pt": [
-        "Instalação de Pesquisa — Uma vez por ciclo, você pode pagar {2}{C}. Se fizer isso, compre uma carta e depois descarte uma carta.",
+        "Instalação de Pesquisa — Uma vez até o início da sua próxima rodada, você pode pagar {2}{C}. Se fizer isso, compre uma carta e depois descarte uma carta.",
         "Avanço Tecnológico — O primeiro Equipamento que você conjura a cada rodada custa 1 Cosmo a menos, no mínimo 1.",
         "Produção de Aço — Sempre que você conjura seu segundo Equipamento em uma rodada, crie uma Ficha de Devoto incolor 1/1 chamada Recruta de Aço."
       ],
@@ -20867,7 +20867,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Cosmo Amplification — Once each cycle, you may generate {1}{L}.",
+        "Cosmo Amplification — Once until the start of your next round, you may generate {1}{L}.",
         "Crystal Overload — Sacrifice Universal Cosmo Crystal: Generate {2}{L}. Activate only during your round."
       ],
       "habilidade_awaken_en": "",
@@ -20883,7 +20883,7 @@
       "nome_exibicao_pt": "CRISTAL DE COSMO UNIVERSAL",
       "subtitulo_pt": "Um Fragmento do Universo Infinito",
       "habilidades_pt": [
-        "Amplificação de Cosmo — Uma vez por ciclo, você pode gerar {1}{L}.",
+        "Amplificação de Cosmo — Uma vez até o início da sua próxima rodada, você pode gerar {1}{L}.",
         "Sobrecarga de Cristal — Sacrifique Cristal de Cosmo Universal: Gere {2}{L}. Ative apenas durante a sua rodada."
       ],
       "flavour_pt": "\"Dentro de um fragmento de cristal, a energia infinita do universo espera para ser despertada.\"",
@@ -21520,7 +21520,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Energy Conversion — Once each cycle, you may pay {1}{S}. If you do, generate {2}{L}.",
+        "Energy Conversion — Once until the start of your next round, you may pay {1}{S}. If you do, generate {2}{L}.",
         "Overloaded Circuits — Whenever Cosmo Converter generates Latent Cosmo, it is not Prepared during your next Prepare Phase."
       ],
       "habilidade_awaken_en": "",
@@ -21536,7 +21536,7 @@
       "nome_exibicao_pt": "CONVERSOR DE COSMO",
       "subtitulo_pt": "Regulagem de Energia Artificial",
       "habilidades_pt": [
-        "Conversão de Energia — Uma vez por ciclo, você pode pagar {1}{S}. Se fizer isso, gere {2}{L}.",
+        "Conversão de Energia — Uma vez até o início da sua próxima rodada, você pode pagar {1}{S}. Se fizer isso, gere {2}{L}.",
         "Circuitos Sobrecarregados — Sempre que Conversor de Cosmo gera Cosmo Latente, ele não é Preparado na sua próxima fase de Preparação."
       ],
       "flavour_pt": "\"A humanidade aprendeu a manipular o Cosmo, mas todo milagre artificial exigia um sacrifício.\"",
@@ -21874,7 +21874,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Saint's Offering — Once each cycle, during your round, you may put a card from your hand into the Void and lose {2}{S}. If you do, draw a card.",
+        "Saint's Offering — Once until the start of your next round, during your round, you may put a card from your hand into the Void and lose {2}{S}. If you do, draw a card.",
         "Resonance — Athena: Once each round, when a friendly Saint survives a Strike, you may pay {1}{C}. If you do, your God gains {2}{S}."
       ],
       "habilidade_awaken_en": "",
@@ -21884,7 +21884,7 @@
       "nome_exibicao_pt": "ESTÁTUA DE ATHENA",
       "tagline_pt": "A Deusa Zela por Todos",
       "habilidades_pt": [
-        "Oferenda do Cavaleiro — Uma vez por ciclo, durante a sua rodada, você pode colocar uma carta da sua mão no Vazio e perder {2}{S}. Se fizer isso, compre uma carta.",
+        "Oferenda do Cavaleiro — Uma vez até o início da sua próxima rodada, durante a sua rodada, você pode colocar uma carta da sua mão no Vazio e perder {2}{S}. Se fizer isso, compre uma carta.",
         "Ressonância — Athena: Uma vez por rodada, quando um Cavaleiro aliado sobrevive a um Golpe, você pode pagar {1}{C}. Se fizer isso, seu Deus ganha {2}{S}."
       ],
       "flavour_pt": "\"Cada ferida que eles suportam, ela sente como se fosse sua.\""
@@ -21916,7 +21916,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Drowned Knowledge — Once each cycle, when an enemy Devotee becomes @Sealed, you may look at the top card of your deck. You may put it on the bottom.",
+        "Drowned Knowledge — Once until the start of your next round, when an enemy Devotee becomes @Sealed, you may look at the top card of your deck. You may put it on the bottom.",
         "Resonance — Poseidon: Once each round, when an enemy Devotee becomes @Sealed, you may pay {1}{C}. If you do, draw a card."
       ],
       "habilidade_awaken_en": "",
@@ -21925,7 +21925,7 @@
       "notas_pt": "Domain de compra com drawback da facção (autor, 31/10/2026).",
       "nome_exibicao_pt": "O ARQUIVO DA MARÉ",
       "habilidades_pt": [
-        "Saber Afogado — Uma vez por ciclo, quando um Devoto inimigo fica @Selado, você pode olhar a carta do topo do seu deck. Você pode colocá-la no fundo.",
+        "Saber Afogado — Uma vez até o início da sua próxima rodada, quando um Devoto inimigo fica @Selado, você pode olhar a carta do topo do seu deck. Você pode colocá-la no fundo.",
         "Ressonância — Poseidon: Uma vez por rodada, quando um Devoto inimigo fica @Selado, você pode pagar {1}{C}. Se fizer isso, compre uma carta."
       ],
       "tagline_pt": "Conhecimento Afogado nas Profundezas",
@@ -21958,7 +21958,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Blood Offering — Once each cycle, during your round, you may sacrifice a friendly Devotee and lose {2}{S}. If you do, draw a card.",
+        "Blood Offering — Once until the start of your next round, during your round, you may sacrifice a friendly Devotee and lose {2}{S}. If you do, draw a card.",
         "Resonance — Ares: Once each round, {1}{C}, sacrifice a friendly Devotee: Deal 2 damage to target enemy Devotee or God."
       ],
       "habilidade_awaken_en": "",
@@ -21968,7 +21968,7 @@
       "nome_exibicao_pt": "O ALTAR DO MASSACRE",
       "tagline_pt": "O Sangue Alimenta o Deus da Guerra",
       "habilidades_pt": [
-        "Oferenda de Sangue — Uma vez por ciclo, durante a sua rodada, você pode sacrificar um Devoto aliado e perder {2}{S}. Se fizer isso, compre uma carta.",
+        "Oferenda de Sangue — Uma vez até o início da sua próxima rodada, durante a sua rodada, você pode sacrificar um Devoto aliado e perder {2}{S}. Se fizer isso, compre uma carta.",
         "Ressonância — Ares: Uma vez por rodada, {1}{C}, sacrifique um Devoto aliado: Cause 2 de dano ao Devoto ou Deus inimigo alvo."
       ],
       "flavour_pt": "\"Só o sangue compra o favor da guerra.\""
@@ -22000,7 +22000,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Moonlit Sacrifice — Once each cycle, during your round, you may lose all your Latent Cosmo and return a Cosmo Base you control to your hand. If you do, draw a card.",
+        "Moonlit Sacrifice — Once until the start of your next round, during your round, you may lose all your Latent Cosmo and return a Cosmo Base you control to your hand. If you do, draw a card.",
         "Resonance — Artemis: Once each round, {3}{C}: Search your deck for a Devotee card with cost 5 or greater, reveal it and put it into your hand. Shuffle your deck."
       ],
       "habilidade_awaken_en": "",
@@ -22010,7 +22010,7 @@
       "nome_exibicao_pt": "A LUA DO CAÇADOR",
       "tagline_pt": "A Caçada Começa ao Amanhecer",
       "habilidades_pt": [
-        "Sacrifício ao Luar — Uma vez por ciclo, durante a sua rodada, você pode perder todo o seu Cosmo Latente e devolver uma Base de Cosmo que você controla para a sua mão. Se fizer isso, compre uma carta.",
+        "Sacrifício ao Luar — Uma vez até o início da sua próxima rodada, durante a sua rodada, você pode perder todo o seu Cosmo Latente e devolver uma Base de Cosmo que você controla para a sua mão. Se fizer isso, compre uma carta.",
         "Ressonância — Artemis: Uma vez por rodada, {3}{C}: Procure no seu deck uma carta de Devoto de custo 5 ou mais, revele-a e coloque-a na sua mão. Embaralhe o seu deck."
       ],
       "flavour_pt": "\"A lua troca o que você tem pelo que você precisa.\""
