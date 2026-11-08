@@ -12,9 +12,9 @@
       -34.8
     ]
   },
-  "estagio": "CONCEPT",
-  "proximo": "Revisão de silhueta pelo autor (prévia em argila); só depois a modelagem detalhada",
-  "nota": "Prévia em argila para revisão de silhueta. Sem materiais, sem LODs, sem versão homologável.",
+  "estagio": "MODELING",
+  "proximo": "Generalizar o build de materiais/LODs (hoje com nomes TIDES__) e começar a modelagem detalhada sobre a silhueta aprovada",
+  "nota": "Silhueta aprovada pelo autor em 08/11/2026. Modelagem detalhada ainda não começou.",
   "fontes": [
     "docs/art-bible/POSEIDON_V11_SCULPTURE_BIBLE.md",
     "docs/art-bible/POSEIDON_V10_GUARDIAN_ART_PRODUCTION.md"
@@ -140,5 +140,18 @@
     "Capa marinha dobrada sobre as costas e a cintura; ombreira com concha entalhada",
     "Pedestal próprio: volutas de náutilo, onda em serpente, concha; massa estável, sem pontas soltas",
     "Coroa, cabelo e tridente não batem no entablamento nem no teto nas chaves 0, 1 e 2"
-  ]
+  ],
+  "aprovacoes": {
+    "silhueta": {
+      "status": "APPROVED",
+      "revisor": "autor (Lierson Mattenhauer Jr)",
+      "data": "2026-11-08",
+      "escopo": "Prévia em argila: pose, tridente na diagonal, capa, ombreira e pedestal. Não aprova rosto, dobras, materiais nem o asset final.",
+      "evidencia": [
+        "docs/img/sculpture-studio/guardian-depths/folha-ab-silhueta-frente.png",
+        "docs/img/sculpture-studio/guardian-depths/mundo-ab-chave1.png"
+      ],
+      "commit": "8feb47c"
+    }
+  }
 }

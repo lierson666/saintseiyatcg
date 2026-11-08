@@ -5,7 +5,7 @@
 import * as THREE from './vendor/three-0.160.0.module.min.js';
 import {OrbitControls} from './vendor/OrbitControls-0.160.0.js';
 import {GLTFLoader} from './vendor/GLTFLoader-0.160.0.js';
-import {css as projCss, renderHomologation, renderProjects} from './sculpture-projects.js?v=20261108-sp2';
+import {css as projCss, renderHomologation, renderProjects} from './sculpture-projects.js?v=20261108-sp3';
 
 const BASE = '../arena-forge/assets/poseidon-v13/';
 const LODS = [['lod0', 'LOD0 · desktop (texturas 2048)'], ['lod1', 'LOD1 · médio'], ['lod2', 'LOD2 · distante'], ['mobile', 'Mobile (LOD1 + 512²)'],

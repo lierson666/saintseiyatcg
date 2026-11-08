@@ -9,7 +9,7 @@ Gerado de `arena-forge/sculpture-studio/projects/*.json` em [docs/art-bible/SCUL
 | Asset | Versão | Estágio | Homologação |
 | --- | --- | --- | --- |
 | Guardião das Marés (`POS-MON-V10-001`) | V14.1 | ART_REVIEW | `TECHNICALLY_VALIDATED / ART_REVIEW_PENDING` |
-| Guardião das Profundezas (`POS-MON-V10-002`) | prévia em argila | CONCEPT | sem homologação; aguarda revisão de silhueta |
+| Guardião das Profundezas (`POS-MON-V10-002`) | prévia em argila | MODELING | silhueta aprovada pelo autor em 08/11/2026; sem homologação |
 
 **APPROVED** só existe com a revisão do autor registrada no projeto. **PUBLISHED** só existe com publicação oficial. Nenhum dos dois está nesses estágios.
 
@@ -95,10 +95,10 @@ playtest/divine/?arena=poseidon&arenaPreview=poseidon-palace&sculptV141=1&sculpt
 | `tools/test-sculpture-studio.py` (V13) | 15 ok |
 | `tools/test-sculpture-v14.py` | 8 ok |
 | `tools/test-sculpture-v14-1.py` | 8 ok |
-| `tools/test-sculpture-homologacao.py` (projetos, homologação, posição B, sem flags) | 14 ok, sem erros de página |
+| `tools/test-sculpture-homologacao.py` (projetos, homologação, posição B, sem flags) | 15 ok, sem erros de página |
 
 ## Decisões que cabem ao autor
 
 1. A revisão artística da V14.1, na aba Homologação.
-2. A revisão da silhueta do Guardião das Profundezas: pose, tridente, capa e pedestal.
+2. ~~A revisão da silhueta do Guardião das Profundezas~~: aprovada em 08/11/2026. A aprovação vale para a pose, o tridente, a capa, a ombreira e o pedestal da prévia; não vale para o rosto, as dobras, os materiais nem o asset final.
 3. Instalar os artboards V10, se existirem, antes da modelagem detalhada.

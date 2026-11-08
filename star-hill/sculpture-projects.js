@@ -43,6 +43,7 @@ export async function renderProjects(panel, onOpen) {
     <h3>${esc(p.nome)} <small class="hint">${esc(p.nome_en || '')} · ${esc(p.assetId)}</small></h3>
     ${pipe(p.estagio)}
     <small>${esc(p.arena)} · lado ${esc(p.posicao?.lado)} · versão atual ${esc(p.atual || '—')}${p.proximo ? ` · próximo: ${esc(p.proximo)}` : ''}</small>
+    ${Object.entries(p.aprovacoes || {}).map(([k, a]) => `<small data-aprov="${esc(k)}"><b class="${a.status === 'APPROVED' ? 'ss-ok' : ''}">${esc(k)}: ${esc(a.status)}</b> · ${esc(a.revisor)} em ${esc(a.data)}<br><span class="hint">${esc(a.escopo)}</span></small>`).join('')}
     <div class="ss-steps">${STEPS.map(([k, l]) => { const e = p.etapas?.[k]?.estado || 'pendente'; return `<span class="${esc(e)}" title="${esc((p.etapas?.[k]?.artefatos || []).join('\n'))}">${l}</span>`; }).join('')}</div>
     <small class="hint">Versões: ${(p.versoes || []).map(v => esc(v.nome)).join(' · ') || 'nenhuma'}</small>
     ${p.atual ? `<button class="secondary" data-open="${esc(p.id)}">Abrir homologação</button>` : `<small class="hint">${esc(p.nota || '')}</small>`}

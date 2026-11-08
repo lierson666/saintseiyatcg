@@ -6,5 +6,5 @@ Estágios: CONCEPT → MODELING → TECHNICAL_QA → ART_REVIEW → APPROVED →
 
 | Asset | Versão | Estágio | Homologação | Próximo passo |
 | --- | --- | --- | --- | --- |
-| Guardião das Profundezas (`POS-MON-V10-002`) | — | **CONCEPT** → MODELING → TECHNICAL_QA → ART_REVIEW → APPROVED → PUBLISHED | sem homologação | Revisão de silhueta pelo autor (prévia em argila); só depois a modelagem detalhada |
+| Guardião das Profundezas (`POS-MON-V10-002`) | — | ~~CONCEPT~~ → **MODELING** → TECHNICAL_QA → ART_REVIEW → APPROVED → PUBLISHED | sem homologação | Generalizar o build de materiais/LODs (hoje com nomes TIDES__) e começar a modelagem detalhada sobre a silhueta aprovada |
 | Guardião das Marés (`POS-MON-V10-001`) | v14-1 | ~~CONCEPT~~ → ~~MODELING~~ → ~~TECHNICAL_QA~~ → **ART_REVIEW** → APPROVED → PUBLISHED | TECHNICALLY_VALIDATED / ART_REVIEW_PENDING | Revisão artística do autor na aba Homologação do Sculpture Studio |
