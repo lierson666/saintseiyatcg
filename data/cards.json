@@ -4618,7 +4618,7 @@
       "faccao": "Poseidon",
       "tipo": "Devotee",
       "subtipos": ["Support"],
-      "raridade": "Common",
+      "raridade": "Uncommon",
       "status": "design-ready",
       "cosmoble": true,
       "caminho_imagem": null,
@@ -4634,17 +4634,15 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Abyssal Ritual — {1}{C}, {T}: Target enemy Devotee with a @Seal counter gets -1 @ATK until the end of your round.",
-        "Whispers Below — Once until the start of your next round, when an enemy Devotee becomes @Sealed, you may look at the top card of your deck. You may put that card on the bottom of your deck."
+        "Abyssal Tide — Whenever a player casts a Moment or Technique, you mill one card and each opponent mills two cards."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026.",
+      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Vira Abyssal Tide, Devoto de mill de Poseidon, Uncommon (autor, 08/11/2026).",
       "nome_exibicao_pt": "SACERDOTE DO ABISMO",
       "subtitulo_pt": "Guardião das Profundezas Esquecidas",
       "habilidades_pt": [
-        "Ritual Abissal — {1}{C}, {T}: O Devoto inimigo alvo com um marcador de @Selo recebe -1 @ATQ até o fim da sua rodada.",
-        "Sussurros Abaixo — Uma vez até o início da sua próxima rodada, quando um Devoto inimigo fica @Selado, você pode olhar a carta do topo do seu deck. Você pode pô-la no fundo do deck."
+        "Maré Abissal — Sempre que um jogador conjura um Momento ou Técnica, você envia ao Tártaro a carta do topo do seu deck e cada oponente envia ao Tártaro as 2 cartas do topo do deck dele."
       ],
       "tagline_pt": "Guardião das Profundezas Esquecidas"
     },

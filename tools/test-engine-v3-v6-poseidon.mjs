@@ -60,17 +60,28 @@ test('enter + bounce: Sea Dragon Kanon devolve o Devotee inimigo à mão do Owne
   assert.equal(s.units[foe], undefined);
 });
 
-test('spell + watchSealed: Abyssal Weight põe 1 Seal, ou 2 se já tinha; Whispers Below observa 1×/Round', () => {
-  const {s, ctx, A, put, asked} = poseidon();
-  s.domains.A = null; // o Domain 142 (Oceanic Dominion) compraria e descartaria ao conjurar: fora deste teste
-  put('A', P('102'), 'battlefield');
-  const foe = put('B', 'hades-v6-211', 'battlefield'), spell = put('A', P('137')), top = A.deck[0];
-  playSpell(s, ctx, 'A', spell, {}); passAll(s);
+test('spell: Abyssal Weight põe 1 Seal, ou 2 se já tinha', () => {
+  const {s, ctx, put} = poseidon();
+  s.domains.A = null;
+  const foe = put('B', 'hades-v6-211', 'battlefield');
+  playSpell(s, ctx, 'A', put('A', P('137')), {}); passAll(s);
   assert.equal(s.units[foe].seal, 1);
-  assert.equal(asked.filter(q => q.ability === 'WHISPERS BELOW').length, 1);
-  assert.equal(A.deck.at(-1), top, 'Whispers Below mandou o topo para o fundo');
   playSpell(s, ctx, 'A', put('A', P('137')), {}); passAll(s);
   assert.equal(s.units[foe].seal, 3, 'já Sealed: +2');
+});
+
+// Priest of the Abyss, Abyssal Tide (autor, 08/11/2026): Spell de qualquer jogador; você mói 1 e o oponente mói 2.
+test('watchSpell: Priest of the Abyss mói 1 do dono e 2 do oponente a cada Spell', () => {
+  const {s, ctx, A, B, put} = poseidon();
+  s.domains.A = null;
+  put('A', P('102'), 'battlefield');
+  put('B', 'hades-v6-211', 'battlefield');
+  const [a0, b0] = [A.deck.length, B.deck.length];
+  playSpell(s, ctx, 'A', put('A', P('137')), {}); passAll(s);
+  assert.deepEqual([a0 - A.deck.length, b0 - B.deck.length], [1 + 1, 2], 'A: 1 do mill + a Spell tirada do deck');
+  const [a1, b1] = [A.deck.length, B.deck.length];
+  playSpell(s, ctx, 'A', put('A', P('137')), {}); passAll(s);
+  assert.deepEqual([a1 - A.deck.length, b1 - B.deck.length], [2, 2], 'sem limite por rodada');
 });
 
 test('watchDeclare (prevenção): Royal Trident Guard previne 1 do dano de Strike, uma vez por Round', () => {

@@ -319,10 +319,9 @@ export default {
     // Poseidon → Azul (31/10/2026): o ganho de Soul virou loot.
     watchSealed: onSealed('emperors-will', (st, c, key, self) => (pay(st, c, key, 1, 'THE EMPEROR\'S WILL', self) ? (loot(st, c, key, 'THE EMPEROR\'S WILL'), true) : false)),
   },
+  // Abyssal Tide (autor, 08/11/2026): qualquer jogador conjura Moment ou Technique; você mói 1 e cada oponente mói 2.
   'poseidon-v6-102': {
-    activate: {name: 'Abyssal Ritual', cost: 1, check: (s, c, key) => needEnemy(s, c, key, u => sealed(s, u)),
-      run: (s, c, key) => debuff(s, enemy(s, c, key, 'ABYSSAL RITUAL', undefined, u => sealed(s, u)), 1)},
-    watchSealed: onSealed('whispers', (st, c, key) => scry(st, c, key, 'WHISPERS BELOW')),
+    watchSpell: (s, c, key) => st => { k.mill(st, key, 1); k.mill(st, k.other(st, key), 2); },
   },
   'poseidon-v6-103': {
     // Lord of Atlantis (31/10/2026): outras Marinas +1/+1; Royal Summons saiu.

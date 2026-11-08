@@ -4,6 +4,13 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-11-08 — Carta poseidon-v6-102 — Priest of the Abyss vira Devoto de mill
+
+- **Antes:** Common. Abyssal Ritual ({1}{C}, {T}: -1 ATK em inimigo com Seal) e Whispers Below (olhar o topo quando um inimigo fica Sealed).
+- **Depois:** Uncommon. "Abyssal Tide — Whenever a player casts a Moment or Technique, you mill one card and each opponent mills two cards." Sem limite por rodada.
+- **Motivo:** autor, 08/11/2026: carta de mill que pune Momento e Técnica dos dois lados.
+- **Feito:** cards.json (EN/PT), rascunho PT, motor (`poseidon.js`, watchSpell) e teste (`test-engine-v3-v6-poseidon.mjs`).
+
 ## 2026-11-08 — Glossário (guia, linha do “once each cycle”) — “uma vez por ciclo” vira “uma vez até o início da sua próxima rodada”
 
 - **Antes:** “Once each cycle” / “uma vez por ciclo”.
