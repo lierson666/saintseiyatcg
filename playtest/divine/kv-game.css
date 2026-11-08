@@ -34,6 +34,7 @@ body:has(#overlay-root > :not(.gear-btn), .pick-modal, .decision-veil, #bigcard)
 /* Escolha de cartas (autor, 01/11/2026): todas apagadas até escolher; a escolhida sobe acesa e as outras ficam em preto e branco. */
 .decision__opt .dcard { filter: brightness(.72) saturate(.8); transition: filter .15s; }
 .decision__opts.is-full .decision__opt:not(.picked) .dcard { filter: grayscale(1) brightness(.5); } /* só quando já não dá para escolher mais */
+.decision__opt.is-off { cursor: not-allowed; } .decision__opt.is-off .dcard, .decision__opt.is-off .pick-row { filter: grayscale(1) brightness(.45); } /* mão revelada: à vista, mas não escolhível */
 .decision__opt.picked { transform: translateY(-14px); }
 .pick-modal .decision__opt .dcard { animation: none; box-shadow: none; }
 .pick-modal .decision__opt.picked .dcard { box-shadow: 0 0 0 2px var(--kv-gold), 0 0 18px #e6c36a99; }

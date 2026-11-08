@@ -51,11 +51,12 @@ export function payCosmo(s, key, n) {
 export const needTarget = (list, text = 'sem alvo legal') => (s, c, key) => { if (!list(s, c, key).length) throw new RuleError('alvo', text); };
 export const may = (c, key, ability, extra = {}) => Boolean(c.decide?.(key, {ability, ...extra}));
 // Escolha de alvo entre `options` (uids). Sem opção: null. `optional`: inclui recusar (null). `text`: frase do modal.
-export function choose(c, key, ability, options, {optional = false, text} = {}) {
+// `shown`: cartas à vista sem serem escolhíveis (mão revelada: o jogador vê a mão inteira, autor 08/11/2026).
+export function choose(c, key, ability, options, {optional = false, text, shown} = {}) {
   const list = [...new Set(options.filter(Boolean))];
   if (!list.length) return null;
   if (optional && !may(c, key, ability, {text: text || 'Use this ability?', part: 'target'})) return null; // `part`: v6/targets.js guarda esta resposta como parte do alvo
-  return c.decide?.(key, {ability, options: list, choose: 'target', text}) ?? null;
+  return c.decide?.(key, {ability, options: list, choose: 'target', text, ...(shown ? {shown: [...shown]} : {})}) ?? null;
 }
 // Até `count` alvos diferentes: sempre numa pergunta só, todos de uma vez (autor, 31/10/2026).
 export const chooseUpTo = (c, key, ability, options, count, opts) => pickUpTo(c, key, ability, options, count, opts);

@@ -83,7 +83,7 @@ const noStrike = (s, uid) => { if (uid) s.strikes.set(uid, s.turn); };
 function strip(s, c, key, ability, test) {
   const opp = k.other(s, key), hand = s.players[opp].hand;
   k.emit(s, 'hand_revealed', {player: opp, uids: [...hand]});
-  const pick = k.choose(c, key, ability, hand.filter(u => test(k.card(c, u))), {text: 'Choose a card to discard.'});
+  const pick = k.choose(c, key, ability, hand.filter(u => test(k.card(c, u))), {text: 'Choose a card to discard.', shown: hand});
   if (!pick || !k.toTartarus(s, c, pick, 'hand')) return null;
   k.emit(s, 'discarded', {player: opp, uid: pick});
   k.watchers(s, c, 'watchDiscard', [opp, pick], 'Discard');

@@ -320,3 +320,14 @@ test('Guia §63 (lendário): segundo Acheron Charon obriga a escolher um; Specte
   assert.ok(p.tartarus.includes(first));
   assert.ok(p.battlefield.includes(g1) && p.battlefield.includes(g2));
 });
+
+test('Whispers of Pandora: a mão inteira vem em `shown`; só não-Devotee é escolhível (autor, 08/11/2026)', () => {
+  const {s, b, add, cast, answers} = hades();
+  const dev = add('hades-v6-218', 'B'), spell = add('hades-v6-257', 'B');
+  let seen;
+  answers({'THE WHISPERS OF PANDORA': (pl, q) => { seen = q; return q.options[0]; }});
+  cast('hades-v6-239'); done(s);
+  assert.deepEqual(seen.shown, [dev, spell]);
+  assert.deepEqual(seen.options, [spell]);
+  assert.ok(b.tartarus.includes(spell) && b.hand.includes(dev));
+});
