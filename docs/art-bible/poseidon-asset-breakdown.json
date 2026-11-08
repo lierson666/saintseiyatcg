@@ -235,7 +235,7 @@
       "implementation": "proposed_unique_sculpted_glb",
       "artDirection": "Unique humanoid carved-marine statue with trident, drapery and sculpted wave base. Not a mirrored clone, requires actual authored model and artistic approval.",
       "materialPreset": "poseidon-statue-aged-ivory-v10",
-      "productionStatus": "v11_concept_references_created_true_orthographics_pending",
+      "productionStatus": "v12_artist_handoff_prepared_no_glb",
       "file": null,
       "visibilityUsage": "cinematic",
       "proposedAnchor": [
@@ -245,8 +245,9 @@
       ],
       "expectedModelFile": "arena-forge/assets/poseidon-v10/guardian-tides.glb",
       "cameraLayout": "docs/art-bible/poseidon-v10-guardian-layout.json",
-      "productionBrief": "docs/art-bible/POSEIDON_V11_SCULPTURE_BIBLE.md",
-      "orthographicState": "not_produced"
+      "productionBrief": "docs/art-bible/POSEIDON_V12_TIDES_SCULPT_HANDOFF.md",
+      "orthographicState": "not_produced",
+      "stagingImporter": "tools/poseidon-v12-import-glb.py"
     },
     {
       "id": "POS-MON-V10-002",

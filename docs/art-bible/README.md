@@ -20,3 +20,7 @@
 ## V11 sculptural preproduction
 - [Poseidon V11 Sculpture Bible](POSEIDON_V11_SCULPTURE_BIBLE.md) — distinct statues, sculpt/material gates, no GLBs claimed.
 - [Poseidon V11 asset preflight](../../arena-forge/assets/poseidon-v11/preflight.json) — models absent, camera anchors validated.
+
+## V12 — sculpture pipeline
+- [Guardian of Tides artist handoff](POSEIDON_V12_TIDES_SCULPT_HANDOFF.md) — dimensioned instructions and technical art gates; professional model not yet delivered.
+- [3D GLB intake](../../tools/poseidon-v12-import-glb.py) — verifies mesh/material metadata and stages imports, without touching the live scene.
