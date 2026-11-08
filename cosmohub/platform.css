@@ -122,3 +122,4 @@ button:hover { border-color: #e6c36a88; background: #e6c36a14; }
   .hub-nav a { padding: 0 8px; letter-spacing: .16em; }
 }
 @media (prefers-reduced-motion: reduce) { .hub-module, .hub-thumb i, .hub-fan a, .hub-god, button, input, select, textarea { transition: none; } .hub-module:hover, .hub-thumb:hover i { transform: none; } }
+.hub-win { display: block; margin-top: 4px; color: var(--kv-gold, #e9c45c); } /* winrate online do deck (autor, 08/11/2026) */

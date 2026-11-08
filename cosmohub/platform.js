@@ -1,6 +1,7 @@
 // Cosmo Hub (docs/platform-4.0.md). Cartas e regras vêm só do registro canônico; permissão é sempre decidida pelo servidor.
 import {renderLiveCard} from '/shared/live-card.js';
 import {mountKV} from '/shared/kv-sky.js';
+import {decklistIndex, deckToText, textToDeck} from '/shared/decklist-text.js?v=20261108-1';
 
 const API = '/api/platform';
 // Sem a API da plataforma no servidor, Codex e home seguem funcionando; o resto diz que abre em breve em vez de dar erro.
@@ -38,10 +39,26 @@ async function loadRegistry() {
   registry = {index, cards, rules, glossary};
   return registry;
 }
+// Decklist em texto (shared/decklist-text.js): no jogo o God é god-<facção>; no registro, <facção>-001.
+const gameId = c => (c.type === 'God' ? `god-${c.faction.toLowerCase()}` : c.id);
+const godName = god => String(god || '').replace(/^god-/, '').replace(/^\w/, ch => ch.toUpperCase());
+const listTools = reg => {
+  const byGame = new Map(reg.cards.map(c => [gameId(c), c]));
+  return {index: decklistIndex(reg.cards.map(c => ({id: gameId(c), kind: c.type, names: [c.name, c.name_pt]}))), nameOf: id => byGame.get(id)?.name || id, card: id => byGame.get(id)};
+};
+// Grava na conta como deck novo (PUT /api/decks): aparece no jogo na próxima abertura. Cópia nunca nasce pública.
+async function addToAccount(data, name) {
+  const id = `my-${Date.now().toString(36)}`;
+  await call(`/api/decks/${id}`, 'PUT', {data: {...data, id, nome: name, alpha_nome: undefined, public: false}, revision: 0});
+  alertBox(`"${name}" is in your decks. Open Play to use it.`);
+}
 
 // ---------- Início ----------
 const newsTile = n => `<a class="hub-tile" href="#/article/${esc(n.slug)}"><b>${esc(n.title)}</b><small>${esc(n.category || n.kind)} · ${when(n.publish_at)}</small></a>`;
-const deckTile = d => `<a class="hub-tile" href="#/deck/${esc(d.id)}"><b>${esc(d.name)}</b><small>${esc(d.god || '')}${d.archetype ? ` · ${esc(d.archetype)}` : ''} · ${esc(d.author || '')}${d.rating ? ` · ★ ${d.rating}` : ''}</small></a>`;
+const pct = r => `${Math.round(r * 100)}%`;
+// Winrate só de duelos online (autor, 08/11/2026); abaixo da amostra mínima mostra a taxa com a contagem ao lado.
+const winText = s => s?.matches ? `${pct(s.win_rate)} in ${s.matches} online duel${s.matches === 1 ? '' : 's'}` : 'No online duels yet';
+const deckTile = d => `<a class="hub-tile" href="#/deck/${esc(d.id)}"><b>${esc(d.name)}</b><small>${esc(godName(d.god))}${d.archetype ? ` · ${esc(d.archetype)}` : ''} · ${esc(d.author || '')}${d.rating ? ` · ★ ${d.rating}` : ''}</small><small class="hub-win">${winText(d.stats)}</small></a>`;
 const eventTile = t => `<a class="hub-tile" href="#/tournament/${esc(t.id)}"><b>${esc(t.name)}</b><small>${esc(t.format)} · ${esc(t.category)} · ${esc(t.status)}</small></a>`;
 
 const artOf = id => artCards?.get(id)?.ilustracao;
@@ -191,22 +208,29 @@ async function decks() {
       <label>Deck<select name="deck_id" required>${account.decks.map(d => `<option value="${esc(d.id)}">${esc(d.data?.name || d.id)}</option>`).join('')}</select></label>
       <label>Visibility<select name="visibility"><option value="private">Private</option><option value="unlisted">Unlisted</option><option value="public">Public</option></select></label>
       <label>Archetype<input name="archetype" maxlength="60"></label><label>Strategy<textarea name="strategy" maxlength="4000" rows="3"></textarea></label><button>Share</button></form>` : '';
-  return `<h1>Decks</h1><h2>Public decks</h2>${tiles(open, deckTile, 'Nothing published yet.')}
+  const importForm = account ? `<h2>Import a deck list</h2><form class="hub-form" data-do="import-list"><label>Deck list<textarea name="list" rows="8" required placeholder="Name: My deck&#10;God&#10;1 Athena (god-athena)&#10;Domain&#10;1 Jamir Tower (athena-v6-063)&#10;Deck&#10;3 Gemini Saga (athena-v6-013)"></textarea></label><button>Add to my decks</button></form>`
+    : `<p class="hub-muted"><a href="/login/?next=${q('/cosmohub/#/decks')}">Sign in</a> to import deck lists and copy decks to your account.</p>`;
+  return `<h1>Decks</h1><p class="hub-lead">Decks marked Public in the game show up here, with comments and online win rate.</p><h2>Public decks</h2>${tiles(open, deckTile, 'Nothing published yet.')}${importForm}
     ${mine ? `<h2>My decks</h2>${tiles(mine.decks, d => deckTile(d), 'You have not shared a deck yet.')}` : ''}${share}`;
 }
 
 async function deckPage(id) {
-  const d = await api(`/decks/${q(id)}`);
-  const cards = d.data.main_deck || [];
-  const counts = cards.reduce((m, c) => { const k = typeof c === 'string' ? c : c.id; m[k] = (m[k] || 0) + (c.qty || 1); return m; }, {});
-  const reg = await loadRegistry();
-  const name = cid => reg.cards.find(c => c.id === cid)?.name || cid;
-  return `<h1>${esc(d.name)}</h1><p class="hub-muted">${esc(d.author || '')} · ${esc(d.god || '')} · v${d.version} · ${esc(d.visibility)}${d.rating ? ` · ★ ${d.rating} (${d.ratings})` : ''} · ${d.favorites} favorites</p>
+  const [d, reg] = await Promise.all([api(`/decks/${q(id)}`), loadRegistry()]);
+  const tools = listTools(reg), main = d.data.main_deck || [];
+  const row = (n, cid) => `<a class="hub-tile" href="#/card/${esc(tools.card(cid)?.id || cid)}"><b>${n} × ${esc(tools.nameOf(cid))}</b></a>`;
+  const s = d.stats || {}, now_ = s.current_version || {};
+  const small = s.matches && !s.sample_ok ? ' <small class="hub-muted">(small sample)</small>' : '';
+  const add = d.mine ? `<button data-do="fork-deck" data-id="${esc(id)}">Add to my decks</button>` : `<a class="kv-ghost" href="/login/?next=${q(`/cosmohub/#/deck/${id}`)}">Sign in to add to your decks</a>`;
+  return `<h1>${esc(d.name)}</h1><p class="hub-muted">${esc(d.author || '')} · ${esc(godName(d.god))} · v${d.version} · ${esc(d.visibility)}${d.rating ? ` · ★ ${d.rating} (${d.ratings})` : ''} · ${d.favorites} favorites</p>
+    <div class="hub-grid"><div class="hub-tile"><b>Win rate ${s.matches ? pct(s.win_rate) : '—'}${small}</b><small>${s.matches || 0} online duels · ${s.wins || 0} wins · all versions</small></div>
+      <div class="hub-tile"><b>This version ${now_.matches ? pct(now_.win_rate) : '—'}</b><small>${now_.matches || 0} online duels with v${d.version}</small></div></div>
     ${d.strategy ? `<div class="hub-rule">${esc(d.strategy)}</div>` : ''}
-    <div class="hub-row">${d.mine && !d.mine.owner ? `<label>Rate <select data-change="rate-deck" data-id="${esc(id)}"><option value="">—</option>${[1, 2, 3, 4, 5].map(s => `<option ${d.mine.stars === s ? 'selected' : ''}>${s}</option>`).join('')}</select></label>` : ''}
-      ${d.mine ? `<button data-do="favorite-deck" data-id="${esc(id)}">${d.mine.favorite ? 'Remove favorite' : 'Favorite'}</button><button data-do="fork-deck" data-id="${esc(id)}">Copy to my decks</button>` : ''}
+    <div class="hub-row">${add}<button data-do="copy-list" data-id="${esc(id)}">Copy list</button>
+      ${d.mine && !d.mine.owner ? `<label>Rate <select data-change="rate-deck" data-id="${esc(id)}"><option value="">—</option>${[1, 2, 3, 4, 5].map(st => `<option ${d.mine.stars === st ? 'selected' : ''}>${st}</option>`).join('')}</select></label>` : ''}
+      ${d.mine ? `<button data-do="favorite-deck" data-id="${esc(id)}">${d.mine.favorite ? 'Remove favorite' : 'Favorite'}</button>` : ''}
       ${d.mine?.owner ? `<select data-change="deck-visibility" data-id="${esc(id)}" aria-label="Visibility">${['private', 'unlisted', 'public'].map(v => `<option ${d.visibility === v ? 'selected' : ''}>${v}</option>`).join('')}</select>` : ''}</div>
-    <h2>Cards</h2>${tiles(Object.entries(counts), ([cid, n]) => `<a class="hub-tile" href="#/card/${esc(cid)}"><b>${n} × ${esc(name(cid))}</b></a>`, 'This deck has no cards.')}
+    <h2>God and Domain</h2><div class="hub-grid">${row(1, d.data.god || 'god-athena')}${d.data.domain_id ? row(1, d.data.domain_id) : ''}</div>
+    <h2>Cards (${main.reduce((n, e) => n + (e.quantity || 1), 0)})</h2>${tiles(main, e => row(e.quantity || 1, e.card_id), 'This deck has no cards.')}
     <h2>Version history</h2><p class="hub-muted">${d.versions.map(v => `v${v.version} (${when(v.at)})`).join(' · ')}</p>
     ${d.visibility === 'private' ? '' : await discussion(`deck:${id}`)}`;
 }
@@ -301,8 +325,18 @@ const ACTIONS = {
   'favorite-deck': el => api(`/decks/${q(el.dataset.id)}/favorite`, 'POST', {}),
   'fork-deck': async el => {
     const {data} = await api(`/decks/${q(el.dataset.id)}/fork`, 'POST', {});
-    await call(`/api/decks/fork-${crypto.randomUUID().slice(0, 12)}`, 'PUT', {data: {...data, name: `${data.name || 'Deck'} (copy)`}, revision: 0});
-    alertBox('Copied to your decks.');
+    await addToAccount(data, `${data.alpha_nome || data.nome || data.name || 'Deck'} (copy)`);
+  },
+  'copy-list': async el => {
+    const [d, reg] = await Promise.all([api(`/decks/${q(el.dataset.id)}`), loadRegistry()]);
+    await navigator.clipboard.writeText(deckToText({...d.data, nome: d.name}, listTools(reg).nameOf));
+    alertBox('Deck list copied. Paste it in the game: Play › Choose your deck › Import list.');
+  },
+  'import-list': async (_, data) => {
+    const {deck, errors} = textToDeck(data.list, listTools(await loadRegistry()).index);
+    if (!deck.main_deck.length) throw new Error(errors.length ? `No cards found. Line ${errors[0].line}: ${errors[0].text}` : 'No cards found in this list.');
+    await addToAccount({god: deck.god || 'god-athena', domain_id: deck.domain_id, main_deck: deck.main_deck}, deck.nome || 'Imported deck');
+    if (errors.length) alertBox(`Added without ${errors.length} line${errors.length === 1 ? '' : 's'} we did not recognize: ${errors.map(e => `${e.line} (${e.text})`).join(', ')}`, true);
   },
   comment: (el, data) => api('/comments', 'POST', {target: el.dataset.target, body: data.body}),
   reply: async el => { const body = prompt('Reply'); if (body) await api('/comments', 'POST', {target: el.dataset.target, parent_id: Number(el.dataset.id), body}); },
@@ -398,6 +432,7 @@ async function refreshMe() {
   document.getElementById('hub-unread').textContent = me?.unread || '';
   document.getElementById('hub-console').hidden = !me?.developer;
   document.getElementById('hub-inbox').hidden = !me;
+  document.getElementById('hub-signin').hidden = !!me; // o Hub é público; o login libera comentar, avaliar e copiar decks
 }
 
 mountKV();

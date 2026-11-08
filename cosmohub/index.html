@@ -1,0 +1,41 @@
+<!doctype html>
+<!-- Cosmo Hub (docs/platform-4.0.md): portal do jogo no KV oficial (docs/kv-oficial.md). Codex, Nexus, decks, guildas, torneios e console. Fica atrás do login do /playtest. -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <script src="/shared/i18n-pt.js?v=20261108-hub1"></script><script src="/shared/i18n-pt-site.js"></script><script src="./i18n-hub.js?v=20261108-hub1"></script><script src="/shared/i18n.js"></script>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Saint Seiya TCG — Cosmo Hub</title>
+  <meta name="theme-color" content="#05060c">
+  <link rel="icon" href="/LOGO/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Cormorant+Garamond:ital,wght@1,400&family=Jost:wght@300;400;500&display=swap">
+  <link rel="stylesheet" href="/shared/kv.css">
+  <link rel="stylesheet" href="/shared/live-card.css">
+  <link rel="stylesheet" href="./platform.css?v=20261108-hub1">
+</head>
+<body>
+  <div class="kv-veil" aria-hidden="true"></div>
+  <div class="hub-page">
+    <header class="kv-nav hub-top">
+      <a class="hub-logo" href="#/" aria-label="Cosmo Hub home"><img src="/LOGO/logo-web.webp" alt="Saint Seiya TCG" width="760" height="380"></a>
+      <nav class="hub-nav" aria-label="Sections">
+        <a class="kv-stamp" href="#/codex" data-section="codex">Codex</a>
+        <a class="kv-stamp" href="#/nexus" data-section="nexus">Nexus</a>
+        <a class="kv-stamp" href="#/decks" data-section="decks">Decks</a>
+        <a class="kv-stamp" href="#/guilds" data-section="guilds">Guilds</a>
+        <a class="kv-stamp" href="#/tournaments" data-section="tournaments">Tournaments</a>
+        <a class="kv-stamp" href="#/notifications" data-section="notifications" id="hub-inbox" hidden>Notifications <span id="hub-unread"></span></a>
+        <a class="kv-stamp" href="#/console" data-section="console" id="hub-console" hidden>Console</a>
+      </nav>
+      <a class="kv-stamp" href="/login/?next=/cosmohub/" id="hub-signin" hidden>Sign in</a>
+      <a class="kv-ghost hub-play" href="/playtest/">Play</a>
+    </header>
+    <main id="hub" aria-live="polite"><p class="hub-empty">Loading…</p></main>
+    <footer class="kv-footer"><span class="kv-stamp">Saint Seiya TCG · In development</span><a class="hub-foot" href="/how-to-play/">How to play</a></footer>
+  </div>
+  <script type="module" src="/shared/env-badge.js"></script>
+  <script type="module" src="./platform.js?v=20261108-hub1"></script>
+</body>
+</html>
