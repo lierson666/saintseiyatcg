@@ -123,3 +123,10 @@ body:has(.ds) .lb-top, .lb-home:has(> .ds) > :not(.ds) { visibility: hidden; }
   .ds-friends { max-height: 72px; }
 }
 @media (prefers-reduced-motion: reduce) { .ds-path, .ds-path::before { transition: none; } }
+/* Importar decklist em texto (lobby.js importPanel) */
+.ds-import { display: grid; gap: 10px; margin-bottom: 18px; padding: 14px 16px; border: 1px solid #ffffff1f; border-radius: 14px; background: #0b0d14e6; color: #ffffffcc; font: 14px var(--kv-sans, system-ui); }
+.ds-import textarea { width: 100%; min-height: 160px; padding: 10px 12px; border: 1px solid #ffffff26; border-radius: 10px; background: #0b0d14cc; color: #fff; font: 13px/1.5 ui-monospace, Menlo, monospace; resize: vertical; }
+.ds-import textarea:focus-visible { outline: 2px solid var(--kv-gold, #e9c45c); outline-offset: 1px; }
+.ds-import__errors { margin: 0; padding-left: 18px; color: #ffb4a8; }
+.ds-import__actions { display: flex; gap: 10px; justify-content: flex-end; }
+.lb-notice__box p.lb-notice__pre { max-height: 50vh; overflow: auto; white-space: pre-wrap; text-align: left; font: 12px/1.5 ui-monospace, Menlo, monospace; user-select: text; }
