@@ -210,6 +210,32 @@ class Decks(Base):
         self.assertEqual((body['data']['main_deck'], len(body['versions'])), (['a', 'z'], 2))
         self.assertEqual(self.as_('bia', 'GET', f'/decks/{sid}?version=1')[1]['data']['main_deck'], ['a'])
 
+    def test_publico_no_jogo_vai_sozinho_ao_hub_com_winrate(self):
+        # Botão Public do builder (autor, 08/11/2026): salvar com public=true publica; lista nova vira versão; desligar esconde.
+        put = lambda data, rev: self.raw('PUT', '/api/decks/auto', {'data': data, 'revision': rev}, cookie=self.users['edu'])[1]
+        v1 = {'nome': 'Edu Aggro', 'god': 'god-ares', 'domain_id': 'x', 'main_deck': [{'card_id': 'a', 'quantity': 3}], 'public': True}
+        put(v1, 0)
+        mine = [d for d in self.as_('edu', 'GET', '/decks?mine=1')[1]['decks'] if d['name'].startswith('Edu')]
+        self.assertEqual([(d['name'], d['visibility'], d['version']) for d in mine], [('Edu Aggro', 'public', 1)])
+        sid = mine[0]['id']
+        put({**v1, 'nome': 'Edu Aggro!'}, 1)  # só o nome mudou: mesma versão
+        self.assertEqual(self.as_('bia', 'GET', f'/decks/{sid}')[1]['version'], 1)
+        v2 = {**v1, 'main_deck': [{'card_id': 'a', 'quantity': 2}]}
+        put(v2, 2)
+        self.assertEqual(self.as_('bia', 'GET', f'/decks/{sid}')[1]['version'], 2)
+        edu = server.db.execute("select id from users where email = 'edu@example.com'").fetchone()[0]
+        h1, h2 = cosmo.deck_hash(v1), cosmo.deck_hash(v2)
+        for i, (side_hash, winner) in enumerate([(h1, 'a'), (h2, 'a'), (h2, 'b')]):
+            server.db.execute('insert into duels (challenge_id, a_id, b_id, winner, a_god, b_god, finished_at, a_hash, b_hash) values (?, ?, 0, ?, ?, ?, 1, ?, ?)',
+                              (800 + i, edu, winner, 'god-ares', 'god-hades', side_hash, 'outro'))
+        stats = self.raw('GET', f'{P}/decks/{sid}')[1]['stats']  # sem login: o Hub é público
+        self.assertEqual((stats['matches'], stats['wins'], stats['current_version']['matches'], stats['current_version']['wins']), (3, 2, 2, 1))
+        put({**v2, 'public': False}, 3)
+        self.assertEqual(self.raw('GET', f'{P}/decks/{sid}')[0], 404)
+        put(v2 | {'public': True}, 4)
+        self.raw('DELETE', '/api/decks/auto', cookie=self.users['edu'])
+        self.assertEqual(self.raw('GET', f'{P}/decks/{sid}')[0], 404)
+
     def test_comunidade(self):
         self.deck('duda', 'pub')
         sid = self.as_('duda', 'POST', '/decks', {'deck_id': 'pub', 'visibility': 'public'})[1]['id']

@@ -183,6 +183,10 @@ def open_db(path=DB_PATH):
         db.execute('alter table reports add column resolved_at')
     if 'deck_b' not in {r['name'] for r in db.execute('pragma table_info(challenges)')}:
         db.execute('alter table challenges add column deck_b')  # deck de quem aceitou (só o God aparece no perfil)
+    have = {r['name'] for r in db.execute('pragma table_info(duels)')}
+    for col in ('a_hash', 'b_hash'):  # impressão da lista de cada lado (cosmo.deck_hash): winrate por deck no Cosmo Hub
+        if col not in have:
+            db.execute(f'alter table duels add column {col}')
     db.execute('create unique index if not exists users_username on users(username)')
     db.execute('create unique index if not exists users_friend_code on users(friend_code)')
     for email in filter(None, (e.strip().lower() for e in os.environ.get('SANCTUARY_INVITES', '').split(','))):
@@ -901,12 +905,14 @@ class Handler(BaseHTTPRequestHandler):
             db.execute('insert into decks values (?, ?, ?, ?, ?, null) on conflict(user_id, deck_id) do update set '
                        'data = excluded.data, revision = excluded.revision, updated_at = excluded.updated_at, deleted_at = null',
                        (user['id'], deck_id, json.dumps(data), current + 1, now))
+        cosmo.sync_public(user['id'], deck_id, data)  # deck marcado Public no jogo aparece no Cosmo Hub
         self.send_json(200, {'id': deck_id, 'revision': current + 1})
 
     def delete_deck(self, deck_id):  # exclusão lógica: 30 dias para desfazer
         user = self.require_user()
         with lock:
             db.execute('update decks set deleted_at = ? where user_id = ? and deck_id = ?', (int(time.time()), user['id'], deck_id))
+        cosmo.sync_public(user['id'], deck_id, None)  # deck apagado sai do Cosmo Hub (fica privado)
         self.send_json(200, {'ok': True})
 
     def restore_deck(self, deck_id):
@@ -986,7 +992,7 @@ class Handler(BaseHTTPRequestHandler):
         match_id = self.arena_create({'A': names[c['from_id']], 'B': names[c['to_id']]}, {'A': json.loads(c['deck']), 'B': deck})
         with lock:
             cur = db.execute("update challenges set status = 'accepted', match_id = ?, deck_b = ? where id = ? and status = 'pending'",
-                             (match_id, json.dumps({'god': deck.get('god')}), cid))
+                             (match_id, json.dumps({'god': deck.get('god'), 'hash': cosmo.deck_hash(deck)}), cid))
             if not cur.rowcount:
                 raise ApiError(409, 'This challenge is no longer open.')
         self.send_json(200, {'match': match_id})
@@ -1079,9 +1085,9 @@ class Handler(BaseHTTPRequestHandler):
             rounds = victory.get('rounds')
             if victory.get('reason') != 'gone':  # partida que sumiu do arena-server não conta como duelo jogado
                 god = lambda d: str((json.loads(d) if isinstance(d, str) else d).get('god') or '')[:40] or None
-                db.execute('insert or ignore into duels values (?, ?, ?, ?, ?, ?, ?, ?)',
+                db.execute('insert or ignore into duels (challenge_id, a_id, b_id, winner, a_god, b_god, rounds, finished_at, a_hash, b_hash) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
                            (c['id'], c['from_id'], c['to_id'], victory.get('winner') if winner else None, god(c['deck']), god(c['deck_b'] or '{}'),
-                            rounds if isinstance(rounds, int) else None, now))
+                            rounds if isinstance(rounds, int) else None, now, cosmo.deck_hash(c['deck']), json.loads(c['deck_b'] or '{}').get('hash')))
             db.execute("insert into messages (from_id, to_id, body, created_at, kind, ref, seen_at) values (?, ?, ?, ?, 'result', ?, ?)",
                        (c['from_id'], c['to_id'], text, now, c['id'], None))
 

@@ -385,6 +385,39 @@ def owned_deck(user_id, deck_id):
     return row
 
 
+def deck_hash(data):
+    """Impressão da lista (God, Domain e cartas): liga o duelo à versão do deck sem guardar a lista no duelo."""
+    if isinstance(data, str):
+        data = json.loads(data or '{}')
+    cards = sorted(json.dumps(e, sort_keys=True) for e in data.get('main_deck') or [])
+    return hashlib.sha256('|'.join([str(data.get('god') or 'god-athena'), str(data.get('domain_id') or ''), *cards]).encode()).hexdigest()[:16]
+
+
+def publish(user_id, deck_id, raw, visibility, archetype='', strategy=''):
+    """Grava a cópia pública do deck. Versão nova só quando a lista muda (o histórico e o winrate seguem a lista)."""
+    data = json.loads(raw)
+    t = now()
+    name, god = str(data.get('name') or data.get('alpha_nome') or data.get('nome') or deck_id)[:80], data.get('god') or data.get('deus')
+    god = str(god)[:60] if god else None
+    with lock:
+        row = conn.execute('select * from shared_decks where owner_id = ? and deck_id = ?', (user_id, deck_id)).fetchone()
+        if row:
+            sid = row['id']
+            last = conn.execute('select data from deck_versions where shared_id = ? and version = ?', (sid, row['version'])).fetchone()
+            changed = not last or deck_hash(last['data']) != deck_hash(data)
+            version = row['version'] + changed
+            conn.execute('update shared_decks set visibility=?, name=?, god=?, archetype=?, strategy=?, version=?, updated_at=? where id=?',
+                         (visibility, name, god, archetype or row['archetype'], strategy or row['strategy'], version, t, sid))
+        else:
+            sid, version, changed = secrets.token_urlsafe(12), 1, True
+            conn.execute('insert into shared_decks (id, owner_id, deck_id, visibility, name, god, archetype, strategy, version, created_at, updated_at) values (?,?,?,?,?,?,?,?,?,?,?)',
+                         (sid, user_id, deck_id, visibility, name, god, archetype or None, strategy or None, version, t, t))
+        if changed:
+            conn.execute('insert into deck_versions values (?, ?, ?, ?)', (sid, version, raw, t))
+        audit(user_id, 'deck.share', f'deck:{sid}', visibility=visibility, version=version)
+    return sid, version
+
+
 def share_deck(h):
     user = h.require_user()
     rate(user, 'deck.share', 30, 3600)
@@ -392,23 +425,20 @@ def share_deck(h):
     deck_id = str(body.get('deck_id') or '')
     visibility = choice(body, 'visibility', VISIBILITY, 'private')
     raw = owned_deck(user['id'], deck_id)['data']
-    data = json.loads(raw)
-    t = now()
-    with lock:
-        row = conn.execute('select * from shared_decks where owner_id = ? and deck_id = ?', (user['id'], deck_id)).fetchone()
-        name, god = str(data.get('name') or data.get('nome') or deck_id)[:80], data.get('god') or data.get('deus')
-        strategy, archetype = text(body, 'strategy', 4000, False), text(body, 'archetype', 60, False)
-        if row:
-            sid, version = row['id'], row['version'] + 1
-            conn.execute('update shared_decks set visibility=?, name=?, god=?, archetype=?, strategy=?, version=?, updated_at=? where id=?',
-                         (visibility, name, str(god)[:60] if god else None, archetype or row['archetype'], strategy or row['strategy'], version, t, sid))
-        else:
-            sid, version = secrets.token_urlsafe(12), 1
-            conn.execute('insert into shared_decks (id, owner_id, deck_id, visibility, name, god, archetype, strategy, version, created_at, updated_at) values (?,?,?,?,?,?,?,?,?,?,?)',
-                         (sid, user['id'], deck_id, visibility, name, str(god)[:60] if god else None, archetype or None, strategy or None, version, t, t))
-        conn.execute('insert into deck_versions values (?, ?, ?, ?)', (sid, version, raw, t))
-        audit(user['id'], 'deck.share', f'deck:{sid}', visibility=visibility, version=version)
+    sid, version = publish(user['id'], deck_id, raw, visibility, text(body, 'archetype', 60, False), text(body, 'strategy', 4000, False))
     h.send_json(200, {'id': sid, 'version': version, 'visibility': visibility})
+
+
+def sync_public(user_id, deck_id, data):
+    """Botão Public do builder (autor, 08/11/2026): o deck público no jogo aparece sozinho no Cosmo Hub e cada lista nova vira versão.
+    Só age quando o jogo manda o campo public; desligar (ou apagar o deck) deixa a cópia privada, sem perder histórico e comentários."""
+    if data is not None and 'public' not in data:
+        return
+    if data and data.get('public'):
+        publish(user_id, deck_id, json.dumps(data), 'public')
+        return
+    with lock:
+        conn.execute("update shared_decks set visibility = 'private', updated_at = ? where owner_id = ? and deck_id = ? and visibility = 'public'", (now(), user_id, deck_id))
 
 
 def shared_deck(sid, user):
@@ -419,11 +449,28 @@ def shared_deck(sid, user):
     return row
 
 
+def deck_stats(row):
+    """Winrate do deck público: só duelos online (autor, 08/11/2026), do dono, com uma lista que já foi versão deste deck."""
+    versions = {deck_hash(v['data']): v['version'] for v in conn.execute('select version, data from deck_versions where shared_id = ? order by version', (row['id'],))}
+    current = next((h for h, v in versions.items() if v == row['version']), None)
+    total, now_ = {'matches': 0, 'wins': 0}, {'matches': 0, 'wins': 0}
+    for d in main.execute('select winner, a_id, b_id, a_hash, b_hash from duels where a_id = ? or b_id = ?', (row['owner_id'], row['owner_id'])):
+        for side in ('a', 'b'):
+            if d[f'{side}_id'] == row['owner_id'] and d[f'{side}_hash'] in versions:
+                for bucket in (total, now_) if d[f'{side}_hash'] == current else (total,):
+                    bucket['matches'] += 1
+                    bucket['wins'] += int(d['winner'] == side)
+    for b in (total, now_):
+        b['win_rate'] = round(b['wins'] / b['matches'], 4) if b['matches'] else None
+        b['sample_ok'] = b['matches'] >= MIN_SAMPLE
+    return {**total, 'current_version': now_}
+
+
 def deck_summary(row, names):
     rating = conn.execute('select avg(stars) a, count(*) n from deck_ratings where shared_id = ?', (row['id'],)).fetchone()
     favorites = conn.execute('select count(*) from deck_favorites where shared_id = ?', (row['id'],)).fetchone()[0]
     return {'id': row['id'], 'name': row['name'], 'god': row['god'], 'archetype': row['archetype'], 'visibility': row['visibility'], 'version': row['version'],
-            'author': names.get(row['owner_id']), 'rating': round(rating['a'], 2) if rating['a'] else None, 'ratings': rating['n'], 'favorites': favorites, 'updated_at': row['updated_at'], 'forked_from': row['forked_from']}
+            'author': names.get(row['owner_id']), 'rating': round(rating['a'], 2) if rating['a'] else None, 'ratings': rating['n'], 'favorites': favorites, 'updated_at': row['updated_at'], 'forked_from': row['forked_from'], 'stats': deck_stats(row)}
 
 
 def list_decks(h):
