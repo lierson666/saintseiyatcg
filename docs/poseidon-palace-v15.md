@@ -2,7 +2,9 @@
 
 Data: 08/11/2026. Branch `olympus-arena`, base `c06f945`. Só desenvolvimento: nada foi enviado ao remoto nem publicado.
 
-**Estado:** `TECHNICALLY_VALIDATED / ART_REVIEW_PENDING`. A V15 **não está aprovada artisticamente**: ela espera a revisão do autor nas comparações abaixo.
+**Estado:** `TECHNICALLY_VALIDATED / ART_REVIEW_PENDING`.
+
+**Direção visual aprovada pelo autor em 08/11/2026.** A aprovação vale para a direção da V15: arquitetura, rochas, materiais, oceano e luz, conforme as comparações abaixo. Ela **não** promove o asset a `ART_APPROVED`. As limitações da seção 6 continuam pendentes, e a arte final ainda precisa de revisão.
 
 **Onde ver:** `playtest/divine/?arena=poseidon&arenaPreview=poseidon-palace&sculptV141=1&sculptDepthsV11=1&palaceV15=1`. Sem `?palaceV15=1`, o palácio é exatamente o da V1.1.
 
