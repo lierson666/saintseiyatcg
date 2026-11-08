@@ -105,7 +105,7 @@ export function arenaNav() {
   return tabs();
 }
 function tabs() {
-  return `<nav class="ms-tabs" aria-label="Arena Forge">${[['#arenas', 'Arenas'], ['#arenas/materiais', 'Texture Library'], ['#arenas/estudio', 'Material Studio · Palácio de Poseidon'], ['#arenas/producao', 'Produção · Artboard']]
+  return `<nav class="ms-tabs" aria-label="Arena Forge">${[['#arenas', 'Arenas'], ['#arenas/materiais', 'Texture Library'], ['#arenas/estudio', 'Material Studio · Palácio de Poseidon'], ['#arenas/producao', 'Produção · Artboard'], ['#arenas/escultura', 'Sculpture Studio']]
     .map(([h, l]) => `<a href="${h}" ${location.hash === h ? 'aria-current="page"' : ''}>${l}</a>`).join('')}</nav>`;
 }
 

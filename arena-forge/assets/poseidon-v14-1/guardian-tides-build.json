@@ -1,0 +1,65 @@
+{
+  "hiPoly": {
+    "TIDES__BODY": 207632,
+    "TIDES__FACE": 107168,
+    "TIDES__HAND_GRIP": 25008,
+    "TIDES__HAIR_BEARD": 462636,
+    "TIDES__CLOTH": 194992,
+    "TIDES__TRIDENT": 3858,
+    "TIDES__PEDESTAL": 29740,
+    "TIDES__WAVES": 373732,
+    "TIDES__DETAILS": 105868
+  },
+  "lod0": {
+    "TIDES__BODY": 5999,
+    "TIDES__FACE": 2599,
+    "TIDES__HAND_GRIP": 1599,
+    "TIDES__HAIR_BEARD": 4400,
+    "TIDES__CLOTH": 5200,
+    "TIDES__TRIDENT": 1799,
+    "TIDES__PEDESTAL": 1600,
+    "TIDES__WAVES": 4000,
+    "TIDES__DETAILS": 2398,
+    "total": 29594
+  },
+  "lod1": {
+    "TIDES__BODY": 1800,
+    "TIDES__FACE": 779,
+    "TIDES__HAND_GRIP": 499,
+    "TIDES__HAIR_BEARD": 1320,
+    "TIDES__CLOTH": 1560,
+    "TIDES__TRIDENT": 540,
+    "TIDES__PEDESTAL": 480,
+    "TIDES__WAVES": 1200,
+    "TIDES__DETAILS": 718,
+    "total": 8896
+  },
+  "lod2": {
+    "TIDES__BODY": 510,
+    "TIDES__FACE": 220,
+    "TIDES__HAND_GRIP": 149,
+    "TIDES__HAIR_BEARD": 396,
+    "TIDES__CLOTH": 442,
+    "TIDES__TRIDENT": 152,
+    "TIDES__PEDESTAL": 149,
+    "TIDES__WAVES": 340,
+    "TIDES__DETAILS": 218,
+    "total": 2576
+  },
+  "scale": 3.3,
+  "grip": {
+    "grip_center": [
+      -0.345942884683609,
+      -0.39576295018196106,
+      1.1552295684814453
+    ],
+    "grip_axis": [
+      0.02447360008955002,
+      0.040758002549409866,
+      0.9988692998886108
+    ],
+    "grip_radius": 0.010350382509853102,
+    "seconds": 6376.3
+  },
+  "generated": "2026-11-08 16:21"
+}
