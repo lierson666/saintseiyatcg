@@ -87,7 +87,8 @@ const deckTile = d => {
 const deckTiles = (list, none) => list.length ? `<div class="hub-decks">${list.map(deckTile).join('')}</div>` : empty(none);
 const eventTile = t => `<a class="hub-tile" href="#/tournament/${esc(t.id)}"><b>${esc(t.name)}</b><small>${esc(t.format)} · ${esc(t.category)} · ${esc(t.status)}</small></a>`;
 
-const artOf = id => artCards?.get(id)?.ilustracao;
+// Arte provisória (-ref) nunca aparece no Hub público (o Caddy bloqueia para quem não entrou).
+const artOf = id => { const f = artCards?.get(id)?.ilustracao; return f && !/-ref\./i.test(f) ? f : undefined; };
 const thumb = id => {
   const file = artOf(id);
   return file ? `/card-forge/art-web/webp/${esc(file.replace(/\.[a-z]+$/i, '.webp'))}` : '';
@@ -220,7 +221,7 @@ async function cardPage(id) {
   const art = artCards.get(id);
   let picture = '';
   try {
-    picture = art ? renderLiveCard(art, {art: art.ilustracao ? `/card-forge/art-web/${art.ilustracao}` : null}) : '';
+    picture = art ? renderLiveCard(art, {art: artOf(art.id) ? `/card-forge/art-web/${artOf(art.id)}` : null}) : '';
   } catch { picture = ''; }
   const {items} = apiUp ? await api('/content?kind=ruling') : {items: []};
   const rulings = items.filter(r => (r.meta.card_refs || []).includes(id));
@@ -645,7 +646,7 @@ function peekHtml(id) {
   if (!peekCache.has(id)) {
     const art = artCards?.get(id);
     let html = '';
-    try { html = art ? renderLiveCard(art, {art: art.ilustracao ? `/card-forge/art-web/${art.ilustracao}` : null}) : ''; } catch { html = ''; }
+    try { html = art ? renderLiveCard(art, {art: artOf(art.id) ? `/card-forge/art-web/${artOf(art.id)}` : null}) : ''; } catch { html = ''; }
     peekCache.set(id, html);
   }
   return peekCache.get(id);
