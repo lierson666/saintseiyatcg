@@ -7,7 +7,7 @@ import {readFilters, filtersQuery, filterCatalog} from './codex-filter.js?v=2026
 const API = '/api/platform';
 // Sem a API da plataforma no servidor, Codex e home seguem funcionando; o resto diz que abre em breve em vez de dar erro.
 const apiUp = await fetch(`${API}/health`).then(r => r.ok).catch(() => false);
-const NEEDS_API = new Set(['article', 'decks', 'deck', 'player', 'guilds', 'guild', 'tournaments', 'tournament', 'notifications', 'console']);
+const NEEDS_API = new Set(['article', 'decks', 'deck', 'player', 'guilds', 'guild', 'tournaments', 'tournament', 'notifications', 'console', 'staff']);
 const root = document.getElementById('hub');
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
 const when = t => t ? new Date(t * 1000).toLocaleDateString() : '';
@@ -21,7 +21,7 @@ async function call(path, method = 'GET', body) {
 }
 const api = (path, method, body) => call(API + path, method, body);
 const soon = () => `<section class="kv-card hub-soon"><p class="kv-stamp kv-stamp--gold">Opening soon</p><p>This part of the Sanctuary is being prepared. The Codex is already open.</p><div class="hub-cta"><a class="kv-ghost" href="#/codex">Open the Codex</a></div></section>`;
-const TITLES = {player: 'Players', decks: 'Decks', guilds: 'Guilds', tournaments: 'Tournaments', notifications: 'Notifications', console: 'Console', article: 'Nexus', deck: 'Decks', guild: 'Guilds', tournament: 'Tournaments'};
+const TITLES = {player: 'Players', decks: 'Decks', guilds: 'Guilds', tournaments: 'Tournaments', notifications: 'Notifications', console: 'Console', staff: 'Staff', article: 'Nexus', deck: 'Decks', guild: 'Guilds', tournament: 'Tournaments'};
 const empty = text => `<p class="hub-empty">${esc(text)}</p>`;
 const tiles = (items, html, none) => items.length ? `<div class="hub-grid">${items.map(html).join('')}</div>` : empty(none);
 const formData = form => {
@@ -100,10 +100,11 @@ async function home() {
 
 async function article(slug) {
   const a = await api(`/content/${q(slug)}`);
-  return `<h1>${esc(a.title)}</h1><p class="hub-muted">${esc(a.author || '')} · ${when(a.publish_at)} · revision ${a.revision}</p>
-    <div class="hub-rule">${esc(a.body)}</div>${a.kind === 'balance' ? balanceDetails(a.meta) : ''}
+  return `${articleBody(a)}
     ${a.status === 'published' ? await discussion(`content:${a.slug}`) : ''}`;
 }
+const articleBody = a => `<h1>${esc(a.title)}</h1><p class="hub-muted">${esc(a.author || '')} · ${when(a.publish_at)}${a.revision ? ` · revision ${a.revision}` : ''}</p>
+  <div class="hub-rule">${esc(a.body)}</div>${a.kind === 'balance' ? balanceDetails(a.meta || {}) : ''}`;
 const balanceDetails = m => `<h2>Change</h2><div class="hub-scroll"><table class="hub-table"><tbody>${['affected', 'previous', 'new', 'release', 'effective', 'reason', 'tests'].map(k => `<tr><th>${k}</th><td>${esc(typeof m[k] === 'string' ? m[k] : JSON.stringify(m[k]))}</td></tr>`).join('')}</tbody></table></div>`;
 
 // ---------- Codex ----------
@@ -314,11 +315,11 @@ async function deckPage(id) {
 
 // ---------- Discussões ----------
 async function discussion(target) {
-  const {comments} = await api(`/comments?target=${q(target)}&sort=top`);
+  const [{comments}] = await Promise.all([api(`/comments?target=${q(target)}&sort=top`), meReady]);
   const kids = {};
   for (const c of comments) (kids[c.parent_id ?? 0] ||= []).push(c);
   const node = c => `<div class="hub-comment"><small class="hub-muted">${c.author ? playerLink(c.author) : 'removed'} · ${when(c.at)} · ${c.score}</small><p>${c.removed ? '<em>Removed</em>' : esc(c.body)}</p>
-    ${c.removed ? '' : `<div class="hub-row"><button data-do="vote" data-id="${c.id}" data-value="1" aria-label="Upvote">▲</button><button data-do="vote" data-id="${c.id}" data-value="-1" aria-label="Downvote">▼</button><button data-do="reply" data-id="${c.id}" data-target="${esc(target)}">Reply</button><button data-do="report-comment" data-id="${c.id}">Report</button></div>`}
+    ${c.removed ? '' : `<div class="hub-row"><button data-do="vote" data-id="${c.id}" data-value="1" aria-label="Upvote">▲</button><button data-do="vote" data-id="${c.id}" data-value="-1" aria-label="Downvote">▼</button><button data-do="reply" data-id="${c.id}" data-target="${esc(target)}">Reply</button><button data-do="report-comment" data-id="${c.id}">Report</button>${staff.mod ? `<button data-do="hide-comment" data-id="${c.id}">Hide</button>` : ''}</div>`}
     ${(kids[c.id] || []).map(node).join('')}</div>`;
   return `<h2>Discussion</h2><form class="hub-form" data-do="comment" data-target="${esc(target)}"><label>Comment<textarea name="body" maxlength="2000" rows="2" required></textarea></label><button>Post</button></form>
     ${(kids[0] || []).map(node).join('') || empty('No comments yet.')}`;
@@ -367,6 +368,7 @@ async function tournamentPage(id) {
       <button data-do="t-simple" data-verb="drop" data-id="${esc(id)}">Drop</button>
       ${t.can_run && t.status === 'open' ? `<button data-do="t-simple" data-verb="start" data-id="${esc(id)}">Start event</button>` : ''}
       ${t.can_run && t.status === 'running' ? `<button data-do="t-simple" data-verb="next-round" data-id="${esc(id)}">Next round</button><button data-do="t-simple" data-verb="close" data-id="${esc(id)}">Close event</button>` : ''}</div>
+    ${t.mode === 'digital' ? '<p class="hub-muted">Digital event: an online duel between paired players records the result by itself (best of one). The organizer can still correct it.</p>' : ''}
     <h2>Standings</h2><p class="hub-muted">Tiebreak policy ${esc(t.policy.id)}: ${esc(t.policy.status)}.</p>
     <div class="hub-scroll"><table class="hub-table"><thead><tr><th>#</th><th>Player</th><th>Pts</th><th>W-D-L</th><th>OMW</th><th>GW</th><th>OGW</th></tr></thead><tbody>${t.standings.map(r => `<tr><td>${r.rank}</td><td>${esc(r.name)}</td><td>${r.points}</td><td>${r.wins}-${r.draws}-${r.losses}</td><td>${r.omw}</td><td>${r.gw}</td><td>${r.ogw}</td></tr>`).join('') || '<tr><td colspan="7">No players yet.</td></tr>'}</tbody></table></div>
     <h2>Pairings${round ? ` · Round ${round} of ${t.total_rounds}` : ''}</h2>${t.matches.length ? `<div class="hub-scroll"><table class="hub-table"><thead><tr><th>Rd</th><th>A</th><th>B</th><th>Score</th><th>Status</th><th></th></tr></thead><tbody>${t.matches.map(match).join('')}</tbody></table></div>` : empty('The event has not started.')}
@@ -390,10 +392,48 @@ async function consolePage() {
       <div class="hub-tile"><b>Database ${esc(c.database)}</b><small>Schema ${c.schema} · ${c.open_reports} open reports</small></div></div>
     <h2>Versions</h2><div class="hub-scroll"><table class="hub-table"><tbody>${row('Rules', reg.index.current.rules)}${row('Catalog', reg.index.current.catalog)}${row('Engine', build?.engine)}${row('Commit', build?.commit)}</tbody></table></div>
     <h2>Releases</h2>${tiles(releases.releases.slice().reverse(), r => `<div class="hub-tile"><b>${esc(r.id)}</b><small>${esc(r.version)} · ${esc(r.channel)} · ready ${r.ready} · approval ${esc(r.approval)}</small></div>`, 'No release candidates yet.')}
-    <h2>Content</h2>${tiles(drafts.items, d => `<div class="hub-tile"><b>${esc(d.title)}</b><small>${esc(d.kind)} · ${esc(d.status)}</small><div class="hub-row">${d.status === 'published' ? `<button data-do="unpublish" data-id="${d.id}">Unpublish</button>` : `<button data-do="publish" data-id="${d.id}">Publish</button>`}</div></div>`, 'No content yet.')}
-    <form class="hub-form" data-do="create-content"><label>Kind<select name="kind">${['news', 'guide', 'lesson', 'ruling', 'balance'].map(k => `<option>${k}</option>`).join('')}</select></label><label>Slug<input name="slug" pattern="[a-z0-9][a-z0-9-]+" required></label><label>Title<input name="title" maxlength="120" required></label><label>Body<textarea name="body" rows="4" required></textarea></label><label>Meta (JSON: rule_refs, card_refs, balance fields)<textarea name="meta" rows="2">{}</textarea></label><button>Save draft</button></form>
+    <h2>Content</h2>${tiles(drafts.items, d => `<a class="hub-tile" href="#/staff/edit/${esc(d.slug)}"><b>${esc(d.title)}</b><small>${esc(d.kind)} · ${esc(d.status)}</small></a>`, 'No content yet.')}
+    <div class="hub-cta"><a class="kv-ghost" href="#/staff/content">Open the editor</a></div>
     <h2>Roles</h2><form class="hub-form" data-do="grant-role"><label>Player<input name="username" required></label><label>Role<select name="role"><option>publisher</option><option>moderator</option><option>judge</option></select></label><button>Grant</button></form>
     <h2>Audit log</h2><div class="hub-scroll"><table class="hub-table"><tbody>${audit.entries.slice(0, 50).map(e => `<tr><td>${when(e.at)}</td><td>${esc(e.actor_name)}</td><td>${esc(e.action)}</td><td>${esc(e.target)}</td></tr>`).join('') || '<tr><td>No entries.</td></tr>'}</tbody></table></div>`;
+}
+
+// ---------- Staff: editor do Nexus e fila de moderação (permissão decidida no servidor) ----------
+const KINDS = ['news', 'guide', 'lesson', 'ruling', 'balance'];
+const targetLink = t => { const [kind, ...rest] = String(t).split(':'); const id = rest.join(':'); return `#/${kind === 'content' ? 'article' : kind}/${q(id)}`; };
+async function staffPage(tab = 'content', slug) {
+  const nav = `<h1>Staff</h1><nav class="hub-tabs">${[['content', 'Content'], ['reports', 'Reports']].map(([k, l]) => `<a href="#/staff/${k}" ${tab === k || (tab === 'edit' && k === 'content') ? 'aria-current="page"' : ''}>${l}</a>`).join('')}</nav>`;
+  if (tab === 'reports') {
+    const {reports} = await api('/reports');
+    return nav + tiles(reports, r => `<div class="hub-tile"><b>${esc(r.body)}</b><small>${r.author ? esc(r.author) : 'removed'} · ${when(r.at)}${r.reason ? ` · ${esc(r.reason)}` : ''}</small>
+      <div class="hub-row"><a class="kv-ghost" href="${targetLink(r.target)}">Open</a><button data-do="hide-comment" data-id="${r.comment_id}">Hide comment</button><button data-do="dismiss-report" data-id="${r.id}">Keep comment</button></div></div>`, 'No open reports.');
+  }
+  if (tab === 'edit') return nav + await editor(slug);
+  const {items} = await api('/content?all=1');
+  return `${nav}<div class="hub-cta"><a class="kv-ghost" href="#/staff/edit">New article</a></div>
+    ${tiles(items, d => `<a class="hub-tile" href="#/staff/edit/${esc(d.slug)}"><b>${esc(d.title)}</b><small>${esc(d.kind)} · ${esc(d.status)} · revision ${d.revision}</small></a>`, 'No content yet.')}`;
+}
+async function editor(slug) {
+  const a = slug ? await api(`/content/${q(slug)}`) : {kind: 'news', title: '', body: '', meta: {}, lang: 'en'};
+  const opt = (v, cur) => `<option ${v === cur ? 'selected' : ''}>${v}</option>`;
+  return `<div class="hub-editor"><form class="hub-form" id="ed-form" data-do="save-content" data-id="${a.id || ''}">
+      <label>Kind<select name="kind" ${a.id ? 'disabled' : ''}>${KINDS.map(k => opt(k, a.kind)).join('')}</select></label>
+      <label>Slug<input name="slug" value="${esc(a.slug || '')}" pattern="[a-z0-9][a-z0-9-]+" required ${a.id ? 'readonly' : ''}></label>
+      <label>Title<input name="title" value="${esc(a.title)}" maxlength="120" required></label>
+      <label>Category<input name="category" value="${esc(a.category || '')}" maxlength="40"></label>
+      <label>Language<select name="lang">${['en', 'pt'].map(k => opt(k, a.lang)).join('')}</select></label>
+      <label><span><input type="checkbox" name="featured" ${a.featured ? 'checked' : ''} style="width:auto;min-height:0"> Featured</span></label>
+      <label>Body<textarea name="body" rows="14" required>${esc(a.body)}</textarea></label>
+      <label>Meta (JSON: rule_refs, card_refs, balance fields)<textarea name="meta" rows="3">${esc(JSON.stringify(a.meta || {}))}</textarea></label>
+      <div class="hub-row"><button>Save draft</button>${a.id ? (a.status === 'published' ? `<button type="button" data-do="unpublish" data-id="${a.id}">Unpublish</button><a class="kv-ghost" href="#/article/${esc(a.slug)}">Open</a>` : `<button type="button" data-do="publish" data-id="${a.id}">Publish</button>`) : ''}</div>
+      ${a.revisions?.length ? `<p class="hub-muted">${esc(a.status)} · ${a.revisions.length} revisions · last ${when(a.revisions[0].at)}</p>` : ''}
+    </form><section class="hub-preview" aria-label="Preview"><p class="kv-stamp">Preview</p><div id="ed-preview">${articleBody({...a, author: a.author || 'You'})}</div></section></div>`;
+}
+function previewArticle(form) {
+  const d = formData(form);
+  let meta = {};
+  try { meta = JSON.parse(d.meta || '{}'); } catch { /* prévia ignora meta inválida; salvar avisa */ }
+  form.ownerDocument.getElementById('ed-preview').innerHTML = articleBody({...d, kind: d.kind || form.querySelector('[name=kind]').value, meta, author: 'You'});
 }
 
 // ---------- Ações ----------
@@ -437,11 +477,15 @@ const ACTIONS = {
   'resolve-match': (el, data) => api(`/matches/${el.dataset.id}/resolve`, 'POST', {a_score: Number(data.a_score), b_score: Number(data.b_score)}),
   publish: el => api(`/content/${el.dataset.id}/publish`, 'POST', {}),
   unpublish: el => api(`/content/${el.dataset.id}/unpublish`, 'POST', {}),
-  'create-content': (_, data) => {
+  'save-content': async (el, data) => {
     let meta;
     try { meta = JSON.parse(data.meta || '{}'); } catch { throw new Error('Meta must be valid JSON.'); }
-    return api('/content', 'POST', {...data, meta});
+    if (el.dataset.id) await api(`/content/${el.dataset.id}`, 'PATCH', {title: data.title, body: data.body, category: data.category || null, featured: data.featured, meta});
+    else { await api('/content', 'POST', {...data, meta}); location.hash = `#/staff/edit/${data.slug}`; }
+    alertBox('Draft saved.');
   },
+  'hide-comment': async el => { await api(`/comments/${el.dataset.id}`, 'DELETE'); alertBox('Comment hidden.'); },
+  'dismiss-report': el => api(`/reports/${el.dataset.id}/dismiss`, 'POST', {}),
   'grant-role': (_, data) => api('/roles', 'POST', data),
 };
 const CHANGES = {
@@ -497,10 +541,11 @@ document.addEventListener('submit', e => { if (e.target.id === 'card-filters') e
 document.addEventListener('input', e => {
   if (e.target.closest('#card-filters')) filterCards();
   if (e.target.id === 'rule-q') filterRules();
+  if (e.target.closest('#ed-form')) previewArticle(e.target.closest('#ed-form'));
 });
 
 // ---------- Rotas ----------
-const ROUTES = {'': home, codex, card: cardPage, player: playerPage, rule: rulePage, nexus, article, decks, deck: deckPage, guilds, guild: guildPage, tournaments, tournament: tournamentPage, notifications: inbox, console: consolePage};
+const ROUTES = {'': home, codex, card: cardPage, player: playerPage, rule: rulePage, nexus, article, decks, deck: deckPage, guilds, guild: guildPage, tournaments, tournament: tournamentPage, notifications: inbox, console: consolePage, staff: staffPage};
 
 // Rota = #/secao/arg/arg2?filtros. query() devolve só os filtros.
 const query = () => location.hash.split('?')[1] || '';
@@ -524,8 +569,12 @@ async function render() {
   }
 }
 
+const staff = {mod: false};
+let meReady = Promise.resolve();
 async function refreshMe() {
-  const me = await api('/me').catch(() => null);
+  const me = await (meReady = api('/me').catch(() => null));
+  staff.mod = !!(me?.developer || me?.roles?.includes('moderator'));
+  document.getElementById('hub-staff').hidden = !(staff.mod || me?.roles?.includes('publisher'));
   document.getElementById('hub-unread').textContent = me?.unread || '';
   document.getElementById('hub-console').hidden = !me?.developer;
   document.getElementById('hub-inbox').hidden = !me;
@@ -538,5 +587,5 @@ async function refreshMe() {
 
 mountKV();
 addEventListener('hashchange', () => { scrollTo(0, 0); render(); });
+refreshMe(); // antes do render: a discussão espera saber se é moderador
 render();
-refreshMe();

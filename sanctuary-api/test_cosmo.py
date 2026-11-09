@@ -297,6 +297,12 @@ class Decks(Base):
         self.as_('dev', 'POST', '/roles', {'username': 'Caio_x', 'role': 'moderator'})
         self.assertEqual(len(self.as_('caio', 'GET', '/reports')[1]['reports']), 1)
         self.assertEqual(self.as_('edu', 'GET', '/reports')[0], 403)
+        rep = self.as_('caio', 'GET', '/reports')[1]['reports'][0]
+        self.assertEqual(rep['author'], 'Duda_x')
+        self.assertNotIn('author_id', rep)
+        self.assertEqual(self.as_('edu', 'POST', f'/reports/{rep["id"]}/dismiss')[0], 403)
+        self.assertEqual(self.as_('caio', 'POST', f'/reports/{rep["id"]}/dismiss')[0], 200)
+        self.assertEqual(self.as_('caio', 'GET', '/reports')[1]['reports'], [])
         self.assertEqual(self.as_('caio', 'DELETE', f'/comments/{reply}')[0], 200)
         hidden = {r['id']: r for r in self.raw('GET', P + f'/comments?target={target}')[1]['comments']}[reply]
         self.assertEqual((hidden['body'], hidden['author']), (None, None))
@@ -360,6 +366,21 @@ class Tournaments(Base):
                 self.assertEqual(self.as_(names[m['b']], 'POST', f'/matches/{m["id"]}/report', {'a_score': 2, 'b_score': 0})[1]['status'], 'confirmed')
 
     NAMES = {'Ana_x': 'ana', 'Bia_x': 'bia', 'Caio_x': 'caio', 'Duda_x': 'duda', 'Edu_x': 'edu'}
+
+    def test_duelo_online_confirma_partida_digital(self):
+        uid = lambda n: server.db.execute('select id from users where email = ?', (f'{n}@example.com',)).fetchone()[0]
+        tid = self.event(['ana', 'bia'], format='single_elimination')
+        fis = self.event(['ana', 'bia'], format='single_elimination', mode='physical')
+        self.as_('dev', 'POST', f'/tournaments/{tid}/start')
+        self.as_('dev', 'POST', f'/tournaments/{fis}/start')
+        self.assertIsNone(cosmo.record_online_duel(uid('ana'), uid('bia'), None))  # empate não conta
+        mid = cosmo.record_online_duel(uid('bia'), uid('ana'), uid('bia'))
+        m = next(x for x in self.raw('GET', P + f'/tournaments/{tid}')[1]['matches'] if x['id'] == mid)
+        self.assertEqual((m['status'], m['b_score'] if m['b'] == 'Bia_x' else m['a_score']), ('confirmed', 1))
+        self.assertEqual(self.as_('ana', 'POST', f'/matches/{mid}/report', {'a_score': 1, 'b_score': 0})[0], 409)
+        self.assertNotIn('confirmed', [x['status'] for x in self.raw('GET', P + f'/tournaments/{fis}')[1]['matches']])  # físico segue manual
+        self.assertIsNone(cosmo.record_online_duel(uid('ana'), uid('bia'), uid('ana')))  # nada pendente
+        self.assertEqual(self.as_('bia', 'GET', '/notifications')[1]['notifications'][0]['text'], 'Your online duel result was recorded.')
 
     def test_swiss_fisico_sem_motor(self):
         tid = self.event(['ana', 'bia', 'caio', 'duda', 'edu'], format='swiss', mode='physical', location='Loja X')

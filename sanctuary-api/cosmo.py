@@ -677,8 +677,20 @@ def delete_comment(h, cid):
 
 def list_reports(h):
     require_role(h, 'moderator')
-    rows = conn.execute('select r.id, r.comment_id, r.reason, r.at, c.body, c.target from comment_reports r join comments c on c.id = r.comment_id where r.resolved_at is null order by r.id desc limit 100').fetchall()
-    h.send_json(200, {'reports': [dict(r) for r in rows]})
+    rows = conn.execute('select r.id, r.comment_id, r.reason, r.at, c.body, c.target, c.author_id from comment_reports r join comments c on c.id = r.comment_id where r.resolved_at is null order by r.id desc limit 100').fetchall()
+    names = public_names(r['author_id'] for r in rows)
+    h.send_json(200, {'reports': [{**{k: r[k] for k in r.keys() if k != 'author_id'}, 'author': names.get(r['author_id'])} for r in rows]})
+
+
+def dismiss_report(h, rid):
+    user = require_role(h, 'moderator')
+    with lock:
+        row = conn.execute('select comment_id from comment_reports where id = ? and resolved_at is null', (int(rid),)).fetchone()
+        if not row:
+            raise ApiError(404, 'Report not found.')
+        conn.execute('update comment_reports set resolved_at = ? where comment_id = ? and resolved_at is null', (now(), row['comment_id']))
+        audit(user['id'], 'report.dismiss', f'comment:{row["comment_id"]}')
+    h.send_json(200, {'ok': True})
 
 
 def notifications(h):
@@ -1220,6 +1232,26 @@ def resolve_match(h, mid):
     h.send_json(200, {'status': 'confirmed'})
 
 
+def record_online_duel(a_id, b_id, winner_id):
+    """Duelo online entre os dois jogadores de uma partida de torneio digital em andamento: confirma 1-0 sozinho (melhor de 1).
+    Empate e partida que sumiu do arena-server não entram; o organizador ainda pode corrigir com resolve."""
+    if winner_id not in (a_id, b_id) or a_id == b_id:
+        return None
+    with lock:
+        match = conn.execute("select m.* from t_matches m join tournaments t on t.id = m.tournament_id where t.status = 'running' and t.mode = 'digital'"
+                             " and m.status in ('pending', 'reported') and ((m.a_id = ? and m.b_id = ?) or (m.a_id = ? and m.b_id = ?)) order by m.round desc, m.id limit 1",
+                             (a_id, b_id, b_id, a_id)).fetchone()
+        if not match:
+            return None
+        a, b = (1, 0) if winner_id == match['a_id'] else (0, 1)
+        conn.execute("update t_matches set a_score=?, b_score=?, status='confirmed', reported_by=null where id=?", (a, b, match['id']))
+        target = f'tournament:{match["tournament_id"]}'
+        audit(None, 'match.online', target, match=match['id'], a=a, b=b, previous=[match['a_score'], match['b_score'], match['status']])
+        for uid in (match['a_id'], match['b_id']):
+            notify(uid, 'tournament', 'Your online duel result was recorded.', target)
+        return match['id']
+
+
 def tournament_audit(h, tid):
     row = tournament_or_404(tid)
     require_runner(h, row)
@@ -1260,7 +1292,7 @@ def _routes():
         ('GET', 'decks', list_decks), ('POST', 'decks', share_deck), ('GET', r'decks/([\w-]+)', read_deck), ('PATCH', r'decks/([\w-]+)', patch_deck),
         ('POST', r'decks/([\w-]+)/rate', rate_deck), ('POST', r'decks/([\w-]+)/favorite', favorite_deck), ('POST', r'decks/([\w-]+)/fork', fork_deck),
         ('GET', 'comments', list_comments), ('POST', 'comments', add_comment), ('POST', r'comments/(\d+)/vote', vote_comment), ('POST', r'comments/(\d+)/report', report_comment),
-        ('DELETE', r'comments/(\d+)', delete_comment), ('GET', 'reports', list_reports), ('GET', 'notifications', notifications), ('POST', 'notifications/read', notifications_read),
+        ('DELETE', r'comments/(\d+)', delete_comment), ('GET', 'reports', list_reports), ('POST', r'reports/(\d+)/dismiss', dismiss_report), ('GET', 'notifications', notifications), ('POST', 'notifications/read', notifications_read),
         ('GET', 'guilds', list_guilds), ('POST', 'guilds', create_guild), ('GET', r'guilds/([\w-]+)', read_guild), ('POST', r'guilds/([\w-]+)/apply', apply_guild),
         ('POST', r'guilds/([\w-]+)/invites', invite_guild), ('POST', r'guilds/requests/(\d+)/(accept|decline)', answer_request), ('POST', r'guilds/([\w-]+)/leave', leave_guild),
         ('POST', r'guilds/([\w-]+)/members/([A-Za-z0-9_]{3,20})/role', set_member_role), ('DELETE', r'guilds/([\w-]+)/members/([A-Za-z0-9_]{3,20})', kick_member),

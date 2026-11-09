@@ -1,5 +1,10 @@
 // Textos do Cosmo Hub em PT-BR: somam-se ao dicionário do jogo (shared/i18n-pt.js) antes de shared/i18n.js carregar.
 Object.assign(self.ssI18nPT.strings, {
+    'Kind': 'Tipo', 'Title': 'Título', 'Body': 'Texto', 'Removed': 'Removido', 'Meta (JSON: rule_refs, card_refs, balance fields)': 'Meta (JSON: rule_refs, card_refs, campos de balanceamento)',
+    'Staff': 'Equipe', 'Content': 'Conteúdo', 'Reports': 'Denúncias', 'New article': 'Novo artigo', 'Hide': 'Ocultar', 'Hide comment': 'Ocultar comentário', 'Keep comment': 'Manter comentário', 'No open reports.': 'Nenhuma denúncia aberta.',
+    'Open': 'Abrir', 'Preview': 'Prévia', 'Category': 'Categoria', 'Language': 'Idioma', 'Featured': 'Destaque', 'Draft saved.': 'Rascunho salvo.', 'Comment hidden.': 'Comentário ocultado.', 'Open the editor': 'Abrir o editor', 'You': 'Você',
+    'Save draft': 'Salvar rascunho', 'Publish': 'Publicar', 'Unpublish': 'Despublicar', 'Meta must be valid JSON.': 'Meta precisa ser JSON válido.', 'Your online duel result was recorded.': 'O resultado do seu duelo online foi registrado.',
+    'Digital event: an online duel between paired players records the result by itself (best of one). The organizer can still correct it.': 'Evento digital: o duelo online entre os jogadores pareados registra o resultado sozinho (melhor de 1). O organizador ainda pode corrigir.',
     'My profile': 'Meu perfil', 'Players': 'Jogadores', 'Achievements': 'Conquistas', 'Public decks': 'Decks públicos', 'Recent online duels': 'Duelos online recentes', 'No online duels yet.': 'Nenhum duelo online ainda.', 'No public decks yet.': 'Nenhum deck público ainda.',
     'Win': 'Vitória', 'Loss': 'Derrota', 'Draw': 'Empate', 'Unranked': 'Sem rank', 'No public deck uses this card yet.': 'Nenhum deck público usa esta carta ainda.', 'Public decks with this card': 'Decks públicos com esta carta', 'Favorite God': 'Deus favorito',
     'Search name, ability or id': 'Buscar nome, habilidade ou id', 'All keywords': 'Todas as palavras-chave', 'Any cost': 'Qualquer custo', 'Clear': 'Limpar', 'No cards match these filters.': 'Nenhuma carta com esses filtros.', 'Filter cards': 'Filtrar cartas',

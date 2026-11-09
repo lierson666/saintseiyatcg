@@ -1112,6 +1112,7 @@ class Handler(BaseHTTPRequestHandler):
                 db.execute('insert or ignore into duels (challenge_id, a_id, b_id, winner, a_god, b_god, rounds, finished_at, a_hash, b_hash) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
                            (c['id'], c['from_id'], c['to_id'], victory.get('winner') if winner else None, god(c['deck']), god(c['deck_b'] or '{}'),
                             rounds if isinstance(rounds, int) else None, now, cosmo.deck_hash(c['deck']), json.loads(c['deck_b'] or '{}').get('hash')))
+                cosmo.record_online_duel(c['from_id'], c['to_id'], winner)  # torneio digital em andamento: resultado sai do duelo
             db.execute("insert into messages (from_id, to_id, body, created_at, kind, ref, seen_at) values (?, ?, ?, ?, 'result', ?, ?)",
                        (c['from_id'], c['to_id'], text, now, c['id'], None))
 
