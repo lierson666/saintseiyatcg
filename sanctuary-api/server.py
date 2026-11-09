@@ -546,6 +546,9 @@ class Handler(BaseHTTPRequestHandler):
             m = re.fullmatch(r'/api/profile/([A-Za-z0-9_]{3,20})', path)
             if m and method == 'GET':
                 return self.player_profile(m[1])
+            m = re.fullmatch(r'/api/players/([A-Za-z0-9_]{3,20})', path)
+            if m and method == 'GET':
+                return self.public_profile(m[1])
             if method == 'POST' and path == '/api/challenges':
                 return self.challenge()
             if method == 'GET' and path == '/api/challenges/pending':
@@ -1003,6 +1006,26 @@ class Handler(BaseHTTPRequestHandler):
             u = db.execute('select * from users where username = ?', (username.lower(),)).fetchone()
             if not u or u['suspended_at'] or (u['id'] != me['id'] and self.blocked_between(me['id'], u['id'])):
                 raise ApiError(404, 'Player not found.')
+        self.send_json(200, {k: v for k, v in self.profile_data(u).items() if k != 'recent_all'})
+
+    def public_profile(self, username):
+        """Perfil no Cosmo Hub, aberto sem login (autor, 08/11/2026): só o que já é público no Hub. Sem país, moedas, verso de carta
+        nem nome dos adversários; perfil incompleto ou suspenso não existe."""
+        with lock:
+            u = db.execute('select * from users where username = ?', (str(username).lower(),)).fetchone()
+        if not u or u['suspended_at'] or not u['username']:
+            raise ApiError(404, 'Player not found.')
+        full = self.profile_data(u)
+        gods = {}
+        for d in full['recent_all']:
+            if d['god']:
+                gods[d['god']] = gods.get(d['god'], 0) + 1
+        self.send_json(200, {'username': full['username'], 'joined': full['joined'], 'avatar_card': full['avatar_card'], 'rank': full['rank'],
+                             'achievements': full['achievements'], 'stats': full['stats'], 'favorite_god': max(gods, key=gods.get) if gods else None,
+                             'recent': [{k: d[k] for k in ('result', 'god', 'opponent_god', 'date')} for d in full['recent']]})
+
+    def profile_data(self, u):
+        with lock:
             uid = u['id']
             rows = db.execute('select d.*, a.username_display as a_name, b.username_display as b_name from duels d '
                               'left join users a on a.id = d.a_id left join users b on b.id = d.b_id '
@@ -1016,7 +1039,7 @@ class Handler(BaseHTTPRequestHandler):
             losses += result == 'loss'
             if len(recent) < 10:
                 recent.append({'opponent': (d['b_name'] if side == 'A' else d['a_name']) or 'Deleted player', 'result': result,
-                               'god': d['a_god'] if side == 'A' else d['b_god'], 'date': d['finished_at']})
+                               'god': d['a_god'] if side == 'A' else d['b_god'], 'opponent_god': d['b_god'] if side == 'A' else d['a_god'], 'date': d['finished_at']})
         played = len(rows)
         r = rank_of(uid)
         # shortcut: vitórias contra a IA só contam quando deram XP (teto diário); trocar se o autor quiser contar todas.
@@ -1024,9 +1047,10 @@ class Handler(BaseHTTPRequestHandler):
         tier = max(TIERS.index(t['tier']) for t in (r, r['best'], r['last_season']) if t)
         have = {'played': played, 'wins': wins, 'tier': tier, 'level': r['level'], 'ai_wins': ai_wins}
         achievements = [{'id': i, 'name': n, 'description': d, 'done': have[m] >= goal} for i, n, d, m, goal in ACHIEVEMENTS]
-        self.send_json(200, {'rank': {k: r[k] for k in ('tier', 'division', 'pips', 'points', 'level', 'title')}, 'achievements': achievements, 'username': u['username_display'], 'country': u['country'], 'joined': u['created_at'],
-                             'avatar_card': u['avatar_card'], 'sleeve': u['sleeve'], 'coin': u['coin'], 'stats': {'played': played, 'wins': wins, 'losses': losses,
-                             'winrate': round(100 * wins / played) if played else 0}, 'recent': recent})
+        return {'rank': {k: r[k] for k in ('tier', 'division', 'pips', 'points', 'level', 'title')}, 'achievements': achievements, 'username': u['username_display'], 'country': u['country'], 'joined': u['created_at'],
+                'avatar_card': u['avatar_card'], 'sleeve': u['sleeve'], 'coin': u['coin'], 'stats': {'played': played, 'wins': wins, 'losses': losses,
+                'winrate': round(100 * wins / played) if played else 0}, 'recent': recent,
+                'recent_all': [{'god': d['a_god'] if d['a_id'] == uid else d['b_god']} for d in rows]}
 
     def arena_create(self, players, decks):
         req = urllib.request.Request(f'{ARENA_URL}/arena/matches', json.dumps({'players': players, 'decks': decks}).encode(),
