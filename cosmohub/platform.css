@@ -481,3 +481,5 @@ a.hub-chip { text-decoration: none; }
 }
 @media (max-width: 900px) { .hub-bld__actions { padding-bottom: calc(40px + env(safe-area-inset-bottom)); } .hub-bld { padding-bottom: 120px; } } /* acima do selo PLAYTEST */
 .hub-bld__actions > a { display: grid; place-items: center; padding: 0 12px; }
+/* Link com cara de botão: texto centralizado, sem sublinhado (o kv.css só estiliza o <button>). */
+a.kv-ghost { display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }
