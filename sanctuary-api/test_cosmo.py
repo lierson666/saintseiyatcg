@@ -263,6 +263,18 @@ class Decks(Base):
         self.assertIn('P2 Deck', uses('athena-v6-001'))
         self.assertIn('P2 Deck', uses('athena-v6-062'))  # Domain conta
         self.assertNotIn('P2 Deck', uses('athena-v6-002'))
+        # Deck Nexus V2: busca no nome/autor, por carta (ids que o Hub resolve), arquétipo, ordenação por partidas e facetas.
+        found = lambda qs: [d['name'] for d in self.raw('GET', f'{P}/decks?{qs}')[1]['decks']]
+        self.assertIn('P2 Deck', found('q=p2'))
+        self.assertIn('P2 Deck', found('q=BIA'))
+        self.assertNotIn('P2 Deck', found('q=zzz'))
+        self.assertIn('P2 Deck', found('q=zzz&cards=athena-v6-002,athena-v6-001'))
+        self.assertNotIn('P2 Deck', found('archetype=aggro'))
+        body = self.raw('GET', f'{P}/decks?sort=matches')[1]
+        self.assertEqual((set(body['facets']), body['facets']['stats']), ({'archetypes', 'stats', 'played', 'total'}, False))
+        by_god = self.raw('GET', f'{P}/decks?god=god-poseidon')[1]
+        self.assertNotIn('P2 Deck', [d['name'] for d in by_god['decks']])
+        self.assertEqual(by_god['facets']['total'], body['total'])  # total de decks públicos ignora o filtro
         self.assertEqual(self.as_('bia', 'POST', '/comments', {'target': 'card:athena-v6-001', 'body': 'Carta forte'})[0], 201)
         self.assertEqual(self.raw('GET', f'{P}/comments?target=card:athena-v6-001')[1]['comments'][0]['body'], 'Carta forte')
         self.assertEqual(self.as_('bia', 'POST', '/comments', {'target': 'card:nao-existe', 'body': 'x'})[0], 404)

@@ -489,16 +489,15 @@ DECK_SORTS = {
     'winrate': lambda d: (d['stats']['win_rate'] is None, -(d['stats']['win_rate'] or 0), -d['stats']['matches']),
     'rating': lambda d: (d['rating'] is None, -(d['rating'] or 0), -d['ratings']),
     'popular': lambda d: (-d['favorites'], -d['stats']['matches']),
+    'matches': lambda d: (-d['stats']['matches'], -d['updated_at']),
 }
 
 
 def list_decks(h):
-    """Biblioteca pública com filtro por God, ordenação e páginas (?god=&sort=&page=&limit=)."""
+    """Biblioteca pública com filtro por God, busca, arquétipo, ordenação e páginas (?god=&q=&cards=&archetype=&sort=&page=&limit=).
+    q procura no nome, autor e arquétipo; cards (ids separados por vírgula, o Hub resolve o nome da carta) acha decks que usam a carta."""
     q = h.query()
     sql, args = "select * from shared_decks where visibility='public'", []
-    if q.get('god'):
-        sql += ' and god = ?'
-        args.append(q['god'])
     if q.get('author'):  # decks públicos de um jogador (página de perfil)
         owner = main.execute('select id from users where username = ? and suspended_at is null', (q['author'].lower(),)).fetchone()
         sql += ' and owner_id = ?'
@@ -517,11 +516,22 @@ def list_decks(h):
         with lock:
             rows = [r for r in rows if uses(r)]
     names = public_names(r['owner_id'] for r in rows)
-    decks = sorted((deck_summary(r, names) for r in rows), key=DECK_SORTS.get(q.get('sort'), DECK_SORTS['recent']))
+    decks = [deck_summary(r, names) for r in rows]
+    # Facetas antes de buscar: arquétipos registrados e se já há winrate confiável (o Hub desliga a ordenação sem dado).
+    facets = {'archetypes': sorted({d['archetype'] for d in decks if d['archetype']}, key=str.lower), 'stats': any(d['stats']['sample_ok'] for d in decks), 'played': any(d['stats']['matches'] for d in decks), 'total': len(decks)}
+    if q.get('god'):  # depois das facetas: o total de decks públicos não muda com o filtro
+        decks = [d for d in decks if d['god'] == q['god']]
+    if q.get('archetype'):
+        decks = [d for d in decks if (d['archetype'] or '').lower() == q['archetype'].lower()]
+    text_q, cards = q.get('q', '').strip().lower()[:80], {c for c in q.get('cards', '').split(',')[:40] if c}
+    if text_q or cards:
+        decks = [d for d in decks if (text_q and any(text_q in (v or '').lower() for v in (d['name'], d['author'], d['archetype'], d['god'])))
+                 or cards & ({d['god'], d['domain']} | {cid for cid, _ in d['main']})]
+    decks.sort(key=DECK_SORTS.get(q.get('sort'), DECK_SORTS['recent']))
     limit = min(max(int(q['limit']) if q.get('limit', '').isdigit() else 24, 1), 100)
     pages = max(1, -(-len(decks) // limit))
     page = min(max(int(q['page']) if q.get('page', '').isdigit() else 1, 1), pages)
-    h.send_json(200, {'decks': decks[(page - 1) * limit:page * limit], 'total': len(decks), 'page': page, 'pages': pages})
+    h.send_json(200, {'decks': decks[(page - 1) * limit:page * limit], 'total': len(decks), 'page': page, 'pages': pages, 'facets': facets})
 
 
 def read_deck(h, sid):

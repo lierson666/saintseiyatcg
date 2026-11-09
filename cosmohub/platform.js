@@ -55,6 +55,7 @@ async function addToAccount(data, name) {
   const id = `my-${Date.now().toString(36)}`;
   await call(`/api/decks/${id}`, 'PUT', {data: {...data, id, nome: name, alpha_nome: undefined, public: false}, revision: 0});
   alertBox(`"${name}" is in your decks. Open Play to use it.`);
+  return id;
 }
 
 // ---------- Início ----------
@@ -80,14 +81,18 @@ function deckGods(god, ids) {
 }
 const godsLabel = (god, ids) => deckGods(god, ids).map(g => `<span class="hub-godname">${godSymbol(g)}${esc(godName(g))}</span>`).join('<span class="hub-slash" aria-hidden="true"> / </span>');
 const deckCount = d => (d.main || []).reduce((n, [, q]) => n + q, 0);
+// Card de deck (Deck Nexus V2): arte da carta-chave, Deus, autor, arquétipo, desempenho online real e data.
 const deckTile = d => {
-  const key = keyCard(d);
-  const g = godName(d.god).toLowerCase(), art = key ? artImg(key.id, key.name) : '';
-  return `<a class="hub-deck" href="#/deck/${esc(d.id)}"><i>${art || (GODS.includes(g) ? `<img class="hub-deck-sym" src="/CARD-TEMPLATE/symbols/${g}.xs.webp" alt="">` : '')}</i><span><b>${esc(d.name)}</b>
-    <small>${godsLabel(d.god, (d.main || []).map(([id]) => id))}${d.archetype ? ` · ${esc(d.archetype)}` : ''}</small>
-    <small>${esc(d.author || '')}${d.main ? ` · ${deckCount(d)} cards` : ''}${d.rating ? ` · ★ ${d.rating}` : ''}</small><small class="hub-win">${winText(d.stats)}</small></span></a>`;
+  const key = keyCard(d), g = godName(d.god).toLowerCase(), fac = GODS.includes(g) ? g : 'athena', s = d.stats || {};
+  const art = key ? artImg(key.id, '') : '';
+  const stat = (v, l) => `<span class="nx-stat"><b>${v}</b><small>${l}</small></span>`;
+  return `<a class="nx-card" href="#/deck/${esc(d.id)}" style="--fac:${FACTION_COLORS[fac]}"><span class="nx-card__art">${art || `<img class="nx-card__ph" src="/CARD-TEMPLATE/symbols/${fac}.xs.webp" alt="">`}<img class="nx-card__sym" src="/CARD-TEMPLATE/symbols/${fac}.xs.webp" alt="" width="30" height="30"></span>
+    <span class="nx-card__body"><b class="nx-card__name">${esc(d.name)}</b><span class="nx-card__gods">${godsLabel(d.god, (d.main || []).map(([id]) => id))}</span>
+      ${d.archetype ? `<span class="nx-tag">${esc(d.archetype)}</span>` : ''}
+      <span class="nx-card__stats">${s.matches ? `${stat(pct(s.win_rate), 'Win rate')}${stat(s.matches, s.matches === 1 ? 'Online duel' : 'Online duels')}${s.sample_ok ? '' : '<small class="nx-card__note">Small sample</small>'}` : '<small class="nx-card__note">No online duels yet</small>'}</span>
+      <span class="nx-card__foot"><span>${esc(d.author || '')}</span><span>${when(d.updated_at)}</span></span></span></a>`;
 };
-const deckTiles = (list, none) => list.length ? `<div class="hub-decks">${list.map(deckTile).join('')}</div>` : empty(none);
+const deckTiles = (list, none) => list.length ? `<div class="nx-grid">${list.map(deckTile).join('')}</div>` : empty(none);
 const eventTile = t => `<a class="hub-tile" href="#/tournament/${esc(t.id)}"><b>${esc(t.name)}</b><small>${esc(t.format)} · ${esc(t.category)} · ${esc(t.status)}</small></a>`;
 
 // Arte provisória (-ref) nunca aparece no Hub público (o Caddy bloqueia para quem não entrou).
@@ -339,33 +344,116 @@ const signedOut = e => e.status === 401 ? null : Promise.reject(e);
 
 // Biblioteca: filtro por God, ordenação e página ficam na URL (#/decks?g=hades&s=winrate&p=2).
 const GODS = ['athena', 'poseidon', 'hades', 'ares', 'artemis'];
-const SORTS = [['recent', 'Most recent'], ['winrate', 'Best online win rate'], ['rating', 'Best rated'], ['popular', 'Most favorited']];
+// ---------- Deck Nexus (V2, autor 09/11/2026) ----------
+// Busca, Deus, arquétipo e ordenação ficam na URL; mudar um filtro só redesenha a lista (o campo de busca não perde o foco).
+// Ordenações de desempenho ficam desligadas enquanto não há duelo online suficiente (nada de número inventado).
+const SORTS = [['recent', 'Most recent'], ['popular', 'Most favorited'], ['winrate', 'Best online win rate'], ['matches', 'Most played online'], ['rating', 'Best rated']];
+const NX_KEYS = ['q', 'g', 'a', 's', 'v', 'p'];
+let nx = null, nxSeq = 0, nxTimer;
+function nxState() {
+  const p = new URLSearchParams(query());
+  return {q: (p.get('q') || '').slice(0, 80), g: GODS.includes(p.get('g')) ? p.get('g') : '', a: (p.get('a') || '').slice(0, 60),
+    s: SORTS.some(([k]) => k === p.get('s')) ? p.get('s') : 'recent', v: p.get('v') === 'table' ? 'table' : '', p: Math.max(1, Number(p.get('p')) || 1)};
+}
+const nxHash = st => { const n = new URLSearchParams(); for (const k of NX_KEYS) if (st[k] && !(k === 's' && st[k] === 'recent') && !(k === 'p' && st[k] === 1)) n.set(k, st[k]); return `#/decks${String(n) ? `?${n}` : ''}`; };
+// Nome de carta na busca: o Hub resolve para ids (EN e PT) e a API acha os decks que usam a carta.
+function nxCards(text) {
+  const t = text.trim().toLowerCase();
+  if (t.length < 3 || !registry) return [];
+  return registry.cards.filter(c => c.publication !== 'cut' && [c.name, c.name_pt].some(n => n && n.toLowerCase().includes(t))).slice(0, 40).map(gameId);
+}
+function nxFetch(st) {
+  const cards = nxCards(st.q), p = new URLSearchParams({sort: st.s, page: st.p, limit: 24});
+  if (st.g) p.set('god', `god-${st.g}`);
+  if (st.a) p.set('archetype', st.a);
+  if (st.q) p.set('q', st.q);
+  if (cards.length) p.set('cards', cards.join(','));
+  return api(`/decks?${p}`);
+}
+const nxTable = list => `<div class="hub-scroll"><table class="hub-table hub-decktable"><thead><tr><th>Deck</th><th>God</th><th>Author</th><th>Archetype</th><th>Win rate</th><th>Duels</th><th>Updated</th></tr></thead><tbody>${list.map(d => `<tr>
+    <td><a href="#/deck/${esc(d.id)}">${esc(d.name)}</a></td><td>${godsLabel(d.god, (d.main || []).map(([id]) => id))}</td><td>${playerLink(d.author)}</td><td>${esc(d.archetype || '—')}</td><td>${d.stats?.matches ? pct(d.stats.win_rate) : '—'}</td><td>${d.stats?.matches || 0}</td><td>${when(d.updated_at)}</td></tr>`).join('')}</tbody></table></div>`;
+function nxResults(lib, st) {
+  const filtered = st.q || st.g || st.a;
+  const head = `<p class="nx-found" role="status">${filtered ? `${lib.total} of ${lib.facets?.total ?? lib.total} decks` : `${lib.total} decks`}</p>`;
+  if (!lib.decks.length) return `${head}<div class="nx-empty"><p>${filtered ? 'No public deck matches this search.' : 'Nothing published yet. Mark a deck Public in the game to share it.'}</p>${filtered ? '<button type="button" data-nx="reset">Clear filters</button>' : ''}</div>`;
+  const pager = lib.pages > 1 ? `<nav class="nx-pager" aria-label="Pages"><button type="button" data-nx-page="${lib.page - 1}" ${lib.page > 1 ? '' : 'disabled'}>← Previous</button><span>Page ${lib.page} of ${lib.pages}</span><button type="button" data-nx-page="${lib.page + 1}" ${lib.page < lib.pages ? '' : 'disabled'}>Next →</button></nav>` : '';
+  return `${head}${st.v === 'table' ? nxTable(lib.decks) : `<div class="nx-grid">${lib.decks.map(deckTile).join('')}</div>`}${pager}`;
+}
+function nxFilters(st, facets, meta) {
+  const share = Object.fromEntries((meta?.gods || []).map(g => [godName(g.god).toLowerCase(), g]));
+  const chip = (g, label) => `<button type="button" class="nx-god" data-nx-god="${g}" aria-pressed="${st.g === g}" style="--fac:${FACTION_COLORS[g] || 'var(--kv-gold)'}">${g ? `<img src="/CARD-TEMPLATE/symbols/${g}.xs.webp" alt="" width="22" height="22">` : ''}<span>${esc(label)}</span>${g && share[g] ? `<small>${pct(share[g].share)} meta</small>` : ''}</button>`;
+  const arch = facets?.archetypes || [];
+  const off = (k, ok) => (ok ? '' : ` disabled title="Needs more online duels"`);
+  return `<div class="nx-gods" role="group" aria-label="God">${chip('', 'All Gods')}${GODS.map(g => chip(g, godName(g))).join('')}</div>
+    <div class="nx-selects"><label>Archetype<select id="nx-a" ${arch.length ? '' : 'disabled'}><option value="">${arch.length ? 'All archetypes' : 'No archetypes yet'}</option>${arch.map(a => `<option ${a === st.a ? 'selected' : ''}>${esc(a)}</option>`).join('')}</select></label>
+      <label>Sort by<select id="nx-s">${SORTS.map(([k, l]) => `<option value="${k}" ${k === st.s ? 'selected' : ''}${k === 'winrate' ? off(k, facets?.stats) : k === 'matches' ? off(k, facets?.played) : ''}>${l}</option>`).join('')}</select></label>
+      <div class="nx-view" role="group" aria-label="View"><button type="button" data-nx-view="" aria-pressed="${st.v !== 'table'}">Tiles</button><button type="button" data-nx-view="table" aria-pressed="${st.v === 'table'}">Table</button></div></div>`;
+}
 async function decks() {
-  const p = new URLSearchParams(query()), god = GODS.includes(p.get('g')) ? p.get('g') : '', sort = SORTS.some(([k]) => k === p.get('s')) ? p.get('s') : 'recent', page = Math.max(1, Number(p.get('p')) || 1);
-  const link = changes => { const n = new URLSearchParams({g: god, s: sort, p: page, v: p.get('v') === 'table' ? 'table' : '', ...changes}); [...n].forEach(([k, v]) => { if (!v || (k === 's' && v === 'recent') || (k === 'p' && v === '1')) n.delete(k); }); return `#/decks${String(n) ? `?${n}` : ''}`; };
-  const view = p.get('v') === 'table' ? 'table' : 'tiles';
-  const [lib, mine, account, meta] = await Promise.all([api(`/decks?sort=${sort}&page=${page}&limit=24${god ? `&god=god-${god}` : ''}`), api('/decks?mine=1').catch(signedOut), call('/api/decks').catch(signedOut), api('/meta').catch(() => null), loadRegistry(), loadArt()]);
-  const open = lib.decks;
-  // Metagame (como o MTGGoldfish): cada Deus com fatia dos duelos online e winrate; clicar filtra a lista.
-  const godMeta = Object.fromEntries((meta?.gods || []).map(g => [godName(g.god).toLowerCase(), g]));
-  const metaTile = g => { const m = godMeta[g]; return `<a class="hub-meta" href="${link({g: god === g ? '' : g, p: 1})}" ${god === g ? 'aria-current="true"' : ''}><img src="/CARD-TEMPLATE/symbols/${g}.xs.webp" alt="" width="36" height="36"><b>${esc(godName(g))}</b>
-    <small>${m ? `${pct(m.share)} of the meta` : 'No online duels yet'}</small><small class="hub-win">${m?.sample_ok ? `${pct(m.win_rate)} win rate` : m ? `${m.matches} duels (small sample)` : ''}</small></a>`; };
-  const tools = `<h2>Metagame</h2><p class="hub-muted">${meta ? `${meta.matches} online duels. ` : ''}Pick a God to filter the decks.</p><div class="hub-metas">${GODS.map(metaTile).join('')}</div>
-    <h2>Public decks</h2><div class="hub-row"><label class="hub-inline">Sort <select data-nav="sort">${SORTS.map(([k, l]) => `<option value="${link({s: k, p: 1})}" ${k === sort ? 'selected' : ''}>${l}</option>`).join('')}</select></label>
-    <nav class="hub-seg" aria-label="View"><a href="${link({v: ''})}" ${view === 'tiles' ? 'aria-current="true"' : ''}>Tiles</a><a href="${link({v: 'table'})}" ${view === 'table' ? 'aria-current="true"' : ''}>Table</a></nav><span class="hub-muted">${lib.total} decks${god ? ` · ${esc(godName(god))}` : ''}</span></div>`;
-  const table = list => list.length ? `<div class="hub-scroll"><table class="hub-table hub-decktable"><thead><tr><th>Deck</th><th>God</th><th>Author</th><th>Win rate</th><th>Duels</th><th>Cards</th><th>Rating</th><th>Updated</th></tr></thead><tbody>${list.map(d => `<tr>
-    <td><a href="#/deck/${esc(d.id)}">${esc(d.name)}</a></td><td>${godsLabel(d.god, (d.main || []).map(([id]) => id))}</td><td>${playerLink(d.author)}</td><td>${d.stats?.matches ? pct(d.stats.win_rate) : '—'}</td><td>${d.stats?.matches || 0}</td><td>${deckCount(d)}</td><td>${d.rating ? `★ ${d.rating}` : '—'}</td><td>${when(d.updated_at)}</td></tr>`).join('')}</tbody></table></div>` : empty(god ? 'No public decks for this God yet.' : 'Nothing published yet.');
-  const pager = lib.pages > 1 ? `<nav class="hub-row hub-pager" aria-label="Pages">${page > 1 ? `<a class="kv-ghost" href="${link({p: page - 1})}">← Previous</a>` : ''}<span class="hub-muted">Page ${lib.page} of ${lib.pages}</span>${page < lib.pages ? `<a class="kv-ghost" href="${link({p: page + 1})}">Next →</a>` : ''}</nav>` : '';
+  await loadRegistry();
+  const st = nxState();
+  const [lib, mine, account, meta] = await Promise.all([nxFetch(st), api('/decks?mine=1').catch(signedOut), call('/api/decks').catch(signedOut), api('/meta').catch(() => null), loadArt()]);
+  nx = {st, meta, facets: lib.facets};
+  const signIn = next => `/login/?next=${q(`/cosmohub/${next}`)}`;
   const share = account ? `<h2>Share a deck</h2><form class="hub-form" data-do="share-deck">
       <label>Deck<select name="deck_id" required>${account.decks.map(d => `<option value="${esc(d.id)}">${esc(d.data?.alpha_nome || d.data?.nome || d.data?.name || d.id)}</option>`).join('')}</select></label>
       <label>Visibility<select name="visibility"><option value="private">Private</option><option value="unlisted">Unlisted</option><option value="public">Public</option></select></label>
       <label>Archetype<input name="archetype" maxlength="60"></label><label>Strategy<textarea name="strategy" maxlength="4000" rows="3"></textarea></label><button>Share</button></form>` : '';
-  const importForm = account ? `<h2>Import a deck list</h2><form class="hub-form" data-do="import-list"><label>Deck list<textarea name="list" rows="8" required placeholder="Name: My deck&#10;God&#10;1 Athena (god-athena)&#10;Domain&#10;1 Jamir Tower (athena-v6-063)&#10;Deck&#10;3 Gemini Saga (athena-v6-013)"></textarea></label><button>Add to my decks</button></form>`
-    : `<p class="hub-muted"><a href="/login/?next=${q('/cosmohub/#/decks')}">Sign in</a> to import deck lists and copy decks to your account.</p>`;
-  return `<h1>Decks</h1><p class="hub-lead">Decks marked Public in the game show up here, with comments and online win rate.</p>
-    ${account ? `<div class="hub-row"><a class="kv-ghost" href="#/build">New deck</a>${account.decks.length ? `<label class="hub-inline">Edit a deck <select data-nav="edit"><option value="" disabled selected>Choose…</option>${account.decks.map(d => `<option value="#/build/${esc(d.id)}">${esc(d.data?.alpha_nome || d.data?.nome || d.data?.name || d.id)}</option>`).join('')}</select></label>` : ''}</div>` : ''}${tools}${view === 'table' ? table(open) : deckTiles(open, god ? 'No public decks for this God yet.' : 'Nothing published yet.')}${pager}
-    ${mine ? `<h2>My decks</h2>${deckTiles(mine.decks, 'You have not shared a deck yet. Mark a deck Public in the game.')}` : ''}${importForm}${share}`;
+  const importForm = account ? `<h2>Import a deck list</h2><form class="hub-form" data-do="import-list"><label>Deck list<textarea name="list" rows="8" required placeholder="Name: My deck&#10;God&#10;1 Athena (god-athena)&#10;Domain&#10;1 Jamir Tower (athena-v6-063)&#10;Deck&#10;3 Gemini Saga (athena-v6-013)"></textarea></label><button>Add to my decks</button></form>` : '';
+  const yours = account ? `<section class="nx-mine" id="nx-mine" tabindex="-1"><h2>My decks</h2>
+      <div class="hub-row"><a class="kv-ghost" href="#/build">New deck</a>${account.decks.length ? `<label class="hub-inline">Edit a deck <select data-nav="edit"><option value="" disabled selected>Choose…</option>${account.decks.map(d => `<option value="#/build/${esc(d.id)}">${esc(d.data?.alpha_nome || d.data?.nome || d.data?.name || d.id)}</option>`).join('')}</select></label>` : ''}</div>
+      <h3 class="hub-subhead">Shared on the Hub</h3>${deckTiles(mine?.decks || [], 'You have not shared a deck yet. Mark a deck Public in the game.')}${importForm}${share}</section>`
+    : `<p class="hub-muted"><a href="${signIn('#/decks')}">Sign in</a> to build, import and copy decks to your account.</p>`;
+  return `<section class="nx-hero"><div class="nx-hero__text"><p class="kv-stamp kv-stamp--gold">Cosmo Hub</p><h1>Deck Nexus</h1><p class="hub-lead">Explore, build and share strategies.</p>
+      <div class="nx-hero__cta"><a class="kv-button" href="${account ? '#/build' : signIn('#/build')}">Create deck</a>${account ? '<button type="button" class="kv-ghost" data-nx="mine">My decks</button>' : `<a class="kv-ghost" href="${signIn('#/decks')}">My decks</a>`}</div></div>
+      ${lib.facets?.total != null ? `<p class="nx-hero__count"><b>${lib.facets.total}</b><span>public decks</span></p>` : ''}</section>
+    <div class="nx-bar"><form class="nx-search" role="search" onsubmit="return false"><input id="nx-q" type="search" value="${esc(st.q)}" placeholder="Search decks, players, cards or Gods…" aria-label="Search decks" autocomplete="off" enterkeyhint="search">
+      <button type="button" class="nx-clear" data-nx="clear" aria-label="Clear search" ${st.q ? '' : 'hidden'}>×</button></form>
+      <button type="button" class="nx-toggle" data-nx="filters" aria-expanded="false" aria-controls="nx-filters">Filters</button></div>
+    <div class="nx-filters" id="nx-filters">${nxFilters(st, lib.facets, meta)}</div>
+    <div id="nx-results" aria-live="polite">${nxResults(lib, st)}</div>${yours}`;
 }
+async function nxUpdate(changes) {
+  if (!nx) return;
+  Object.assign(nx.st, changes);
+  history.replaceState(null, '', nxHash(nx.st));
+  const box = document.getElementById('nx-results'), seq = ++nxSeq;
+  box.setAttribute('aria-busy', 'true');
+  try {
+    const lib = await nxFetch(nx.st);
+    if (seq !== nxSeq) return; // resposta velha: o jogador já mudou o filtro
+    box.innerHTML = nxResults(lib, nx.st);
+    box.querySelectorAll('img[data-fallback]').forEach(armFallback);
+    document.getElementById('nx-filters').innerHTML = nxFilters(nx.st, lib.facets, nx.meta);
+    document.querySelector('.nx-clear').hidden = !nx.st.q;
+  } catch (e) {
+    if (seq === nxSeq) box.innerHTML = `<div class="hub-error" role="alert"><p>${esc(e.message || 'Something went wrong.')}</p><button type="button" data-nx="retry">Try again</button></div>`;
+  } finally {
+    if (seq === nxSeq) box.removeAttribute('aria-busy');
+  }
+}
+document.addEventListener('input', e => {
+  if (e.target.id !== 'nx-q') return;
+  document.querySelector('.nx-clear').hidden = !e.target.value;
+  clearTimeout(nxTimer);
+  nxTimer = setTimeout(() => nxUpdate({q: e.target.value.trim().slice(0, 80), p: 1}), 250);
+});
+document.addEventListener('change', e => {
+  if (e.target.id === 'nx-a') nxUpdate({a: e.target.value, p: 1});
+  if (e.target.id === 'nx-s') nxUpdate({s: e.target.value, p: 1});
+});
+document.addEventListener('click', e => {
+  if (!nx || !e.target.closest('.nx-hero, .nx-bar, .nx-filters, #nx-results')) return;
+  const god = e.target.closest('[data-nx-god]'), view = e.target.closest('[data-nx-view]'), page = e.target.closest('[data-nx-page]'), act = e.target.closest('[data-nx]')?.dataset.nx;
+  if (god) nxUpdate({g: nx.st.g === god.dataset.nxGod ? '' : god.dataset.nxGod, p: 1});
+  if (view) nxUpdate({v: view.dataset.nxView});
+  if (page) { nxUpdate({p: Number(page.dataset.nxPage)}); document.getElementById('nx-results').scrollIntoView({behavior: 'smooth', block: 'start'}); }
+  if (act === 'clear') { const box = document.getElementById('nx-q'); box.value = ''; box.focus(); nxUpdate({q: '', p: 1}); }
+  if (act === 'reset') { document.getElementById('nx-q').value = ''; nxUpdate({q: '', g: '', a: '', p: 1}); }
+  if (act === 'retry') nxUpdate({});
+  if (act === 'mine') { const m = document.getElementById('nx-mine'); m.scrollIntoView({behavior: 'smooth'}); m.focus({preventScroll: true}); }
+  if (act === 'filters') { const open = document.getElementById('nx-filters').classList.toggle('is-open'); e.target.closest('[data-nx]').setAttribute('aria-expanded', String(open)); }
+});
 
 // Curva de Cosmo (custo 0–7+) e tipos, lidas do registro canônico.
 function curveHtml(main, tools) {
@@ -463,22 +551,28 @@ async function deckPage(id) {
   const tools = listTools(reg), main = d.data.main_deck || [];
   const visual = new URLSearchParams(query()).get('v') !== 'text';
   const s = d.stats || {}, now_ = s.current_version || {};
-  const small = s.matches && !s.sample_ok ? ' <small class="hub-muted">(small sample)</small>' : '';
-  const add = d.mine ? `<button data-do="fork-deck" data-id="${esc(id)}">Add to my decks</button>` : `<a class="kv-ghost" href="/login/?next=${q(`/cosmohub/#/deck/${id}`)}">Sign in to add to your decks</a>`;
+  const key = keyCard({...d, main: main.map(e => [e.card_id, e.quantity || 1])}), g = godName(d.god).toLowerCase(), fac = GODS.includes(g) ? g : 'athena';
   const count = main.reduce((n, e) => n + (e.quantity || 1), 0);
-  return `<h1>${esc(d.name)}</h1><p class="hub-muted">${godsLabel(d.god, main.map(e => e.card_id))}${d.archetype ? ` · ${esc(d.archetype)}` : ''} · ${playerLink(d.author)} · v${d.version} · ${when(d.versions[0]?.at)} · ${esc(d.visibility)}${d.rating ? ` · ★ ${d.rating} (${d.ratings})` : ''} · ${d.favorites} favorites</p>
-    <div class="hub-deckpage"><section aria-label="Deck list"><div class="hub-row"><nav class="hub-seg" aria-label="View"><a href="#/deck/${esc(id)}" ${visual ? 'aria-current="true"' : ''}>Visual</a><a href="#/deck/${esc(id)}?v=text" ${visual ? '' : 'aria-current="true"'}>Text</a></nav><span class="hub-muted">${count} cards</span></div>
+  const stat = (v, l, note = '') => `<div class="nx-stat nx-stat--big"><b>${v}</b><small>${l}</small>${note ? `<small class="nx-card__note">${note}</small>` : ''}</div>`;
+  // Só número de duelo online real; sem duelo, o lugar diz isso em vez de 0%.
+  const stats = s.matches ? `${stat(pct(s.win_rate), 'Win rate', s.sample_ok ? '' : 'Small sample')}${stat(s.matches, s.matches === 1 ? 'Online duel' : 'Online duels')}${stat(now_.matches ? pct(now_.win_rate) : '—', `This version (v${d.version})`, now_.matches ? `${now_.matches} duels` : 'No duels yet')}`
+    : '<p class="nx-card__note">No online duels yet. Win rate appears after the first online duels with this deck.</p>';
+  const copy = d.mine ? `<button type="button" class="nx-primary" data-do="fork-deck" data-id="${esc(id)}">Copy to my decks</button>` : `<a class="kv-button" href="/login/?next=${q(`/cosmohub/#/deck/${id}`)}">Sign in to copy</a>`;
+  const owner = d.mine?.owner;
+  return `<section class="nx-dhero" style="--fac:${FACTION_COLORS[fac]}">${key && artOf(key.id) ? `<img class="nx-dhero__art" src="${thumb(key.id)}" alt="">` : ''}
+      <div class="nx-dhero__text"><a class="nx-back" href="#/decks">← Deck Nexus</a><p class="nx-dhero__gods">${godsLabel(d.god, main.map(e => e.card_id))}</p><h1>${esc(d.name)}</h1>
+        <p class="nx-dhero__by">${d.author ? `<span>Created by</span> ${playerLink(d.author)} · ` : ''}v${d.version} · ${when(d.versions[0]?.at)}${d.archetype ? ` <span class="nx-tag">${esc(d.archetype)}</span>` : ''}${owner && d.visibility !== 'public' ? ` <span class="nx-tag">${d.visibility === 'private' ? 'Private' : 'Unlisted'}</span>` : ''}</p>
+        <div class="nx-dhero__stats">${stats}${d.rating ? stat(`★ ${d.rating}`, `${d.ratings} ratings`) : ''}${d.favorites ? stat(d.favorites, 'Favorites') : ''}</div>
+        <div class="nx-dhero__cta">${copy}<button type="button" data-do="copy-link" data-id="${esc(id)}">Copy link</button><button type="button" data-do="copy-list" data-id="${esc(id)}">Copy list</button>
+          ${owner && d.data.id ? `<a class="kv-ghost" href="#/build/${esc(d.data.id)}">Edit deck</a>` : ''}
+          ${d.mine ? `<button type="button" data-do="favorite-deck" data-id="${esc(id)}" aria-pressed="${!!d.mine.favorite}">${d.mine.favorite ? 'Remove favorite' : 'Favorite'}</button>` : ''}
+          ${d.mine && !owner ? `<label class="hub-inline">Rate <select data-change="rate-deck" data-id="${esc(id)}"><option value="">—</option>${[1, 2, 3, 4, 5].map(st => `<option ${d.mine.stars === st ? 'selected' : ''}>${st}</option>`).join('')}</select></label>` : ''}
+          ${owner ? `<label class="hub-inline">Visibility <select data-change="deck-visibility" data-id="${esc(id)}">${[['private', 'Private'], ['unlisted', 'Unlisted'], ['public', 'Public']].map(([v, l]) => `<option value="${v}" ${d.visibility === v ? 'selected' : ''}>${l}</option>`).join('')}</select></label>` : ''}</div></div></section>
+    ${d.strategy ? `<section class="nx-strategy"><h2>Strategy</h2><div class="hub-rule">${esc(d.strategy)}</div></section>` : ''}
+    <div class="hub-deckpage"><section aria-label="Deck list"><div class="hub-row"><nav class="hub-seg" aria-label="View"><a href="#/deck/${esc(id)}" ${visual ? 'aria-current="true"' : ''}>Visual</a><a href="#/deck/${esc(id)}?v=text" ${visual ? '' : 'aria-current="true"'}>Text</a></nav><span class="hub-muted">${count} cards</span><span class="hub-muted">Grouped by type, sorted by cost</span></div>
       ${deckSections(d, tools, visual)}</section>
-    <aside class="hub-side"><div class="hub-tile"><b>Win rate ${s.matches ? pct(s.win_rate) : '—'}${small}</b><small>${s.matches || 0} online duels · ${s.wins || 0} wins · all versions</small></div>
-      <div class="hub-tile"><b>This version ${now_.matches ? pct(now_.win_rate) : '—'}</b><small>${now_.matches || 0} online duels with v${d.version}</small></div>
-    <div class="hub-row">${d.mine?.owner && d.data.id ? `<a class="kv-ghost" href="#/build/${esc(d.data.id)}">Edit deck</a>` : ''}${add}<button data-do="copy-list" data-id="${esc(id)}">Copy list</button><button data-do="copy-link" data-id="${esc(id)}">Copy link</button>
-      ${d.mine && !d.mine.owner ? `<label>Rate <select data-change="rate-deck" data-id="${esc(id)}"><option value="">—</option>${[1, 2, 3, 4, 5].map(st => `<option ${d.mine.stars === st ? 'selected' : ''}>${st}</option>`).join('')}</select></label>` : ''}
-      ${d.mine ? `<button data-do="favorite-deck" data-id="${esc(id)}">${d.mine.favorite ? 'Remove favorite' : 'Favorite'}</button>` : ''}
-      ${d.mine?.owner ? `<select data-change="deck-visibility" data-id="${esc(id)}" aria-label="Visibility">${['private', 'unlisted', 'public'].map(v => `<option ${d.visibility === v ? 'selected' : ''}>${v}</option>`).join('')}</select>` : ''}</div>
-    <h2>Analysis</h2>${deckAnalysis(main, tools)}
-    ${curveHtml(main, tools)}${breakdown(main, tools)}
+    <aside class="hub-side"><h2>Analysis</h2>${deckAnalysis(main, tools)}${curveHtml(main, tools)}${breakdown(main, tools)}
     <h2>Version history</h2><p class="hub-muted">${d.versions.map(v => `v${v.version} (${when(v.at)})`).join(' · ')}</p></aside></div>
-    ${d.strategy ? `<h2>Strategy</h2><div class="hub-rule">${esc(d.strategy)}</div>` : ''}
     ${d.visibility === 'private' ? '' : await discussion(`deck:${id}`)}`;
 }
 
@@ -744,7 +838,7 @@ const ACTIONS = {
   'favorite-deck': el => api(`/decks/${q(el.dataset.id)}/favorite`, 'POST', {}),
   'fork-deck': async el => {
     const {data} = await api(`/decks/${q(el.dataset.id)}/fork`, 'POST', {});
-    await addToAccount(data, `${data.alpha_nome || data.nome || data.name || 'Deck'} (copy)`);
+    location.hash = `#/build/${await addToAccount(data, `${data.alpha_nome || data.nome || data.name || 'Deck'} (copy)`)}`; // a cópia abre no editor
   },
   'copy-list': async el => {
     const [d, reg] = await Promise.all([api(`/decks/${q(el.dataset.id)}`), loadRegistry()]);
@@ -915,6 +1009,7 @@ async function render() {
     filterCards();
     filterRules();
     if (name === 'build') { paintDeck(); paintPool(); } else bld = null;
+    if (name !== 'decks') nx = null;
   } catch (e) {
     root.innerHTML = `<div class="hub-error" role="alert"><p>${esc(e.status === 401 ? 'Sign in to continue.' : e.status === 403 ? 'You do not have permission to see this.' : e.message || 'Something went wrong. Please try again.')}</p>
       ${e.status === 401 ? `<a class="kv-ghost" href="/login/?next=${q('/cosmohub/' + location.hash)}">Sign in</a>` : '<button type="button" class="kv-ghost" data-retry>Try again</button>'}</div>`;
