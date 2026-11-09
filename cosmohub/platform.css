@@ -233,7 +233,7 @@ a.hub-chip { text-decoration: none; }
 #hub-peek[hidden] { display: none; }
 
 /* Lista visual do deck: carta viva pequena, como no campo */
-.hub-minis { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(min(132px, 30%), 1fr)); }
+.hub-minis { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(min(150px, 30%), 1fr)); }
 .hub-mini { position: relative; display: block; color: inherit; text-decoration: none; border-radius: 10px; transition: transform .2s; }
 .hub-mini:hover, .hub-mini:focus-visible { transform: translateY(-3px); }
 .hub-mini .hub-qty { top: auto; bottom: 8px; right: 8px; z-index: 2; background: #05060ce6; color: var(--kv-gold); }
@@ -292,3 +292,26 @@ a.hub-chip { text-decoration: none; }
 .hub-user__menu a { display: flex; align-items: center; min-height: 44px; padding: 0 14px; border-radius: 10px; color: var(--kv-ink); text-decoration: none; font: 500 15px var(--kv-sans); }
 .hub-user__menu a:hover, .hub-user__menu a:focus-visible, .hub-user__menu a[aria-current="page"] { background: #f5f1e612; color: var(--kv-gold); }
 .hub-user__menu a[hidden] { display: none; }
+
+/* Carta do campo (cópia do playtest/divine/board.css: o /playtest fica atrás do login) */
+.hub-board { position: relative; display: block; width: 100%; aspect-ratio: 1 / .86; container-type: inline-size; }
+.hub-board .btok { position: absolute; inset: 0; overflow: hidden; border-radius: 7cqw; background: #0b0c16 var(--art) center 22% / cover no-repeat; border: 1px solid #e6c36a66; box-shadow: 0 6px 16px #000a, inset 0 0 0 1px #0008; }
+.hub-board .btok.is-framed { background-size: calc(var(--fw) * 100cqw) auto; background-position: calc(var(--fx) * 100cqw) calc(var(--fy) * 100cqw); }
+.hub-board .btok.is-noart { background: var(--art) center 46% / var(--noart-w, 38%) auto no-repeat, radial-gradient(circle at 50% 46%, #2a2350, #0b0c16 70%); }
+.hub-board .btok::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, #000c 0, #0000 26%, #0000 62%, #000b 100%); }
+.hub-board .btok__name { position: absolute; z-index: 1; left: 6cqw; right: 6cqw; top: 4cqw; overflow: hidden; text-align: center; white-space: nowrap; text-overflow: ellipsis; font: italic 700 8.4cqw/1.1 Futura, "Futura PT", "Century Gothic", sans-serif; color: #fff0bf; -webkit-text-stroke: .09em #141008; paint-order: stroke fill; text-shadow: 0 0 .06em #000, 0 0 .13em #000, 0 0 .86em #fffc008c; }
+.hub-board .btok__stat { position: absolute; z-index: 1; bottom: 2cqw; display: grid; place-items: center; width: 30cqw; aspect-ratio: 1; background: var(--gem) center / contain no-repeat; font: 700 15cqw/1 Futura, "Futura PT", "Century Gothic", sans-serif; -webkit-text-stroke: .1em #120a04; paint-order: stroke fill; }
+.hub-board .btok__stat--atk { left: 2cqw; color: #7fd8ff; text-shadow: 0 0 .033em #000, 0 0 .2em #2aa8ff, 0 0 .4em #1a7bff; }
+.hub-board .btok__stat--hp { right: 2cqw; color: #ffb347; text-shadow: 0 0 .033em #000, 0 0 .2em #ff7a1a, 0 0 .4em #ff5a00; }
+.hub-mini:hover .btok, .hub-mini:focus-visible .btok { border-color: var(--kv-gold); }
+.hub-mini .hub-qty { top: 34%; bottom: auto; right: 6px; }
+
+/* Celular: logo, idioma, conta e Jogar numa faixa só; o menu de seções rola embaixo */
+@media (max-width: 560px) {
+  .hub-top { row-gap: 4px; }
+  .hub-logo img { height: 32px; }
+  .hub-play { min-height: 40px; padding: 0 14px; letter-spacing: .14em; }
+  #hub-signin { letter-spacing: .12em; }
+  .hub-top .ss-lang { margin-left: 0; }
+  .hub-top .ss-lang button { padding: 10px 9px; }
+}

@@ -42,6 +42,8 @@ async function loadRegistry() {
 }
 // Decklist em texto (shared/decklist-text.js): no jogo o God é god-<facção>; no registro, <facção>-001.
 const gameId = c => (c.type === 'God' ? `god-${c.faction.toLowerCase()}` : c.id);
+const isPT = () => globalThis.ssI18n?.lang === 'pt';
+const cardName = c => (isPT() && c?.name_pt) || c?.name || '';
 const godName = god => String(god || '').replace(/^god-/, '').replace(/^\w/, ch => ch.toUpperCase());
 const listTools = reg => {
   const byGame = new Map(reg.cards.map(c => [gameId(c), c]));
@@ -179,7 +181,7 @@ function armFallback(img) {
 const PAGE = 60;
 let shownCards = PAGE, moreObserver = null;
 let owning = null; // {pool: Set, qty: id => n} só na página da Coleção
-const cardThumb = c => `<a class="hub-thumb${owning && !owning.qty(c.id) ? ' is-missing' : ''}" href="#/card/${esc(c.id)}">${owning ? `<em class="hub-qty">${owning.qty(c.id)}/${owning.limit}</em>` : ''}<i>${artImg(c.id, c.name) || '<span class="hub-noart" aria-hidden="true"></span>'}</i><b>${esc(c.name)}</b><small>${esc(c.faction)} · ${esc(c.type)}${c.cost != null ? ` · ${c.cost}` : ''}</small></a>`;
+const cardThumb = c => `<a class="hub-thumb${owning && !owning.qty(c.id) ? ' is-missing' : ''}" href="#/card/${esc(c.id)}">${owning ? `<em class="hub-qty">${owning.qty(c.id)}/${owning.limit}</em>` : ''}<i>${artImg(c.id, cardName(c)) || '<span class="hub-noart" aria-hidden="true"></span>'}</i><b>${esc(cardName(c))}</b><small>${esc(c.faction)} · ${esc(c.type)}${c.cost != null ? ` · ${c.cost}` : ''}</small></a>`;
 function cardFilters() {
   const form = document.getElementById('card-filters');
   return form ? Object.fromEntries(new FormData(form)) : null;
@@ -227,9 +229,9 @@ async function cardPage(id) {
   const rulings = items.filter(r => (r.meta.card_refs || []).includes(id));
   const rules = reg.rules.filter(r => r.cards.includes(id));
   const stat = (k, v) => v == null || v === '' ? '' : `<tr><th>${k}</th><td>${esc(v)}</td></tr>`;
-  return `<h1>${esc(c.name)}</h1><div class="hub-card"><div>${picture || empty('No artwork yet.')}</div><div>
+  return `<h1>${esc(cardName(c))}</h1><div class="hub-card"><div>${picture || empty('No artwork yet.')}</div><div>
     <div class="hub-scroll"><table class="hub-table"><tbody>${stat('Number', c.number)}${stat('Edition', c.edition)}${stat('Faction', c.faction)}${stat('Type', c.type)}${stat('Subtype', c.subtypes.join(', '))}${stat('Rarity', c.rarity)}${stat('Cost', c.cost)}${stat('Equip cost', c.equip_cost)}${stat('ATK', c.attack)}${stat('HP', c.hp)}${stat('Soul', c.soul)}${stat('Publication', c.publication)}</tbody></table></div>
-    <h2>Abilities</h2>${c.abilities.length ? c.abilities.map(a => `<p>${esc(a)}</p>`).join('') : empty('No abilities.')}
+    <h2>Abilities</h2>${c.abilities.length ? (isPT() && c.abilities_pt?.length ? c.abilities_pt : c.abilities).map(a => `<p>${esc(a)}</p>`).join('') : empty('No abilities.')}
     ${c.awaken_text ? `<h2>Awaken</h2><p>${esc(c.awaken_text)}</p>` : ''}${c.ultimate ? `<h2>Ultimate</h2><p>${esc(c.ultimate)}</p>` : ''}
     ${rules.length ? `<h2>Rules</h2>${rules.map(r => `<p><a href="#/rule/${esc(r.id)}">${esc(r.number)}. ${esc(r.title)}</a></p>`).join('')}` : ''}
     <h2>Rulings</h2>${tiles(rulings, newsTile, 'Nothing published yet.')}</div></div>
@@ -281,7 +283,7 @@ async function rulePage(id) {
   if (!r) return empty('Rule not found.');
   const cards = reg.cards.filter(c => r.cards.includes(c.id)).slice(0, 24);
   return `<h1>${esc(r.number)}. ${esc(r.title)}</h1><p class="hub-muted">${esc(r.chapter || '')} · ${esc(r.id)} · version ${esc(reg.index.current.rules)}${r.status === 'review' ? ' · under review' : ''}</p>
-    <div class="hub-rule">${esc(r.body)}</div>${cards.length ? `<h2>Related cards</h2>${tiles(cards, c => `<a class="hub-tile" href="#/card/${esc(c.id)}"><b>${esc(c.name)}</b></a>`, '')}` : ''}
+    <div class="hub-rule">${esc(r.body)}</div>${cards.length ? `<h2>Related cards</h2>${tiles(cards, c => `<a class="hub-tile" href="#/card/${esc(c.id)}"><b>${esc(cardName(c))}</b></a>`, '')}` : ''}
     <h2>Rules history</h2>${tiles(reg.index.history.slice().reverse(), h => `<div class="hub-tile"><b>${esc(h.rules)}</b><small>${when(h.at)}</small></div>`, 'No history.')}`;
 }
 
@@ -344,10 +346,22 @@ function curveHtml(main, tools) {
     <p class="hub-muted">${Object.entries(types).map(([t, n]) => `${n} ${esc(t)}`).join(' · ')}</p>`;
 }
 
+// Carta do campo, igual à mesa do duelo (playtest/divine/board.css): arte no enquadramento do Forge, nome em cima,
+// ATK e HP nas gemas da facção (Athena usa gem_resistance). Fora Devoto, só arte e nome. Passar o mouse mostra a carta inteira.
+const FACS = new Set(['athena', 'poseidon', 'hades', 'ares', 'artemis']);
+function boardToken(c, cid) {
+  const forge = c && artCards?.get(c.id), file = c && artOf(c.id), fr = forge?.ilustracao_enquadramento;
+  const fac = FACS.has(String(c?.faction).toLowerCase()) ? String(c.faction).toLowerCase() : 'athena';
+  const style = file ? `--art:url('${thumb(c.id)}');${fr?.w ? `--fx:${fr.x / 1488};--fy:${(fr.y - 160) / 1488};--fw:${fr.w / 1488};` : ''}`
+    : FACS.has(String(c?.faction).toLowerCase()) ? `--art:url('/CARD-TEMPLATE/symbols/${fac}.xs.webp');` : `--art:url('/LOGO/logo-web.webp');--noart-w:70%;`;
+  const gem = (kind, v) => `<b class="btok__stat btok__stat--${kind}" style="--gem:url('/CARD-TEMPLATE/${fac}/gem_${kind === 'atk' ? 'power' : fac === 'athena' ? 'resistance' : 'soul'}.sm.webp')">${esc(v)}</b>`;
+  const stats = c?.type === 'Devotee' && c.attack != null ? gem('atk', c.attack) + gem('hp', c.hp ?? '') : '';
+  return `<span class="hub-board"><span class="btok ${!file ? 'is-noart' : fr?.w ? 'is-framed' : ''}" style="${style}"><span class="btok__name">${esc(cardName(c) || cid)}</span>${stats}</span></span>`;
+}
 const TYPE_ORDER = [['Devotee', 'Devotees'], ['Spell', 'Spells'], ['Equipment', 'Equipment']];
 function deckSections(d, tools, visual) {
   const entry = (cid, n) => ({c: tools.card(cid), cid, n});
-  const sort = (a, b) => (Number(a.c?.cost) || 0) - (Number(b.c?.cost) || 0) || String(a.c?.name).localeCompare(String(b.c?.name));
+  const sort = (a, b) => (Number(a.c?.cost) || 0) - (Number(b.c?.cost) || 0) || cardName(a.c).localeCompare(cardName(b.c));
   const main = (d.data.main_deck || []).map(e => entry(e.card_id, e.quantity || 1));
   const groups = [['God and Domain', [entry(d.data.god || 'god-athena', 1), ...(d.data.domain_id ? [entry(d.data.domain_id, 1)] : [])]],
     ...TYPE_ORDER.map(([t, label]) => [label, main.filter(x => x.c?.type === t).sort(sort)]),
@@ -355,9 +369,9 @@ function deckSections(d, tools, visual) {
   const total = list => list.reduce((n, x) => n + x.n, 0);
   const href = x => `#/card/${esc(x.c?.id || x.cid)}`;
   // Visual: a carta inteira como no campo do jogo (carta viva), pequena; sem carta viva cai na arte com o nome.
-  const mini = x => { const live = x.c && peekHtml(x.c.id); return `<a class="hub-mini" href="${href(x)}" aria-label="${x.n} × ${esc(x.c?.name || x.cid)}"><em class="hub-qty">${x.n}×</em>${live || `<span class="hub-thumb"><i>${x.c && artImg(x.c.id, x.c.name) || '<span class="hub-noart" aria-hidden="true"></span>'}</i><b>${esc(x.c?.name || x.cid)}</b></span>`}</a>`; };
+  const mini = x => `<a class="hub-mini" href="${href(x)}" aria-label="${x.n} × ${esc(cardName(x.c) || x.cid)}"><em class="hub-qty">${x.n}×</em>${boardToken(x.c, x.cid)}</a>`;
   if (visual) return groups.map(([label, list]) => `<h3>${esc(label)} <span>(${total(list)})</span></h3><div class="hub-minis">${list.map(mini).join('')}</div>`).join('');
-  return groups.map(([label, list]) => `<table class="hub-table hub-list"><thead><tr><th colspan="2">${esc(label)} <span>(${total(list)})</span></th><th>Cost</th><th>Rarity</th></tr></thead><tbody>${list.map(x => `<tr><td class="hub-n">${x.n}</td><td><a href="${href(x)}">${esc(x.c?.name || x.cid)}</a></td><td>${x.c?.cost ?? '—'}</td><td>${esc(x.c?.rarity || '—')}</td></tr>`).join('')}</tbody></table>`).join('');
+  return groups.map(([label, list]) => `<table class="hub-table hub-list"><thead><tr><th colspan="2">${esc(label)} <span>(${total(list)})</span></th><th>Cost</th><th>Rarity</th></tr></thead><tbody>${list.map(x => `<tr><td class="hub-n">${x.n}</td><td><a href="${href(x)}">${esc(cardName(x.c) || x.cid)}</a></td><td>${x.c?.cost ?? '—'}</td><td>${esc(x.c?.rarity || '—')}</td></tr>`).join('')}</tbody></table>`).join('');
 }
 function breakdown(main, tools) {
   const by = {};
@@ -676,6 +690,7 @@ document.addEventListener('mouseover', e => {
   placePeek(e.clientX, e.clientY);
 });
 document.addEventListener('mousemove', e => { if (!peek.hidden) placePeek(e.clientX, e.clientY); });
+addEventListener('ss-lang', () => { peekCache.clear(); render(); });
 addEventListener('hashchange', () => { peek.hidden = true; peekLink = null; document.getElementById('hub-user').open = false; });
 // Menu da conta fecha ao clicar fora ou com Esc.
 document.addEventListener('click', e => { const m = document.getElementById('hub-user'); if (m.open && !m.contains(e.target)) m.open = false; });
