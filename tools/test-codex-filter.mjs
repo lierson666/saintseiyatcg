@@ -3,7 +3,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {readFilters, filtersQuery, filterCatalog, filterCollection} from '../cosmohub/codex-filter.js';
+import {readFilters, filtersQuery, filterCatalog, filterCollection, parseQuery, describe, sortCards} from '../cosmohub/codex-filter.js';
 
 const index = JSON.parse(readFileSync(new URL('../data/registry/index.json', import.meta.url)));
 const cards = JSON.parse(readFileSync(new URL(`../data/registry/cards-${index.current.catalog}.json`, import.meta.url)));
@@ -33,4 +33,21 @@ test('coleção: só o catálogo do jogo, com filtro tenho/faltam', () => {
   assert.deepEqual(filterCollection(cards, {...none, own: 'owned'}, pool, qty).map(c => c.id), ['athena-v6-001']);
   assert.ok(!filterCollection(cards, {...none, own: 'missing'}, pool, qty).some(c => c.id === 'athena-v6-001'));
   assert.equal(readFilters('o=missing').own, 'missing');
+});
+
+test('sintaxe estilo Scryfall: chave:valor em EN ou PT, comparação e negação', () => {
+  const athenaBig = filterCatalog(cards, {...none, q: 'f:athena c>=5'});
+  assert.ok(athenaBig.length && athenaBig.every(c => c.faction === 'Athena' && c.cost >= 5));
+  assert.deepEqual(filterCatalog(cards, {...none, q: 'faccao:athena custo>=5'}).map(c => c.id), athenaBig.map(c => c.id));
+  assert.ok(filterCatalog(cards, {...none, q: 't:devoto -r:common'}).every(c => c.type === 'Devotee' && c.rarity !== 'Common'));
+  assert.ok(filterCatalog(cards, {...none, q: 'atk>=4 hp<=2'}).every(c => c.attack >= 4 && c.hp <= 2));
+  assert.ok(filterCatalog(cards, {...none, q: 'n:seiya'}).some(c => c.id === 'athena-v6-001'));
+  assert.equal(parseQuery('o:"cosmo base"')[0].value, 'cosmo base');
+  assert.equal(describe('f:athena c>=5'), 'the faction is athena and the cost is ≥ 5');
+});
+
+test('ordem por custo e por nome, crescente e decrescente', () => {
+  const list = filterCatalog(cards, {...none, q: 'f:hades t:devoto'});
+  const up = sortCards(list, 'cost'), down = sortCards(list, 'cost', 'desc');
+  assert.ok(up[0].cost <= up.at(-1).cost && down[0].cost >= down.at(-1).cost);
 });

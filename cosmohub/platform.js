@@ -2,7 +2,7 @@
 import {renderLiveCard} from '/shared/live-card.js';
 import {mountKV} from '/shared/kv-sky.js';
 import {decklistIndex, deckToText, textToDeck} from '/shared/decklist-text.js?v=20261108-1';
-import {readFilters, filtersQuery, filterCatalog, filterCollection} from './codex-filter.js?v=20261109-p4';
+import {readFilters, filtersQuery, filterCatalog, filterCollection, describe, sortCards} from './codex-filter.js?v=20261109-cx1';
 
 const API = '/api/platform';
 // Sem a API da plataforma no servidor, Codex e home seguem funcionando; o resto diz que abre em breve em vez de dar erro.
@@ -99,31 +99,47 @@ const fallbackArt = id => `/card-forge/art-web/${esc(artOf(id) || '')}`;
 const artImg = (id, alt = '', eager = false) => artOf(id) ? `<img src="${thumb(id)}" data-fallback="${fallbackArt(id)}" alt="${esc(alt)}" loading="${eager ? 'eager' : 'lazy'}">` : '';
 const loadArt = async () => { artCards ??= await call('/card-forge/art-web/cards.json').then(d => new Map(d.cartas.map(x => [x.id, x]))).catch(() => new Map()); };
 
+// ---------- Início: portal do jogo (artigos em destaque, meta, balanceamento, torneios, decks) ----------
+const siteLang = () => (isPT() ? 'pt' : 'en');
+const KIND_LABEL = {news: 'News', guide: 'Guide', lesson: 'Lesson', balance: 'Balance', ruling: 'Ruling'};
+// Capa: a carta escolhida no artigo; sem ela, a arte de um Deus (sempre a mesma para o mesmo artigo).
+const FALLBACK_COVERS = ['athena-001', 'poseidon-001', 'hades-001', 'ares-001', 'artemis-001'];
+const coverOf = a => { const id = a.meta?.cover || a.meta?.card_refs?.[0]; if (id && artOf(id)) return thumb(id);
+  const fb = FALLBACK_COVERS[[...String(a.slug || '')].reduce((n, ch) => n + ch.charCodeAt(0), 0) % FALLBACK_COVERS.length]; return artOf(fb) ? thumb(fb) : ''; };
+const excerpt = (text, n = 170) => { const t = String(text || '').replace(/\s+/g, ' ').trim(); return t.length > n ? `${t.slice(0, n).replace(/\s\S*$/, '')}…` : t; };
+const articleCard = (a, big = false) => `<a class="hub-article ${big ? 'is-big' : ''}" href="#/article/${esc(a.slug)}"><i>${coverOf(a) ? `<img src="${coverOf(a)}" alt="" loading="${big ? 'eager' : 'lazy'}">` : ''}</i>
+  <span><em class="hub-tag hub-tag--${esc(a.kind)}">${esc(a.category || KIND_LABEL[a.kind] || a.kind)}</em><b>${esc(a.title)}</b>${big ? `<p>${esc(excerpt(a.body, 220))}</p>` : ''}<small>${esc(a.author || '')}${a.author ? ' · ' : ''}${when(a.publish_at)}</small></span></a>`;
+const articleGrid = (list, none) => list.length ? `<div class="hub-articles">${list.map(a => articleCard(a)).join('')}</div>` : empty(none);
+function metaBars(m, n = 5) {
+  if (!m?.gods?.length) return empty('No online duels yet. The meta report starts with the first ranked duels.');
+  return `<ol class="hub-metabars">${m.gods.slice(0, n).map(g => { const name = godName(g.god).toLowerCase(); return `<li><a href="#/decks?g=${esc(name)}">${godSymbol(g.god)}<b>${esc(godName(g.god))}</b><span class="hub-metabar" aria-hidden="true"><i style="width:${Math.round(g.share * 100)}%"></i></span><small>${pct(g.share)} of the meta${g.sample_ok ? ` · ${pct(g.win_rate)} win rate` : ''}</small></a></li>`; }).join('')}</ol>
+    <p class="hub-muted">${m.matches} online duels. ${m.matches < m.min_sample ? `Win rates appear after ${m.min_sample} duels per God.` : ''}</p>`;
+}
+const balanceRow = a => { const dir = String(a.meta?.change || a.meta?.direction || '').toLowerCase(); const tag = dir === 'nerf' ? 'Nerf' : dir === 'buff' ? 'Buff' : 'Change';
+  return `<a class="hub-balance" href="#/article/${esc(a.slug)}"><i>${coverOf(a) ? `<img src="${coverOf(a)}" alt="" loading="lazy">` : ''}</i><span><em class="hub-tag hub-tag--${tag.toLowerCase()}">${tag}</em><b>${esc(a.title)}</b><small>${when(a.publish_at)}</small></span></a>`; };
 async function home() {
-  const [reg, f] = await Promise.all([loadRegistry(), apiUp ? api('/home').catch(() => null) : null, loadArt()]);
+  const [reg, f, meta, top] = await Promise.all([loadRegistry(), apiUp ? api(`/home?lang=${siteLang()}`).catch(() => null) : null, apiUp ? api('/meta').catch(() => null) : null, apiUp ? api('/decks?sort=winrate&limit=4').catch(() => null) : null, loadArt()]);
   const live = reg.cards.filter(c => c.publication !== 'cut');
   const gods = live.filter(c => c.type === 'God');
-  const module = (href, stamp, title, text, wide, art) => `<a class="kv-card hub-module ${wide ? 'hub-module--wide' : ''}" href="${href}">${art ? artImg(art) : ''}<p class="kv-stamp">${stamp}</p><b>${title}</b><span>${text}</span></a>`;
-  return `<section class="hub-hero">
-      <div><p class="kv-stamp kv-stamp--gold">The official portal of the game</p>
-        <h1><span class="kv-lyric">Enter the</span><span class="kv-cosmo">Sanctuary</span></h1>
-        <p class="hub-lead">Every card, every rule, every deck and every battle of the Holy War, in one place.</p>
-        <div class="hub-cta"><a class="kv-button" href="/playtest/">Play now</a><a class="kv-ghost" href="#/codex">Open the Codex</a></div></div>
-      <div class="hub-fan">${gods.slice(0, 5).map(g => `<a href="#/card/${esc(g.id)}" aria-label="${esc(g.name)}">${artImg(g.id, g.name, true)}</a>`).join('')}</div>
-    </section>
-    <dl class="hub-numbers"><div><dd>${live.length}</dd><dt>Cards</dt></div><div><dd>${reg.rules.length}</dd><dt>Rules</dt></div><div><dd>${gods.length}</dd><dt>Gods</dt></div><div><dd>${reg.glossary.length}</dd><dt>Terms</dt></div></dl>
-    <h2>Explore</h2><div class="hub-bento">
-      ${module('#/codex', 'Codex', 'Every card and every rule', 'Search every card and the official rulebook.', true, gods[0]?.id)}
-      ${module('#/nexus', 'Nexus', 'News and the meta', 'Newsroom, Meta Hub and the balance archive.', true, gods[1]?.id)}
-      ${module('#/decks', 'Decks', 'Share your deck', 'Public lists, versions and discussion.')}
-      ${module('#/guilds', 'Guilds', 'Find your order', 'Members, teams and announcements.')}
-      ${module('#/tournaments', 'Tournaments', 'Prove your Cosmo', 'Community events, online and in person.')}
-    </div>
-    <h2>The Gods</h2><div class="hub-gods">${gods.map(g => `<a class="hub-god" href="#/codex/cards/${q(g.faction)}">${artImg(g.id, '')}<span>${esc(g.name)}</span></a>`).join('')}</div>
-    ${f ? `<h2>Latest News</h2>${tiles(f.news, newsTile, 'Nothing published yet.')}
-    <h2>Featured Decks</h2>${deckTiles(f.decks, 'Nothing published yet.')}
-    <h2>Balance Updates</h2>${tiles(f.balance, newsTile, 'Nothing published yet.')}
-    <h2>Tournament Highlights</h2>${tiles(f.tournaments, eventTile, 'Nothing published yet.')}` : ''}`;
+  const articles = [...(f?.news || []), ...(f?.guides || [])].sort((a, b) => Number(b.featured) - Number(a.featured) || b.publish_at - a.publish_at);
+  const [lead, ...rest] = articles;
+  const search = `<form class="hub-search hub-search--home" id="home-search" role="search" aria-label="Search the Codex"><div class="hub-searchbar"><input name="q" type="search" placeholder="Search ${live.length} cards… e.g. f:athena c>=5" aria-label="Search cards" autocomplete="off"><button class="kv-button">Search</button></div></form>`;
+  const hero = lead ? `<section class="hub-front">${articleCard(lead, true)}
+      <aside class="hub-front__side"><div class="hub-panel"><p class="kv-stamp kv-stamp--gold">Meta report</p>${metaBars(meta, 3)}<a class="hub-more-link" href="#/nexus/meta">Full meta report<span aria-hidden="true"> →</span></a></div>
+        <div class="hub-panel hub-panel--play"><p class="kv-stamp">The Holy War awaits</p><b>Build a deck and duel online.</b><div class="hub-cta"><a class="kv-button" href="/playtest/">Play now</a><a class="kv-ghost" href="#/decks">Decks</a></div></div></aside></section>`
+    : `<section class="hub-hero"><div><p class="kv-stamp kv-stamp--gold">The official portal of the game</p><h1><span class="kv-lyric">Enter the</span><span class="kv-cosmo">Sanctuary</span></h1>
+        <p class="hub-lead">Every card, every rule, every deck and every battle of the Holy War, in one place.</p><div class="hub-cta"><a class="kv-button" href="/playtest/">Play now</a><a class="kv-ghost" href="#/codex">Open the Codex</a></div></div>
+        <div class="hub-fan">${gods.slice(0, 5).map(g => `<a href="#/card/${esc(g.id)}" aria-label="${esc(g.name)}">${artImg(g.id, g.name, true)}</a>`).join('')}</div></section>`;
+  const head = (title, href, label) => `<div class="hub-sechead"><h2>${title}</h2>${href ? `<a class="hub-more-link" href="${href}">${label}<span aria-hidden="true"> →</span></a>` : ''}</div>`;
+  return `${hero}${search}
+    ${f ? `${head('Latest articles', '#/nexus', 'All articles')}${articleGrid(lead ? rest.slice(0, 6) : articles.slice(0, 6), 'Nothing published yet.')}` : ''}
+    <div class="hub-split"><section>${head('Meta report', '#/nexus/meta', 'Meta Hub')}<div class="hub-panel">${metaBars(meta)}</div>
+        ${top?.decks?.length ? `<h3 class="hub-subhead">Top decks online</h3>${deckTiles(top.decks, '')}` : ''}</section>
+      <section>${head('Balance: nerfs and buffs', '#/nexus/balance', 'Balance Center')}${f?.balance?.length ? `<div class="hub-balances">${f.balance.map(balanceRow).join('')}</div>` : empty('No balance changes yet. Every nerf and buff will be listed here with the reason.')}
+        ${head('Tournaments', '#/tournaments', 'All events')}${tiles(f?.tournaments || [], eventTile, 'No events open right now. Create one in Tournaments.')}</section></div>
+    ${f?.decks?.length ? `${head('Community decks', '#/decks', 'Deck library')}${deckTiles(f.decks, '')}` : ''}
+    ${head('The Gods', '#/codex', 'Codex')}<div class="hub-gods">${gods.map(g => `<a class="hub-god" href="#/codex/cards?f=${q(g.faction)}">${artImg(g.id, '')}<span>${esc(g.name)}</span></a>`).join('')}</div>
+    <dl class="hub-numbers"><div><dd>${live.length}</dd><dt>Cards</dt></div><div><dd>${reg.rules.length}</dd><dt>Rules</dt></div><div><dd>${gods.length}</dd><dt>Gods</dt></div><div><dd>${reg.glossary.length}</dd><dt>Terms</dt></div></dl>`;
 }
 
 async function article(slug) {
@@ -131,7 +147,7 @@ async function article(slug) {
   return `${articleBody(a)}
     ${a.status === 'published' ? await discussion(`content:${a.slug}`) : ''}`;
 }
-const articleBody = a => `<h1>${esc(a.title)}</h1><p class="hub-muted">${esc(a.author || '')} · ${when(a.publish_at)}${a.revision ? ` · revision ${a.revision}` : ''}</p>
+const articleBody = a => `${coverOf(a) ? `<div class="hub-cover"><img src="${coverOf(a)}" alt=""></div>` : ''}<p class="kv-stamp kv-stamp--gold">${esc(a.category || KIND_LABEL[a.kind] || a.kind || '')}</p><h1>${esc(a.title)}</h1><p class="hub-muted">${esc(a.author || '')} · ${when(a.publish_at)}${a.revision ? ` · revision ${a.revision}` : ''}</p>
   <div class="hub-rule">${esc(a.body)}</div>${a.kind === 'balance' ? balanceDetails(a.meta || {}) : ''}`;
 const balanceDetails = m => `<h2>Change</h2><div class="hub-scroll"><table class="hub-table"><tbody>${['affected', 'previous', 'new', 'release', 'effective', 'reason', 'tests'].map(k => `<tr><th>${k}</th><td>${esc(typeof m[k] === 'string' ? m[k] : JSON.stringify(m[k]))}</td></tr>`).join('')}</tbody></table></div>`;
 
@@ -162,13 +178,23 @@ function cardFilterForm(reg, f, extra = '') {
   const keywords = [...counts].filter(([, n]) => n > 1).map(([k]) => k).sort(); // texto solto de uma carta só não vira filtro
   const factions = distinct('faction');
   const chip = v => `<button type="button" class="hub-chip" data-faction="${esc(v)}" aria-pressed="${f.faction === v}">${v === 'Neutral' ? '' : `<img src="/CARD-TEMPLATE/symbols/${esc(v.toLowerCase())}.xs.webp" alt="" width="20" height="20">`}${esc(v)}</button>`;
-  return `<div class="hub-chips" role="group" aria-label="Faction"><button type="button" class="hub-chip" data-faction="" aria-pressed="${!f.faction}">All</button>${factions.map(chip).join('')}</div>
-    <form class="hub-row hub-filters" id="card-filters" role="search" aria-label="Filter cards"><input id="card-q" name="q" type="search" placeholder="Search name, ability or id" aria-label="Search cards" value="${esc(f.q)}">
-    <select id="card-type" name="type" aria-label="Type"><option value="">All types</option>${opts(distinct('type'), f.type)}</select>
-    <select id="card-rarity" name="rarity" aria-label="Rarity"><option value="">All rarities</option>${opts(distinct('rarity'), f.rarity)}</select>
-    <select id="card-cost" name="cost" aria-label="Cost"><option value="">Any cost</option>${opts(['0', '1', '2', '3', '4', '5', '6', '7+'], f.cost)}</select>
-    <select id="card-keyword" name="keyword" aria-label="Keyword"><option value="">All keywords</option>${opts(keywords, f.keyword)}</select>${extra}
-    <input type="hidden" name="faction" value="${esc(f.faction)}"><button type="button" class="kv-ghost hub-clear" data-clear>Clear</button></form>
+  const sel = (name, label, list, chosen) => `<select name="${name}" aria-label="${label}">${list.map(([v, l]) => `<option value="${v}" ${v === (chosen || '') ? 'selected' : ''}>${l}</option>`).join('')}</select>`;
+  const adv = [f.type, f.rarity, f.cost, f.keyword].some(Boolean);
+  // Como o Scryfall: uma caixa de busca com sintaxe, barra "como / ordenado por" e filtros avançados recolhidos.
+  return `<form id="card-filters" class="hub-search" role="search" aria-label="Search cards">
+    <div class="hub-searchbar"><input id="card-q" name="q" type="search" placeholder="Search cards… e.g. f:athena c>=5 k:guardian" aria-label="Search cards" value="${esc(f.q)}" autocomplete="off" spellcheck="false">
+      <button type="button" class="kv-ghost" data-syntax aria-expanded="false" aria-controls="hub-syntax">Syntax</button><button type="button" class="kv-ghost" data-random>Random</button></div>
+    <div class="hub-syntax" id="hub-syntax" hidden><p><b>f:</b>athena · <b>t:</b>devotee · <b>r:</b>legendary · <b>c</b>&gt;=5 · <b>atk</b>&gt;=3 · <b>hp</b>&lt;=2 · <b>k:</b>guardian · <b>o:</b>"cosmo base" · <b>n:</b>seiya · <b>is:</b>cosmoble</p>
+      <p class="hub-muted">Combine terms with spaces. Put "-" in front to exclude (-r:common). Portuguese works too: faccao:, tipo:, custo:, atq:, vida:, texto:.</p></div>
+    <div class="hub-chips" role="group" aria-label="Faction"><button type="button" class="hub-chip" data-faction="" aria-pressed="${!f.faction}">All</button>${factions.map(chip).join('')}</div>
+    <div class="hub-row hub-viewbar"><span class="hub-muted">Cards as</span>${sel('view', 'View', [['', 'Images'], ['checklist', 'Checklist'], ['text', 'Text only']], f.view)}<span class="hub-muted">sorted by</span>${sel('sort', 'Sort', [['', 'Name'], ['cost', 'Cost'], ['atk', 'ATK'], ['hp', 'HP'], ['rarity', 'Rarity'], ['number', 'Number']], f.sort)}${sel('dir', 'Order', [['', 'Ascending'], ['desc', 'Descending']], f.dir)}${extra}
+      <button type="button" class="kv-ghost hub-clear" data-clear>Clear</button></div>
+    <details class="hub-adv" ${adv ? 'open' : ''}><summary>Advanced filters</summary><div class="hub-row hub-filters">
+      <select id="card-type" name="type" aria-label="Type"><option value="">All types</option>${opts(distinct('type'), f.type)}</select>
+      <select id="card-rarity" name="rarity" aria-label="Rarity"><option value="">All rarities</option>${opts(distinct('rarity'), f.rarity)}</select>
+      <select id="card-cost" name="cost" aria-label="Cost"><option value="">Any cost</option>${opts(['0', '1', '2', '3', '4', '5', '6', '7+'], f.cost)}</select>
+      <select id="card-keyword" name="keyword" aria-label="Keyword"><option value="">All keywords</option>${opts(keywords, f.keyword)}</select></div></details>
+    <input type="hidden" name="faction" value="${esc(f.faction)}"></form>
     <div id="card-list" aria-live="polite"></div>`;
 }
 
@@ -179,7 +205,7 @@ function armFallback(img) {
 
 // Lista completa em páginas de 60: rolar até o fim (ou o botão) carrega mais. Filtros vão para a URL sem recarregar a tela.
 const PAGE = 60;
-let shownCards = PAGE, moreObserver = null;
+let shownCards = PAGE, moreObserver = null, lastFound = [];
 let owning = null; // {pool: Set, qty: id => n} só na página da Coleção
 const cardThumb = c => `<a class="hub-thumb${owning && !owning.qty(c.id) ? ' is-missing' : ''}" href="#/card/${esc(c.id)}">${owning ? `<em class="hub-qty">${owning.qty(c.id)}/${owning.limit}</em>` : ''}<i>${artImg(c.id, cardName(c)) || '<span class="hub-noart" aria-hidden="true"></span>'}</i><b>${esc(cardName(c))}</b><small>${esc(c.faction)} · ${esc(c.type)}${c.cost != null ? ` · ${c.cost}` : ''}</small></a>`;
 function cardFilters() {
@@ -190,13 +216,20 @@ function filterCards(reset = true) {
   const list = document.getElementById('card-list'), f = cardFilters();
   if (!list || !f) return;
   if (reset) shownCards = PAGE;
-  const found = owning ? filterCollection(registry.cards, f, owning.pool, owning.qty) : filterCatalog(registry.cards, f);
+  const found = sortCards(owning ? filterCollection(registry.cards, f, owning.pool, owning.qty) : filterCatalog(registry.cards, f), f.sort, f.dir, cardName);
+  lastFound = found;
   const qs = filtersQuery(f), path = location.hash.split('?')[0].replace(/^#\/codex\/?$/, '#/codex/cards');
   history.replaceState(null, '', path + (qs ? `?${qs}` : ''));
   document.querySelectorAll('.hub-chip[data-faction]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.faction === f.faction)));
   const more = found.length > shownCards;
-  list.innerHTML = `<p class="hub-muted">${found.length} cards</p>` + (found.length
-    ? `<div class="hub-cards">${found.slice(0, shownCards).map(cardThumb).join('')}</div>${more ? `<button type="button" class="kv-ghost hub-more" id="card-more">Show more (${found.length - shownCards})</button>` : ''}`
+  const shown = found.slice(0, shownCards);
+  const body = f.view === 'checklist' ? `<div class="hub-scroll"><table class="hub-table hub-checklist"><thead><tr><th>#</th><th>Name</th><th>Faction</th><th>Type</th><th>Cost</th><th>ATK</th><th>HP</th><th>Rarity</th></tr></thead><tbody>${shown.map(c => `<tr><td>${esc(c.number ?? '')}</td><td><a href="#/card/${esc(c.id)}">${esc(cardName(c))}</a></td><td>${esc(c.faction)}</td><td>${esc(c.type)}</td><td>${c.cost ?? '—'}</td><td>${c.attack ?? '—'}</td><td>${c.hp ?? '—'}</td><td>${esc(c.rarity || '—')}</td></tr>`).join('')}</tbody></table></div>`
+    : f.view === 'text' ? `<div class="hub-textcards">${shown.map(c => `<article class="hub-textcard"><h3><a href="#/card/${esc(c.id)}">${esc(cardName(c))}</a><span>${c.cost ?? ''}</span></h3><p class="hub-muted">${esc(c.faction)} · ${esc(c.type)}${c.subtypes?.length ? ` — ${esc(c.subtypes.join(', '))}` : ''} · ${esc(c.rarity || '')}</p>${(isPT() && c.abilities_pt?.length ? c.abilities_pt : c.abilities || []).map(a => `<p>${esc(a)}</p>`).join('')}${c.attack != null ? `<p class="hub-stats">${c.attack} / ${c.hp ?? '—'}</p>` : ''}</article>`).join('')}</div>`
+    : `<div class="hub-cards">${shown.map(cardThumb).join('')}</div>`;
+  // Frase já no idioma do site (fica fora do dicionário: muda a cada busca).
+  const pt = isPT(), what = f.q ? ` ${pt ? 'onde' : 'where'} ${describe(f.q, siteLang())}` : '';
+  list.innerHTML = `<p class="hub-resultline" translate="no">${found.length ? `1 – ${shown.length}` : 0} ${pt ? 'de' : 'of'} ${found.length} ${pt ? 'cartas' : 'cards'}${esc(what)}</p>` + (found.length
+    ? `${body}${more ? `<button type="button" class="kv-ghost hub-more" id="card-more">Show more (${found.length - shownCards})</button>` : ''}`
     : empty('No cards match these filters.'));
   list.querySelectorAll('img[data-fallback]').forEach(armFallback);
   moreObserver?.disconnect();
@@ -296,8 +329,8 @@ async function nexus(tab = 'news') {
     return `${nav}<p class="hub-muted">${m.matches} online duels in ${esc(m.environment)}. Win rates need at least ${m.min_sample} matches. Excluded: ${esc(m.excluded.join(', '))}. These are not Official statistics.</p>
       ${m.gods.length ? `<div class="hub-scroll"><table class="hub-table"><thead><tr><th>God</th><th>Matches</th><th>Share</th><th>Win rate</th></tr></thead><tbody>${m.gods.map(g => `<tr><td>${esc(g.god)}</td><td>${g.matches}</td><td>${(g.share * 100).toFixed(1)}%</td><td>${g.sample_ok ? `${(g.win_rate * 100).toFixed(1)}%` : 'Sample too small'}</td></tr>`).join('')}</tbody></table></div>` : empty('No eligible matches yet.')}`;
   }
-  const {items} = await api(`/content?kind=${tab === 'balance' ? 'balance' : 'news'}`);
-  return nav + tiles(items, newsTile, 'Nothing published yet.');
+  const {items} = await api(`/content?kind=${tab === 'balance' ? 'balance' : 'news,guide,lesson'}&lang=${siteLang()}`);
+  return nav + (tab === 'balance' ? (items.length ? `<div class="hub-balances">${items.map(balanceRow).join('')}</div>` : empty('No balance changes yet.')) : articleGrid(items, 'Nothing published yet.'));
 }
 
 // ---------- Decks ----------
@@ -378,7 +411,7 @@ function fitNames(root = document) {
     run.style.animationDuration = `${(run.scrollWidth / 2 / MARQUEE_SPEED).toFixed(1)}s`;
   }
 }
-let fitTimer = 0;
+let fitTimer = 0, qTimer = 0;
 addEventListener('resize', () => { clearTimeout(fitTimer); fitTimer = setTimeout(() => fitNames(), 150); });
 const TYPE_ORDER = [['Devotee', 'Devotees'], ['Spell', 'Spells'], ['Equipment', 'Equipment']];
 function deckSections(d, tools, visual) {
@@ -526,7 +559,6 @@ async function collectionPage() {
       <div class="hub-tile"><b>${c.boosters}</b><small>Unopened boosters</small></div></div>
     <div class="hub-cta"><a class="kv-ghost" href="/playtest/">Open the game</a></div>
     <h2>Cards</h2>${cardFilterForm(reg, f, `<select name="own" aria-label="Owned"><option value="">All cards</option><option value="owned" ${f.own === 'owned' ? 'selected' : ''}>Owned</option><option value="missing" ${f.own === 'missing' ? 'selected' : ''}>Missing</option></select>`)}
-    <div id="card-list" aria-live="polite"></div>
     <h2>Cosmetics</h2>${tiles(c.cosmetics, cosmetic, 'No cosmetics bought yet. God avatars are free.')}`;
 }
 
@@ -667,11 +699,18 @@ document.addEventListener('click', e => {
   if (chip) { document.querySelector('#card-filters [name=faction]').value = chip.dataset.faction; filterCards(); }
   if (e.target.closest('#card-more')) { shownCards += PAGE; filterCards(false); }
   if (e.target.closest('[data-retry]')) render();
+  const syn = e.target.closest('[data-syntax]');
+  if (syn) { const box = document.getElementById('hub-syntax'); box.hidden = !box.hidden; syn.setAttribute('aria-expanded', String(!box.hidden)); }
+  if (e.target.closest('[data-random]') && lastFound.length) location.hash = `#/card/${lastFound[Math.floor(Math.random() * lastFound.length)].id}`;
   if (e.target.closest('[data-clear]')) { document.querySelectorAll('#card-filters input, #card-filters select').forEach(el => { el.value = ''; }); filterCards(); }
 });
-document.addEventListener('submit', e => { if (e.target.id === 'card-filters') e.preventDefault(); });
+document.addEventListener('submit', e => {
+  if (e.target.id === 'card-filters') e.preventDefault();
+  if (e.target.id === 'home-search') { e.preventDefault(); const v = new FormData(e.target).get('q'); location.hash = `#/codex/cards${v ? `?q=${q(v)}` : ''}`; }
+});
 document.addEventListener('input', e => {
-  if (e.target.closest('#card-filters')) filterCards();
+  if (e.target.closest('#card-filters') && e.target.name !== 'q') filterCards();
+  if (e.target.id === 'card-q') { clearTimeout(qTimer); qTimer = setTimeout(filterCards, 180); } // digitar a sintaxe não redesenha a cada tecla
   if (e.target.id === 'rule-q') filterRules();
   if (e.target.closest('#ed-form')) previewArticle(e.target.closest('#ed-form'));
 });

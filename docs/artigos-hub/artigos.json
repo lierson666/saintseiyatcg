@@ -1,0 +1,444 @@
+[
+ {
+  "slug": "how-to-play",
+  "lang": "en",
+  "kind": "guide",
+  "category": "Guide",
+  "title": "How to play: the basics",
+  "body": "Welcome to the Sanctuary. In Saint Seiya TCG each player commands a God and the Devotees who fight for it: Saints, Marines, Specters, Berserkers, Satellites and more. You raise your Cosmo, choose your battles one Strike at a time, and try to bring down the enemy God.\n\nHow you win\n\nEvery God has Soul. Reduce the opposing God's Soul to zero and you win. If both Gods hit zero at the same moment, the game is a draw. There is a second way to lose: a player who has to draw a card from an empty deck loses on the spot.\n\nWhat you bring\n\nYou play with 1 God, 1 Domain and a main deck of 50 cards. The God and the Domain start in play, outside the deck. You begin with a hand of 7 cards and may take one free mulligan.\n\nCosmo Base and Latent Cosmo\n\nCosmo is the resource that pays for your cards. Once per turn, on your own turn with the chain empty, you may place a Cosmoble card from your hand as a Cosmo Base. It enters Prepared and can pay costs right away. Each Prepared Base pays 1 Cosmo.\n\nAt the start of your End Phase, every Base still Prepared turns into 1 Latent Cosmo. Latent is a bank that keeps up to 3 and carries over between turns. Devotees, Armor and Ultimates are paid only with Base. Moments played as a response on your opponent's turn are paid only with Latent. Most other costs accept both.\n\nThe shape of a turn\n\nEach Round is one player's turn. A turn has three parts:\n\n• Start of turn: prepare all your Devotees, Equipment and Bases, resolve start-of-turn triggers, then draw 1 card. The player who goes first does not draw on their very first turn.\n• Main phase: place a Base, play Devotees, Equipment, Techniques and Moments, equip, activate abilities and declare Strikes, in any order you can pay for.\n• End Phase: Prepared Bases become Latent, end-of-turn triggers resolve, and if you hold more than 7 cards you discard down to 7.\n\nStrikes and combat\n\nA Prepared Devotee can declare one Strike per turn, targeting the enemy God or any enemy Devotee, Prepared or not. Declaring a Strike makes it Unprepared. Devotees enter play Unprepared, so they usually wait a turn before striking, unless they have Impulse.\n\nWhen two Devotees clash, both deal damage equal to their ATK at the same time. The defender retaliates for free. Damage stays marked on a Devotee between turns, and once it reaches the Devotee's HP, that Devotee is destroyed. A Strike against a God deals damage to its Soul, and Gods never retaliate. If the enemy has a Devotee with Guardian, your Strikes must aim at a Guardian.\n\nThe zones\n\nDestroyed Devotees go to the Tartarus, your graveyard. Cards discarded at the End Phase also go there. Some cards act from the Tartarus, such as those with Afterlife. The Void is a separate zone for exiled cards; Afterlife does not work there. Cards played and abilities activated go on the chain, where your opponent can answer them.\n\nThat is the core. Play a few games against the AI and the rest will click quickly.",
+  "featured": true,
+  "meta": {
+   "cover": "athena-001",
+   "pair": "how-to-play-pt",
+   "sources": [
+    "guia-do-jogo.md §1",
+    "§2",
+    "§4",
+    "§5",
+    "§7",
+    "§8",
+    "§11 (Cap. IV)",
+    "§20",
+    "§21",
+    "§22",
+    "§24",
+    "§39",
+    "§55",
+    "§63"
+   ]
+  }
+ },
+ {
+  "slug": "how-to-play-pt",
+  "lang": "pt",
+  "kind": "guide",
+  "category": "Guia",
+  "title": "Como jogar: o básico",
+  "body": "Bem-vindo ao Santuário. No Saint Seiya TCG cada jogador comanda um Deus e os Devotos que lutam por ele: Cavaleiros, Marinas, Espectros, Berserkers, Satélites e outros. Você eleva o seu Cosmo, escolhe as batalhas um Golpe de cada vez e tenta derrubar o Deus inimigo.\n\nComo vencer\n\nTodo Deus tem Alma. Reduza a Alma do Deus adversário a zero e você vence. Se os dois Deuses chegarem a zero ao mesmo tempo, a partida empata. Há uma segunda forma de perder: quem precisa comprar uma carta com o deck vazio perde na hora.\n\nO que você leva para a mesa\n\nVocê joga com 1 Deus, 1 Domínio e um deck principal de 50 cartas. Deus e Domínio começam em jogo, fora do deck. Você começa com 7 cartas na mão e tem direito a um mulligan gratuito.\n\nCosmo Base e Cosmo Latente\n\nO Cosmo é o recurso que paga as suas cartas. Uma vez por turno, no seu turno e com a pilha vazia, você pode colocar uma carta Cosmável da mão como Cosmo Base. Ela entra Preparada e já paga custos no mesmo turno. Cada Base Preparada paga 1 Cosmo.\n\nNo início da sua fase final, cada Base ainda Preparada vira 1 Cosmo Latente. O Latente é um banco que guarda até 3 e passa de um turno para o outro. Devotos, Armaduras e Supremos são pagos só com Base. Momentos jogados como resposta no turno do adversário são pagos só com Latente. A maioria dos outros custos aceita os dois.\n\nO formato de um turno\n\nCada Rodada é o turno de um jogador. O turno tem três partes:\n\n• Início do turno: prepare todos os seus Devotos, Equipamentos e Bases, resolva os gatilhos de início de turno e compre 1 carta. Quem começa a partida não compra no primeiro turno dele.\n• Fase principal: coloque uma Base, jogue Devotos, Equipamentos, Técnicas e Momentos, equipe, ative habilidades e declare Golpes, na ordem que quiser e puder pagar.\n• Fase final: as Bases Preparadas viram Latente, os gatilhos de fim de turno resolvem e, se tiver mais de 7 cartas na mão, você descarta até ficar com 7.\n\nGolpes e combate\n\nUm Devoto Preparado pode declarar um Golpe por turno, mirando o Deus inimigo ou qualquer Devoto inimigo, Preparado ou não. Declarar o Golpe deixa o atacante Despreparado. Devotos entram em campo Despreparados, então normalmente esperam um turno para golpear, a menos que tenham Impulso.\n\nQuando dois Devotos se enfrentam, os dois causam dano igual ao seu ATQ ao mesmo tempo. O defensor revida sem custo. O dano fica marcado no Devoto entre os turnos e, quando chega aos PV dele, o Devoto é destruído. Um Golpe contra um Deus causa dano à Alma, e Deuses nunca revidam. Se o inimigo tiver um Devoto com Guardião, os seus Golpes precisam mirar um Guardião.\n\nAs zonas\n\nDevotos destruídos vão para o Tártaro, o seu cemitério. As cartas descartadas na fase final também vão para lá. Algumas cartas agem a partir do Tártaro, como as que têm Além-Túmulo. O Vazio é uma zona separada, para cartas exiladas; Além-Túmulo não funciona lá. Cartas jogadas e habilidades ativadas vão para a pilha, onde o adversário pode respondê-las.\n\nEsse é o núcleo do jogo. Jogue algumas partidas contra a IA e o resto se encaixa rápido.",
+  "featured": true,
+  "meta": {
+   "cover": "athena-001",
+   "pair": "how-to-play",
+   "sources": [
+    "guia-do-jogo.md §1",
+    "§2",
+    "§4",
+    "§5",
+    "§7",
+    "§8",
+    "§11 (Cap. IV)",
+    "§20",
+    "§21",
+    "§22",
+    "§24",
+    "§39",
+    "§55",
+    "§63"
+   ]
+  }
+ },
+ {
+  "slug": "faction-athena",
+  "lang": "en",
+  "kind": "guide",
+  "category": "Guide",
+  "title": "Faction guide: Athena",
+  "body": "Athena's motto in the rulebook says it all: \"No Saint fights alone.\" This is the faction of the Saints, the Bronze heroes and the Gold guardians of the Twelve Temples, and its strength comes from protecting one another until the moment to strike back arrives.\n\nIdentity\n\nThe rulebook names Athena's pillars as Voltron, Anthem, Brotherhood and Miracle. In practice that means Devotees that grow stronger together, effects that reward your Saints as a group, and comebacks when things look grim. Athena's Armor family is the Cloth, which climbs from Bronze to Silver, Gold and God.\n\nThe God\n\nAthena's Divine Power rewards you whenever one of your Athena Devotees survives a Strike, granting Latent Cosmo. Her Divine Command removes damage from a friendly Devotee each round. Once Awakened, she gives your Athena Devotees +1 ATK and +1 HP and can pay Cosmo to stop one of them from being destroyed. Athena plays a long game: keep your Saints alive and the advantage keeps compounding.\n\nSignature cards\n\n• Pegasus Seiya: a 3-cost Bronze Saint with Seventh Sense, which grows his ATK when he survives a Strike against a stronger enemy, and Miracle, a bonus while your God is behind on Soul. He is the heart of the comeback.\n• Aries Mu: a Guardian Gold Saint who can prevent Strike damage to your God or another Saint, and repair a friend with Cloth Restoration. The wall your plan is built behind.\n• Leo Aiolia: Long Range and Lightning Speed make him a clean attacker, and Lion's Pride lets him Prepare again after defeating a Devotee.\n• Phoenix Ikki: Impulse and Nimble on one body, plus Hidden Cosmo. He is also the one Saint the rules let you control in any number of copies.\n\nHow it plays\n\nA typical Athena game opens with sturdy Devotees and a Guardian to hold the line. You trade carefully, use your Divine Command to keep key Saints healthy, and let survival effects build your Latent bank. When your board is stronger, Gold Saints with Long Range and Pierce turn the pressure on the enemy God.\n\nWho should play it\n\nPick Athena if you like solid boards, protective tricks and the feeling of turning a losing game around. It is forgiving for new players because good blocking and patient trades are rewarded, yet it has plenty of depth in timing Awaken and choosing which Saint to save.",
+  "featured": false,
+  "meta": {
+   "cover": "athena-v6-001",
+   "pair": "faction-athena-pt",
+   "sources": [
+    "guia-do-jogo.md §26",
+    "§54",
+    "§63",
+    "registry athena-001, athena-v6-001, -009, -011, -015"
+   ]
+  }
+ },
+ {
+  "slug": "faction-athena-pt",
+  "lang": "pt",
+  "kind": "guide",
+  "category": "Guia",
+  "title": "Guia de facção: Athena",
+  "body": "O lema de Athena no livro de regras diz tudo: \"Nenhum Cavaleiro luta sozinho.\" Esta é a facção dos Cavaleiros, dos heróis de Bronze e dos guardiões de Ouro das Doze Casas, e a força dela vem de proteger uns aos outros até chegar a hora de contra-atacar.\n\nIdentidade\n\nO livro de regras define os pilares de Athena como Voltron, Anthem, Brotherhood e Miracle. Na prática: Devotos que ficam mais fortes juntos, efeitos que recompensam seus Cavaleiros em grupo e viradas quando tudo parece perdido. A família de Armadura de Athena é a Cloth, que sobe de Bronze para Prata, Ouro e Deus.\n\nO Deus\n\nO Poder Divino de Athena recompensa você sempre que um Devoto de Athena seu sobrevive a um Golpe, dando Cosmo Latente. O Comando Divino dela remove dano de um Devoto aliado a cada rodada. Depois de Despertar, ela dá +1 ATQ e +1 PV aos seus Devotos de Athena e pode pagar Cosmo para impedir que um deles seja destruído. Athena joga o jogo longo: mantenha seus Cavaleiros vivos e a vantagem só cresce.\n\nCartas de destaque\n\n• Seiya de Pégaso: Cavaleiro de Bronze de custo 3 com Sétimo Sentido, que aumenta o ATQ dele quando sobrevive a um Golpe contra um inimigo mais forte, e Milagre, um bônus enquanto o seu Deus estiver atrás na Alma. É o coração da virada.\n• Mu de Áries: Cavaleiro de Ouro com Guardião que pode prevenir dano de Golpe ao seu Deus ou a outro Cavaleiro, e consertar um aliado com Restauração de Armadura. A muralha atrás da qual o seu plano cresce.\n• Aiolia de Leão: Longo Alcance e Velocidade da Luz fazem dele um atacante limpo, e Orgulho do Leão permite que ele se Prepare de novo depois de derrotar um Devoto.\n• Ikki de Fênix: Impulso e Ágil no mesmo corpo, além de Cosmo Oculto. Ele é também o único Cavaleiro que as regras deixam ter em campo em qualquer número de cópias.\n\nComo joga\n\nUma partida típica de Athena começa com Devotos resistentes e um Guardião segurando a linha. Você troca com cuidado, usa o Comando Divino para manter os Cavaleiros importantes inteiros e deixa os efeitos de sobrevivência encherem o seu banco de Latente. Quando o seu campo estiver mais forte, Cavaleiros de Ouro com Longo Alcance e Perfurar viram a pressão contra o Deus inimigo.\n\nPara quem é\n\nEscolha Athena se você gosta de campo sólido, truques de proteção e da sensação de virar uma partida perdida. Ela perdoa erros de quem está começando, porque bloquear bem e trocar com paciência é recompensado, e ainda tem muita profundidade em escolher a hora de Despertar e qual Cavaleiro salvar.",
+  "featured": false,
+  "meta": {
+   "cover": "athena-v6-001",
+   "pair": "faction-athena",
+   "sources": [
+    "guia-do-jogo.md §26",
+    "§54",
+    "§63",
+    "registry athena-001, athena-v6-001, -009, -011, -015"
+   ]
+  }
+ },
+ {
+  "slug": "faction-poseidon",
+  "lang": "en",
+  "kind": "guide",
+  "category": "Guide",
+  "title": "Faction guide: Poseidon",
+  "body": "Poseidon rules the seas, and his Marines fight like the tide: slowly, relentlessly, until nothing is left standing. The rulebook describes this faction as control, progressive pressure and dominance.\n\nIdentity\n\nPoseidon's tools are Seal counters, returning Devotees to the hand and milling the opponent's deck. A Sealed Devotee becomes Unprepared and, at the start of its owner's turn, removes one counter instead of preparing. Stack a few counters and an enemy threat sits out several turns. Poseidon's Armor family is the Scale.\n\nMilling matters here. A player who has to draw from an empty deck loses immediately, so every card Poseidon sends from the opponent's deck brings that moment closer. Mill is a real win condition, not just a side effect.\n\nThe God\n\nPoseidon's Divine Power lets you pay Cosmo to Seal an enemy Devotee as it declares a Strike. His Divine Command puts a Seal counter on a cheap enemy Devotee, and on any cost once he is Awakened. Awakened Poseidon also makes the opponent mill two cards and gives you a draw whenever an enemy Devotee becomes Sealed.\n\nSignature cards\n\n• Sea Dragon Kanon: Pierce, a bounce on entry, and Golden Triangle, which returns an enemy Devotee to its owner's hand. The general who resets the board.\n• Siren Sorrento: Nimble, so only Nimble Devotees can Strike him, and Dead End Symphony weakens the defender whenever he attacks.\n• Seahorse Baian: Long Range with God Breath, lowering the defender's ATK before the damage lands. A safe, steady attacker.\n• Kraken Isaac: Aurora Borealis Seals an enemy Devotee he damages, keeping the opposing board frozen.\n\nHow it plays\n\nPoseidon rarely races. You slow the opponent down, Seal their best attacker, bounce whatever they spent their turn on, and let the mill and your Marines finish the job. Keep Latent Cosmo for the opponent's turn so your God's power and your Moments are ready when they declare a Strike.\n\nWho should play it\n\nChoose Poseidon if you enjoy reading the opponent, denying their plans and winning a long game. It rewards patience and careful counting of turns and cards in the opponent's deck.",
+  "featured": false,
+  "meta": {
+   "cover": "poseidon-v6-091",
+   "pair": "faction-poseidon-pt",
+   "sources": [
+    "guia-do-jogo.md §26",
+    "§48",
+    "§54",
+    "§55",
+    "registry poseidon-001, poseidon-v6-091, -093, -095, -097"
+   ]
+  }
+ },
+ {
+  "slug": "faction-poseidon-pt",
+  "lang": "pt",
+  "kind": "guide",
+  "category": "Guia",
+  "title": "Guia de facção: Poseidon",
+  "body": "Poseidon governa os mares, e as Marinas dele lutam como a maré: devagar, sem trégua, até não sobrar nada de pé. O livro de regras descreve a facção como controle, pressão progressiva e domínio.\n\nIdentidade\n\nAs ferramentas de Poseidon são os marcadores de Selo, devolver Devotos à mão e moer o deck do adversário. Um Devoto Selado fica Despreparado e, no início do turno do dono, tira um marcador em vez de se preparar. Empilhe alguns marcadores e uma ameaça inimiga fica fora de combate por vários turnos. A família de Armadura de Poseidon é a Escama.\n\nMoer faz diferença aqui. Quem precisa comprar com o deck vazio perde na hora, então cada carta que Poseidon tira do deck do adversário aproxima esse momento. Moer é uma condição de vitória de verdade, não só um efeito colateral.\n\nO Deus\n\nO Poder Divino de Poseidon permite pagar Cosmo para Selar um Devoto inimigo quando ele declara um Golpe. O Comando Divino põe um marcador de Selo num Devoto inimigo barato, e em qualquer custo depois que ele Desperta. Poseidon Desperto também faz o adversário moer duas cartas e dá uma compra a você sempre que um Devoto inimigo fica Selado.\n\nCartas de destaque\n\n• Kanon de Dragão Marinho: Perfurar, um retorno à mão ao entrar e Triângulo Dourado, que devolve um Devoto inimigo à mão do dono. O general que reinicia o campo.\n• Sorento de Sirene: Ágil, então só Devotos Ágeis podem golpeá-lo, e Sinfonia Sem Saída enfraquece o defensor sempre que ele ataca.\n• Baian de Cavalo Marinho: Longo Alcance com Sopro Divino, que reduz o ATQ do defensor antes do dano. Um atacante seguro e constante.\n• Isaak de Kraken: Aurora Boreal Sela o Devoto inimigo que ele fere, mantendo o campo adversário congelado.\n\nComo joga\n\nPoseidon quase nunca corre. Você atrasa o adversário, Sela o melhor atacante dele, devolve à mão aquilo em que ele gastou o turno e deixa a moagem e as suas Marinas fecharem a partida. Guarde Cosmo Latente para o turno do adversário, para que o poder do seu Deus e os seus Momentos estejam prontos quando ele declarar um Golpe.\n\nPara quem é\n\nEscolha Poseidon se você gosta de ler o adversário, negar os planos dele e vencer partidas longas. Ele recompensa paciência e atenção às contas de turnos e de cartas no deck do adversário.",
+  "featured": false,
+  "meta": {
+   "cover": "poseidon-v6-091",
+   "pair": "faction-poseidon",
+   "sources": [
+    "guia-do-jogo.md §26",
+    "§48",
+    "§54",
+    "§55",
+    "registry poseidon-001, poseidon-v6-091, -093, -095, -097"
+   ]
+  }
+ },
+ {
+  "slug": "faction-hades",
+  "lang": "en",
+  "kind": "guide",
+  "category": "Guide",
+  "title": "Faction guide: Hades",
+  "body": "Death is not the end for the armies of Hades. The Specters fall, return and fall again, and every loss feeds the Lord of the Underworld. The rulebook sums up the faction as persistence, sacrifice and return.\n\nIdentity\n\nHades treats the Tartarus as a second hand. Many of its cards bring Devotees back from the Tartarus, punish the opponent when Devotees are defeated, or carry Afterlife, an ability that only works while the card sits in your Tartarus. After an Afterlife ability resolves, the card goes to the Void. Returning from the Tartarus always needs an effect, and each physical card can return to play only once per round. Hades' Armor family is the Surplice.\n\nHades often pays with Soul. Many of the strongest effects ask you to lose Soul as a cost, so watch your own total as closely as the opponent's.\n\nThe God\n\nHades' Divine Power lets you lose Soul when one of your Devotees is defeated to draw a card and gain Latent Cosmo. His Divine Command shrinks an enemy Devotee's ATK and HP for your round. Once Awakened, every Devotee that returns from your Tartarus drains Soul from the enemy God into Hades.\n\nSignature cards\n\n• Wyvern Rhadamanthys: when he enters you may pay Soul to defeat a target Devotee, and Judge's Authority makes the opponent lose Soul as their Devotees are destroyed.\n• Thanatos, God of Death: a 7-cost Legendary that can defeat an enemy Devotee on entry and forces the opponent to sacrifice when your Devotees fall.\n• Hypnos, God of Sleep: puts two Seal counters on every enemy Devotee when he enters, if you pay the Soul.\n• Aries Shion, The Resurrected Saint: brings a Devotee back from your Tartarus to the Battlefield as he enters.\n\nCards like Minotaur Gordon show the other side of the plan: they keep working from the Tartarus through Afterlife.\n\nHow it plays\n\nTrade freely. Losing a Devotee is often a resource for Hades, not a setback. Build a Tartarus worth returning, spend Soul when it buys a decisive swing, and close with big returns and Soul drain.\n\nWho should play it\n\nHades suits players who like long-term planning, value from every card and a little risk with their own life total.",
+  "featured": false,
+  "meta": {
+   "cover": "hades-v6-181",
+   "pair": "faction-hades-pt",
+   "sources": [
+    "guia-do-jogo.md §26",
+    "§39",
+    "§40",
+    "§41",
+    "§54",
+    "§58",
+    "§62",
+    "registry hades-001, hades-v6-181, -191, -193, -197, -214"
+   ]
+  }
+ },
+ {
+  "slug": "faction-hades-pt",
+  "lang": "pt",
+  "kind": "guide",
+  "category": "Guia",
+  "title": "Guia de facção: Hades",
+  "body": "A morte não é o fim para os exércitos de Hades. Os Espectros caem, voltam e caem de novo, e cada perda alimenta o Senhor do Mundo dos Mortos. O livro de regras resume a facção como persistência, sacrifício e retorno.\n\nIdentidade\n\nHades trata o Tártaro como uma segunda mão. Muitas cartas dele trazem Devotos de volta do Tártaro, punem o adversário quando Devotos são derrotados ou têm Além-Túmulo, uma habilidade que só funciona enquanto a carta está no seu Tártaro. Depois que uma habilidade de Além-Túmulo resolve, a carta vai para o Vazio. Voltar do Tártaro sempre exige um efeito, e cada carta física só pode voltar ao campo uma vez por rodada. A família de Armadura de Hades é a Súplice.\n\nHades paga muito com Alma. Vários dos efeitos mais fortes pedem que você perca Alma como custo, então acompanhe o seu total tanto quanto o do adversário.\n\nO Deus\n\nO Poder Divino de Hades permite perder Alma quando um Devoto seu é derrotado para comprar uma carta e ganhar Cosmo Latente. O Comando Divino reduz o ATQ e os PV de um Devoto inimigo durante a sua rodada. Depois de Despertar, cada Devoto que volta do seu Tártaro drena Alma do Deus inimigo para Hades.\n\nCartas de destaque\n\n• Radamanthys de Wyvern: ao entrar, você pode pagar Alma para derrotar um Devoto alvo, e Autoridade do Juiz faz o adversário perder Alma conforme os Devotos dele são destruídos.\n• Thanatos, Deus da Morte: um Lendário de custo 7 que pode derrotar um Devoto inimigo ao entrar e obriga o adversário a sacrificar quando os seus Devotos caem.\n• Hypnos, Deus do Sono: põe dois marcadores de Selo em cada Devoto inimigo ao entrar, se você pagar a Alma.\n• Shion de Áries, o Cavaleiro Ressuscitado: traz um Devoto do seu Tártaro de volta ao Campo de Batalha quando entra.\n\nCartas como Gordon de Minotauro mostram o outro lado do plano: continuam trabalhando a partir do Tártaro com Além-Túmulo.\n\nComo joga\n\nTroque sem medo. Perder um Devoto muitas vezes é recurso para Hades, não prejuízo. Monte um Tártaro que valha a pena trazer de volta, gaste Alma quando ela compra uma virada decisiva e feche com grandes retornos e drenagem de Alma.\n\nPara quem é\n\nHades combina com quem gosta de planejar a longo prazo, de tirar valor de cada carta e de correr um pouco de risco com a própria vida.",
+  "featured": false,
+  "meta": {
+   "cover": "hades-v6-181",
+   "pair": "faction-hades",
+   "sources": [
+    "guia-do-jogo.md §26",
+    "§39",
+    "§40",
+    "§41",
+    "§54",
+    "§58",
+    "§62",
+    "registry hades-001, hades-v6-181, -191, -193, -197, -214"
+   ]
+  }
+ },
+ {
+  "slug": "faction-ares",
+  "lang": "en",
+  "kind": "guide",
+  "category": "Guide",
+  "title": "Faction guide: Ares",
+  "body": "Ares is the god of war, and his Berserkers want one thing: to reach the enemy God before the enemy is ready. The rulebook calls this faction aggression, combat and conquest.\n\nIdentity\n\nAres plays fast. Impulse lets a Devotee declare a Strike the same turn it enters, even against the God. Pierce pushes excess damage through a defending Devotee into the opposing Soul. Many Ares effects re-Prepare attackers or reward you for destroying enemy Devotees in combat. Ares' Armor family is the Warplate.\n\nThe price is your own life. Ares starts with less Soul than the other Gods, and several of his effects cost Soul or a friendly Devotee. You are trading safety for speed.\n\nThe God\n\nAres' Divine Power Prepares one of your Devotees again and gives it +1 ATK for the round, although that Devotee cannot Strike a God that round. His Divine Command deals 1 damage to an enemy Devotee at the cost of 1 Soul. Once Awakened, every enemy Devotee you destroy in a Strike also makes the enemy God lose Soul.\n\nSignature cards\n\n• Ethon Alcmenes: Impulse, 3 damage to an enemy Devotee on entry, and he Prepares again after defeating a Devotee in combat. A complete Ares turn on one card.\n• Lamia Lotis: drains the opponent's Latent Cosmo when she enters and whenever she damages a God, cutting off their answers.\n• Lamassu Lior: turns the fall of your own Berserkers into damage to enemy Devotees or the God.\n• Ouroboros Ofir: looks at the top three cards of your deck on entry and keeps the best one, helping Ares refill a hand that empties fast.\n\nHow it plays\n\nCurve out with cheap attackers, use Impulse to hit before the opponent can stabilise, and point damage at Guardians so the path to the God stays open. Count the opponent's Soul every turn: Ares wins by closing the game before it runs out of cards.\n\nWho should play it\n\nAres is for players who like tempo, pressure and decisive turns. It teaches combat math quickly, and few things feel better than an Impulse finisher on the last point of Soul.",
+  "featured": false,
+  "meta": {
+   "cover": "ares-v6-271",
+   "pair": "faction-ares-pt",
+   "sources": [
+    "guia-do-jogo.md §19",
+    "§26",
+    "§47",
+    "§54",
+    "§55",
+    "registry ares-001, ares-v6-271, -273, -275, -277"
+   ]
+  }
+ },
+ {
+  "slug": "faction-ares-pt",
+  "lang": "pt",
+  "kind": "guide",
+  "category": "Guia",
+  "title": "Guia de facção: Ares",
+  "body": "Ares é o deus da guerra, e os Berserkers dele querem uma coisa só: chegar ao Deus inimigo antes que o inimigo esteja pronto. O livro de regras define a facção como agressividade, combate e conquista.\n\nIdentidade\n\nAres joga rápido. Impulso permite que um Devoto declare um Golpe no mesmo turno em que entra, inclusive contra o Deus. Perfurar empurra o dano excedente de um Devoto defensor para a Alma adversária. Muitos efeitos de Ares preparam atacantes de novo ou recompensam você por destruir Devotos inimigos em combate. A família de Armadura de Ares é a Placa de Guerra.\n\nO preço é a sua própria vida. Ares começa com menos Alma que os outros Deuses, e vários efeitos dele custam Alma ou um Devoto aliado. Você troca segurança por velocidade.\n\nO Deus\n\nO Poder Divino de Ares Prepara de novo um Devoto seu e dá +1 ATQ a ele na rodada, mas esse Devoto não pode Golpear um Deus nessa rodada. O Comando Divino causa 1 de dano a um Devoto inimigo ao custo de 1 de Alma. Depois de Despertar, cada Devoto inimigo que você destrói num Golpe também faz o Deus inimigo perder Alma.\n\nCartas de destaque\n\n• Alcmenes de Éton: Impulso, 3 de dano a um Devoto inimigo ao entrar e ele se Prepara de novo depois de derrotar um Devoto em combate. Um turno completo de Ares numa carta só.\n• Lotis de Lâmia: tira Cosmo Latente do adversário quando entra e sempre que fere um Deus, cortando as respostas dele.\n• Lior de Lamassu: transforma a queda dos seus próprios Berserkers em dano contra Devotos inimigos ou contra o Deus.\n• Ofir de Ouroboros: olha as três cartas do topo do seu deck ao entrar e fica com a melhor, ajudando Ares a reabastecer uma mão que esvazia rápido.\n\nComo joga\n\nAbra com atacantes baratos, use Impulso para bater antes que o adversário se estabilize e aponte dano para os Guardiões, para manter aberto o caminho até o Deus. Conte a Alma do adversário a cada turno: Ares vence fechando a partida antes de ficar sem cartas.\n\nPara quem é\n\nAres é para quem gosta de ritmo, pressão e turnos decisivos. Ele ensina rápido a matemática do combate, e poucas coisas são melhores que um finalizador com Impulso no último ponto de Alma.",
+  "featured": false,
+  "meta": {
+   "cover": "ares-v6-271",
+   "pair": "faction-ares",
+   "sources": [
+    "guia-do-jogo.md §19",
+    "§26",
+    "§47",
+    "§54",
+    "§55",
+    "registry ares-001, ares-v6-271, -273, -275, -277"
+   ]
+  }
+ },
+ {
+  "slug": "faction-artemis",
+  "lang": "en",
+  "kind": "guide",
+  "category": "Guide",
+  "title": "Faction guide: Artemis",
+  "body": "Artemis is the huntress of the moon. Her Satellites train in silence, grow stronger every night and strike exactly where it hurts. The rulebook defines the faction as hunting, precision and strategic elimination.\n\nIdentity\n\nThe signature tool of Artemis is the Training counter. Each one gives a Devotee +1 ATK and +1 HP, the counters stack, and they stay as long as the Devotee is on the field. Artemis Devotees often get bonuses from each other, so a board of trained hunters quickly outgrows the opponent's. Artemis also bends the Cosmo rules a little: her God can place a non-Cosmoble card as a Base by paying Soul.\n\nArtemis' Armor family is the Moonplate. The faction is also home to the Angels, who wear Glory, an Armor family with no ranks.\n\nThe God\n\nArtemis' Divine Power lets you ignore the Cosmoble requirement when placing a Base, at the cost of 2 Soul. Her Divine Command gives a friendly Devotee +1 ATK and +1 HP for your round, and once she is Awakened it places a permanent Training counter instead. Awakened Artemis also gains extra Latent Cosmo, up to the normal limit of 3.\n\nSignature cards\n\n• Calisto: gives your other Artemis Devotees +1/+1 and draws you a card when you put Training counters on a friend.\n• Selene, Titaness of the Moon: another +1/+1 for the faction, and Training counters on two friendly Devotees at the start of every round.\n• The First Moon Guardian: a Guardian that trains itself whenever the enemy attacks one of your Devotees.\n• Icarus (Touma), Celestial Angel: Pierce, damage equal to his ATK to an enemy Devotee when he enters, and he grows with your Cosmo Bank.\n\nHow it plays\n\nDevelop early, protect your growing Devotees with Guardians, and use your Divine Command every round to keep the counters coming. Once your hunters outsize the enemy, pick off key Devotees and push Pierce damage into the God.\n\nWho should play it\n\nArtemis rewards players who enjoy building an engine and watching it scale. Plan a few turns ahead and she becomes very hard to catch.",
+  "featured": false,
+  "meta": {
+   "cover": "artemis-v6-361",
+   "pair": "faction-artemis-pt",
+   "sources": [
+    "guia-do-jogo.md §26",
+    "§48A",
+    "§54",
+    "registry artemis-001, artemis-v6-361, -373, -375, -433"
+   ]
+  }
+ },
+ {
+  "slug": "faction-artemis-pt",
+  "lang": "pt",
+  "kind": "guide",
+  "category": "Guia",
+  "title": "Guia de facção: Ártemis",
+  "body": "Ártemis é a caçadora da lua. As Satélites dela treinam em silêncio, ficam mais fortes a cada noite e atacam exatamente onde dói. O livro de regras define a facção como caça, precisão e eliminação estratégica.\n\nIdentidade\n\nA ferramenta marcante de Ártemis é o marcador de Treinamento. Cada um dá +1 ATQ e +1 PV a um Devoto, os marcadores se acumulam e ficam enquanto o Devoto estiver em campo. Os Devotos de Ártemis costumam dar bônus uns aos outros, então um campo de caçadoras treinadas logo supera o do adversário. Ártemis também flexiona um pouco as regras de Cosmo: o Deus dela pode colocar como Base uma carta não Cosmável pagando Alma.\n\nA família de Armadura de Ártemis é a Placa Lunar. A facção também abriga os Anjos, que vestem Glória, uma família de Armadura sem patentes.\n\nO Deus\n\nO Poder Divino de Ártemis permite ignorar a exigência de Cosmável ao colocar uma Base, ao custo de 2 de Alma. O Comando Divino dá +1 ATQ e +1 PV a um Devoto aliado durante a sua rodada e, depois que ela Desperta, põe um marcador de Treinamento permanente em vez disso. Ártemis Desperta também ganha Cosmo Latente extra, até o limite normal de 3.\n\nCartas de destaque\n\n• Calisto: dá +1/+1 aos seus outros Devotos de Ártemis e compra uma carta quando você põe marcadores de Treinamento num aliado.\n• Selene, Titânide da Lua: mais +1/+1 para a facção e marcadores de Treinamento em dois Devotos aliados no início de toda rodada.\n• A Primeira Guardiã Lunar: um Guardião que treina a si mesmo sempre que o inimigo ataca um dos seus Devotos.\n• Ícaro (Toma), Anjo Celeste: Perfurar, dano igual ao ATQ dele a um Devoto inimigo quando entra, e ele cresce com o seu Banco de Cosmo.\n\nComo joga\n\nDesenvolva cedo, proteja os Devotos que estão crescendo com Guardiões e use o Comando Divino em toda rodada para manter os marcadores chegando. Quando as suas caçadoras ficarem maiores que as do inimigo, elimine os Devotos importantes e empurre dano de Perfurar no Deus.\n\nPara quem é\n\nÁrtemis recompensa quem gosta de montar um motor e ver ele crescer. Planeje alguns turnos à frente e ela fica muito difícil de alcançar.",
+  "featured": false,
+  "meta": {
+   "cover": "artemis-v6-361",
+   "pair": "faction-artemis",
+   "sources": [
+    "guia-do-jogo.md §26",
+    "§48A",
+    "§54",
+    "registry artemis-001, artemis-v6-361, -373, -375, -433"
+   ]
+  }
+ },
+ {
+  "slug": "deckbuilding-basics",
+  "lang": "en",
+  "kind": "guide",
+  "category": "Guide",
+  "title": "Deckbuilding basics",
+  "body": "A good deck starts with a few simple rules and a clear plan. Here is what the rulebook asks of every deck and how to think about the rest.\n\nThe rules\n\n• 1 God and 1 Domain. Both start in play and are not part of the main deck.\n• A main deck of exactly 50 cards.\n• Up to 3 copies of the same card identity. Alternate art and revisions of the same card do not raise that limit.\n• Cards from your God's faction plus neutral cards.\n\nYour Domain and the splash\n\nYour Domain does not have to match your God. If the Domain is from another faction, two things change. First, the Domain's general line still works in full, but its Resonance line does not, because that line only works when your God shares the Domain's faction. Second, your main deck may include up to 15 cards from the Domain's faction. Neutral cards do not count toward those 15.\n\nIf God and Domain share a faction, the deck is that faction plus neutrals, and the Domain works completely. That is the simplest way to start.\n\nCosmoble cards\n\nYour Cosmo comes from your own cards. Once per turn you may place a Cosmoble card from your hand as a Cosmo Base. Most cards in the catalog are Cosmoble, but not all, so check before you count on a card as a Base. Cards with Hidden Cosmo are always Cosmoble and can even be played later from the Base, paying their Hidden Cosmo cost.\n\nEvery card you turn into a Base is a card you will not play, so a healthy deck has spare cards that are happy to become Cosmo in the early turns.\n\nThe Cosmo curve\n\nBecause you normally add only one Base per turn, your Cosmo grows by about one each turn. Build your curve around that:\n\n• Enough cheap Devotees to act on your first turns.\n• A solid middle of 3 and 4 cost cards, where most games are decided.\n• A few expensive finishers, not a hand full of them.\n\nRemember that Devotees and Armor are paid only with Base, while Moments as responses on the opponent's turn use Latent. A few cheap Moments make good use of the Latent you bank at the end of your turns.\n\nLegendary characters\n\nYou can control only one Devotee of each named character at a time among the warrior classes: Saints, Marines, Satellites, Specters, Berserkers and Angels. Running three copies of a key character is fine, but extra copies in hand wait their turn. Phoenix Ikki is the exception and may be controlled in any number.\n\nA first deck\n\nStart mono-faction with a matching Domain. Play 3 copies of your best cards, cut the clunky ones, and test. Your games will tell you what to change.",
+  "featured": false,
+  "meta": {
+   "cover": "athena-v6-062",
+   "pair": "deckbuilding-basics-pt",
+   "sources": [
+    "guia-do-jogo.md §2",
+    "§4",
+    "§4A",
+    "§63",
+    "§65"
+   ]
+  }
+ },
+ {
+  "slug": "deckbuilding-basics-pt",
+  "lang": "pt",
+  "kind": "guide",
+  "category": "Guia",
+  "title": "Montagem de deck: o básico",
+  "body": "Um bom deck começa com poucas regras e um plano claro. Veja o que o livro de regras pede de todo deck e como pensar o resto.\n\nAs regras\n\n• 1 Deus e 1 Domínio. Os dois começam em jogo e não fazem parte do deck principal.\n• Um deck principal de exatamente 50 cartas.\n• Até 3 cópias da mesma identidade de carta. Artes alternativas e revisões da mesma carta não aumentam esse limite.\n• Cartas da facção do seu Deus mais cartas neutras.\n\nO seu Domínio e o toque de outra cor\n\nO Domínio não precisa ser da facção do seu Deus. Se ele for de outra facção, duas coisas mudam. Primeiro, a linha geral do Domínio funciona inteira, mas a linha de Ressonância não, porque essa linha só vale quando o seu Deus é da mesma facção do Domínio. Segundo, o deck principal pode ter até 15 cartas da facção do Domínio. Cartas neutras não contam nesse limite.\n\nSe Deus e Domínio forem da mesma facção, o deck é dessa facção mais neutras, e o Domínio funciona inteiro. É o jeito mais simples de começar.\n\nCartas Cosmáveis\n\nO seu Cosmo vem das suas próprias cartas. Uma vez por turno você pode colocar uma carta Cosmável da mão como Cosmo Base. A maioria das cartas do catálogo é Cosmável, mas não todas, então confira antes de contar com uma carta como Base. Cartas com Cosmo Oculto são sempre Cosmáveis e podem até ser jogadas depois a partir da Base, pagando o custo de Cosmo Oculto.\n\nCada carta que vira Base é uma carta que você não vai jogar, então um deck saudável tem cartas de sobra que ficam bem como Cosmo nos primeiros turnos.\n\nA curva de Cosmo\n\nComo normalmente você adiciona só uma Base por turno, o seu Cosmo cresce cerca de um por turno. Monte a curva em cima disso:\n\n• Devotos baratos suficientes para agir nos primeiros turnos.\n• Um meio sólido de cartas de custo 3 e 4, onde a maioria das partidas se decide.\n• Alguns finalizadores caros, não uma mão cheia deles.\n\nLembre que Devotos e Armaduras são pagos só com Base, enquanto Momentos jogados como resposta no turno do adversário usam Latente. Alguns Momentos baratos aproveitam bem o Latente que você guarda no fim dos seus turnos.\n\nPersonagens lendários\n\nVocê só pode controlar um Devoto de cada personagem nomeado por vez nas classes de guerreiros: Cavaleiros, Marinas, Satélites, Espectros, Berserkers e Anjos. Ter três cópias de um personagem importante não tem problema, mas as cópias extras na mão esperam a vez. Ikki de Fênix é a exceção e pode estar em campo em qualquer número.\n\nUm primeiro deck\n\nComece monofacção com um Domínio da mesma facção. Jogue 3 cópias das suas melhores cartas, corte as que travam e teste. As suas partidas vão dizer o que mudar.",
+  "featured": false,
+  "meta": {
+   "cover": "athena-v6-062",
+   "pair": "deckbuilding-basics",
+   "sources": [
+    "guia-do-jogo.md §2",
+    "§4",
+    "§4A",
+    "§63",
+    "§65"
+   ]
+  }
+ },
+ {
+  "slug": "keywords-explained",
+  "lang": "en",
+  "kind": "guide",
+  "category": "Guide",
+  "title": "Keywords explained",
+  "body": "A keyword is a single word that sums up an ability. The official list has eight: Guardian, Pierce, Impulse, Nimble, Long Range, Hidden Cosmo, Afterlife and Immune. On a card, the first five sit together on the first line of the text. Here is what each one does, starting with the most common in the current catalog.\n\nGuardian\n\nWhile the opponent controls a Devotee with Guardian, Prepared or not, enemy Strikes must target a Guardian. Guardians protect your God and your weaker Devotees. Example: Aries Mu, Dragon Shiryu.\n\nPierce\n\nWhen a Devotee with Pierce starts a Strike against a Devotee, damage beyond the target's remaining HP is dealt to the Soul of the God that controls it. It does not work on retaliation. Example: Aquarius Camus, Sea Dragon Kanon.\n\nImpulse\n\nThe Devotee can declare a Strike on the turn it enters play, against any legal target, including the God. Normally a Devotee enters Unprepared and waits a turn. Example: Ethon Alcmenes.\n\nNimble\n\nThis is the game's \"flying\". A Nimble Devotee can only be targeted by Strikes from another Nimble Devotee, and it ignores Guardians without Nimble when it attacks. Effects that are not Strikes still reach it. Example: Siren Sorrento, Phoenix Ikki.\n\nLong Range\n\nWhen a Long Range Devotee starts a Strike, its damage is dealt first. If the target is destroyed, it does not retaliate. This advantage does not apply when the Devotee is defending. Example: Leo Aiolia, Seahorse Baian.\n\nImmune\n\nWritten as \"Immune to X\". Enemy sources of X cannot target the Devotee, not even with a Strike; their damage to it is prevented, including retaliation, and none of their effects affect it. Friendly sources are not affected.\n\nHidden Cosmo\n\nHidden Cosmo {X}: while this card is one of your Cosmo Bases, you may play it from the Base by paying X instead of its printed cost. The top card of your deck then takes its place as a face-down, Unprepared Base, so you do not lose a Base. Example: Phoenix Ikki.\n\nAfterlife\n\nAn activated ability that only works while the card is in your Tartarus. You may use it on your turn or as a response; as a response it is paid only with Latent. After it resolves, the card goes to the Void. Example: Minotaur Gordon.\n\nMarkers you will meet\n\nSeal and Training are counters, not keywords. A Devotee that receives Seal becomes Unprepared; at the start of its owner's turn it removes one counter and does not prepare. Each Training counter gives +1 ATK and +1 HP and they stack.\n\nRead the first line of every card you face. Knowing these eight words already wins a lot of games.",
+  "featured": false,
+  "meta": {
+   "cover": "athena-v6-011",
+   "pair": "keywords-explained-pt",
+   "sources": [
+    "guia-do-jogo.md Cap. IX §41–§48A",
+    "§4A",
+    "§40",
+    "§59"
+   ]
+  }
+ },
+ {
+  "slug": "keywords-explained-pt",
+  "lang": "pt",
+  "kind": "guide",
+  "category": "Guia",
+  "title": "Palavras-chave explicadas",
+  "body": "Uma palavra-chave é uma palavra só que resume uma habilidade. A lista oficial tem oito: Guardião, Perfurar, Impulso, Ágil, Longo Alcance, Cosmo Oculto, Além-Túmulo e Imune. Na carta, as cinco primeiras ficam juntas na primeira linha do texto. Veja o que cada uma faz, começando pelas mais comuns no catálogo atual.\n\nGuardião\n\nEnquanto o adversário controlar um Devoto com Guardião, Preparado ou não, os Golpes inimigos precisam mirar um Guardião. Guardiões protegem o seu Deus e os seus Devotos mais frágeis. Exemplo: Mu de Áries, Shiryu de Dragão.\n\nPerfurar\n\nQuando um Devoto com Perfurar inicia um Golpe contra um Devoto, o dano que passar dos PV restantes do alvo vai para a Alma do Deus que o controla. Não funciona no revide. Exemplo: Camus de Aquário, Kanon de Dragão Marinho.\n\nImpulso\n\nO Devoto pode declarar um Golpe no turno em que entra em campo, contra qualquer alvo válido, inclusive o Deus. Normalmente um Devoto entra Despreparado e espera um turno. Exemplo: Alcmenes de Éton.\n\nÁgil\n\nÉ o \"voar\" do jogo. Um Devoto Ágil só pode ser alvo de Golpe de outro Devoto Ágil e ignora Guardiões sem Ágil quando ataca. Efeitos que não são Golpe o alcançam normalmente. Exemplo: Sorento de Sirene, Ikki de Fênix.\n\nLongo Alcance\n\nQuando um Devoto com Longo Alcance inicia um Golpe, o dano dele é causado primeiro. Se o alvo for destruído, não revida. A vantagem não vale quando o Devoto está defendendo. Exemplo: Aiolia de Leão, Baian de Cavalo Marinho.\n\nImune\n\nEscreve-se \"Imune a X\". Fontes inimigas X não podem mirar o Devoto, nem com Golpe; o dano delas é prevenido, inclusive o revide, e nenhum efeito delas o afeta. Fontes aliadas não são afetadas.\n\nCosmo Oculto\n\nCosmo Oculto {X}: enquanto esta carta for uma das suas Cosmo Bases, você pode jogá-la a partir da Base pagando X no lugar do custo impresso. A carta do topo do seu deck entra no lugar como Base virada para baixo e Despreparada, então você não perde Base. Exemplo: Ikki de Fênix.\n\nAlém-Túmulo\n\nUma habilidade ativada que só funciona enquanto a carta está no seu Tártaro. Você pode usá-la no seu turno ou como resposta; como resposta, ela é paga só com Latente. Depois de resolver, a carta vai para o Vazio. Exemplo: Gordon de Minotauro.\n\nMarcadores que você vai encontrar\n\nSelo e Treinamento são marcadores, não palavras-chave. Um Devoto que recebe Selo fica Despreparado; no início do turno do dono, ele tira um marcador e não se prepara. Cada marcador de Treinamento dá +1 ATQ e +1 PV, e eles se acumulam.\n\nLeia a primeira linha de toda carta que enfrentar. Só conhecer estas oito palavras já ganha muitas partidas.",
+  "featured": false,
+  "meta": {
+   "cover": "athena-v6-011",
+   "pair": "keywords-explained",
+   "sources": [
+    "guia-do-jogo.md Cap. IX §41–§48A",
+    "§4A",
+    "§40",
+    "§59"
+   ]
+  }
+ },
+ {
+  "slug": "first-online-duels",
+  "lang": "en",
+  "kind": "guide",
+  "category": "Guide",
+  "title": "Your first online duels: tips",
+  "body": "Your first games against real opponents can feel fast. These tips are general strategy, not rules, and they will help you settle in.\n\nThe opening hand\n\nYou draw 7 cards and get one free mulligan. Ask two questions about your hand: can I place a Cosmo Base on each of my first turns, and do I have something cheap to play? A hand full of expensive cards or with nothing Cosmoble is usually worth sending back. A hand with Bases and two or three early plays is usually a keep.\n\nThink about which cards become Bases. A card you cannot cast for many turns, or a spare copy, often does more as Cosmo today.\n\nTempo\n\nThe player who uses their Cosmo every turn usually gets ahead. Try to spend most of your Cosmo each turn, and remember that Bases you leave Prepared turn into Latent at your End Phase. That is not wasted: Latent is how you answer on the opponent's turn. The bank keeps at most 3, so do not hold more than you can use.\n\nSince Devotees enter Unprepared, a Devotee you play this turn will usually attack next turn. Playing threats early matters more than playing them big.\n\nTrading and damage\n\nCombat damage is simultaneous and it stays marked. Before each Strike, check both numbers: what you deal and what comes back. A Devotee that already took damage is an easy target, and a damaged attacker can die to the retaliation. Long Range changes this math, so look for it.\n\nWhen to hit the God\n\nHitting the God wins games, but leaving their best Devotee alive can lose them. A simple habit: if a trade removes a threat cheaply, trade; if the board is safe, push damage to the Soul. Remember that Guardians must be dealt with first.\n\nReading the opponent\n\n• Look at their God and Domain: they tell you the faction plan before the first card.\n• Watch their Latent Cosmo. If they have Latent at the start of your turn, they can respond with Moments.\n• Count their Soul and yours every turn, and ask how many turns each of you needs.\n• Pay attention to their Tartarus, especially against Hades.\n\nGood habits\n\nTake your time on each declaration; everything you play goes on the chain and can be answered, so make the play that is still good if they respond. And after each game, win or lose, think of one decision you would change. That is the fastest way to climb.",
+  "featured": false,
+  "meta": {
+   "cover": "athena-v6-009",
+   "pair": "first-online-duels-pt",
+   "sources": [
+    "guia-do-jogo.md §5",
+    "§12",
+    "§21",
+    "§55",
+    "§56",
+    "§60"
+   ]
+  }
+ },
+ {
+  "slug": "first-online-duels-pt",
+  "lang": "pt",
+  "kind": "guide",
+  "category": "Guia",
+  "title": "Seus primeiros duelos online: dicas",
+  "body": "As primeiras partidas contra adversários reais podem parecer rápidas. Estas dicas são estratégia geral, não regras, e ajudam você a se ambientar.\n\nA mão inicial\n\nVocê compra 7 cartas e tem um mulligan gratuito. Faça duas perguntas sobre a mão: consigo colocar uma Cosmo Base em cada um dos meus primeiros turnos, e tenho algo barato para jogar? Uma mão cheia de cartas caras ou sem nada Cosmável geralmente vale ser trocada. Uma mão com Bases e duas ou três jogadas iniciais geralmente fica.\n\nPense em quais cartas viram Base. Uma carta que você não vai conseguir jogar por muitos turnos, ou uma cópia sobrando, muitas vezes rende mais como Cosmo hoje.\n\nRitmo\n\nQuem usa o Cosmo em todo turno costuma sair na frente. Tente gastar a maior parte do seu Cosmo a cada turno e lembre que as Bases que ficam Preparadas viram Latente na sua fase final. Isso não é desperdício: o Latente é como você responde no turno do adversário. O banco guarda no máximo 3, então não segure mais do que vai usar.\n\nComo os Devotos entram Despreparados, um Devoto jogado neste turno normalmente ataca no próximo. Jogar ameaças cedo importa mais do que jogá-las grandes.\n\nTrocas e dano\n\nO dano de combate é simultâneo e fica marcado. Antes de cada Golpe, confira os dois números: o que você causa e o que volta. Um Devoto que já levou dano é um alvo fácil, e um atacante ferido pode morrer no revide. Longo Alcance muda essa conta, então fique de olho.\n\nQuando bater no Deus\n\nBater no Deus ganha partidas, mas deixar vivo o melhor Devoto do adversário pode perdê-las. Um hábito simples: se a troca remove uma ameaça barato, troque; se o campo está seguro, empurre dano na Alma. Lembre que os Guardiões precisam ser resolvidos primeiro.\n\nLendo o adversário\n\n• Olhe o Deus e o Domínio dele: eles mostram o plano da facção antes da primeira carta.\n• Observe o Cosmo Latente dele. Se ele tiver Latente no início do seu turno, pode responder com Momentos.\n• Conte a Alma dele e a sua a cada turno e pergunte quantos turnos cada um precisa.\n• Preste atenção no Tártaro dele, principalmente contra Hades.\n\nBons hábitos\n\nNão tenha pressa em cada declaração; tudo o que você joga vai para a pilha e pode ser respondido, então faça a jogada que continua boa mesmo se ele responder. E depois de cada partida, ganhando ou perdendo, pense numa decisão que você mudaria. É o jeito mais rápido de subir.",
+  "featured": false,
+  "meta": {
+   "cover": "athena-v6-009",
+   "pair": "first-online-duels",
+   "sources": [
+    "guia-do-jogo.md §5",
+    "§12",
+    "§21",
+    "§55",
+    "§56",
+    "§60"
+   ]
+  }
+ },
+ {
+  "slug": "sanctuary-glossary",
+  "lang": "en",
+  "kind": "guide",
+  "category": "Guide",
+  "title": "Glossary of the Sanctuary",
+  "body": "Saint Seiya TCG has its own vocabulary, and it is played in English and Brazilian Portuguese. This glossary pairs the key terms in both languages, so you can follow the cards, the rulebook and other players in either one.\n\nEach entry shows the English term, the official Portuguese term and a short meaning.\n\nThe essentials\n\n• God (PT: Deus): the deity you command; it has Soul and starts in play.\n• Soul (PT: Alma): your God's life; at zero, you lose.\n• Devotee (PT: Devoto): a character that fights for your God, with ATK and HP.\n• Domain (PT: Domínio): the God's realm; starts in play with its own abilities.\n• Cosmo Base (PT: Cosmo Base): a Cosmoble card placed to pay 1 Cosmo per turn.\n• Latent Cosmo (PT: Cosmo Latente): banked Cosmo, up to 3, used to respond on the opponent's turn.\n• Cosmoble (PT: Cosmável): a card that can be placed as a Cosmo Base.\n• Strike (PT: Golpe): the attack a Devotee declares against a God or a Devotee.\n• ATK / HP (PT: ATQ / PV): a Devotee's damage and how much damage it can take.\n• Prepared / Unprepared (PT: Preparado / Despreparado): whether a Devotee can declare a Strike.\n• Retaliation (PT: Revide): the damage a defending Devotee deals back; Gods never retaliate.\n• Tartarus (PT: Tártaro): where destroyed Devotees and discarded cards go.\n• Void (PT: Vazio): the exile zone; Afterlife does not work there.\n• Chain (PT: Pilha): where played cards and abilities wait to resolve and can be answered.\n• Technique (PT: Técnica): a card played only on your own turn.\n• Moment (PT: Momento): a card you may also play as a response, even on the opponent's turn.\n• Equipment / Armor (PT: Equipamento / Armadura): gear for a Devotee; each Devotee has one Armor slot.\n• Resonance (PT: Ressonância): links a card to a character, equipping it for free and turning on its Resonance abilities.\n• Awaken (PT: Despertar): a stronger state of a Devotee or God, described on the card.\n• Ultimate (PT: Supremo): an extraordinary ability, paid only with Base, once per character per game.\n\nA note on names\n\nCard types, keywords and zones always use these official terms, in every screen and on every card. Character names follow the classic Brazilian dub in Portuguese, so Pegasus Seiya is Seiya de Pégaso and Aries Mu is Mu de Áries.\n\nKeywords have their own guide. In short: Guardian is Guardião, Nimble is Ágil, Long Range is Longo Alcance, Pierce is Perfurar, Impulse is Impulso, Hidden Cosmo is Cosmo Oculto, Afterlife is Além-Túmulo and Immune is Imune.\n\nKeep this page close during your first games. After a few duels these words become second nature.",
+  "featured": false,
+  "meta": {
+   "cover": "athena-v6-065",
+   "pair": "sanctuary-glossary-pt",
+   "sources": [
+    "glossario-pt-br.md",
+    "guia-do-jogo.md §1",
+    "§3",
+    "§4",
+    "§5",
+    "§9",
+    "§21",
+    "§27",
+    "§36",
+    "§38",
+    "§39",
+    "§40",
+    "§56",
+    "§61",
+    "§62"
+   ]
+  }
+ },
+ {
+  "slug": "sanctuary-glossary-pt",
+  "lang": "pt",
+  "kind": "guide",
+  "category": "Guia",
+  "title": "Glossário do Santuário",
+  "body": "O Saint Seiya TCG tem vocabulário próprio e é jogado em inglês e em português do Brasil. Este glossário junta os termos principais nas duas línguas, para você acompanhar as cartas, o livro de regras e os outros jogadores em qualquer uma delas.\n\nCada verbete traz o termo oficial em português, o termo em inglês e um significado curto.\n\nO essencial\n\n• Deus (EN: God): a divindade que você comanda; tem Alma e começa em jogo.\n• Alma (EN: Soul): a vida do seu Deus; em zero, você perde.\n• Devoto (EN: Devotee): um personagem que luta pelo seu Deus, com ATQ e PV.\n• Domínio (EN: Domain): o reino do Deus; começa em jogo com habilidades próprias.\n• Cosmo Base (EN: Cosmo Base): carta Cosmável colocada para pagar 1 Cosmo por turno.\n• Cosmo Latente (EN: Latent Cosmo): Cosmo guardado, até 3, usado para responder no turno do adversário.\n• Cosmável (EN: Cosmoble): carta que pode ser colocada como Cosmo Base.\n• Golpe (EN: Strike): o ataque que um Devoto declara contra um Deus ou um Devoto.\n• ATQ / PV (EN: ATK / HP): o dano de um Devoto e quanto dano ele aguenta.\n• Preparado / Despreparado (EN: Prepared / Unprepared): se um Devoto pode ou não declarar um Golpe.\n• Revide (EN: Retaliation): o dano que o Devoto defensor devolve; Deuses nunca revidam.\n• Tártaro (EN: Tartarus): para onde vão Devotos destruídos e cartas descartadas.\n• Vazio (EN: Void): a zona de exílio; Além-Túmulo não funciona lá.\n• Pilha (EN: Chain): onde cartas e habilidades esperam para resolver e podem ser respondidas.\n• Técnica (EN: Technique): carta jogada só no seu turno.\n• Momento (EN: Moment): carta que também pode ser jogada como resposta, inclusive no turno do adversário.\n• Equipamento / Armadura (EN: Equipment / Armor): equipamento de um Devoto; cada Devoto tem um espaço de Armadura.\n• Ressonância (EN: Resonance): liga uma carta a um personagem, equipando sem custo e ligando as habilidades de Ressonância.\n• Despertar (EN: Awaken): um estado mais forte de um Devoto ou Deus, descrito na carta.\n• Supremo (EN: Ultimate): uma habilidade extraordinária, paga só com Base, uma vez por personagem por partida.\n\nUma nota sobre os nomes\n\nTipos de carta, palavras-chave e zonas usam sempre estes termos oficiais, em todas as telas e em todas as cartas. Os nomes dos personagens seguem a dublagem clássica brasileira, então Pegasus Seiya é Seiya de Pégaso e Aries Mu é Mu de Áries.\n\nAs palavras-chave têm um guia próprio. Em resumo: Guardian é Guardião, Nimble é Ágil, Long Range é Longo Alcance, Pierce é Perfurar, Impulse é Impulso, Hidden Cosmo é Cosmo Oculto, Afterlife é Além-Túmulo e Immune é Imune.\n\nDeixe esta página por perto nas primeiras partidas. Depois de alguns duelos, estas palavras ficam naturais.",
+  "featured": false,
+  "meta": {
+   "cover": "athena-v6-065",
+   "pair": "sanctuary-glossary",
+   "sources": [
+    "glossario-pt-br.md",
+    "guia-do-jogo.md §1",
+    "§3",
+    "§4",
+    "§5",
+    "§9",
+    "§21",
+    "§27",
+    "§36",
+    "§38",
+    "§39",
+    "§40",
+    "§56",
+    "§61",
+    "§62"
+   ]
+  }
+ }
+]

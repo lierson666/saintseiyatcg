@@ -346,9 +346,10 @@ def list_content(h):
         sql += " and status='published' and publish_at <= ?"
         args.append(now())
     for key in ('kind', 'placement', 'category', 'lang'):
-        if q.get(key):
-            sql += f' and {key} = ?'
-            args.append(q[key])
+        if q.get(key):  # kind aceita lista: ?kind=news,guide (Notícias mostra notícias e guias)
+            values = q[key].split(',')[:8]
+            sql += f' and {key} in ({",".join("?" * len(values))})'
+            args.extend(values)
     rows = conn.execute(sql + ' order by featured desc, coalesce(publish_at, updated_at) desc limit 50', args).fetchall()
     names = public_names(r['author_id'] for r in rows)
     h.send_json(200, {'items': [content_row(r, names) for r in rows]})
@@ -365,14 +366,17 @@ def read_content(h, slug):
 
 
 def home_feed(h):
-    def items(kind, n):
-        rows = conn.execute("select * from content where kind=? and status='published' and publish_at<=? order by featured desc, publish_at desc limit ?", (kind, now(), n)).fetchall()
+    lang = h.query().get('lang')
+    lang = lang if lang in ('en', 'pt') else None
+
+    def items(kind, n):  # com ?lang= só o idioma do site; sem, todos
+        rows = conn.execute("select * from content where kind=? and status='published' and publish_at<=? and (? is null or lang = ?) order by featured desc, publish_at desc limit ?", (kind, now(), lang, lang, n)).fetchall()
         names = public_names(r['author_id'] for r in rows)
         return [content_row(r, names) for r in rows]
     decks = conn.execute("select id, name, god, archetype, owner_id from shared_decks where visibility='public' order by (select count(*) from deck_favorites f where f.shared_id=shared_decks.id) desc, updated_at desc limit 6").fetchall()
     names = public_names(d['owner_id'] for d in decks)
     events = conn.execute("select id, name, format, category, status, starts_at from tournaments where visibility='public' and status != 'closed' order by created_at desc limit 6").fetchall()
-    h.send_json(200, {'news': items('news', 6), 'balance': items('balance', 4),
+    h.send_json(200, {'news': items('news', 6), 'guides': items('guide', 10), 'balance': items('balance', 4),
                       'decks': [{'id': d['id'], 'name': d['name'], 'god': d['god'], 'archetype': d['archetype'], 'author': names.get(d['owner_id'])} for d in decks],
                       'tournaments': [dict(e) for e in events]})
 
