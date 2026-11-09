@@ -2,7 +2,7 @@
   "projeto": "guardian-depths",
   "assetId": "POS-MON-V10-002",
   "versao": "v1-1",
-  "data": "2026-11-08T19:23:29",
+  "data": "2026-11-08T22:35:13",
   "status": "TECHNICALLY_VALIDATED / ART_REVIEW_PENDING",
   "tecnico": {
     "status": "TECHNICALLY_VALIDATED",
@@ -50,6 +50,12 @@
         "detalhe": "5.26 × 8.97 × 3.90 m, pivô y -0.000"
       },
       {
+        "id": "lod0-mapas",
+        "nome": "lod0: nenhum mapa vazio, preto ou divergente do LOD0",
+        "ok": true,
+        "detalhe": "ok"
+      },
+      {
         "id": "lod1-estrutura",
         "nome": "lod1: auditoria estrutural limpa",
         "ok": true,
@@ -84,6 +90,12 @@
         "nome": "lod1: caixa de cada peça a até 10 cm da do LOD0",
         "ok": true,
         "detalhe": "pior: DEPTHS__DETAILS 0.00 m"
+      },
+      {
+        "id": "lod1-mapas",
+        "nome": "lod1: nenhum mapa vazio, preto ou divergente do LOD0",
+        "ok": true,
+        "detalhe": "ok"
       },
       {
         "id": "lod2-estrutura",
@@ -122,6 +134,12 @@
         "detalhe": "pior: DEPTHS__PEDESTAL 0.08 m"
       },
       {
+        "id": "lod2-mapas",
+        "nome": "lod2: nenhum mapa vazio, preto ou divergente do LOD0",
+        "ok": true,
+        "detalhe": "ok"
+      },
+      {
         "id": "mobile-estrutura",
         "nome": "mobile: auditoria estrutural limpa",
         "ok": true,
@@ -156,6 +174,12 @@
         "nome": "mobile: caixa de cada peça a até 10 cm da do LOD0",
         "ok": true,
         "detalhe": "pior: DEPTHS__DETAILS 0.00 m"
+      },
+      {
+        "id": "mobile-mapas",
+        "nome": "mobile: nenhum mapa vazio, preto ou divergente do LOD0",
+        "ok": true,
+        "detalhe": "ok"
       },
       {
         "id": "mobile-texturas",
@@ -265,7 +289,7 @@
     },
     {
       "lod": "mobile",
-      "arquivo": "arena-forge/assets/poseidon-depths-v1-1/guardian-depths-mobile.glb",
+      "arquivo": "arena-forge/assets/poseidon-depths-v1-1/guardian-depths-mobile-r2.glb",
       "tri": 8668,
       "malhas": 9,
       "materiais": 3,
@@ -274,8 +298,8 @@
       "largura": 5.26,
       "profundidade": 3.9,
       "pivoY": 0,
-      "sha256": "44de9eff8a98e23fe9cc494522006031da73c19c62872a50d772847f298071c2",
-      "bytes": 519732,
+      "sha256": "867f0b4680b67521d038d62bfc8f15a978b8d44b3e913d07606a8138623b5c8c",
+      "bytes": 906120,
       "gate": "STRUCTURE_VALID_ART_REVIEW_PENDING"
     }
   ],

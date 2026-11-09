@@ -11,7 +11,8 @@ import {attachPoseidonPaintedMaps} from './poseidon-painted-maps.js';
 import {attachPoseidonBattlefieldPainting} from './poseidon-battlefield-paint.js';
 import {addPoseidonV6Sculptures} from './poseidon-v6-sculpture.js';
 import {loadPoseidonSculptGLB} from './poseidon-v7-glb-loader.js';
-import {GUARDIAN_DEPTHS,depthsClayFlag,depthsUrl,guardianFlag,guardianUrl, loadGuardianTides} from './poseidon-v13-guardian.js';
+import {GUARDIAN_DEPTHS,GUARDIAN_TIDES,depthsClayFlag,depthsUrl,depthsVersion,guardianFlag,guardianSupport,guardianUrl,guardianVersion,sculptLodOverride} from './poseidon-v13-guardian.js';
+import {createSculptureManager} from './sculpture-manager.js';
 import * as V15 from './poseidon-v15-architecture.js';
 // Abertura padrão de Poseidon (editável no Arena Forge → Produção → Cinemática; o jogo lê arena-forge/cinematics/poseidon.json).
 // Cada chave: pos, look (ponto focal), fov, roll (°), dur (ms até chegar nela; na primeira, tempo parado no plano de abertura), ease, stage, light (1 = luz da partida), vfx, sound.
@@ -241,21 +242,34 @@ export function createPoseidonPalace(THREE, {quality = 'high', reduceMotion = fa
     :Promise.resolve(null);
 
   // V13 (só desenvolvimento): Guardian of the Tides em (-10.8, 4.41, -34.8) com apoio sob o pedestal, apenas com ?sculptV13=1.
-  let guardianV13=null,guardianV13Disposed=false;
-  if(guardianFlag()){
-    root.userData.guardianV13='loading';
-    loadGuardianTides(THREE,{parent:G.landmark,material:M.platform,baseUrl:import.meta.url,url:guardianUrl(quality)})
-      .then(v=>{if(guardianV13Disposed){v.dispose();return;}guardianV13=v;root.userData.guardianV13='ready';root.userData.guardianV13Url=guardianUrl(quality);})
-      .catch(err=>{root.userData.guardianV13='unavailable';console.warn('[POSEIDON V13] guardian GLB not loaded',err);});
+  // V15.2 · Sculpture Manager: os guardiões (só desenvolvimento, atrás das flags) entram pelo gerenciador central de esculturas.
+  // Variantes de LOD vêm do catálogo (arena-forge/assets/sculpture-catalog.json, gerado de projects/*.json); sem catálogo, o
+  // padrão da V15.1 (mesma pasta, -lodN / -mobile-r2). Apoio de mármore sob o pedestal é arquitetura: entra já e não troca de LOD.
+  const guardSpecs=[];
+  if(guardianFlag()) guardSpecs.push({key:'guardianV13',id:'guardian-tides',version:guardianVersion(),position:GUARDIAN_TIDES.position,name:'GUARDIAN_TIDES_GLB',url:guardianUrl()});
+  if(depthsClayFlag()){const v=depthsVersion();guardSpecs.push({key:'guardianB',id:'guardian-depths',version:v,position:GUARDIAN_DEPTHS.position,url:depthsUrl(),
+    name:v==='clay'?'GUARDIAN_DEPTHS_CLAY_DEV':v==='v1-1'?'GUARDIAN_DEPTHS_V11_DEV':'GUARDIAN_DEPTHS_V1_DEV'});}
+  const sculpt=guardSpecs.length?createSculptureManager(THREE,{parent:G.landmark,baseUrl:import.meta.url,profile:quality,lodOverride:sculptLodOverride()}):null;
+  const supports=guardSpecs.map(g=>{const s=guardianSupport(THREE,M.platform,g.position);G.landmark.add(s.root);return s;});
+  let battleMode=false,battleTimer=0;
+  const keepInBattle=()=>sculpt&&sculpt.profile!=='phone'; // política: no celular a partida solta os guardiões; no desktop ficam (revisita barata)
+  if(sculpt){
+    for(const g of guardSpecs) root.userData[g.key]='loading';
+    const fallback=url=>/-lod0\.glb$/.test(url)?{lod0:url,lod1:url.replace(/-lod0\.glb$/,'-lod1.glb'),lod2:url.replace(/-lod0\.glb$/,'-lod2.glb'),mobile:url.replace(/-lod0\.glb$/,'-mobile-r2.glb')}:{lod0:url};
+    const catalog=(typeof fetch==='function')?fetch(new URL('./assets/sculpture-catalog.json',import.meta.url).href,{cache:'no-cache'}).then(r=>r.ok?r.json():null).catch(()=>null):Promise.resolve(null);
+    root.userData.sculptures='loading';
+    catalog.then(cat=>{
+      for(const g of guardSpecs){
+        const vs=cat?.esculturas?.[g.id]?.versoes?.[g.version]?.variantes;
+        const variants=vs?Object.fromEntries(Object.entries(vs).filter(([,e])=>e.elegivel).map(([l,e])=>[l,e.arquivo.replace(/^arena-forge\//,'./')])):fallback(g.url);
+        sculpt.register({id:g.id,project:g.id,version:g.version,variants,position:g.position,name:g.name});
+      }
+      root.userData.sculptures=cat?'catalog':'fallback';
+      return Promise.all(guardSpecs.map(g=>sculpt.require('cinematic',g.id).then(()=>{const it=sculpt.get(g.id);
+        root.userData[g.key]=it.root?'ready':'unavailable';root.userData[g.key+'Url']=it.url;})));
+    });
   }
-  // Posição B (só desenvolvimento): Guardião das Profundezas, apenas com ?sculptDepthsClay=1 (argila), ?sculptDepthsV1=1 (V1) ou ?sculptDepthsV11=1 (V1.1).
-  let guardianB=null,guardianBDisposed=false;
-  if(depthsClayFlag()){
-    root.userData.guardianB='loading';
-    loadGuardianTides(THREE,{parent:G.landmark,material:M.platform,baseUrl:import.meta.url,...GUARDIAN_DEPTHS,url:depthsUrl(quality)})
-      .then(v=>{if(guardianBDisposed){v.dispose();return;}v.root.name=depthsUrl(quality)===GUARDIAN_DEPTHS.url?'GUARDIAN_DEPTHS_CLAY_DEV':depthsUrl(quality).includes('-v1-1/')?'GUARDIAN_DEPTHS_V11_DEV':'GUARDIAN_DEPTHS_V1_DEV';guardianB=v;root.userData.guardianB='ready';root.userData.guardianBUrl=depthsUrl(quality);})
-      .catch(err=>{root.userData.guardianB='unavailable';console.warn('[POSEIDON] guardian B not loaded',err);});
-  }
+  const syncBattle=()=>{if(!sculpt||!battleMode)return;if(keepInBattle())sculpt.require('battle');else sculpt.release('battle');};
 
   // V15 · Pedestais dos guardiões presos à arquitetura: cornija de coroamento e moldura de base nos quatro lados,
   // faixa de ouro e painel rebaixado com moldura dourada na frente. Envolve o apoio de mármore (3,8 × 4,4 m) sem mexer no GLB.
@@ -646,6 +660,12 @@ export function createPoseidonPalace(THREE, {quality = 'high', reduceMotion = fa
   root.userData={...root.userData,preset:'poseidon-palace-canonical-v1',beauty:'v7-glb-pipeline',source:'Saint Seiya reference study',protectedGameplay:false,quality,detailObjects:detailV4.count,sculptureObjects:sculptureV6.count};
   root.userData.palaceV15=v15?'on':'off';
   return {group:root,paint,glbV7Ready,capV8Ready,portalV9Ready,v15,
+    // V15.2 · ciclo das esculturas: perfil gráfico em tempo real, cinemática (prepara antes de revelar) e partida (residência).
+    sculptures:sculpt,
+    setQuality(q){ if(!sculpt) return Promise.resolve(); const p=sculpt.setProfile(q); syncBattle(); return p; },
+    prepareCinematic(){ clearTimeout(battleTimer); battleMode=false; return sculpt?sculpt.require('cinematic'):Promise.resolve(); },
+    onCinematicEnd(){ if(!sculpt) return; battleMode=true; clearTimeout(battleTimer); syncBattle();
+      battleTimer=setTimeout(()=>{ if(battleMode) sculpt.release('cinematic'); },1500); }, // folga: a transição para o campo ainda pode olhar os guardiões
     // V15: arte de material (uniformes compartilhados); null sem ?palaceV15=1.
     art:artU,setArt(p){if(artU)V15.applyArt(artU,p);},readArt(){return artU?V15.readArt(artU):null;},
     groups:G,
@@ -653,5 +673,5 @@ export function createPoseidonPalace(THREE, {quality = 'high', reduceMotion = fa
     setLight(k){ hemi.intensity=base.hemi*k; key.intensity=base.key*k; rim.intensity=base.rim*k; warm.intensity=base.warm*k; front.intensity=base.front*k; rakeL.intensity=base.rake*k; },
     update(t){ if(reduceMotion) return; shared.uTime.value=t; beams.forEach((b,i)=>{b.rotation.z=b.userData.tilt+Math.sin(t*.07+i*1.7)*.012;});
       flames.forEach((f,i)=>{const k=1+Math.sin(t*5+i*2.1)*.08+Math.sin(t*11.3+i)*.04;const u=f.userData.s||[1,1];f.scale.set(u[0],k*u[1],u[0]);}); },
-    dispose(){ guardianV13Disposed=true;guardianV13?.dispose(); guardianBDisposed=true;guardianB?.dispose(); portalV9Disposed=true;if(portalInstances)G.landmark.remove(portalInstances);portalV9?.dispose();capV8Disposed=true;if(capInstances)G.landmark.remove(capInstances);capV8?.dispose();v7Disposed=true;glbV7?.dispose();paintedMaps?.dispose();battlePainting?.dispose();root.traverse(n=>{ if(n.isMesh && n.geometry!==unitBox) n.geometry.dispose(); }); new Set(owned).forEach(o=>o.dispose()); root.material.dispose(); }};
+    dispose(){ clearTimeout(battleTimer);sculpt?.dispose();supports.forEach(s=>{G.landmark.remove(s.root);s.dispose();}); portalV9Disposed=true;if(portalInstances)G.landmark.remove(portalInstances);portalV9?.dispose();capV8Disposed=true;if(capInstances)G.landmark.remove(capInstances);capV8?.dispose();v7Disposed=true;glbV7?.dispose();paintedMaps?.dispose();battlePainting?.dispose();root.traverse(n=>{ if(n.isMesh && n.geometry!==unitBox) n.geometry.dispose(); }); new Set(owned).forEach(o=>o.dispose()); root.material.dispose(); }};
 }

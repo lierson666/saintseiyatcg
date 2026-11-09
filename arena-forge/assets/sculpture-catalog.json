@@ -1,0 +1,1018 @@
+{
+ "gerado": "tools/sculpture_catalog.py",
+ "esculturas": {
+  "guardian-depths": {
+   "nome": "Guardião das Profundezas",
+   "atual": "v1-1",
+   "posicao": {
+    "lado": "direita",
+    "ancora": [
+     10.8,
+     4.41,
+     -34.8
+    ]
+   },
+   "versoes": {
+    "v1": {
+     "flag": "sculptDepthsV1",
+     "variantes": {
+      "lod0": {
+       "projeto": "guardian-depths",
+       "nome": "Guardião das Profundezas",
+       "versao": "v1",
+       "lod": "lod0",
+       "arquivo": "arena-forge/assets/poseidon-depths-v1/guardian-depths-lod0.glb",
+       "tri": 28993,
+       "texturas": 9,
+       "texturaMax": 2048,
+       "memoriaTexturaMB": 143.6,
+       "bytes": 3481368,
+       "sha256": "94480011ec70e41eb2ba7e151107237703fc8d70e58ecea55f04a2846c6462f0",
+       "hashOk": true,
+       "orcamentoTri": [
+        15000,
+        30000
+       ],
+       "orcamentoOk": true,
+       "texturaOk": true,
+       "mapas": {
+        "ok": true,
+        "problemas": []
+       },
+       "estado": "TECHNICALLY_VALIDATED",
+       "elegivel": true,
+       "artistico": "ART_REVIEW_PENDING"
+      },
+      "lod1": {
+       "projeto": "guardian-depths",
+       "nome": "Guardião das Profundezas",
+       "versao": "v1",
+       "lod": "lod1",
+       "arquivo": "arena-forge/assets/poseidon-depths-v1/guardian-depths-lod1.glb",
+       "tri": 8692,
+       "texturas": 9,
+       "texturaMax": 1024,
+       "memoriaTexturaMB": 35.9,
+       "bytes": 1325052,
+       "sha256": "2533361023f1ead2e6a0a435b9f98c5f889a19bd4ca40f3dc06a1166106a923e",
+       "hashOk": true,
+       "orcamentoTri": [
+        5000,
+        10000
+       ],
+       "orcamentoOk": true,
+       "texturaOk": true,
+       "mapas": {
+        "ok": true,
+        "problemas": []
+       },
+       "estado": "TECHNICALLY_VALIDATED",
+       "elegivel": true,
+       "artistico": "ART_REVIEW_PENDING"
+      },
+      "lod2": {
+       "projeto": "guardian-depths",
+       "nome": "Guardião das Profundezas",
+       "versao": "v1",
+       "lod": "lod2",
+       "arquivo": "arena-forge/assets/poseidon-depths-v1/guardian-depths-lod2.glb",
+       "tri": 2679,
+       "texturas": 9,
+       "texturaMax": 1024,
+       "memoriaTexturaMB": 35.9,
+       "bytes": 1018936,
+       "sha256": "34202b8003cc73f964bdbaf881a3c1d5816d04551347922d7a1ecec562f9e1d5",
+       "hashOk": true,
+       "orcamentoTri": [
+        500,
+        3000
+       ],
+       "orcamentoOk": true,
+       "texturaOk": true,
+       "mapas": {
+        "ok": true,
+        "problemas": []
+       },
+       "estado": "TECHNICALLY_VALIDATED",
+       "elegivel": true,
+       "artistico": "ART_REVIEW_PENDING"
+      },
+      "mobile": {
+       "projeto": "guardian-depths",
+       "nome": "Guardião das Profundezas",
+       "versao": "v1",
+       "lod": "mobile",
+       "arquivo": "arena-forge/assets/poseidon-depths-v1/guardian-depths-mobile-r2.glb",
+       "tri": 8692,
+       "texturas": 9,
+       "texturaMax": 512,
+       "memoriaTexturaMB": 12.0,
+       "bytes": 915488,
+       "sha256": "80660513d6106451acff052ee4a8812e23b8085c6f53df57feba5d496aeb6da5",
+       "hashOk": true,
+       "orcamentoTri": [
+        5000,
+        10000
+       ],
+       "orcamentoOk": true,
+       "texturaOk": true,
+       "mapas": {
+        "ok": true,
+        "problemas": []
+       },
+       "estado": "TECHNICALLY_VALIDATED",
+       "elegivel": true,
+       "artistico": "ART_REVIEW_PENDING"
+      }
+     },
+     "legado": [
+      {
+       "projeto": "guardian-depths",
+       "nome": "Guardião das Profundezas",
+       "versao": "v1",
+       "lod": "mobile",
+       "arquivo": "arena-forge/assets/poseidon-depths-v1/guardian-depths-mobile.glb",
+       "tri": 8692,
+       "texturas": 9,
+       "texturaMax": 512,
+       "memoriaTexturaMB": 12.0,
+       "bytes": 532108,
+       "sha256": "9cabcbc2994ae5c4e6adc83b016397f8b0f76189bf0d27a5e86d1b482fa40052",
+       "hashOk": true,
+       "orcamentoTri": [
+        5000,
+        10000
+       ],
+       "orcamentoOk": true,
+       "texturaOk": true,
+       "mapas": {
+        "ok": false,
+        "problemas": [
+         {
+          "imagem": "STATUE_AGED_IVORY_L1_normal_512",
+          "tipo": "PRETO",
+          "media": [
+           0.0,
+           0.0,
+           0.0
+          ]
+         },
+         {
+          "imagem": "STATUE_AGED_IVORY_L1_orm_512",
+          "tipo": "PRETO",
+          "media": [
+           0.0,
+           0.0,
+           0.0
+          ]
+         },
+         {
+          "imagem": "STATUE_AGED_IVORY_L1_base_512",
+          "tipo": "PRETO",
+          "media": [
+           0.0,
+           0.0,
+           0.0
+          ]
+         },
+         {
+          "imagem": "STATUE_DEEP_MARBLE_L1_normal_512",
+          "tipo": "PRETO",
+          "media": [
+           0.0,
+           0.0,
+           0.0
+          ]
+         },
+         {
+          "imagem": "STATUE_DEEP_MARBLE_L1_orm_512",
+          "tipo": "PRETO",
+          "media": [
+           0.0,
+           0.0,
+           0.0
+          ]
+         },
+         {
+          "imagem": "STATUE_DEEP_MARBLE_L1_base_512",
+          "tipo": "PRETO",
+          "media": [
+           0.0,
+           0.0,
+           0.0
+          ]
+         }
+        ]
+       },
+       "estado": "LEGACY_DEFECTIVE",
+       "elegivel": false,
+       "motivo": "Texturas 512² de marfim e mármore pretas: o build copiava imagem assada só em memória (image.copy()). Preservado por histórico; não elegível."
+      }
+     ]
+    },
+    "v1-1": {
+     "flag": "sculptDepthsV11",
+     "variantes": {
+      "lod0": {
+       "projeto": "guardian-depths",
+       "nome": "Guardião das Profundezas",
+       "versao": "v1-1",
+       "lod": "lod0",
+       "arquivo": "arena-forge/assets/poseidon-depths-v1-1/guardian-depths-lod0.glb",
+       "tri": 28966,
+       "texturas": 9,
+       "texturaMax": 2048,
+       "memoriaTexturaMB": 143.6,
+       "bytes": 3490588,
+       "sha256": "47791460ee7281cd2c26594b36fe9a82c16aa283e032821a3c38041b4f07de14",
+       "hashOk": true,
+       "orcamentoTri": [
+        15000,
+        30000
+       ],
+       "orcamentoOk": true,
+       "texturaOk": true,
+       "mapas": {
+        "ok": true,
+        "problemas": []
+       },
+       "estado": "TECHNICALLY_VALIDATED",
+       "elegivel": true,
+       "artistico": "ART_REVIEW_PENDING"
+      },
+      "lod1": {
+       "projeto": "guardian-depths",
+       "nome": "Guardião das Profundezas",
+       "versao": "v1-1",
+       "lod": "lod1",
+       "arquivo": "arena-forge/assets/poseidon-depths-v1-1/guardian-depths-lod1.glb",
+       "tri": 8668,
+       "texturas": 9,
+       "texturaMax": 1024,
+       "memoriaTexturaMB": 35.9,
+       "bytes": 1319608,
+       "sha256": "499f63abcb4075634c030e70dbeb41e7ea6df67ae35ebc841df9451eabb25835",
+       "hashOk": true,
+       "orcamentoTri": [
+        5000,
+        10000
+       ],
+       "orcamentoOk": true,
+       "texturaOk": true,
+       "mapas": {
+        "ok": true,
+        "problemas": []
+       },
+       "estado": "TECHNICALLY_VALIDATED",
+       "elegivel": true,
+       "artistico": "ART_REVIEW_PENDING"
+      },
+      "lod2": {
+       "projeto": "guardian-depths",
+       "nome": "Guardião das Profundezas",
+       "versao": "v1-1",
+       "lod": "lod2",
+       "arquivo": "arena-forge/assets/poseidon-depths-v1-1/guardian-depths-lod2.glb",
+       "tri": 2556,
+       "texturas": 9,
+       "texturaMax": 1024,
+       "memoriaTexturaMB": 35.9,
+       "bytes": 1036140,
+       "sha256": "907670d4dcb78c609d4a8351490dc49002eb1f37a40abe5deaab75867c4ef9bb",
+       "hashOk": true,
+       "orcamentoTri": [
+        500,
+        3000
+       ],
+       "orcamentoOk": true,
+       "texturaOk": true,
+       "mapas": {
+        "ok": true,
+        "problemas": []
+       },
+       "estado": "TECHNICALLY_VALIDATED",
+       "elegivel": true,
+       "artistico": "ART_REVIEW_PENDING"
+      },
+      "mobile": {
+       "projeto": "guardian-depths",
+       "nome": "Guardião das Profundezas",
+       "versao": "v1-1",
+       "lod": "mobile",
+       "arquivo": "arena-forge/assets/poseidon-depths-v1-1/guardian-depths-mobile-r2.glb",
+       "tri": 8668,
+       "texturas": 9,
+       "texturaMax": 512,
+       "memoriaTexturaMB": 12.0,
+       "bytes": 906120,
+       "sha256": "867f0b4680b67521d038d62bfc8f15a978b8d44b3e913d07606a8138623b5c8c",
+       "hashOk": true,
+       "orcamentoTri": [
+        5000,
+        10000
+       ],
+       "orcamentoOk": true,
+       "texturaOk": true,
+       "mapas": {
+        "ok": true,
+        "problemas": []
+       },
+       "estado": "TECHNICALLY_VALIDATED",
+       "elegivel": true,
+       "artistico": "ART_REVIEW_PENDING"
+      }
+     },
+     "legado": [
+      {
+       "projeto": "guardian-depths",
+       "nome": "Guardião das Profundezas",
+       "versao": "v1-1",
+       "lod": "mobile",
+       "arquivo": "arena-forge/assets/poseidon-depths-v1-1/guardian-depths-mobile.glb",
+       "tri": 8668,
+       "texturas": 9,
+       "texturaMax": 512,
+       "memoriaTexturaMB": 12.0,
+       "bytes": 519732,
+       "sha256": "44de9eff8a98e23fe9cc494522006031da73c19c62872a50d772847f298071c2",
+       "hashOk": true,
+       "orcamentoTri": [
+        5000,
+        10000
+       ],
+       "orcamentoOk": true,
+       "texturaOk": true,
+       "mapas": {
+        "ok": false,
+        "problemas": [
+         {
+          "imagem": "STATUE_AGED_IVORY_L1_normal_512",
+          "tipo": "PRETO",
+          "media": [
+           0.0,
+           0.0,
+           0.0
+          ]
+         },
+         {
+          "imagem": "STATUE_AGED_IVORY_L1_orm_512",
+          "tipo": "PRETO",
+          "media": [
+           0.0,
+           0.0,
+           0.0
+          ]
+         },
+         {
+          "imagem": "STATUE_AGED_IVORY_L1_base_512",
+          "tipo": "PRETO",
+          "media": [
+           0.0,
+           0.0,
+           0.0
+          ]
+         },
+         {
+          "imagem": "STATUE_DEEP_MARBLE_L1_normal_512",
+          "tipo": "PRETO",
+          "media": [
+           0.0,
+           0.0,
+           0.0
+          ]
+         },
+         {
+          "imagem": "STATUE_DEEP_MARBLE_L1_orm_512",
+          "tipo": "PRETO",
+          "media": [
+           0.0,
+           0.0,
+           0.0
+          ]
+         },
+         {
+          "imagem": "STATUE_DEEP_MARBLE_L1_base_512",
+          "tipo": "PRETO",
+          "media": [
+           0.0,
+           0.0,
+           0.0
+          ]
+         }
+        ]
+       },
+       "estado": "LEGACY_DEFECTIVE",
+       "elegivel": false,
+       "motivo": "Texturas 512² de marfim e mármore pretas: o build copiava imagem assada só em memória (image.copy()). Preservado por histórico; não elegível."
+      }
+     ]
+    }
+   }
+  },
+  "guardian-tides": {
+   "nome": "Guardião das Marés",
+   "atual": "v14-1",
+   "posicao": {
+    "lado": "esquerda",
+    "ancora": [
+     -10.8,
+     4.41,
+     -34.8
+    ]
+   },
+   "versoes": {
+    "v13": {
+     "flag": "sculptV13",
+     "variantes": {
+      "lod0": {
+       "projeto": "guardian-tides",
+       "nome": "Guardião das Marés",
+       "versao": "v13",
+       "lod": "lod0",
+       "arquivo": "arena-forge/assets/poseidon-v13/guardian-tides-lod0.glb",
+       "tri": 28509,
+       "texturas": 9,
+       "texturaMax": 2048,
+       "memoriaTexturaMB": 143.6,
+       "bytes": 5539332,
+       "sha256": "2975ef9233c95e34f663dbd16736013cec6bf5e9c013b28ef4315896de4b23dc",
+       "hashOk": true,
+       "orcamentoTri": [
+        15000,
+        30000
+       ],
+       "orcamentoOk": true,
+       "texturaOk": true,
+       "mapas": {
+        "ok": true,
+        "problemas": []
+       },
+       "estado": "TECHNICALLY_VALIDATED",
+       "elegivel": true,
+       "artistico": "ART_REVIEW_PENDING"
+      },
+      "lod1": {
+       "projeto": "guardian-tides",
+       "nome": "Guardião das Marés",
+       "versao": "v13",
+       "lod": "lod1",
+       "arquivo": "arena-forge/assets/poseidon-v13/guardian-tides-lod1.glb",
+       "tri": 8570,
+       "texturas": 9,
+       "texturaMax": 1024,
+       "memoriaTexturaMB": 35.9,
+       "bytes": 1659052,
+       "sha256": "57006451f7389c66a5d3cac2479dcbe5bbecf7b4bf1dd19a21139f599007a8b3",
+       "hashOk": true,
+       "orcamentoTri": [
+        5000,
+        10000
+       ],
+       "orcamentoOk": true,
+       "texturaOk": true,
+       "mapas": {
+        "ok": true,
+        "problemas": []
+       },
+       "estado": "TECHNICALLY_VALIDATED",
+       "elegivel": true,
+       "artistico": "ART_REVIEW_PENDING"
+      },
+      "lod2": {
+       "projeto": "guardian-tides",
+       "nome": "Guardião das Marés",
+       "versao": "v13",
+       "lod": "lod2",
+       "arquivo": "arena-forge/assets/poseidon-v13/guardian-tides-lod2.glb",
+       "tri": 2091,
+       "texturas": 9,
+       "texturaMax": 1024,
+       "memoriaTexturaMB": 35.9,
+       "bytes": 1049132,
+       "sha256": "54835c9523221f6286842767b8d535928c7bd00dea45ef4bd7f641ad2c5ee307",
+       "hashOk": true,
+       "orcamentoTri": [
+        500,
+        3000
+       ],
+       "orcamentoOk": true,
+       "texturaOk": true,
+       "mapas": {
+        "ok": true,
+        "problemas": []
+       },
+       "estado": "TECHNICALLY_VALIDATED",
+       "elegivel": true,
+       "artistico": "ART_REVIEW_PENDING"
+      },
+      "mobile": {
+       "projeto": "guardian-tides",
+       "nome": "Guardião das Marés",
+       "versao": "v13",
+       "lod": "mobile",
+       "arquivo": "arena-forge/assets/poseidon-v13/guardian-tides-mobile-r2.glb",
+       "tri": 8570,
+       "texturas": 9,
+       "texturaMax": 512,
+       "memoriaTexturaMB": 12.0,
+       "bytes": 1029428,
+       "sha256": "22cfed779e47911635a921b55f62a95b056e1b3ec0c130f979cfe4ae465fdfbf",
+       "hashOk": true,
+       "orcamentoTri": [
+        5000,
+        10000
+       ],
+       "orcamentoOk": true,
+       "texturaOk": true,
+       "mapas": {
+        "ok": true,
+        "problemas": []
+       },
+       "estado": "TECHNICALLY_VALIDATED",
+       "elegivel": true,
+       "artistico": "ART_REVIEW_PENDING"
+      }
+     },
+     "legado": [
+      {
+       "projeto": "guardian-tides",
+       "nome": "Guardião das Marés",
+       "versao": "v13",
+       "lod": "mobile",
+       "arquivo": "arena-forge/assets/poseidon-v13/guardian-tides-mobile.glb",
+       "tri": 8570,
+       "texturas": 9,
+       "texturaMax": 512,
+       "memoriaTexturaMB": 12.0,
+       "bytes": 541428,
+       "sha256": "515dd1338f7d550c14778c77876aafa4f760f99f768f59ded1903bb5552626a2",
+       "hashOk": true,
+       "orcamentoTri": [
+        5000,
+        10000
+       ],
+       "orcamentoOk": true,
+       "texturaOk": true,
+       "mapas": {
+        "ok": false,
+        "problemas": [
+         {
+          "imagem": "STATUE_AGED_IVORY_L1_normal_512",
+          "tipo": "PRETO",
+          "media": [
+           0.0,
+           0.0,
+           0.0
+          ]
+         },
+         {
+          "imagem": "STATUE_AGED_IVORY_L1_orm_512",
+          "tipo": "PRETO",
+          "media": [
+           0.0,
+           0.0,
+           0.0
+          ]
+         },
+         {
+          "imagem": "STATUE_AGED_IVORY_L1_base_512",
+          "tipo": "PRETO",
+          "media": [
+           0.0,
+           0.0,
+           0.0
+          ]
+         },
+         {
+          "imagem": "STATUE_DEEP_MARBLE_L1_normal_512",
+          "tipo": "PRETO",
+          "media": [
+           0.0,
+           0.0,
+           0.0
+          ]
+         },
+         {
+          "imagem": "STATUE_DEEP_MARBLE_L1_orm_512",
+          "tipo": "PRETO",
+          "media": [
+           0.0,
+           0.0,
+           0.0
+          ]
+         },
+         {
+          "imagem": "STATUE_DEEP_MARBLE_L1_base_512",
+          "tipo": "PRETO",
+          "media": [
+           0.0,
+           0.0,
+           0.0
+          ]
+         }
+        ]
+       },
+       "estado": "LEGACY_DEFECTIVE",
+       "elegivel": false,
+       "motivo": "Texturas 512² de marfim e mármore pretas: o build copiava imagem assada só em memória (image.copy()). Preservado por histórico; não elegível."
+      }
+     ]
+    },
+    "v14": {
+     "flag": "sculptV14",
+     "variantes": {
+      "lod0": {
+       "projeto": "guardian-tides",
+       "nome": "Guardião das Marés",
+       "versao": "v14",
+       "lod": "lod0",
+       "arquivo": "arena-forge/assets/poseidon-v14/guardian-tides-lod0.glb",
+       "tri": 29182,
+       "texturas": 9,
+       "texturaMax": 2048,
+       "memoriaTexturaMB": 143.6,
+       "bytes": 5549364,
+       "sha256": "4c154e0f941686e33e8fd13765254277ceee0a569737074d3fa7c587ad78cb2e",
+       "hashOk": true,
+       "orcamentoTri": [
+        15000,
+        30000
+       ],
+       "orcamentoOk": true,
+       "texturaOk": true,
+       "mapas": {
+        "ok": true,
+        "problemas": []
+       },
+       "estado": "TECHNICALLY_VALIDATED",
+       "elegivel": true,
+       "artistico": "ART_REVIEW_PENDING"
+      },
+      "lod1": {
+       "projeto": "guardian-tides",
+       "nome": "Guardião das Marés",
+       "versao": "v14",
+       "lod": "lod1",
+       "arquivo": "arena-forge/assets/poseidon-v14/guardian-tides-lod1.glb",
+       "tri": 8742,
+       "texturas": 9,
+       "texturaMax": 1024,
+       "memoriaTexturaMB": 35.9,
+       "bytes": 1709528,
+       "sha256": "a490efe6d32e0847c2f27d2a912c8f3e0e1f4d8bc3a810e9346f3f56d85e6ad8",
+       "hashOk": true,
+       "orcamentoTri": [
+        5000,
+        10000
+       ],
+       "orcamentoOk": true,
+       "texturaOk": true,
+       "mapas": {
+        "ok": true,
+        "problemas": []
+       },
+       "estado": "TECHNICALLY_VALIDATED",
+       "elegivel": true,
+       "artistico": "ART_REVIEW_PENDING"
+      },
+      "lod2": {
+       "projeto": "guardian-tides",
+       "nome": "Guardião das Marés",
+       "versao": "v14",
+       "lod": "lod2",
+       "arquivo": "arena-forge/assets/poseidon-v14/guardian-tides-lod2.glb",
+       "tri": 2566,
+       "texturas": 9,
+       "texturaMax": 1024,
+       "memoriaTexturaMB": 35.9,
+       "bytes": 1157804,
+       "sha256": "1c059e5e779e7b7c6981f0442d62c012d32d06bb8f4195d8e20999c4d8020b9b",
+       "hashOk": true,
+       "orcamentoTri": [
+        500,
+        3000
+       ],
+       "orcamentoOk": true,
+       "texturaOk": true,
+       "mapas": {
+        "ok": true,
+        "problemas": []
+       },
+       "estado": "TECHNICALLY_VALIDATED",
+       "elegivel": true,
+       "artistico": "ART_REVIEW_PENDING"
+      },
+      "mobile": {
+       "projeto": "guardian-tides",
+       "nome": "Guardião das Marés",
+       "versao": "v14",
+       "lod": "mobile",
+       "arquivo": "arena-forge/assets/poseidon-v14/guardian-tides-mobile-r2.glb",
+       "tri": 8742,
+       "texturas": 9,
+       "texturaMax": 512,
+       "memoriaTexturaMB": 12.0,
+       "bytes": 1028384,
+       "sha256": "6651da20d80f012f705792f8c171a24a24e85bc0df122041ddd1b9fca2983036",
+       "hashOk": true,
+       "orcamentoTri": [
+        5000,
+        10000
+       ],
+       "orcamentoOk": true,
+       "texturaOk": true,
+       "mapas": {
+        "ok": true,
+        "problemas": []
+       },
+       "estado": "TECHNICALLY_VALIDATED",
+       "elegivel": true,
+       "artistico": "ART_REVIEW_PENDING"
+      }
+     },
+     "legado": [
+      {
+       "projeto": "guardian-tides",
+       "nome": "Guardião das Marés",
+       "versao": "v14",
+       "lod": "mobile",
+       "arquivo": "arena-forge/assets/poseidon-v14/guardian-tides-mobile.glb",
+       "tri": 8742,
+       "texturas": 9,
+       "texturaMax": 512,
+       "memoriaTexturaMB": 12.0,
+       "bytes": 545560,
+       "sha256": "6527cb3c489a241b32eb9cbad0e99e76d796115409c66a0279c964168324ac5f",
+       "hashOk": true,
+       "orcamentoTri": [
+        5000,
+        10000
+       ],
+       "orcamentoOk": true,
+       "texturaOk": true,
+       "mapas": {
+        "ok": false,
+        "problemas": [
+         {
+          "imagem": "STATUE_AGED_IVORY_L1_normal_512",
+          "tipo": "PRETO",
+          "media": [
+           0.0,
+           0.0,
+           0.0
+          ]
+         },
+         {
+          "imagem": "STATUE_AGED_IVORY_L1_orm_512",
+          "tipo": "PRETO",
+          "media": [
+           0.0,
+           0.0,
+           0.0
+          ]
+         },
+         {
+          "imagem": "STATUE_AGED_IVORY_L1_base_512",
+          "tipo": "PRETO",
+          "media": [
+           0.0,
+           0.0,
+           0.0
+          ]
+         },
+         {
+          "imagem": "STATUE_DEEP_MARBLE_L1_normal_512",
+          "tipo": "PRETO",
+          "media": [
+           0.0,
+           0.0,
+           0.0
+          ]
+         },
+         {
+          "imagem": "STATUE_DEEP_MARBLE_L1_orm_512",
+          "tipo": "PRETO",
+          "media": [
+           0.0,
+           0.0,
+           0.0
+          ]
+         },
+         {
+          "imagem": "STATUE_DEEP_MARBLE_L1_base_512",
+          "tipo": "PRETO",
+          "media": [
+           0.0,
+           0.0,
+           0.0
+          ]
+         }
+        ]
+       },
+       "estado": "LEGACY_DEFECTIVE",
+       "elegivel": false,
+       "motivo": "Texturas 512² de marfim e mármore pretas: o build copiava imagem assada só em memória (image.copy()). Preservado por histórico; não elegível."
+      }
+     ]
+    },
+    "v14-1": {
+     "flag": "sculptV141",
+     "variantes": {
+      "lod0": {
+       "projeto": "guardian-tides",
+       "nome": "Guardião das Marés",
+       "versao": "v14-1",
+       "lod": "lod0",
+       "arquivo": "arena-forge/assets/poseidon-v14-1/guardian-tides-lod0.glb",
+       "tri": 29203,
+       "texturas": 9,
+       "texturaMax": 2048,
+       "memoriaTexturaMB": 143.6,
+       "bytes": 5467728,
+       "sha256": "930773f34f304a7c4a79009e7a9cba4575453411f9c9787d5674be8ac89f4edb",
+       "hashOk": true,
+       "orcamentoTri": [
+        15000,
+        30000
+       ],
+       "orcamentoOk": true,
+       "texturaOk": true,
+       "mapas": {
+        "ok": true,
+        "problemas": []
+       },
+       "estado": "TECHNICALLY_VALIDATED",
+       "elegivel": true,
+       "artistico": "ART_REVIEW_PENDING"
+      },
+      "lod1": {
+       "projeto": "guardian-tides",
+       "nome": "Guardião das Marés",
+       "versao": "v14-1",
+       "lod": "lod1",
+       "arquivo": "arena-forge/assets/poseidon-v14-1-r2/guardian-tides-lod1.glb",
+       "tri": 9115,
+       "texturas": 9,
+       "texturaMax": 1024,
+       "memoriaTexturaMB": 35.9,
+       "bytes": 1627312,
+       "sha256": "0548b90a3b87ce86b7b70d90a9891efe52782f38108662bbdb15c794b9bb2548",
+       "hashOk": true,
+       "orcamentoTri": [
+        5000,
+        10000
+       ],
+       "orcamentoOk": true,
+       "texturaOk": true,
+       "mapas": {
+        "ok": true,
+        "problemas": []
+       },
+       "estado": "TECHNICALLY_VALIDATED",
+       "elegivel": true,
+       "artistico": "ART_REVIEW_PENDING"
+      },
+      "lod2": {
+       "projeto": "guardian-tides",
+       "nome": "Guardião das Marés",
+       "versao": "v14-1",
+       "lod": "lod2",
+       "arquivo": "arena-forge/assets/poseidon-v14-1/guardian-tides-lod2.glb",
+       "tri": 2933,
+       "texturas": 9,
+       "texturaMax": 1024,
+       "memoriaTexturaMB": 35.9,
+       "bytes": 1176548,
+       "sha256": "07bf9bddac11af049e6d9a6da234802e49edd08f11f18b02689b2089749c3641",
+       "hashOk": true,
+       "orcamentoTri": [
+        500,
+        3000
+       ],
+       "orcamentoOk": true,
+       "texturaOk": true,
+       "mapas": {
+        "ok": true,
+        "problemas": []
+       },
+       "estado": "TECHNICALLY_VALIDATED",
+       "elegivel": true,
+       "artistico": "ART_REVIEW_PENDING"
+      },
+      "mobile": {
+       "projeto": "guardian-tides",
+       "nome": "Guardião das Marés",
+       "versao": "v14-1",
+       "lod": "mobile",
+       "arquivo": "arena-forge/assets/poseidon-v14-1-r2/guardian-tides-mobile.glb",
+       "tri": 9115,
+       "texturas": 9,
+       "texturaMax": 512,
+       "memoriaTexturaMB": 12.0,
+       "bytes": 832316,
+       "sha256": "70d776a6e134980f51b2feec3b2fc8e87296aa572688195b68dd254ff9e7f5cd",
+       "hashOk": true,
+       "orcamentoTri": [
+        5000,
+        10000
+       ],
+       "orcamentoOk": true,
+       "texturaOk": true,
+       "mapas": {
+        "ok": true,
+        "problemas": []
+       },
+       "estado": "TECHNICALLY_VALIDATED",
+       "elegivel": true,
+       "artistico": "ART_REVIEW_PENDING"
+      }
+     },
+     "legado": [
+      {
+       "projeto": "guardian-tides",
+       "nome": "Guardião das Marés",
+       "versao": "v14-1",
+       "lod": "mobile",
+       "arquivo": "arena-forge/assets/poseidon-v14-1/guardian-tides-mobile.glb",
+       "tri": 8791,
+       "texturas": 9,
+       "texturaMax": 512,
+       "memoriaTexturaMB": 12.0,
+       "bytes": 549716,
+       "sha256": "d2e0083834bc441fd294253a695db0795b4fb3db9dd837ae099063ac63eb087d",
+       "hashOk": true,
+       "orcamentoTri": [
+        5000,
+        10000
+       ],
+       "orcamentoOk": true,
+       "texturaOk": true,
+       "mapas": {
+        "ok": false,
+        "problemas": [
+         {
+          "imagem": "STATUE_AGED_IVORY_L1_normal_512",
+          "tipo": "PRETO",
+          "media": [
+           0.0,
+           0.0,
+           0.0
+          ]
+         },
+         {
+          "imagem": "STATUE_AGED_IVORY_L1_orm_512",
+          "tipo": "PRETO",
+          "media": [
+           0.0,
+           0.0,
+           0.0
+          ]
+         },
+         {
+          "imagem": "STATUE_AGED_IVORY_L1_base_512",
+          "tipo": "PRETO",
+          "media": [
+           0.0,
+           0.0,
+           0.0
+          ]
+         },
+         {
+          "imagem": "STATUE_DEEP_MARBLE_L1_normal_512",
+          "tipo": "PRETO",
+          "media": [
+           0.0,
+           0.0,
+           0.0
+          ]
+         },
+         {
+          "imagem": "STATUE_DEEP_MARBLE_L1_orm_512",
+          "tipo": "PRETO",
+          "media": [
+           0.0,
+           0.0,
+           0.0
+          ]
+         },
+         {
+          "imagem": "STATUE_DEEP_MARBLE_L1_base_512",
+          "tipo": "PRETO",
+          "media": [
+           0.0,
+           0.0,
+           0.0
+          ]
+         }
+        ]
+       },
+       "estado": "LEGACY_DEFECTIVE",
+       "elegivel": false,
+       "motivo": "Texturas 512² de marfim e mármore pretas: o build copiava imagem assada só em memória (image.copy()). Preservado por histórico; não elegível."
+      }
+     ]
+    }
+   }
+  }
+ }
+}

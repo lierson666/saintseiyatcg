@@ -12,7 +12,10 @@ Mede, nas mesmas condições, cada versão pedida em cada perfil e em cada vista
 Uso: uv run -q --with playwright python tools/bench-poseidon-palace.py 8770 [--rodadas 2] [--amostras 12]
      [--versoes v11,v15] [--perfis alto,medio,celular] [--saida docs/perf/poseidon-palace-bench.json]
 Versões: semFlags (sem esculturas), v11 (V14.1 + Profundezas V1.1), v15 (v11 + ?palaceV15=1, guardiões sempre LOD0 como na V15),
-     v151 (V15.1: LOD dos guardiões pelo perfil gráfico).
+     v151 (V15.1: LOD dos guardiões pelo perfil gráfico), v152 (as mesmas flags; nome para comparar com a V15.1 servida
+     de outra porta via --porta-v151, ex. uma cópia do commit 09341d7 por git archive; --porta-v152 faz o mesmo para uma
+     árvore só com as mudanças da V15.2, para nenhuma alteração alheia da árvore de trabalho entrar na medida).
+     --ciclo (V15.2): depois das vistas, mede troca de LOD em tempo real, descarte e reentrada pelo Sculpture Manager.
 """
 import argparse, json, statistics, sys, time
 from pathlib import Path
@@ -27,11 +30,30 @@ ap.add_argument('--quadros', type=int, default=10, help='quadros por amostra de 
 ap.add_argument('--versoes', default='v11')
 ap.add_argument('--perfis', default='alto,medio,celular')  # também: baixo
 ap.add_argument('--vistas', default='chave0,chave1,chave2,partida')
+ap.add_argument('--porta-v151', default=None, help='porta que serve a árvore da V15.1 (a versão v151 usa essa porta)')
+ap.add_argument('--porta-v152', default=None, help='porta que serve a árvore da V15.2 isolada (a versão v152 usa essa porta)')
+ap.add_argument('--ciclo', action='store_true', help='mede troca de LOD, descarte e reentrada (só onde há Sculpture Manager)')
 ap.add_argument('--saida', default='docs/perf/poseidon-palace-bench.json')
 a = ap.parse_args()
 
 GAME = f'http://127.0.0.1:{a.port}/playtest/divine/?arena=poseidon&arenaPreview=poseidon-palace&ai=none&demo=ultimate&noIntro=1'
-VERSOES = {'semFlags': '', 'v11': '&sculptV141=1&sculptDepthsV11=1', 'v15': '&sculptV141=1&sculptDepthsV11=1&palaceV15=1&sculptLod=lod0', 'v151': '&sculptV141=1&sculptDepthsV11=1&palaceV15=1'}
+VERSOES = {'semFlags': '', 'v11': '&sculptV141=1&sculptDepthsV11=1', 'v15': '&sculptV141=1&sculptDepthsV11=1&palaceV15=1&sculptLod=lod0', 'v151': '&sculptV141=1&sculptDepthsV11=1&palaceV15=1',
+           'v152': '&sculptV141=1&sculptDepthsV11=1&palaceV15=1'}
+def game_url(versao):
+    porta = {'v151': a.porta_v151, 'v152': a.porta_v152}.get(versao)
+    return GAME.replace(f':{a.port}/', f':{porta}/') if porta else GAME
+# V15.2: troca de LOD em tempo real (perfil → outro → volta), descarte de tudo e reentrada (pronto para a cinemática).
+CICLO = r"""(async () => {
+  const s = window.__divine.scene, env = s.environment, m = env.sculptures; if (!m || !m.diagnostics) return null;
+  const out = {}, start = m.profile, D = () => m.diagnostics();
+  for (const q of (start === 'phone' ? ['low', 'phone'] : start === 'high' ? ['medium', 'high'] : ['high', start])) {
+    const t = performance.now(); await env.setQuality(q); out['troca_' + start + '_' + q + 'Ms'] = Math.round(performance.now() - t); }
+  const t1 = performance.now(); m.release('cinematic'); m.release('battle'); out.descarteMs = +(performance.now() - t1).toFixed(2);
+  out.descartePorItemMs = D().items.map(i => i.lastDispose?.ms); out.recursosDepoisDoDescarte = D().assets.length;
+  const t2 = performance.now(); await env.prepareCinematic(); out.reentradaMs = Math.round(performance.now() - t2);
+  out.estado = D().items.map(i => i.state + ':' + i.loaded); out.recursos = D().assets.length;
+  return out; })()"""
+
 PERFIS = {
     'alto': dict(viewport={'width': 1600, 'height': 900}, device_scale_factor=2, quality='high'),
     'medio': dict(viewport={'width': 1600, 'height': 900}, device_scale_factor=2, quality='medium'),
@@ -110,7 +132,7 @@ def run_page(br, perfil, versao, vistas, keys_cache):
     errs = []
     p.on('pageerror', lambda e: errs.append(str(e)))
     t0 = time.time()
-    p.goto(GAME + VERSOES[versao], wait_until='commit')
+    p.goto(game_url(versao) + VERSOES[versao], wait_until='commit')
     f = game(p, READY if 'sculpt' in VERSOES[versao] else READY_PLAIN)
     carga = round(time.time() - t0, 1)
     p.wait_for_timeout(3000)
@@ -125,6 +147,7 @@ def run_page(br, perfil, versao, vistas, keys_cache):
         probe = f.evaluate(PROBE)
         out[v] = {'amostras': amostras, **probe}
     f.evaluate('window.__divine.scene.poseCinematic(null)')
+    if a.ciclo: out['_ciclo'] = f.evaluate(CICLO)
     ctx.close()
     return out, carga, errs
 
@@ -141,6 +164,8 @@ def main():
                     out, carga, errs = run_page(br, p, v, vistas, None)
                     cargas.setdefault(f'{v}:{p}', []).append(carga)
                     erros += [f'{v}:{p}: {e}' for e in errs]
+                    ciclo = out.pop('_ciclo', None)
+                    if ciclo: res.setdefault('_ciclos', []).append({'versao': v, 'perfil': p, 'rodada': r + 1, **ciclo}); print('   ciclo', ciclo, flush=True)
                     for x, d in out.items():
                         slot = res[v][p][x]
                         slot['amostras'] += d['amostras']
@@ -149,6 +174,7 @@ def main():
                     print(f'rodada {r + 1} {p:8} {v:8} ' + ' '.join(f"{x}={statistics.median(out[x]['amostras']):.2f}ms" for x in vistas), flush=True)
         br.close()
     tabela = {}
+    ciclos = res.pop('_ciclos', [])
     for v in versoes:
         for p in perfis:
             for x in vistas:
@@ -157,7 +183,7 @@ def main():
                 tabela[f'{v}|{p}|{x}'] = s
     doc = {'data': time.strftime('%Y-%m-%d %H:%M'), 'condicoes': {'navegador': 'Chrome (Playwright) --use-angle=metal', 'quadrosPorAmostra': a.quadros,
            'amostrasPorRodada': a.amostras, 'rodadas': a.rodadas, 'ordem': 'versões intercaladas em cada rodada e perfil', 'perfis': {k: {kk: vv for kk, vv in c.items()} for k, c in PERFIS.items() if k in perfis}},
-           'resultados': tabela, 'cargaSegundos': cargas, 'errosDePagina': erros}
+           'resultados': tabela, 'ciclosV152': ciclos, 'cargaSegundos': cargas, 'errosDePagina': erros}
     out = ROOT / a.saida; out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(doc, indent=1, ensure_ascii=False))
     print('\nversão|perfil|vista            mediana   p95   min   max  calls   tris     texMB  guardMB geoMB  rodadas')

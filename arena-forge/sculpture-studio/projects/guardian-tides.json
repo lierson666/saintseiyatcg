@@ -137,7 +137,21 @@
       "pasta": "arena-forge/assets/poseidon-v13",
       "flag": "sculptV13",
       "relatorio": "docs/sculpture-studio-guardian-tides.md",
-      "commit": "a95e077"
+      "commit": "a95e077",
+      "variantes": {
+        "lod0": "arena-forge/assets/poseidon-v13/guardian-tides-lod0.glb",
+        "lod1": "arena-forge/assets/poseidon-v13/guardian-tides-lod1.glb",
+        "lod2": "arena-forge/assets/poseidon-v13/guardian-tides-lod2.glb",
+        "mobile": "arena-forge/assets/poseidon-v13/guardian-tides-mobile-r2.glb"
+      },
+      "legado": [
+        {
+          "lod": "mobile",
+          "arquivo": "arena-forge/assets/poseidon-v13/guardian-tides-mobile.glb",
+          "estado": "LEGACY_DEFECTIVE",
+          "motivo": "Texturas 512² de marfim e mármore pretas: o build copiava imagem assada só em memória (image.copy()). Preservado por histórico; não elegível."
+        }
+      ]
     },
     {
       "id": "v14",
@@ -145,7 +159,21 @@
       "pasta": "arena-forge/assets/poseidon-v14",
       "flag": "sculptV14",
       "relatorio": "docs/sculpture-studio-guardian-tides-v14.md",
-      "commit": "a95e077"
+      "commit": "a95e077",
+      "variantes": {
+        "lod0": "arena-forge/assets/poseidon-v14/guardian-tides-lod0.glb",
+        "lod1": "arena-forge/assets/poseidon-v14/guardian-tides-lod1.glb",
+        "lod2": "arena-forge/assets/poseidon-v14/guardian-tides-lod2.glb",
+        "mobile": "arena-forge/assets/poseidon-v14/guardian-tides-mobile-r2.glb"
+      },
+      "legado": [
+        {
+          "lod": "mobile",
+          "arquivo": "arena-forge/assets/poseidon-v14/guardian-tides-mobile.glb",
+          "estado": "LEGACY_DEFECTIVE",
+          "motivo": "Texturas 512² de marfim e mármore pretas: o build copiava imagem assada só em memória (image.copy()). Preservado por histórico; não elegível."
+        }
+      ]
     },
     {
       "id": "v14-1",
@@ -153,7 +181,36 @@
       "pasta": "arena-forge/assets/poseidon-v14-1",
       "flag": "sculptV141",
       "relatorio": "docs/sculpture-studio-guardian-tides-v14-1.md",
-      "commit": "a95e077"
+      "commit": "a95e077",
+      "revisoes": [
+        {
+          "id": "r2",
+          "pasta": "arena-forge/assets/poseidon-v14-1-r2",
+          "lods": [
+            "lod1",
+            "mobile"
+          ],
+          "motivo": "V15.2: coroa de louro protegida no LOD1 (60 % do LOD0 do louro; 642 → 1046 triângulos em TIDES__DETAILS). Mobile sai do mesmo LOD1 com o build corrigido.",
+          "substitui": [
+            "arena-forge/assets/poseidon-v14-1/guardian-tides-lod1.glb",
+            "arena-forge/assets/poseidon-v14-1/guardian-tides-mobile-r2.glb"
+          ]
+        }
+      ],
+      "variantes": {
+        "lod0": "arena-forge/assets/poseidon-v14-1/guardian-tides-lod0.glb",
+        "lod1": "arena-forge/assets/poseidon-v14-1-r2/guardian-tides-lod1.glb",
+        "lod2": "arena-forge/assets/poseidon-v14-1/guardian-tides-lod2.glb",
+        "mobile": "arena-forge/assets/poseidon-v14-1-r2/guardian-tides-mobile.glb"
+      },
+      "legado": [
+        {
+          "lod": "mobile",
+          "arquivo": "arena-forge/assets/poseidon-v14-1/guardian-tides-mobile.glb",
+          "estado": "LEGACY_DEFECTIVE",
+          "motivo": "Texturas 512² de marfim e mármore pretas: o build copiava imagem assada só em memória (image.copy()). Preservado por histórico; não elegível."
+        }
+      ]
     }
   ],
   "atual": "v14-1",

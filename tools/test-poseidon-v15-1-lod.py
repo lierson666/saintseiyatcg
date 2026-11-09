@@ -65,7 +65,9 @@ with sync_playwright() as pw:
     for perfil in PERFIS:
         c, p, f, reqs, errs, lod, tex = run(br, perfil)
         info = f.evaluate(PROBE)
-        want = {f'poseidon-v14-1/guardian-tides-{lod}.glb', f'poseidon-depths-v1-1/guardian-depths-{lod}.glb'}
+        # V15.2: variantes do catálogo — LOD1 e mobile da V14.1 vêm da revisão r2 (coroa protegida)
+        tides = {'lod1': 'poseidon-v14-1-r2/guardian-tides-lod1.glb', 'mobile-r2': 'poseidon-v14-1-r2/guardian-tides-mobile.glb'}.get(lod, f'poseidon-v14-1/guardian-tides-{lod}.glb')
+        want = {tides, f'poseidon-depths-v1-1/guardian-depths-{lod}.glb'}
         ok(f'{perfil}: baixa só {sorted(want)} ({len(reqs)} requisições)', sorted(reqs) == sorted(want))
         ok(f'{perfil}: textura máxima dos guardiões {info["maxTex"]}² (esperado {tex}²), perfil da cena {info["level"]}', info['maxTex'] == tex and info['level'] == perfil)
         ok(f"{perfil}: textura de marfim dos guardiões não está preta (luma média {info['ivoryLuma']})", 60 < info['ivoryLuma'] < 1e9)

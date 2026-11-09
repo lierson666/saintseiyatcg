@@ -2,7 +2,7 @@
   "projeto": "guardian-tides",
   "assetId": "POS-MON-V10-001",
   "versao": "v14-1",
-  "data": "2026-11-08T17:54:59",
+  "data": "2026-11-08T22:33:21",
   "status": "TECHNICALLY_VALIDATED / ART_REVIEW_PENDING",
   "tecnico": {
     "status": "TECHNICALLY_VALIDATED",
@@ -45,9 +45,15 @@
       },
       {
         "id": "lod0-escala",
-        "nome": "lod0: altura 9.0–10.5 m, base até 4.0 m, pivô no chão",
+        "nome": "lod0: altura 9.0–10.5 m, largura até 4.0 m, profundidade até 4.0 m, pivô no chão",
         "ok": true,
         "detalhe": "3.37 × 9.90 × 3.34 m, pivô y 0.000"
+      },
+      {
+        "id": "lod0-mapas",
+        "nome": "lod0: nenhum mapa vazio, preto ou divergente do LOD0",
+        "ok": true,
+        "detalhe": "ok"
       },
       {
         "id": "lod1-estrutura",
@@ -59,7 +65,7 @@
         "id": "lod1-orcamento",
         "nome": "lod1: triângulos entre 5000 e 10000",
         "ok": true,
-        "detalhe": "8791"
+        "detalhe": "9115"
       },
       {
         "id": "lod1-partes",
@@ -75,7 +81,7 @@
       },
       {
         "id": "lod1-escala",
-        "nome": "lod1: altura 9.0–10.5 m, base até 4.0 m, pivô no chão",
+        "nome": "lod1: altura 9.0–10.5 m, largura até 4.0 m, profundidade até 4.0 m, pivô no chão",
         "ok": true,
         "detalhe": "3.37 × 9.90 × 3.34 m, pivô y 0.000"
       },
@@ -83,7 +89,13 @@
         "id": "lod1-silhueta",
         "nome": "lod1: caixa de cada peça a até 10 cm da do LOD0",
         "ok": true,
-        "detalhe": "pior: TIDES__DETAILS 0.07 m"
+        "detalhe": "pior: TIDES__CLOTH 0.00 m"
+      },
+      {
+        "id": "lod1-mapas",
+        "nome": "lod1: nenhum mapa vazio, preto ou divergente do LOD0",
+        "ok": true,
+        "detalhe": "ok"
       },
       {
         "id": "lod2-estrutura",
@@ -111,7 +123,7 @@
       },
       {
         "id": "lod2-escala",
-        "nome": "lod2: altura 9.0–10.5 m, base até 4.0 m, pivô no chão",
+        "nome": "lod2: altura 9.0–10.5 m, largura até 4.0 m, profundidade até 4.0 m, pivô no chão",
         "ok": true,
         "detalhe": "3.37 × 9.90 × 3.34 m, pivô y 0.000"
       },
@@ -120,6 +132,12 @@
         "nome": "lod2: caixa de cada peça a até 10 cm da do LOD0",
         "ok": true,
         "detalhe": "pior: TIDES__CLOTH 0.00 m"
+      },
+      {
+        "id": "lod2-mapas",
+        "nome": "lod2: nenhum mapa vazio, preto ou divergente do LOD0",
+        "ok": true,
+        "detalhe": "ok"
       },
       {
         "id": "mobile-estrutura",
@@ -131,7 +149,7 @@
         "id": "mobile-orcamento",
         "nome": "mobile: triângulos entre 5000 e 10000",
         "ok": true,
-        "detalhe": "8791"
+        "detalhe": "9115"
       },
       {
         "id": "mobile-partes",
@@ -147,7 +165,7 @@
       },
       {
         "id": "mobile-escala",
-        "nome": "mobile: altura 9.0–10.5 m, base até 4.0 m, pivô no chão",
+        "nome": "mobile: altura 9.0–10.5 m, largura até 4.0 m, profundidade até 4.0 m, pivô no chão",
         "ok": true,
         "detalhe": "3.37 × 9.90 × 3.34 m, pivô y 0.000"
       },
@@ -155,7 +173,13 @@
         "id": "mobile-silhueta",
         "nome": "mobile: caixa de cada peça a até 10 cm da do LOD0",
         "ok": true,
-        "detalhe": "pior: TIDES__DETAILS 0.07 m"
+        "detalhe": "pior: TIDES__CLOTH 0.00 m"
+      },
+      {
+        "id": "mobile-mapas",
+        "nome": "mobile: nenhum mapa vazio, preto ou divergente do LOD0",
+        "ok": true,
+        "detalhe": "ok"
       },
       {
         "id": "mobile-texturas",
@@ -245,8 +269,8 @@
     },
     {
       "lod": "lod1",
-      "arquivo": "arena-forge/assets/poseidon-v14-1/guardian-tides-lod1.glb",
-      "tri": 8791,
+      "arquivo": "arena-forge/assets/poseidon-v14-1-r2/guardian-tides-lod1.glb",
+      "tri": 9115,
       "malhas": 9,
       "materiais": 3,
       "texturaMax": 1024,
@@ -254,8 +278,8 @@
       "largura": 3.37,
       "profundidade": 3.34,
       "pivoY": 0,
-      "sha256": "9ea8bab0f75c69fbff7766453203be9fb0eeda79f2ccf7cc283ea48c4bec2a65",
-      "bytes": 1599072,
+      "sha256": "0548b90a3b87ce86b7b70d90a9891efe52782f38108662bbdb15c794b9bb2548",
+      "bytes": 1627312,
       "gate": "STRUCTURE_VALID_ART_REVIEW_PENDING"
     },
     {
@@ -275,8 +299,8 @@
     },
     {
       "lod": "mobile",
-      "arquivo": "arena-forge/assets/poseidon-v14-1/guardian-tides-mobile.glb",
-      "tri": 8791,
+      "arquivo": "arena-forge/assets/poseidon-v14-1-r2/guardian-tides-mobile.glb",
+      "tri": 9115,
       "malhas": 9,
       "materiais": 3,
       "texturaMax": 512,
@@ -284,8 +308,8 @@
       "largura": 3.37,
       "profundidade": 3.34,
       "pivoY": 0,
-      "sha256": "d2e0083834bc441fd294253a695db0795b4fb3db9dd837ae099063ac63eb087d",
-      "bytes": 549716,
+      "sha256": "70d776a6e134980f51b2feec3b2fc8e87296aa572688195b68dd254ff9e7f5cd",
+      "bytes": 832316,
       "gate": "STRUCTURE_VALID_ART_REVIEW_PENDING"
     }
   ],

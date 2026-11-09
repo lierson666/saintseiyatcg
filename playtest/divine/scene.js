@@ -487,7 +487,7 @@ export async function createScene(host, {quality = 'high', theme = 'athena', red
     const K = cine.keys, T = []; K.reduce((acc, k, i) => (T[i] = acc + k.dur), 0);
     const t = now - cine.t0;
     K.forEach((k, i) => { if (t >= T[i] && !cine.fired.has(i)) { cine.fired.add(i); if (k.vfx) cineVfx(k.vfx); cine.onEvent?.(k, i); } });
-    if (t >= T.at(-1)) { const done = cine.done; cine = null; devEnvironment?.setLight(1); done(true); return; }
+    if (t >= T.at(-1)) { const done = cine.done; cine = null; devEnvironment?.setLight(1); devEnvironment?.onCinematicEnd?.(); done(true); return; }
     const i = Math.max(1, T.findIndex(x => x > t));
     if (t < T[0]) return cinePose(K[0]);
     const a = K[i - 1], b = K[i], u = EASE[b.ease]((t - T[i - 1]) / Math.max(1, b.dur));
@@ -557,6 +557,7 @@ export async function createScene(host, {quality = 'high', theme = 'athena', red
 
   function setQuality(name) {
     q = QUALITY[name] || QUALITY.high;
+    devEnvironment?.setQuality?.(Object.keys(QUALITY).find(k => QUALITY[k] === q)); // V15.2: troca o LOD das esculturas sem recarregar a cena
     renderer.setPixelRatio(Math.min(q.pixelRatio, window.devicePixelRatio || 1)); fxRenderer.setPixelRatio(renderer.getPixelRatio());
     buildColumns(q.columns); buildDust(still ? 0 : q.ambient);
     rays.forEach(r => { r.visible = q.rays; });
@@ -599,11 +600,12 @@ export async function createScene(host, {quality = 'high', theme = 'athena', red
     // Reduzir movimento: não roda (corte direto). skipCinematic() termina na hora, exatamente na posição competitiva.
     cinematic(keys = cineKeys, {onEvent} = {}) {
       if (!cineCam || still) return Promise.resolve(false);
-      return new Promise(done => {
+      // V15.2: as esculturas da abertura carregam (na variante do perfil) antes de a câmera revelar o palácio: sem popping.
+      return Promise.resolve(devEnvironment?.prepareCinematic?.()).then(() => new Promise(done => {
         cine?.done?.(false);
         cine = {keys: cineNormalize(keys), t0: performance.now(), fired: new Set(), onEvent, done};
         dirty = true; wake();
-      });
+      }));
     },
     skipCinematic() { if (cine && !cine.static) { cine.t0 = -1e9; dirty = true; wake(); } },
     // Editor: segura a câmera cinematográfica numa chave (null volta para a competitiva).
@@ -611,6 +613,7 @@ export async function createScene(host, {quality = 'high', theme = 'athena', red
       if (!cineCam) return false;
       if (cine && !cine.static) cine.done(false);
       cine = key ? {static: cineNormalize([key, cineLast])[0]} : null;
+      if (key) devEnvironment?.prepareCinematic?.();   // editor segurando uma chave: os guardiões precisam estar lá
       if (!key) devEnvironment?.setLight(1);
       dirty = true; wake(); return true;
     },

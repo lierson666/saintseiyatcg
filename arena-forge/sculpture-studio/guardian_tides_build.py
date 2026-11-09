@@ -47,6 +47,8 @@ LOD0 = {  # orçamento de triângulos por parte (LOD0 ~29k); LOD1 = 30 %, LOD2 =
     'TIDES__CLOTH': 5200, 'TIDES__TRIDENT': 1800, 'TIDES__DETAILS': 1400, 'TIDES__PEDESTAL': 1600, 'TIDES__WAVES': 4000,
 }
 LOD_FACTORS = {0: 1.0, 1: 0.30, 2: 0.085}
+# V15.2: orçamento protegido de peças de identidade (fração mínima do LOD0 da peça, por LOD). Vazio = build histórico.
+PROTECT = {}
 # Especificação do build. Os valores abaixo são os do Guardião das Marés; outro projeto troca tudo por configure(),
 # lendo a seção "build" do seu JSON em projects/ (ex.: --projeto guardian-depths). Nada aqui é específico de Poseidon
 # além destes padrões.
@@ -274,7 +276,8 @@ def low_poly(hi, low_body, lod):
                 key = next(k for k in share if k in x.name)
                 if key == 'BELT':   # o cinto (escamas + solidify) não é manifold e não decima; o remesh fecha a malha
                     rm = x.modifiers.new('fechar', 'REMESH'); rm.mode = 'VOXEL'; rm.voxel_size = 0.003; apply_modifiers(x)
-                parts.append(_decimate(x, max(int(LOD0[name] * f * share[key]), 60)))
+                cota = max(f, PROTECT.get(key, {}).get(lod, 0))   # V15.2: a coroa (LAUREL) não cai abaixo da cota protegida
+                parts.append(_decimate(x, max(int(LOD0[name] * cota * share[key]), 60)))
             o = _join(parts, f'L{lod}_{name}')
             for g in o.vertex_groups[:]: o.vertex_groups.remove(g)
             o.name = f'L{lod}_{name}'
@@ -527,6 +530,11 @@ if __name__ == '__main__':
         b = pj['build']; configure(b)
         stage_game(src=WORK / b['fonte'].format(versao=ver), out=Path(__file__).resolve().parents[2] / b['saida'].format(versao=ver),
                    game_blend=WORK / b['jogo'].format(versao=ver))
+    if stage == 'game-v14-1-r2':
+        # V15.2: revisão só de LOD1 + mobile da V14.1 com a coroa protegida (60 % do LOD0 do louro). Pasta própria: nada histórico muda.
+        PROTECT['LAUREL'] = {1: 0.6}
+        stage_game(lods=(1,), src=WORK / 'guardian-tides-v14-1-sculpt.blend', out=OUT.parent / 'poseidon-v14-1-r2',
+                   game_blend=WORK / 'guardian-tides-v14-1-r2-game.blend')
     if stage == 'game-v14-1':
         stage_game(src=WORK / 'guardian-tides-v14-1-sculpt.blend', out=OUT.parent / 'poseidon-v14-1',
                    game_blend=WORK / 'guardian-tides-v14-1-game.blend')

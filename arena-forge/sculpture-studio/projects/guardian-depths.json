@@ -139,7 +139,21 @@
       "pasta": "arena-forge/assets/poseidon-depths-v1",
       "flag": "sculptDepthsV1",
       "relatorio": "docs/sculpture-studio-guardian-depths-v1.md",
-      "commit": "4e4bf85"
+      "commit": "4e4bf85",
+      "variantes": {
+        "lod0": "arena-forge/assets/poseidon-depths-v1/guardian-depths-lod0.glb",
+        "lod1": "arena-forge/assets/poseidon-depths-v1/guardian-depths-lod1.glb",
+        "lod2": "arena-forge/assets/poseidon-depths-v1/guardian-depths-lod2.glb",
+        "mobile": "arena-forge/assets/poseidon-depths-v1/guardian-depths-mobile-r2.glb"
+      },
+      "legado": [
+        {
+          "lod": "mobile",
+          "arquivo": "arena-forge/assets/poseidon-depths-v1/guardian-depths-mobile.glb",
+          "estado": "LEGACY_DEFECTIVE",
+          "motivo": "Texturas 512² de marfim e mármore pretas: o build copiava imagem assada só em memória (image.copy()). Preservado por histórico; não elegível."
+        }
+      ]
     },
     {
       "id": "v1-1",
@@ -147,7 +161,21 @@
       "pasta": "arena-forge/assets/poseidon-depths-v1-1",
       "flag": "sculptDepthsV11",
       "relatorio": "docs/sculpture-studio-guardian-depths-v1-1.md",
-      "commit": null
+      "commit": null,
+      "variantes": {
+        "lod0": "arena-forge/assets/poseidon-depths-v1-1/guardian-depths-lod0.glb",
+        "lod1": "arena-forge/assets/poseidon-depths-v1-1/guardian-depths-lod1.glb",
+        "lod2": "arena-forge/assets/poseidon-depths-v1-1/guardian-depths-lod2.glb",
+        "mobile": "arena-forge/assets/poseidon-depths-v1-1/guardian-depths-mobile-r2.glb"
+      },
+      "legado": [
+        {
+          "lod": "mobile",
+          "arquivo": "arena-forge/assets/poseidon-depths-v1-1/guardian-depths-mobile.glb",
+          "estado": "LEGACY_DEFECTIVE",
+          "motivo": "Texturas 512² de marfim e mármore pretas: o build copiava imagem assada só em memória (image.copy()). Preservado por histórico; não elegível."
+        }
+      ]
     }
   ],
   "atual": "v1-1",

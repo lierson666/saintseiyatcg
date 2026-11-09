@@ -22,6 +22,9 @@ import subprocess
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from sculpture_catalog import map_integrity  # V15.2: mapas vazios, pretos ou divergentes reprovam a variante
+
 ROOT = Path(__file__).resolve().parents[1]
 PROJECTS = ROOT / 'arena-forge/sculpture-studio/projects'
 BOARD = ROOT / 'docs/art-bible/SCULPTURE_PRODUCTION_BOARD.md'
@@ -110,12 +113,15 @@ def homologate(proj, versao, port):
     def check(cid, nome, ok, detalhe=''):
         checks.append({'id': cid, 'nome': nome, 'ok': bool(ok), 'detalhe': detalhe})
 
-    files = {l: folder / proj['glb'].format(lod=l) for l in LODS}
+    # V15.2: as variantes do projeto (podem vir de revisões em outra pasta, ex. LOD1 r2) mandam; sem elas, o padrão antigo
+    files = {l: ROOT / v['variantes'][l] for l in LODS} if v.get('variantes') else {l: folder / proj['glb'].format(lod=l) for l in LODS}
     missing = [l for l, f in files.items() if not f.exists()]
     check('arquivos', 'Os 4 GLB existem (LOD0, LOD1, LOD2, Mobile)', not missing, ', '.join(missing) or 'ok')
     if missing: return checks, lods
-    bad = sums_ok(folder)
-    check('hashes', 'SHA-256 dos GLB batem com SHA256SUMS', bad == [], 'sem SHA256SUMS' if bad is None else (', '.join(bad) or 'ok'))
+    bad = []
+    for d in sorted({f.parent for f in files.values()} | {folder}):
+        r = sums_ok(d); bad += [f'{d.name}: sem SHA256SUMS'] if r is None else [f'{d.name}/{x}' for x in r]
+    check('hashes', 'SHA-256 dos GLB batem com SHA256SUMS', bad == [], ', '.join(bad) or 'ok')
     b = proj['orcamento']
     for l, f in files.items():
         a, fa = audit(f), glb_facts(f)
@@ -144,6 +150,8 @@ def homologate(proj, versao, port):
                    for n in ref if n in fa['caixas']}
             pior = max(dev, key=dev.get)
             check(f'{l}-silhueta', f'{l}: caixa de cada peça a até {int(tol * 100)} cm da do LOD0', dev[pior] <= tol, f'pior: {pior} {dev[pior]:.2f} m')
+        probs = map_integrity(f, files['lod0'] if l != 'lod0' else None, proj.get('build', {}).get('pretoIntencional', []))
+        check(f'{l}-mapas', f'{l}: nenhum mapa vazio, preto ou divergente do LOD0', not probs, ', '.join(f"{x['imagem']} {x['tipo']}" for x in probs) or 'ok')
         if l == 'mobile':
             check('mobile-texturas', f'mobile: texturas até {b["texturaMobile"]}²', lods[-1]['texturaMax'] <= b['texturaMobile'], f'{lods[-1]["texturaMax"]} px')
     cap = proj['capturas']

@@ -32,6 +32,16 @@ export function depthsUrl(quality) {
 const COMP = {5120: Int8Array, 5121: Uint8Array, 5122: Int16Array, 5123: Uint16Array, 5125: Uint32Array, 5126: Float32Array};
 const SIZE = {SCALAR: 1, VEC2: 2, VEC3: 3, VEC4: 4};
 
+// V15.2: versão do projeto pela flag (o Sculpture Manager pega as variantes no catálogo por projeto + versão).
+export function guardianVersion() {
+  try { const q = new URLSearchParams(location.search); return q.get('sculptV141') === '1' ? 'v14-1' : q.get('sculptV14') === '1' ? 'v14' : 'v13'; } catch { return 'v13'; }
+}
+export function depthsVersion() {
+  try { const q = new URLSearchParams(location.search); return q.get('sculptDepthsV11') === '1' ? 'v1-1' : q.get('sculptDepthsV1') === '1' ? 'v1' : 'clay'; } catch { return 'clay'; }
+}
+export function sculptLodOverride() {
+  try { const o = new URLSearchParams(location.search).get('sculptLod'); return ['lod0', 'lod1', 'lod2', 'mobile'].includes(o) ? o : null; } catch { return null; }
+}
 export function guardianFlag() {
   try { const q = new URLSearchParams(location.search); return ['sculptV13', 'sculptV14', 'sculptV141'].some(k => q.get(k) === '1'); } catch { return false; }
 }

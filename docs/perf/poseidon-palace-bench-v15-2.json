@@ -1,0 +1,765 @@
+{
+ "data": "2026-11-08 22:41",
+ "condicoes": {
+  "navegador": "Chrome (Playwright) --use-angle=metal",
+  "quadrosPorAmostra": 10,
+  "amostrasPorRodada": 10,
+  "rodadas": 2,
+  "ordem": "versões intercaladas em cada rodada e perfil",
+  "perfis": {
+   "alto": {
+    "viewport": {
+     "width": 1600,
+     "height": 900
+    },
+    "device_scale_factor": 2,
+    "quality": "high"
+   },
+   "medio": {
+    "viewport": {
+     "width": 1600,
+     "height": 900
+    },
+    "device_scale_factor": 2,
+    "quality": "medium"
+   },
+   "baixo": {
+    "viewport": {
+     "width": 1600,
+     "height": 900
+    },
+    "device_scale_factor": 2,
+    "quality": "low"
+   },
+   "celular": {
+    "viewport": {
+     "width": 390,
+     "height": 844
+    },
+    "device_scale_factor": 3,
+    "is_mobile": true,
+    "has_touch": true,
+    "quality": "phone"
+   }
+  }
+ },
+ "resultados": {
+  "v151|alto|chave1": {
+   "rodadas": [
+    12.65,
+    14.81
+   ],
+   "drawCalls": 227,
+   "triangulos": 192886,
+   "texturas": 27,
+   "geometrias": 185,
+   "pixelRatio": 1.75,
+   "nivel": "high",
+   "memGeoMB": 4.5,
+   "memTexMB": 313.5,
+   "memTexGuardioesMB": 287.3,
+   "glbs": [
+    {
+     "glb": "poseidon-v14-1/guardian-tides-lod0.glb",
+     "ms": 39,
+     "bytes": 5468028
+    },
+    {
+     "glb": "poseidon-depths-v1-1/guardian-depths-lod0.glb",
+     "ms": 38,
+     "bytes": 3490888
+    }
+   ],
+   "heapMB": 35,
+   "gpuMsMediana": 13.74,
+   "gpuMsP95": 15.51,
+   "gpuMsMin": 11.9,
+   "gpuMsMax": 15.64,
+   "n": 20
+  },
+  "v151|alto|partida": {
+   "rodadas": [
+    4.65,
+    5.23
+   ],
+   "drawCalls": 95,
+   "triangulos": 123162,
+   "texturas": 27,
+   "geometrias": 185,
+   "pixelRatio": 1.75,
+   "nivel": "high",
+   "memGeoMB": 4.5,
+   "memTexMB": 313.5,
+   "memTexGuardioesMB": 287.3,
+   "glbs": [
+    {
+     "glb": "poseidon-v14-1/guardian-tides-lod0.glb",
+     "ms": 39,
+     "bytes": 5468028
+    },
+    {
+     "glb": "poseidon-depths-v1-1/guardian-depths-lod0.glb",
+     "ms": 38,
+     "bytes": 3490888
+    }
+   ],
+   "heapMB": 28.9,
+   "gpuMsMediana": 4.77,
+   "gpuMsP95": 5.47,
+   "gpuMsMin": 4.22,
+   "gpuMsMax": 5.69,
+   "n": 20
+  },
+  "v151|medio|chave1": {
+   "rodadas": [
+    7.88,
+    8.2
+   ],
+   "drawCalls": 225,
+   "triangulos": 152104,
+   "texturas": 27,
+   "geometrias": 180,
+   "pixelRatio": 1.25,
+   "nivel": "medium",
+   "memGeoMB": 2.8,
+   "memTexMB": 89.1,
+   "memTexGuardioesMB": 71.8,
+   "glbs": [
+    {
+     "glb": "poseidon-v14-1/guardian-tides-lod1.glb",
+     "ms": 10,
+     "bytes": 1599372
+    },
+    {
+     "glb": "poseidon-depths-v1-1/guardian-depths-lod1.glb",
+     "ms": 6,
+     "bytes": 1319908
+    }
+   ],
+   "heapMB": 23.1,
+   "gpuMsMediana": 8.04,
+   "gpuMsP95": 8.94,
+   "gpuMsMin": 7.65,
+   "gpuMsMax": 9.15,
+   "n": 20
+  },
+  "v151|medio|partida": {
+   "rodadas": [
+    3.28,
+    3.25
+   ],
+   "drawCalls": 92,
+   "triangulos": 122354,
+   "texturas": 27,
+   "geometrias": 180,
+   "pixelRatio": 1.25,
+   "nivel": "medium",
+   "memGeoMB": 2.8,
+   "memTexMB": 89.1,
+   "memTexGuardioesMB": 71.8,
+   "glbs": [
+    {
+     "glb": "poseidon-v14-1/guardian-tides-lod1.glb",
+     "ms": 10,
+     "bytes": 1599372
+    },
+    {
+     "glb": "poseidon-depths-v1-1/guardian-depths-lod1.glb",
+     "ms": 6,
+     "bytes": 1319908
+    }
+   ],
+   "heapMB": 26.3,
+   "gpuMsMediana": 3.26,
+   "gpuMsP95": 3.54,
+   "gpuMsMin": 2.74,
+   "gpuMsMax": 3.7,
+   "n": 20
+  },
+  "v151|baixo|chave1": {
+   "rodadas": [
+    5.12,
+    4.98
+   ],
+   "drawCalls": 206,
+   "triangulos": 51520,
+   "texturas": 25,
+   "geometrias": 158,
+   "pixelRatio": 1,
+   "nivel": "low",
+   "memGeoMB": 1.6,
+   "memTexMB": 84.8,
+   "memTexGuardioesMB": 71.8,
+   "glbs": [
+    {
+     "glb": "poseidon-v14-1/guardian-tides-lod2.glb",
+     "ms": 6,
+     "bytes": 1176848
+    },
+    {
+     "glb": "poseidon-depths-v1-1/guardian-depths-lod2.glb",
+     "ms": 6,
+     "bytes": 1036440
+    }
+   ],
+   "heapMB": 21.3,
+   "gpuMsMediana": 5.02,
+   "gpuMsP95": 5.27,
+   "gpuMsMin": 4.76,
+   "gpuMsMax": 5.28,
+   "n": 20
+  },
+  "v151|baixo|partida": {
+   "rodadas": [
+    2.55,
+    2.49
+   ],
+   "drawCalls": 86,
+   "triangulos": 34186,
+   "texturas": 25,
+   "geometrias": 160,
+   "pixelRatio": 1,
+   "nivel": "low",
+   "memGeoMB": 1.6,
+   "memTexMB": 84.8,
+   "memTexGuardioesMB": 71.8,
+   "glbs": [
+    {
+     "glb": "poseidon-v14-1/guardian-tides-lod2.glb",
+     "ms": 6,
+     "bytes": 1176848
+    },
+    {
+     "glb": "poseidon-depths-v1-1/guardian-depths-lod2.glb",
+     "ms": 6,
+     "bytes": 1036440
+    }
+   ],
+   "heapMB": 22.5,
+   "gpuMsMediana": 2.5,
+   "gpuMsP95": 3.15,
+   "gpuMsMin": 2.23,
+   "gpuMsMax": 3.48,
+   "n": 20
+  },
+  "v151|celular|chave1": {
+   "rodadas": [
+    3.93,
+    3.09
+   ],
+   "drawCalls": 129,
+   "triangulos": 47512,
+   "texturas": 16,
+   "geometrias": 90,
+   "pixelRatio": 1.25,
+   "nivel": "phone",
+   "memGeoMB": 2.2,
+   "memTexMB": 36.9,
+   "memTexGuardioesMB": 23.9,
+   "glbs": [
+    {
+     "glb": "poseidon-v14-1/guardian-tides-mobile-r2.glb",
+     "ms": 6,
+     "bytes": 1005528
+    },
+    {
+     "glb": "poseidon-depths-v1-1/guardian-depths-mobile-r2.glb",
+     "ms": 7,
+     "bytes": 906420
+    }
+   ],
+   "heapMB": 20.9,
+   "gpuMsMediana": 3.44,
+   "gpuMsP95": 4.11,
+   "gpuMsMin": 2.69,
+   "gpuMsMax": 4.26,
+   "n": 20
+  },
+  "v151|celular|partida": {
+   "rodadas": [
+    2.2,
+    1.92
+   ],
+   "drawCalls": 56,
+   "triangulos": 32314,
+   "texturas": 16,
+   "geometrias": 90,
+   "pixelRatio": 1.25,
+   "nivel": "phone",
+   "memGeoMB": 2.2,
+   "memTexMB": 36.9,
+   "memTexGuardioesMB": 23.9,
+   "glbs": [
+    {
+     "glb": "poseidon-v14-1/guardian-tides-mobile-r2.glb",
+     "ms": 6,
+     "bytes": 1005528
+    },
+    {
+     "glb": "poseidon-depths-v1-1/guardian-depths-mobile-r2.glb",
+     "ms": 7,
+     "bytes": 906420
+    }
+   ],
+   "heapMB": 19.9,
+   "gpuMsMediana": 1.98,
+   "gpuMsP95": 2.38,
+   "gpuMsMin": 1.51,
+   "gpuMsMax": 2.49,
+   "n": 20
+  },
+  "v152|alto|chave1": {
+   "rodadas": [
+    12.8,
+    14.75
+   ],
+   "drawCalls": 227,
+   "triangulos": 192886,
+   "texturas": 27,
+   "geometrias": 185,
+   "pixelRatio": 1.75,
+   "nivel": "high",
+   "memGeoMB": 4.5,
+   "memTexMB": 313.5,
+   "memTexGuardioesMB": 287.3,
+   "glbs": [
+    {
+     "glb": "poseidon-v14-1/guardian-tides-lod0.glb",
+     "ms": 78,
+     "bytes": 5468028
+    },
+    {
+     "glb": "poseidon-depths-v1-1/guardian-depths-lod0.glb",
+     "ms": 24,
+     "bytes": 3490888
+    }
+   ],
+   "heapMB": 35.9,
+   "gpuMsMediana": 13.5,
+   "gpuMsP95": 15.08,
+   "gpuMsMin": 12.39,
+   "gpuMsMax": 15.36,
+   "n": 20
+  },
+  "v152|alto|partida": {
+   "rodadas": [
+    4.89,
+    4.89
+   ],
+   "drawCalls": 95,
+   "triangulos": 123162,
+   "texturas": 27,
+   "geometrias": 185,
+   "pixelRatio": 1.4000000000000001,
+   "nivel": "high",
+   "memGeoMB": 4.5,
+   "memTexMB": 313.5,
+   "memTexGuardioesMB": 287.3,
+   "glbs": [
+    {
+     "glb": "poseidon-v14-1/guardian-tides-lod0.glb",
+     "ms": 78,
+     "bytes": 5468028
+    },
+    {
+     "glb": "poseidon-depths-v1-1/guardian-depths-lod0.glb",
+     "ms": 24,
+     "bytes": 3490888
+    }
+   ],
+   "heapMB": 27.6,
+   "gpuMsMediana": 4.89,
+   "gpuMsP95": 5.26,
+   "gpuMsMin": 4.23,
+   "gpuMsMax": 5.72,
+   "n": 20
+  },
+  "v152|medio|chave1": {
+   "rodadas": [
+    7.83,
+    7.95
+   ],
+   "drawCalls": 225,
+   "triangulos": 152428,
+   "texturas": 27,
+   "geometrias": 182,
+   "pixelRatio": 1.25,
+   "nivel": "medium",
+   "memGeoMB": 2.9,
+   "memTexMB": 89.1,
+   "memTexGuardioesMB": 71.8,
+   "glbs": [
+    {
+     "glb": "poseidon-v14-1-r2/guardian-tides-lod1.glb",
+     "ms": 12,
+     "bytes": 1627612
+    },
+    {
+     "glb": "poseidon-depths-v1-1/guardian-depths-lod1.glb",
+     "ms": 12,
+     "bytes": 1319908
+    }
+   ],
+   "heapMB": 24,
+   "gpuMsMediana": 7.9,
+   "gpuMsP95": 8.81,
+   "gpuMsMin": 7.61,
+   "gpuMsMax": 9.43,
+   "n": 20
+  },
+  "v152|medio|partida": {
+   "rodadas": [
+    3.46,
+    3.86
+   ],
+   "drawCalls": 92,
+   "triangulos": 122354,
+   "texturas": 27,
+   "geometrias": 182,
+   "pixelRatio": 1.25,
+   "nivel": "medium",
+   "memGeoMB": 2.9,
+   "memTexMB": 89.1,
+   "memTexGuardioesMB": 71.8,
+   "glbs": [
+    {
+     "glb": "poseidon-v14-1-r2/guardian-tides-lod1.glb",
+     "ms": 12,
+     "bytes": 1627612
+    },
+    {
+     "glb": "poseidon-depths-v1-1/guardian-depths-lod1.glb",
+     "ms": 12,
+     "bytes": 1319908
+    }
+   ],
+   "heapMB": 21.6,
+   "gpuMsMediana": 3.76,
+   "gpuMsP95": 4.07,
+   "gpuMsMin": 2.83,
+   "gpuMsMax": 4.17,
+   "n": 20
+  },
+  "v152|baixo|chave1": {
+   "rodadas": [
+    5.02,
+    5.4
+   ],
+   "drawCalls": 206,
+   "triangulos": 51520,
+   "texturas": 25,
+   "geometrias": 160,
+   "pixelRatio": 1,
+   "nivel": "low",
+   "memGeoMB": 1.6,
+   "memTexMB": 84.8,
+   "memTexGuardioesMB": 71.8,
+   "glbs": [
+    {
+     "glb": "poseidon-v14-1/guardian-tides-lod2.glb",
+     "ms": 5,
+     "bytes": 1176848
+    },
+    {
+     "glb": "poseidon-depths-v1-1/guardian-depths-lod2.glb",
+     "ms": 5,
+     "bytes": 1036440
+    }
+   ],
+   "heapMB": 20.2,
+   "gpuMsMediana": 5.12,
+   "gpuMsP95": 5.88,
+   "gpuMsMin": 4.92,
+   "gpuMsMax": 6.81,
+   "n": 20
+  },
+  "v152|baixo|partida": {
+   "rodadas": [
+    2.42,
+    2.74
+   ],
+   "drawCalls": 86,
+   "triangulos": 34186,
+   "texturas": 25,
+   "geometrias": 160,
+   "pixelRatio": 1,
+   "nivel": "low",
+   "memGeoMB": 1.6,
+   "memTexMB": 84.8,
+   "memTexGuardioesMB": 71.8,
+   "glbs": [
+    {
+     "glb": "poseidon-v14-1/guardian-tides-lod2.glb",
+     "ms": 5,
+     "bytes": 1176848
+    },
+    {
+     "glb": "poseidon-depths-v1-1/guardian-depths-lod2.glb",
+     "ms": 5,
+     "bytes": 1036440
+    }
+   ],
+   "heapMB": 22.7,
+   "gpuMsMediana": 2.59,
+   "gpuMsP95": 2.89,
+   "gpuMsMin": 2.15,
+   "gpuMsMax": 3.1,
+   "n": 20
+  },
+  "v152|celular|chave1": {
+   "rodadas": [
+    3.54,
+    3.4
+   ],
+   "drawCalls": 129,
+   "triangulos": 47512,
+   "texturas": 16,
+   "geometrias": 90,
+   "pixelRatio": 1.25,
+   "nivel": "phone",
+   "memGeoMB": 2.2,
+   "memTexMB": 36.9,
+   "memTexGuardioesMB": 23.9,
+   "glbs": [
+    {
+     "glb": "poseidon-v14-1-r2/guardian-tides-mobile.glb",
+     "ms": 4,
+     "bytes": 832616
+    },
+    {
+     "glb": "poseidon-depths-v1-1/guardian-depths-mobile-r2.glb",
+     "ms": 5,
+     "bytes": 906420
+    }
+   ],
+   "heapMB": 22.1,
+   "gpuMsMediana": 3.46,
+   "gpuMsP95": 3.99,
+   "gpuMsMin": 2.82,
+   "gpuMsMax": 4.15,
+   "n": 20
+  },
+  "v152|celular|partida": {
+   "rodadas": [
+    1.98,
+    1.71
+   ],
+   "drawCalls": 56,
+   "triangulos": 32314,
+   "texturas": 16,
+   "geometrias": 90,
+   "pixelRatio": 1.25,
+   "nivel": "phone",
+   "memGeoMB": 2.2,
+   "memTexMB": 36.9,
+   "memTexGuardioesMB": 23.9,
+   "glbs": [
+    {
+     "glb": "poseidon-v14-1-r2/guardian-tides-mobile.glb",
+     "ms": 4,
+     "bytes": 832616
+    },
+    {
+     "glb": "poseidon-depths-v1-1/guardian-depths-mobile-r2.glb",
+     "ms": 5,
+     "bytes": 906420
+    }
+   ],
+   "heapMB": 21.4,
+   "gpuMsMediana": 1.85,
+   "gpuMsP95": 2.31,
+   "gpuMsMin": 1.46,
+   "gpuMsMax": 2.42,
+   "n": 20
+  }
+ },
+ "ciclosV152": [
+  {
+   "versao": "v152",
+   "perfil": "alto",
+   "rodada": 1,
+   "troca_high_mediumMs": 59,
+   "troca_high_highMs": 79,
+   "descarteMs": 7.3,
+   "descartePorItemMs": [
+    3.2,
+    4
+   ],
+   "recursosDepoisDoDescarte": 0,
+   "reentradaMs": 87,
+   "estado": [
+    "READY:lod0",
+    "READY:lod0"
+   ],
+   "recursos": 2
+  },
+  {
+   "versao": "v152",
+   "perfil": "medio",
+   "rodada": 1,
+   "troca_medium_highMs": 85,
+   "troca_medium_mediumMs": 31,
+   "descarteMs": 2.7,
+   "descartePorItemMs": [
+    1.2,
+    1.3
+   ],
+   "recursosDepoisDoDescarte": 0,
+   "reentradaMs": 23,
+   "estado": [
+    "READY:lod1",
+    "READY:lod1"
+   ],
+   "recursos": 2
+  },
+  {
+   "versao": "v152",
+   "perfil": "baixo",
+   "rodada": 1,
+   "troca_low_highMs": 94,
+   "troca_low_lowMs": 34,
+   "descarteMs": 2.4,
+   "descartePorItemMs": [
+    1.2,
+    1.2
+   ],
+   "recursosDepoisDoDescarte": 0,
+   "reentradaMs": 24,
+   "estado": [
+    "READY:lod2",
+    "READY:lod2"
+   ],
+   "recursos": 2
+  },
+  {
+   "versao": "v152",
+   "perfil": "celular",
+   "rodada": 1,
+   "troca_phone_lowMs": 27,
+   "troca_phone_phoneMs": 14,
+   "descarteMs": 0.7,
+   "descartePorItemMs": [
+    0.4,
+    0.2
+   ],
+   "recursosDepoisDoDescarte": 0,
+   "reentradaMs": 13,
+   "estado": [
+    "READY:mobile",
+    "READY:mobile"
+   ],
+   "recursos": 2
+  },
+  {
+   "versao": "v152",
+   "perfil": "alto",
+   "rodada": 2,
+   "troca_high_mediumMs": 37,
+   "troca_high_highMs": 66,
+   "descarteMs": 4.5,
+   "descartePorItemMs": [
+    2.6,
+    1.7
+   ],
+   "recursosDepoisDoDescarte": 0,
+   "reentradaMs": 73,
+   "estado": [
+    "READY:lod0",
+    "READY:lod0"
+   ],
+   "recursos": 2
+  },
+  {
+   "versao": "v152",
+   "perfil": "medio",
+   "rodada": 2,
+   "troca_medium_highMs": 115,
+   "troca_medium_mediumMs": 43,
+   "descarteMs": 2.2,
+   "descartePorItemMs": [
+    1.3,
+    0.9
+   ],
+   "recursosDepoisDoDescarte": 0,
+   "reentradaMs": 30,
+   "estado": [
+    "READY:lod1",
+    "READY:lod1"
+   ],
+   "recursos": 2
+  },
+  {
+   "versao": "v152",
+   "perfil": "baixo",
+   "rodada": 2,
+   "troca_low_highMs": 148,
+   "troca_low_lowMs": 31,
+   "descarteMs": 2.2,
+   "descartePorItemMs": [
+    0.9,
+    1.1
+   ],
+   "recursosDepoisDoDescarte": 0,
+   "reentradaMs": 21,
+   "estado": [
+    "READY:lod2",
+    "READY:lod2"
+   ],
+   "recursos": 2
+  },
+  {
+   "versao": "v152",
+   "perfil": "celular",
+   "rodada": 2,
+   "troca_phone_lowMs": 34,
+   "troca_phone_phoneMs": 15,
+   "descarteMs": 0.9,
+   "descartePorItemMs": [
+    0.3,
+    0.5
+   ],
+   "recursosDepoisDoDescarte": 0,
+   "reentradaMs": 13,
+   "estado": [
+    "READY:mobile",
+    "READY:mobile"
+   ],
+   "recursos": 2
+  }
+ ],
+ "cargaSegundos": {
+  "v151:alto": [
+   1.3,
+   0.9
+  ],
+  "v152:alto": [
+   0.8,
+   1.0
+  ],
+  "v151:medio": [
+   0.7,
+   0.7
+  ],
+  "v152:medio": [
+   0.8,
+   0.9
+  ],
+  "v151:baixo": [
+   0.7,
+   0.6
+  ],
+  "v152:baixo": [
+   0.8,
+   0.7
+  ],
+  "v151:celular": [
+   0.6,
+   0.6
+  ],
+  "v152:celular": [
+   0.5,
+   0.6
+  ]
+ },
+ "errosDePagina": []
+}

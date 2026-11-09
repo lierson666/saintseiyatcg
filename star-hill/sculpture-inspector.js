@@ -6,13 +6,21 @@ import * as THREE from './vendor/three-0.160.0.module.min.js';
 import {OrbitControls} from './vendor/OrbitControls-0.160.0.js';
 import {GLTFLoader} from './vendor/GLTFLoader-0.160.0.js';
 import {css as projCss, renderHomologation, renderProjects} from './sculpture-projects.js?v=20261108-sp3';
+import {createSculptureManager, PROFILE_LOD} from '../arena-forge/sculpture-manager.js';
 
 const BASE = '../arena-forge/assets/poseidon-v13/';
-const LODS = [['lod0', 'LOD0 · desktop (texturas 2048)'], ['lod1', 'LOD1 · médio'], ['lod2', 'LOD2 · distante'], ['mobile', 'Mobile (LOD1 + 512²)'],
-  ['../poseidon-v14/guardian-tides-lod0', 'V14 · LOD0 (revisão)'], ['../poseidon-v14/guardian-tides-lod1', 'V14 · LOD1'], ['../poseidon-v14/guardian-tides-lod2', 'V14 · LOD2'], ['../poseidon-v14/guardian-tides-mobile', 'V14 · Mobile'],
-  ['../poseidon-v14-1/guardian-tides-lod0', 'V14.1 · LOD0 (revisão)'], ['../poseidon-v14-1/guardian-tides-lod1', 'V14.1 · LOD1'], ['../poseidon-v14-1/guardian-tides-lod2', 'V14.1 · LOD2'], ['../poseidon-v14-1/guardian-tides-mobile', 'V14.1 · Mobile'],
-  ['../poseidon-depths-v1/guardian-depths-lod0', 'Profundezas V1 · LOD0'], ['../poseidon-depths-v1/guardian-depths-lod1', 'Profundezas V1 · LOD1'], ['../poseidon-depths-v1/guardian-depths-lod2', 'Profundezas V1 · LOD2'], ['../poseidon-depths-v1/guardian-depths-mobile', 'Profundezas V1 · Mobile'],
-  ['../poseidon-depths-v1-1/guardian-depths-lod0', 'Profundezas V1.1 · LOD0'], ['../poseidon-depths-v1-1/guardian-depths-lod1', 'Profundezas V1.1 · LOD1'], ['../poseidon-depths-v1-1/guardian-depths-lod2', 'Profundezas V1.1 · LOD2'], ['../poseidon-depths-v1-1/guardian-depths-mobile', 'Profundezas V1.1 · Mobile']];
+const LODS = [['lod0', 'LOD0 · desktop (texturas 2048)'], ['lod1', 'LOD1 · médio'], ['lod2', 'LOD2 · distante'], ['mobile', 'Mobile (LOD1 + 512²) · legado: texturas pretas, não elegível'],
+  ['../poseidon-v14/guardian-tides-lod0', 'V14 · LOD0 (revisão)'], ['../poseidon-v14/guardian-tides-lod1', 'V14 · LOD1'], ['../poseidon-v14/guardian-tides-lod2', 'V14 · LOD2'], ['../poseidon-v14/guardian-tides-mobile', 'V14 · Mobile · legado: texturas pretas, não elegível'],
+  ['../poseidon-v14-1/guardian-tides-lod0', 'V14.1 · LOD0 (revisão)'], ['../poseidon-v14-1/guardian-tides-lod1', 'V14.1 · LOD1'], ['../poseidon-v14-1/guardian-tides-lod2', 'V14.1 · LOD2'], ['../poseidon-v14-1/guardian-tides-mobile', 'V14.1 · Mobile · legado: texturas pretas, não elegível'],
+  ['../poseidon-depths-v1/guardian-depths-lod0', 'Profundezas V1 · LOD0'], ['../poseidon-depths-v1/guardian-depths-lod1', 'Profundezas V1 · LOD1'], ['../poseidon-depths-v1/guardian-depths-lod2', 'Profundezas V1 · LOD2'], ['../poseidon-depths-v1/guardian-depths-mobile', 'Profundezas V1 · Mobile · legado: texturas pretas, não elegível'],
+  ['../poseidon-depths-v1-1/guardian-depths-lod0', 'Profundezas V1.1 · LOD0'], ['../poseidon-depths-v1-1/guardian-depths-lod1', 'Profundezas V1.1 · LOD1'], ['../poseidon-depths-v1-1/guardian-depths-lod2', 'Profundezas V1.1 · LOD2'], ['../poseidon-depths-v1-1/guardian-depths-mobile', 'Profundezas V1.1 · Mobile · legado: texturas pretas, não elegível'],
+  // V15.2: variantes válidas do catálogo (arena-forge/assets/sculpture-catalog.json)
+  ['mobile-r2', 'V13 · Mobile r2 (válido)'], ['../poseidon-v14/guardian-tides-mobile-r2', 'V14 · Mobile r2 (válido)'],
+  ['../poseidon-v14-1-r2/guardian-tides-lod1', 'V14.1 · LOD1 r2 (coroa protegida)'], ['../poseidon-v14-1-r2/guardian-tides-mobile', 'V14.1 · Mobile r2 (coroa protegida)'],
+  ['../poseidon-depths-v1/guardian-depths-mobile-r2', 'Profundezas V1 · Mobile r2 (válido)'], ['../poseidon-depths-v1-1/guardian-depths-mobile-r2', 'Profundezas V1.1 · Mobile r2 (válido)']];
+const CATALOG = '../arena-forge/assets/sculpture-catalog.json';
+// URL do GLB → caminho do catálogo (arena-forge/assets/...)
+const catPath = url => decodeURIComponent(new URL(url, location.href).pathname).replace(/^.*?(arena-forge\/assets\/)/, '$1');
 const VIEWS = {frente: [0, 0, 1], costas: [0, 0, -1], esquerda: [1, 0, 0], direita: [-1, 0, 0], 'tres-quartos': [-0.7, 0.18, 1]};
 const MODES = [['textura', 'Materiais'], ['argila', 'Argila'], ['normais', 'Normais'], ['base', 'Só cor base'], ['ao', 'Só AO']];
 const PID = 'poseidon-palace';
@@ -72,11 +80,20 @@ export async function mountSculpture(host, ctx, nav) {
     <div class="ss-col">
       <fieldset><legend>Métricas</legend><table data-ss="metrics"></table></fieldset>
       <fieldset><legend>LODs</legend><table data-ss="lods"><tr><td>Carregando…</td></tr></table></fieldset>
+      <fieldset><legend>Catálogo da variante</legend><table data-ss="cat"><tr><td>—</td></tr></table></fieldset>
+      <fieldset><legend>Runtime · Sculpture Manager</legend>
+        <label>Escultura <select data-ss="rt-proj"></select></label>
+        <div class="ss-row">${Object.keys(PROFILE_LOD).map(k => `<button class="secondary" data-ss-rt="${k}">${k}</button>`).join('')}</div>
+        <div class="ss-row"><button class="secondary" data-ss-rt="off">Voltar ao inspetor</button></div>
+        <table data-ss="rt"><tr><td>Escolha um perfil para carregar pelo gerenciador do jogo.</td></tr></table></fieldset>
       <fieldset><legend>Texturas</legend><div class="ss-tex" data-ss="tex"></div></fieldset>
       <fieldset><legend>Captura</legend><button data-ss-act="shot">Salvar PNG da vista</button></fieldset>
       <p class="ss-note">Escultura gerada por script no Blender (base anatômica CC0). Aprovação artística é do autor: este inspetor só mede e mostra.</p>
     </div><div class="ss-hom" data-ss="hom"></div></section>`;
   st = createInspector(host.querySelector('[data-ss="stage"]'), host);
+  st.catalog = await fetch(CATALOG, {cache: 'no-cache'}).then(r => r.ok ? r.json() : null).catch(() => null);
+  host.querySelector('[data-ss="rt-proj"]').innerHTML = Object.entries(st.catalog?.esculturas || {}).flatMap(([id, e]) =>
+    Object.keys(e.versoes).map(v => `<option value="${esc(id)}|${esc(v)}" ${v === e.atual ? 'selected' : ''}>${esc(e.nome)} · ${esc(v)}</option>`)).join('');
   try {
     const proj = await ctx.api(`producao?id=${PID}`);
     host.querySelector('[data-ss="ab"]').insertAdjacentHTML('beforeend', proj.artboards.map(b => `<option value="${esc(b.arquivo)}">${esc(b.nome)} v${b.versao}</option>`).join(''));
@@ -147,6 +164,46 @@ function createInspector(stage, root) {
     $('dims').textContent = `Caixa: ${dim.x.toFixed(2)} × ${dim.y.toFixed(2)} × ${dim.z.toFixed(2)} m · base em y = ${box.min.y.toFixed(2)}`;
     $('src').textContent = `${label} · ${(buf.byteLength / 1048576).toFixed(2)} MB`;
     applyScale(); applyMode(); view('frente'); nodes(); textures(); resize();
+    if (url) catalogInfo(catPath(url));
+  }
+  // V15.2: dados medidos do catálogo (tools/sculpture_catalog.py), não inventados aqui.
+  function catalogInfo(path) {
+    const all = Object.values(api.catalog?.esculturas || {}).flatMap(e => Object.values(e.versoes).flatMap(v => [...Object.values(v.variantes), ...v.legado]));
+    const e = all.find(x => x.arquivo === path);
+    $('cat').innerHTML = !e ? `<tr><td>Fora do catálogo (${esc(path)})</td></tr>` : [['Projeto', `${e.nome || e.projeto}`], ['Versão · LOD', `${e.versao} · ${e.lod}`],
+      ['Triângulos', e.tri?.toLocaleString('pt-BR')], ['Texturas', `${e.texturas} · até ${e.texturaMax}²`], ['Memória de textura (est.)', `${e.memoriaTexturaMB} MB`],
+      ['Mapas', e.mapas?.ok ? 'íntegros' : e.mapas?.problemas.map(p => `${p.imagem} ${p.tipo}`).join(', ')], ['SHA-256', `<code title="${e.sha256}">${e.sha256?.slice(0, 12)}…</code> ${e.hashOk ? 'confere' : 'NÃO confere'}`],
+      ['Estado', `<b>${e.estado}</b>${e.elegivel ? ' · elegível' : ' · não elegível'}${e.artistico ? ' · ' + e.artistico : ''}`], ...(e.motivo ? [['Motivo', esc(e.motivo)]] : [])]
+      .map(([k, v]) => `<tr><td>${k}</td><td>${v}</td></tr>`).join('');
+  }
+  // V15.2: runtime — a escultura entra pelo mesmo gerenciador do jogo, e o perfil troca o LOD sem recarregar a página.
+  let rt = null, rtGroup = null, rtTimer = 0;
+  function runtime(profile) {
+    const [id, ver] = ($('rt-proj').value || '').split('|');
+    const vs = api.catalog?.esculturas?.[id]?.versoes?.[ver]?.variantes;
+    if (profile === 'off' || !vs) { rt?.dispose(); rt = null; if (rtGroup) scene.remove(rtGroup); rtGroup = null; clearInterval(rtTimer); holder.visible = true; $('rt').innerHTML = '<tr><td>Inspetor.</td></tr>'; return; }
+    if (!rt || rt._key !== id + ver) {
+      rt?.dispose(); if (rtGroup) scene.remove(rtGroup);
+      rtGroup = new THREE.Group(); scene.add(rtGroup);
+      rt = createSculptureManager(THREE, {parent: rtGroup, baseUrl: new URL('../', import.meta.url).href, profile});
+      rt._key = id + ver;
+      rt.register({id, project: id, version: ver, variants: Object.fromEntries(Object.entries(vs).filter(([, e]) => e.elegivel).map(([l, e]) => [l, e.arquivo])), position: [0, 0, 0]});
+      rt.require('editor');
+      clearInterval(rtTimer); rtTimer = setInterval(rtPanel, 400);
+    } else rt.setProfile(profile);
+    holder.visible = false;
+    root.querySelectorAll('[data-ss-rt]').forEach(b => b.setAttribute('aria-pressed', b.dataset.ssRt === profile));
+  }
+  function rtPanel() {
+    if (!rt) return;
+    const d = rt.diagnostics(), it = d.items[0];
+    if (!it) return;
+    const hom = Object.values(api.catalog.esculturas[it.project].versoes[it.version].variantes).find(e => e.lod === it.loaded);
+    $('rt').innerHTML = [['Perfil', d.profile], ['Variante pedida', it.requested ?? '—'], ['Variante carregada', it.loaded ?? '—'], ['Estado', `<b>${it.state}</b>`],
+      ['Memória de textura (est.)', `${it.texMB} MB`], ['Referências ativas', it.refs], ['Motivos de residência', it.reasons.join(', ') || '—'],
+      ['Último carregamento', it.lastLoad ? `${it.lastLoad.lod} · ${it.lastLoad.ms} ms · ${(it.lastLoad.bytes / 1048576).toFixed(2)} MB` : '—'],
+      ['Último descarte', it.lastDispose ? `${it.lastDispose.ms} ms` : '—'], ['Erro', it.error ? esc(it.error.msg) : '—'],
+      ['Homologação', hom ? `${hom.estado}${hom.artistico ? ' · ' + hom.artistico : ''}` : '—']].map(([k, v]) => `<tr><td>${k}</td><td>${v}</td></tr>`).join('');
   }
 
   function applyScale() {
@@ -232,6 +289,7 @@ function createInspector(stage, root) {
     if (act === 'ortho') { cam = cam === ortho ? persp : ortho; b.setAttribute('aria-pressed', cam === ortho); resize(); }
     if (act === 'wire') { wire = !wire; b.setAttribute('aria-pressed', wire); applyMode(); }
     if (act === 'shot') shot();
+    if (b.dataset.ssRt) runtime(b.dataset.ssRt);
   };
   const onInput = async e => {
     const k = e.target.dataset.ss; if (!k || !root.contains(e.target)) return;
@@ -245,8 +303,8 @@ function createInspector(stage, root) {
   root.addEventListener('click', onClick); root.addEventListener('change', onInput); root.addEventListener('input', onInput);
   frame();
   const setSpin = on => { spin = on; root.querySelector('[data-ss-act="spin"]')?.setAttribute('aria-pressed', on); };
-  const api = {load, compareLods, view, setSpin, stats: () => model && stats(model), renderer,
-    dispose() { cancelAnimationFrame(raf); ro.disconnect(); root.removeEventListener('click', onClick); root.removeEventListener('change', onInput); root.removeEventListener('input', onInput); if (model) dispose(model); renderer.dispose(); controls.dispose(); }};
+  const api = {load, compareLods, view, setSpin, stats: () => model && stats(model), renderer, catalog: null, runtime, get rt() { return rt; },
+    dispose() { rt?.dispose(); clearInterval(rtTimer); cancelAnimationFrame(raf); ro.disconnect(); root.removeEventListener('click', onClick); root.removeEventListener('change', onInput); root.removeEventListener('input', onInput); if (model) dispose(model); renderer.dispose(); controls.dispose(); }};
   window.__sculptureStudio = api;   // usado pelos testes (tools/test-sculpture-studio.py)
   return api;
 }
