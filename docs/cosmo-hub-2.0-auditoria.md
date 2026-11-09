@@ -76,3 +76,8 @@ Cada item: teste automatizado (`test_cosmo.py` para API, `node --test` para lóg
 - **Caddy**: só root (terminal web da Hostinger); script com validação e backup.
 - **Arte `-ref`**: nunca listar nem linkar no Hub público.
 - **Volume de dados**: hoje há 7 duelos online; winrate e meta vão demorar a ter amostra.
+
+## 6. Andamento
+
+- **09/11/2026 — P1 no ar** (commits `d80897a`, `6d17475`): Codex com as 607 cartas em páginas de 60, chips de facção, keyword, custo 7+ e filtros na URL; Decks com filtro por Deus, ordenação (recentes, winrate online, nota, favoritos), páginas, curva de Cosmo e Copiar link; skeleton, erro com Tentar de novo, foco visível, alvos de 44 px, menu e abas rolando de lado no mobile; selo sem "build unknown". Backups: `/data/*-pre-p1-20261109.db`, `/home/dev/backups/cosmohub-pre-p1/`, `cosmo.py.bak-pre-p1`.
+- Próximo: P2 (perfis públicos e página de carta com artes alternativas e decks que usam a carta).
