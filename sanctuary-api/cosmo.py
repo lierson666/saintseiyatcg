@@ -459,7 +459,7 @@ def deck_stats(row):
             if d[f'{side}_id'] == row['owner_id'] and d[f'{side}_hash'] in versions:
                 for bucket in (total, now_) if d[f'{side}_hash'] == current else (total,):
                     bucket['matches'] += 1
-                    bucket['wins'] += int(d['winner'] == side)
+                    bucket['wins'] += int(str(d['winner'] or '').lower() == side)  # duels grava 'A'/'B' (settle_pair)
     for b in (total, now_):
         b['win_rate'] = round(b['wins'] / b['matches'], 4) if b['matches'] else None
         b['sample_ok'] = b['matches'] >= MIN_SAMPLE
@@ -491,11 +491,23 @@ def list_decks(h):
     if q.get('god'):
         sql += ' and god = ?'
         args.append(q['god'])
+    if q.get('author'):  # decks públicos de um jogador (página de perfil)
+        owner = main.execute('select id from users where username = ? and suspended_at is null', (q['author'].lower(),)).fetchone()
+        sql += ' and owner_id = ?'
+        args.append(owner['id'] if owner else -1)
     if q.get('mine') == '1':
         user = h.require_user()
         sql, args = 'select * from shared_decks where owner_id = ?', [user['id']]
     # shortcut: ordena em Python sobre até 1000 decks (winrate é calculado); passar para tabela de estatística quando passar disso
     rows = conn.execute(sql + ' order by updated_at desc limit 1000', args).fetchall()
+    if q.get('card'):  # decks cuja versão atual usa a carta (página da carta); God e Domain contam
+        card = q['card']
+        def uses(r):
+            snap = conn.execute('select data from deck_versions where shared_id = ? and version = ?', (r['id'], r['version'])).fetchone()
+            d = json.loads(snap['data']) if snap else {}
+            return card in (d.get('god'), d.get('domain_id')) or any(isinstance(e, dict) and e.get('card_id') == card for e in d.get('main_deck') or [])
+        with lock:
+            rows = [r for r in rows if uses(r)]
     names = public_names(r['owner_id'] for r in rows)
     decks = sorted((deck_summary(r, names) for r in rows), key=DECK_SORTS.get(q.get('sort'), DECK_SORTS['recent']))
     limit = min(max(int(q['limit']) if q.get('limit', '').isdigit() else 24, 1), 100)
@@ -572,6 +584,9 @@ def visible_target(target, user):
     kind, _, key = str(target).partition(':')
     if kind == 'deck':
         shared_deck(key, user)
+    elif kind == 'card':  # discussão na página da carta do Codex (Cosmo Hub 2.0, P2)
+        if key not in registry_ids()[1]:
+            raise ApiError(404, 'Not found.')
     elif kind == 'content':
         row = conn.execute("select status, publish_at from content where slug = ?", (key,)).fetchone()
         if not row or row['status'] != 'published' or row['publish_at'] > now():
@@ -1227,7 +1242,7 @@ def meta_hub(h):
         for side, god in (('a', d['a_god']), ('b', d['b_god'])):
             row = gods.setdefault(god, {'god': god, 'matches': 0, 'wins': 0})
             row['matches'] += 1
-            row['wins'] += int(d['winner'] == side)
+            row['wins'] += int(str(d['winner'] or '').lower() == side)  # duels grava 'A'/'B' (settle_pair)
     rows = []
     for row in sorted(gods.values(), key=lambda r: -r['matches']):
         enough = row['matches'] >= MIN_SAMPLE

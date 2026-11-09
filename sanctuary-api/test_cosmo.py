@@ -225,7 +225,7 @@ class Decks(Base):
         self.assertEqual(self.as_('bia', 'GET', f'/decks/{sid}')[1]['version'], 2)
         edu = server.db.execute("select id from users where email = 'edu@example.com'").fetchone()[0]
         h1, h2 = cosmo.deck_hash(v1), cosmo.deck_hash(v2)
-        for i, (side_hash, winner) in enumerate([(h1, 'a'), (h2, 'a'), (h2, 'b')]):
+        for i, (side_hash, winner) in enumerate([(h1, 'A'), (h2, 'A'), (h2, 'B')]):  # como settle_pair grava
             server.db.execute('insert into duels (challenge_id, a_id, b_id, winner, a_god, b_god, finished_at, a_hash, b_hash) values (?, ?, 0, ?, ?, ?, 1, ?, ?)',
                               (800 + i, edu, winner, 'god-ares', 'god-hades', side_hash, 'outro'))
         stats = self.raw('GET', f'{P}/decks/{sid}')[1]['stats']  # sem login: o Hub é público
@@ -249,6 +249,28 @@ class Decks(Base):
         page = self.raw('GET', f'{P}/decks?god=god-hades&limit=1&page=2')[1]
         self.assertEqual((page['total'], page['pages'], page['page'], len(page['decks'])), (2, 2, 2, 1))
         self.assertEqual(self.raw('GET', f'{P}/decks?page=999&limit=abc')[0], 200)  # parâmetro ruim não quebra
+
+    def test_perfil_publico_e_decks_por_autor_e_carta(self):
+        # Cosmo Hub 2.0 P2: perfil sem login, sem dado privado; decks do autor e decks que usam uma carta; comentário na carta.
+        self.raw('PUT', '/api/decks/p2', {'data': {'nome': 'P2 Deck', 'god': 'god-athena', 'domain_id': 'athena-v6-062', 'main_deck': [{'card_id': 'athena-v6-001', 'quantity': 3}], 'public': True}, 'revision': 0}, cookie=self.users['bia'])
+        st, prof, _ = self.raw('GET', '/api/players/bia_x')
+        self.assertEqual((st, prof['username']), (200, 'Bia_x'))
+        self.assertFalse({'country', 'coin', 'sleeve', 'recent_all'} & set(prof))
+        self.assertEqual(self.raw('GET', '/api/players/ninguem')[0], 404)
+        self.assertEqual([d['name'] for d in self.raw('GET', f'{P}/decks?author=bia_x')[1]['decks']], ['P2 Deck'])
+        self.assertEqual(self.raw('GET', f'{P}/decks?author=ninguem')[1]['total'], 0)
+        uses = lambda card: [d['name'] for d in self.raw('GET', f'{P}/decks?card={card}')[1]['decks']]
+        self.assertIn('P2 Deck', uses('athena-v6-001'))
+        self.assertIn('P2 Deck', uses('athena-v6-062'))  # Domain conta
+        self.assertNotIn('P2 Deck', uses('athena-v6-002'))
+        self.assertEqual(self.as_('bia', 'POST', '/comments', {'target': 'card:athena-v6-001', 'body': 'Carta forte'})[0], 201)
+        self.assertEqual(self.raw('GET', f'{P}/comments?target=card:athena-v6-001')[1]['comments'][0]['body'], 'Carta forte')
+        self.assertEqual(self.as_('bia', 'POST', '/comments', {'target': 'card:nao-existe', 'body': 'x'})[0], 404)
+        server.db.execute("update users set suspended_at = 1 where email = 'bia@example.com'")
+        try:
+            self.assertEqual(self.raw('GET', '/api/players/bia_x')[0], 404)
+        finally:
+            server.db.execute("update users set suspended_at = null where email = 'bia@example.com'")
 
     def test_comunidade(self):
         self.deck('duda', 'pub')
