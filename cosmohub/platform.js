@@ -159,7 +159,7 @@ async function codex(tab = 'cards', faction = '') {
   await loadArt();
   const head = `<h1>Codex</h1><p class="hub-lead">Every card and every rule of the game, always in sync with what the game plays.</p>${codexTabs(tab)}`;
   if (tab === 'rules') return `${head}<div class="hub-row"><input id="rule-q" type="search" placeholder="Search" aria-label="Search rules"></div><div id="rule-list"></div>`;
-  if (tab === 'glossary') return `${head}<div class="hub-scroll"><table class="hub-table"><thead><tr><th>EN</th><th>PT-BR</th><th>Note</th></tr></thead><tbody>${reg.glossary.map(g => `<tr><td>${esc(g.en)}</td><td>${esc(g.pt)}</td><td>${esc(g.note)}</td></tr>`).join('')}</tbody></table></div>`;
+  if (tab === 'glossary') return `${head}<div class="hub-scroll"><table class="hub-table"><thead><tr><th>EN</th><th>PT-BR</th><th>Note</th></tr></thead><tbody>${reg.glossary.map(g => `<tr><td translate="no" lang="en">${esc(g.en)}</td><td translate="no" lang="pt-BR">${esc(g.pt)}</td><td>${esc(g.note)}</td></tr>`).join('')}</tbody></table></div>`;
   if (tab === 'rulings' || tab === 'academy') {
     if (!apiUp) return head + soon();
     const kind = tab === 'rulings' ? 'ruling' : 'lesson';
