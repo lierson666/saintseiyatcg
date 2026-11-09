@@ -227,3 +227,7 @@ a.hub-chip { text-decoration: none; }
 .hub-n { width: 2.5em; color: var(--kv-gold); font-variant-numeric: tabular-nums; }
 .hub-decktable td { white-space: nowrap; }
 @media (max-width: 860px) { .hub-deckpage { grid-template-columns: minmax(0, 1fr); } .hub-side { position: static; } }
+
+/* Prévia da carta no hover do nome (só com mouse) */
+#hub-peek { position: fixed; z-index: 50; width: 260px; pointer-events: none; filter: drop-shadow(0 18px 40px #000c); }
+#hub-peek[hidden] { display: none; }

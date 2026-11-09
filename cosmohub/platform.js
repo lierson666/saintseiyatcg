@@ -615,6 +615,44 @@ document.addEventListener('input', e => {
   if (e.target.closest('#ed-form')) previewArticle(e.target.closest('#ed-form'));
 });
 
+// ---------- Prévia da carta no hover (como no MTGGoldfish): nome da carta em texto mostra a carta inteira ----------
+const peekCache = new Map();
+function peekHtml(id) {
+  if (!peekCache.has(id)) {
+    const art = artCards?.get(id);
+    let html = '';
+    try { html = art ? renderLiveCard(art, {art: art.ilustracao ? `/card-forge/art-web/${art.ilustracao}` : null}) : ''; } catch { html = ''; }
+    peekCache.set(id, html);
+  }
+  return peekCache.get(id);
+}
+const peek = document.createElement('div');
+peek.id = 'hub-peek';
+peek.setAttribute('aria-hidden', 'true');
+peek.hidden = true;
+document.body.append(peek);
+let peekLink = null;
+function placePeek(x, y) {
+  const w = peek.offsetWidth, h = peek.offsetHeight, gap = 18;
+  const left = x + gap + w > innerWidth ? Math.max(8, x - gap - w) : x + gap;
+  peek.style.left = `${left}px`;
+  peek.style.top = `${Math.min(Math.max(8, y - h / 2), innerHeight - h - 8)}px`;
+}
+const hoverable = matchMedia('(hover: hover)');
+document.addEventListener('mouseover', e => {
+  const link = hoverable.matches && e.target.closest('a[href^="#/card/"]:not(.hub-thumb)');
+  if (link === peekLink) return;
+  peekLink = link;
+  if (link && !artCards) loadArt(); // página sem arte carregada: a prévia aparece no próximo hover
+  const html = link && artCards ? peekHtml(decodeURIComponent(link.getAttribute('href').slice(7).split('?')[0])) : '';
+  peek.hidden = !html;
+  if (!html) return;
+  peek.innerHTML = html;
+  placePeek(e.clientX, e.clientY);
+});
+document.addEventListener('mousemove', e => { if (!peek.hidden) placePeek(e.clientX, e.clientY); });
+addEventListener('hashchange', () => { peek.hidden = true; peekLink = null; });
+
 // ---------- Rotas ----------
 const ROUTES = {'': home, codex, card: cardPage, player: playerPage, rule: rulePage, nexus, article, decks, deck: deckPage, guilds, guild: guildPage, tournaments, tournament: tournamentPage, notifications: inbox, console: consolePage, staff: staffPage, collection: collectionPage};
 
