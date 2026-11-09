@@ -244,16 +244,16 @@ export function createPoseidonPalace(THREE, {quality = 'high', reduceMotion = fa
   let guardianV13=null,guardianV13Disposed=false;
   if(guardianFlag()){
     root.userData.guardianV13='loading';
-    loadGuardianTides(THREE,{parent:G.landmark,material:M.platform,baseUrl:import.meta.url,url:guardianUrl()})
-      .then(v=>{if(guardianV13Disposed){v.dispose();return;}guardianV13=v;root.userData.guardianV13='ready';})
+    loadGuardianTides(THREE,{parent:G.landmark,material:M.platform,baseUrl:import.meta.url,url:guardianUrl(quality)})
+      .then(v=>{if(guardianV13Disposed){v.dispose();return;}guardianV13=v;root.userData.guardianV13='ready';root.userData.guardianV13Url=guardianUrl(quality);})
       .catch(err=>{root.userData.guardianV13='unavailable';console.warn('[POSEIDON V13] guardian GLB not loaded',err);});
   }
   // Posição B (só desenvolvimento): Guardião das Profundezas, apenas com ?sculptDepthsClay=1 (argila), ?sculptDepthsV1=1 (V1) ou ?sculptDepthsV11=1 (V1.1).
   let guardianB=null,guardianBDisposed=false;
   if(depthsClayFlag()){
     root.userData.guardianB='loading';
-    loadGuardianTides(THREE,{parent:G.landmark,material:M.platform,baseUrl:import.meta.url,...GUARDIAN_DEPTHS,url:depthsUrl()})
-      .then(v=>{if(guardianBDisposed){v.dispose();return;}v.root.name=depthsUrl()===GUARDIAN_DEPTHS.url?'GUARDIAN_DEPTHS_CLAY_DEV':depthsUrl().includes('-v1-1/')?'GUARDIAN_DEPTHS_V11_DEV':'GUARDIAN_DEPTHS_V1_DEV';guardianB=v;root.userData.guardianB='ready';})
+    loadGuardianTides(THREE,{parent:G.landmark,material:M.platform,baseUrl:import.meta.url,...GUARDIAN_DEPTHS,url:depthsUrl(quality)})
+      .then(v=>{if(guardianBDisposed){v.dispose();return;}v.root.name=depthsUrl(quality)===GUARDIAN_DEPTHS.url?'GUARDIAN_DEPTHS_CLAY_DEV':depthsUrl(quality).includes('-v1-1/')?'GUARDIAN_DEPTHS_V11_DEV':'GUARDIAN_DEPTHS_V1_DEV';guardianB=v;root.userData.guardianB='ready';root.userData.guardianBUrl=depthsUrl(quality);})
       .catch(err=>{root.userData.guardianB='unavailable';console.warn('[POSEIDON] guardian B not loaded',err);});
   }
 

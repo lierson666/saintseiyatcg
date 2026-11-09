@@ -11,7 +11,8 @@ Mede, nas mesmas condições, cada versão pedida em cada perfil e em cada vista
 
 Uso: uv run -q --with playwright python tools/bench-poseidon-palace.py 8770 [--rodadas 2] [--amostras 12]
      [--versoes v11,v15] [--perfis alto,medio,celular] [--saida docs/perf/poseidon-palace-bench.json]
-Versões: semFlags (sem esculturas), v11 (V14.1 + Profundezas V1.1), v15 (v11 + ?palaceV15=1).
+Versões: semFlags (sem esculturas), v11 (V14.1 + Profundezas V1.1), v15 (v11 + ?palaceV15=1, guardiões sempre LOD0 como na V15),
+     v151 (V15.1: LOD dos guardiões pelo perfil gráfico).
 """
 import argparse, json, statistics, sys, time
 from pathlib import Path
@@ -24,16 +25,17 @@ ap.add_argument('--rodadas', type=int, default=2)
 ap.add_argument('--amostras', type=int, default=12)
 ap.add_argument('--quadros', type=int, default=10, help='quadros por amostra de bench')
 ap.add_argument('--versoes', default='v11')
-ap.add_argument('--perfis', default='alto,medio,celular')
+ap.add_argument('--perfis', default='alto,medio,celular')  # também: baixo
 ap.add_argument('--vistas', default='chave0,chave1,chave2,partida')
 ap.add_argument('--saida', default='docs/perf/poseidon-palace-bench.json')
 a = ap.parse_args()
 
 GAME = f'http://127.0.0.1:{a.port}/playtest/divine/?arena=poseidon&arenaPreview=poseidon-palace&ai=none&demo=ultimate&noIntro=1'
-VERSOES = {'semFlags': '', 'v11': '&sculptV141=1&sculptDepthsV11=1', 'v15': '&sculptV141=1&sculptDepthsV11=1&palaceV15=1'}
+VERSOES = {'semFlags': '', 'v11': '&sculptV141=1&sculptDepthsV11=1', 'v15': '&sculptV141=1&sculptDepthsV11=1&palaceV15=1&sculptLod=lod0', 'v151': '&sculptV141=1&sculptDepthsV11=1&palaceV15=1'}
 PERFIS = {
     'alto': dict(viewport={'width': 1600, 'height': 900}, device_scale_factor=2, quality='high'),
     'medio': dict(viewport={'width': 1600, 'height': 900}, device_scale_factor=2, quality='medium'),
+    'baixo': dict(viewport={'width': 1600, 'height': 900}, device_scale_factor=2, quality='low'),
     'celular': dict(viewport={'width': 390, 'height': 844}, device_scale_factor=3, is_mobile=True, has_touch=True, quality='phone'),
 }
 READY = ("(e => e && ['ready','unavailable'].includes(e.group.userData.guardianB) && e.group.userData.guardianV13 && e.group.userData.guardianV13 !== 'loading'"
@@ -72,9 +74,12 @@ PROBE = r"""
     for (const m of ms) for (const k in m) { const t = m[k]; if (t && t.isTexture && !seenT.has(t.image)) { seenT.add(t.image); const im = t.image; const w = im?.width || 0, h = im?.height || 0; tex += w * h * 4 * (t.generateMipmaps === false ? 1 : 1.33); } }
     if (o.material?.uniforms) for (const k in o.material.uniforms) { const t = o.material.uniforms[k]?.value; if (t && t.isTexture && !seenT.has(t.image)) { seenT.add(t.image); const im = t.image; tex += (im?.width || 0) * (im?.height || 0) * 4 * 1.33; } }
   });
+  let gtex = 0; const seenG2 = new Set();
+  env.group.traverse(o => { if (!/^GUARDIAN_.*(GLB|DEV)$/.test(o.name)) return; o.traverse(n => { const m = n.material; if (!m) return; for (const k of ['map', 'normalMap', 'roughnessMap', 'aoMap']) { const t = m[k]; if (t && t.image && !seenG2.has(t.image)) { seenG2.add(t.image); gtex += t.image.width * t.image.height * 4 * 1.33; } } }); });
+  const glbs = performance.getEntriesByType('resource').filter(r => /guardian-.*\.glb/.test(r.name)).map(r => ({glb: r.name.split('/').slice(-2).join('/'), ms: Math.round(r.duration), bytes: r.transferSize || r.encodedBodySize || r.decodedBodySize}));
   const st = s.stats();
   return {drawCalls: world.calls, triangulos: Math.round(world.tris), texturas: st.textures, geometrias: st.geometries, pixelRatio: st.pixelRatio, nivel: st.level,
-    memGeoMB: +(geo / 1048576).toFixed(1), memTexMB: +(tex / 1048576).toFixed(1), heapMB: performance.memory ? +(performance.memory.usedJSHeapSize / 1048576).toFixed(1) : null};
+    memGeoMB: +(geo / 1048576).toFixed(1), memTexMB: +(tex / 1048576).toFixed(1), memTexGuardioesMB: +(gtex / 1048576).toFixed(1), glbs, heapMB: performance.memory ? +(performance.memory.usedJSHeapSize / 1048576).toFixed(1) : null};
 })()
 """
 
@@ -155,9 +160,9 @@ def main():
            'resultados': tabela, 'cargaSegundos': cargas, 'errosDePagina': erros}
     out = ROOT / a.saida; out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(doc, indent=1, ensure_ascii=False))
-    print('\nversão|perfil|vista            mediana   p95   min   max  calls   tris     texMB  geoMB  rodadas')
+    print('\nversão|perfil|vista            mediana   p95   min   max  calls   tris     texMB  guardMB geoMB  rodadas')
     for k, s in tabela.items():
-        print(f"{k:28} {s['gpuMsMediana']:6} {s['gpuMsP95']:6} {s['gpuMsMin']:5} {s['gpuMsMax']:5} {s['drawCalls']:5} {s['triangulos']:8} {s['memTexMB']:6} {s['memGeoMB']:6}  {s['rodadas']}")
+        print(f"{k:28} {s['gpuMsMediana']:6} {s['gpuMsP95']:6} {s['gpuMsMin']:5} {s['gpuMsMax']:5} {s['drawCalls']:5} {s['triangulos']:8} {s['memTexMB']:6} {s['memTexGuardioesMB']:7} {s['memGeoMB']:6}  {s['rodadas']}")
     print('erros de página:', len(erros), erros[:3])
     print('salvo em', out)
 

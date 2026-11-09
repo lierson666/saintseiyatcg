@@ -10,12 +10,21 @@ export const GUARDIAN_DEPTHS = {position: [10.8, 4.41, -34.8], url: './assets/po
 export function depthsClayFlag() {
   try { const q = new URLSearchParams(location.search); return ['sculptDepthsClay', 'sculptDepthsV1', 'sculptDepthsV11'].some(k => q.get(k) === '1'); } catch { return false; }
 }
+// V15.1 (08/11/2026): seleção central do LOD pelo perfil gráfico da cena. High/Ultra = LOD0 (2048²), Medium = LOD1,
+// Low = LOD2, phone (celular/toque) = GLB mobile-r2 (512²). O -mobile.glb do build saiu com 6 texturas pretas (tools/fix-mobile-glb-textures.py). Baixa direto o arquivo do perfil: o LOD0 nunca é baixado antes.
+// Sem perfil (chamadas antigas, editor) continua LOD0. A argila tem arquivo único e não muda.
+export const SCULPT_LOD = {ultra: 'lod0', high: 'lod0', medium: 'lod1', low: 'lod2', phone: 'mobile-r2'};
+export function sculptLodUrl(url, quality) {
+  let lod = SCULPT_LOD[quality] || 'lod0';
+  try { const o = new URLSearchParams(location.search).get('sculptLod'); if (['lod0', 'lod1', 'lod2', 'mobile', 'mobile-r2'].includes(o)) lod = o; } catch {} // QA: ?sculptLod= força um LOD
+  return /-lod0\.glb$/.test(url) ? url.replace(/-lod0\.glb$/, `-${lod}.glb`) : url;
+}
 // V1.1 com ?sculptDepthsV11=1, V1 com ?sculptDepthsV1=1; senão a prévia em argila.
-export function depthsUrl() {
+export function depthsUrl(quality) {
   try {
     const q = new URLSearchParams(location.search);
-    if (q.get('sculptDepthsV11') === '1') return './assets/poseidon-depths-v1-1/guardian-depths-lod0.glb';
-    if (q.get('sculptDepthsV1') === '1') return './assets/poseidon-depths-v1/guardian-depths-lod0.glb';
+    if (q.get('sculptDepthsV11') === '1') return sculptLodUrl('./assets/poseidon-depths-v1-1/guardian-depths-lod0.glb', quality);
+    if (q.get('sculptDepthsV1') === '1') return sculptLodUrl('./assets/poseidon-depths-v1/guardian-depths-lod0.glb', quality);
   } catch {}
   return GUARDIAN_DEPTHS.url;
 }
@@ -28,13 +37,13 @@ export function guardianFlag() {
 }
 
 // Revisões de escultura com o mesmo leitor: ?sculptV141=1 carrega a V14.1, ?sculptV14=1 a V14; ?sculptV13=1 continua a V13.
-export function guardianUrl() {
+export function guardianUrl(quality) {
   try {
     const q = new URLSearchParams(location.search);
-    if (q.get('sculptV141') === '1') return './assets/poseidon-v14-1/guardian-tides-lod0.glb';
-    if (q.get('sculptV14') === '1') return './assets/poseidon-v14/guardian-tides-lod0.glb';
+    if (q.get('sculptV141') === '1') return sculptLodUrl('./assets/poseidon-v14-1/guardian-tides-lod0.glb', quality);
+    if (q.get('sculptV14') === '1') return sculptLodUrl('./assets/poseidon-v14/guardian-tides-lod0.glb', quality);
   } catch {}
-  return GUARDIAN_TIDES.url;
+  return sculptLodUrl(GUARDIAN_TIDES.url, quality);
 }
 
 export async function parseGuardianGLB(THREE, raw) {
@@ -95,11 +104,13 @@ export async function parseGuardianGLB(THREE, raw) {
     owned.push(g);
     return {g, mat: mats[pr.material] || new THREE.MeshStandardMaterial()};
   }));
+  // nós sem malha e a raiz: Mesh vazia invisível, também solta no dispose (V15.1)
+  const empty = () => { const g = new THREE.BufferGeometry(), m = new THREE.MeshBasicMaterial({visible: false}); owned.push(g, m); return new THREE.Mesh(g, m); };
   const build = i => {
     const n = json.nodes[i];
     const parts = n.mesh !== undefined ? meshes[n.mesh] : [];
     // o build enxuto não tem Group: nós sem malha viram Mesh invisível vazia (mesmo padrão do palácio)
-    const o = parts.length === 1 ? new THREE.Mesh(parts[0].g, parts[0].mat) : new THREE.Mesh(new THREE.BufferGeometry(), new THREE.MeshBasicMaterial({visible: false}));
+    const o = parts.length === 1 ? new THREE.Mesh(parts[0].g, parts[0].mat) : empty();
     if (parts.length > 1) parts.forEach(p => o.add(new THREE.Mesh(p.g, p.mat)));
     o.name = n.name || '';
     if (n.translation) o.position.fromArray(n.translation);
@@ -109,10 +120,10 @@ export async function parseGuardianGLB(THREE, raw) {
     return o;
   };
   const scene = json.scenes[json.scene || 0];
-  const root = new THREE.Mesh(new THREE.BufferGeometry(), new THREE.MeshBasicMaterial({visible: false}));
+  const root = empty();
   root.name = 'GUARDIAN_TIDES_GLB';
   scene.nodes.forEach(i => root.add(build(i)));
-  return {root, dispose() { owned.forEach(x => { if (x.isMaterial) Object.values(x).forEach(v => v?.isTexture && v.dispose()); x.dispose(); }); images.forEach(b => b.close?.()); }};
+  return {root, dispose() { const tx = new Set(); owned.forEach(x => { if (x.isMaterial) Object.values(x).forEach(v => v?.isTexture && tx.add(v)); x.dispose(); }); tx.forEach(t => t.dispose()); images.forEach(b => b.close?.()); }}; // V15.1: cada textura solta uma vez (o ORM é compartilhado por 3 mapas)
 }
 
 /** Apoio sob o pedestal: bloco de mármore do chão (y = 0) até o topo do pódio (4,41), ligado à lateral do pódio. */

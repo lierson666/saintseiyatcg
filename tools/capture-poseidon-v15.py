@@ -8,6 +8,7 @@ Saída: docs/img/poseidon-v15/<tag>-<vista>.jpg (mundo sem HUD em 1600 px de lar
 
 Uso: uv run -q --with playwright python tools/capture-poseidon-v15.py 8770 base
      uv run -q --with playwright python tools/capture-poseidon-v15.py 8770 v15 --flags '&palaceV15=1'
+     uv run -q --with playwright python tools/capture-poseidon-v15.py 8770 v151m --flags '&palaceV15=1' --mobile
 """
 import base64, json, sys, time
 from pathlib import Path
@@ -16,6 +17,7 @@ from playwright.sync_api import sync_playwright
 ROOT = Path(__file__).resolve().parent.parent
 PORT, TAG = sys.argv[1], sys.argv[2]
 FLAGS = sys.argv[sys.argv.index('--flags') + 1] if '--flags' in sys.argv else ''
+MOBILE = '--mobile' in sys.argv  # V15.1: celular emulado (390 × 844, toque, perfil phone); só chaves e partida
 OUT = ROOT / 'docs/img/poseidon-v15'
 OUT.mkdir(parents=True, exist_ok=True)
 GAME = f'http://127.0.0.1:{PORT}/playtest/divine/?arena=poseidon&arenaPreview=poseidon-palace&ai=none&demo=ultimate&noIntro=1&sculptV141=1&sculptDepthsV11=1'
@@ -55,8 +57,8 @@ def save(f, name):
 
 with sync_playwright() as pw:
     br = pw.chromium.launch(channel='chrome', args=['--use-angle=metal', '--enable-gpu'])
-    ctx = br.new_context(viewport={'width': 1600, 'height': 900}, device_scale_factor=1)
-    ctx.add_init_script("try { const k='ssTcgOlympusArena', s=JSON.parse(localStorage.getItem(k)||'{}'); s.quality='high'; localStorage.setItem(k, JSON.stringify(s)); } catch {}")
+    ctx = br.new_context(viewport={'width': 390, 'height': 844}, device_scale_factor=3, is_mobile=True, has_touch=True) if MOBILE else br.new_context(viewport={'width': 1600, 'height': 900}, device_scale_factor=1)
+    if not MOBILE: ctx.add_init_script("try { const k='ssTcgOlympusArena', s=JSON.parse(localStorage.getItem(k)||'{}'); s.quality='high'; localStorage.setItem(k, JSON.stringify(s)); } catch {}")
     p = ctx.new_page()
     errs = []
     p.on('pageerror', lambda e: errs.append(str(e)))
@@ -66,7 +68,7 @@ with sync_playwright() as pw:
     keys = f.evaluate('window.__divine.scene.cinematicKeys')
     for i in range(3):
         f.evaluate(f'window.__divine.scene.poseCinematic({json.dumps(keys[i])})'); p.wait_for_timeout(700); save(f, f'chave{i}')
-    for k, cam in AUDIT.items():
+    for k, cam in ({'pedestais': AUDIT['pedestais']} if MOBILE else AUDIT).items():
         f.evaluate(f'window.__divine.scene.poseCinematic({json.dumps(cam)})'); p.wait_for_timeout(700); save(f, k)
     f.evaluate('window.__divine.scene.poseCinematic(null)'); p.wait_for_timeout(1500)
     save(f, 'partida')

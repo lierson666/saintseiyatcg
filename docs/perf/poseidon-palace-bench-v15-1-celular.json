@@ -1,0 +1,233 @@
+{
+ "data": "2026-11-08 21:14",
+ "condicoes": {
+  "navegador": "Chrome (Playwright) --use-angle=metal",
+  "quadrosPorAmostra": 10,
+  "amostrasPorRodada": 10,
+  "rodadas": 2,
+  "ordem": "versões intercaladas em cada rodada e perfil",
+  "perfis": {
+   "celular": {
+    "viewport": {
+     "width": 390,
+     "height": 844
+    },
+    "device_scale_factor": 3,
+    "is_mobile": true,
+    "has_touch": true,
+    "quality": "phone"
+   }
+  }
+ },
+ "resultados": {
+  "v15|celular|chave0": {
+   "rodadas": [
+    3.55,
+    3.36
+   ],
+   "drawCalls": 140,
+   "triangulos": 71631,
+   "texturas": 16,
+   "geometrias": 98,
+   "pixelRatio": 1.25,
+   "nivel": "phone",
+   "memGeoMB": 3.8,
+   "memTexMB": 300.2,
+   "memTexGuardioesMB": 287.3,
+   "glbs": [
+    {
+     "glb": "poseidon-v14-1/guardian-tides-lod0.glb",
+     "ms": 30,
+     "bytes": 5468028
+    },
+    {
+     "glb": "poseidon-depths-v1-1/guardian-depths-lod0.glb",
+     "ms": 27,
+     "bytes": 3490888
+    }
+   ],
+   "heapMB": 29.9,
+   "gpuMsMediana": 3.5,
+   "gpuMsP95": 3.9,
+   "gpuMsMin": 3.14,
+   "gpuMsMax": 3.96,
+   "n": 20
+  },
+  "v15|celular|chave1": {
+   "rodadas": [
+    3.51,
+    3.71
+   ],
+   "drawCalls": 129,
+   "triangulos": 59971,
+   "texturas": 16,
+   "geometrias": 108,
+   "pixelRatio": 1.25,
+   "nivel": "phone",
+   "memGeoMB": 3.8,
+   "memTexMB": 300.2,
+   "memTexGuardioesMB": 287.3,
+   "glbs": [
+    {
+     "glb": "poseidon-v14-1/guardian-tides-lod0.glb",
+     "ms": 30,
+     "bytes": 5468028
+    },
+    {
+     "glb": "poseidon-depths-v1-1/guardian-depths-lod0.glb",
+     "ms": 27,
+     "bytes": 3490888
+    }
+   ],
+   "heapMB": 30.6,
+   "gpuMsMediana": 3.65,
+   "gpuMsP95": 4.02,
+   "gpuMsMin": 3.34,
+   "gpuMsMax": 4.12,
+   "n": 20
+  },
+  "v15|celular|partida": {
+   "rodadas": [
+    1.7,
+    1.89
+   ],
+   "drawCalls": 56,
+   "triangulos": 32314,
+   "texturas": 16,
+   "geometrias": 110,
+   "pixelRatio": 1.25,
+   "nivel": "phone",
+   "memGeoMB": 3.8,
+   "memTexMB": 300.2,
+   "memTexGuardioesMB": 287.3,
+   "glbs": [
+    {
+     "glb": "poseidon-v14-1/guardian-tides-lod0.glb",
+     "ms": 30,
+     "bytes": 5468028
+    },
+    {
+     "glb": "poseidon-depths-v1-1/guardian-depths-lod0.glb",
+     "ms": 27,
+     "bytes": 3490888
+    }
+   ],
+   "heapMB": 29.3,
+   "gpuMsMediana": 1.83,
+   "gpuMsP95": 2.03,
+   "gpuMsMin": 1.56,
+   "gpuMsMax": 2.23,
+   "n": 20
+  },
+  "v151|celular|chave0": {
+   "rodadas": [
+    3.45,
+    3.35
+   ],
+   "drawCalls": 140,
+   "triangulos": 51333,
+   "texturas": 16,
+   "geometrias": 100,
+   "pixelRatio": 1.25,
+   "nivel": "phone",
+   "memGeoMB": 2.2,
+   "memTexMB": 36.9,
+   "memTexGuardioesMB": 23.9,
+   "glbs": [
+    {
+     "glb": "poseidon-depths-v1-1/guardian-depths-mobile-r2.glb",
+     "ms": 6,
+     "bytes": 906420
+    },
+    {
+     "glb": "poseidon-v14-1/guardian-tides-mobile-r2.glb",
+     "ms": 6,
+     "bytes": 1005528
+    }
+   ],
+   "heapMB": 23.6,
+   "gpuMsMediana": 3.4,
+   "gpuMsP95": 3.74,
+   "gpuMsMin": 3.17,
+   "gpuMsMax": 3.84,
+   "n": 20
+  },
+  "v151|celular|chave1": {
+   "rodadas": [
+    3.76,
+    3.46
+   ],
+   "drawCalls": 129,
+   "triangulos": 47512,
+   "texturas": 16,
+   "geometrias": 110,
+   "pixelRatio": 1.25,
+   "nivel": "phone",
+   "memGeoMB": 2.2,
+   "memTexMB": 36.9,
+   "memTexGuardioesMB": 23.9,
+   "glbs": [
+    {
+     "glb": "poseidon-depths-v1-1/guardian-depths-mobile-r2.glb",
+     "ms": 6,
+     "bytes": 906420
+    },
+    {
+     "glb": "poseidon-v14-1/guardian-tides-mobile-r2.glb",
+     "ms": 6,
+     "bytes": 1005528
+    }
+   ],
+   "heapMB": 25.1,
+   "gpuMsMediana": 3.62,
+   "gpuMsP95": 3.92,
+   "gpuMsMin": 3.16,
+   "gpuMsMax": 4.38,
+   "n": 20
+  },
+  "v151|celular|partida": {
+   "rodadas": [
+    1.8,
+    2.02
+   ],
+   "drawCalls": 56,
+   "triangulos": 32314,
+   "texturas": 16,
+   "geometrias": 110,
+   "pixelRatio": 1.25,
+   "nivel": "phone",
+   "memGeoMB": 2.2,
+   "memTexMB": 36.9,
+   "memTexGuardioesMB": 23.9,
+   "glbs": [
+    {
+     "glb": "poseidon-depths-v1-1/guardian-depths-mobile-r2.glb",
+     "ms": 6,
+     "bytes": 906420
+    },
+    {
+     "glb": "poseidon-v14-1/guardian-tides-mobile-r2.glb",
+     "ms": 6,
+     "bytes": 1005528
+    }
+   ],
+   "heapMB": 23.7,
+   "gpuMsMediana": 1.88,
+   "gpuMsP95": 2.22,
+   "gpuMsMin": 1.55,
+   "gpuMsMax": 2.4,
+   "n": 20
+  }
+ },
+ "cargaSegundos": {
+  "v15:celular": [
+   1.2,
+   0.9
+  ],
+  "v151:celular": [
+   0.8,
+   0.7
+  ]
+ },
+ "errosDePagina": []
+}

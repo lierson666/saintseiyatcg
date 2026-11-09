@@ -467,7 +467,12 @@ def export_lod(parts, path, tex_size=None):
             for m in o.data.materials:
                 for nd in m.node_tree.nodes:
                     if nd.type == 'TEX_IMAGE' and nd.image and nd.image.size[0] > tex_size:
-                        cp = nd.image.copy(); cp.scale(tex_size, tex_size); cp.name = nd.image.name + f'_{tex_size}'
+                        # V15.1: image.copy() de imagem assada só em memória sai PRETA; copia os pixels de verdade
+                        src = nd.image
+                        cp = bpy.data.images.new(src.name + f'_{tex_size}', src.size[0], src.size[1], alpha=False, float_buffer=src.is_float)
+                        cp.colorspace_settings.name = src.colorspace_settings.name
+                        px = [0.0] * len(src.pixels); src.pixels.foreach_get(px); cp.pixels.foreach_set(px)
+                        cp.scale(tex_size, tex_size)
                         resized.append((nd, nd.image)); nd.image = cp
     select_only(root, *objs, active=root)
     bpy.ops.export_scene.gltf(filepath=str(path), export_format='GLB', use_selection=True, export_yup=True,
