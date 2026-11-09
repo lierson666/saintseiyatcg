@@ -594,7 +594,7 @@ Parâmetro	Valor experimental
 Deck principal	50 cartas
 Mão inicial	7 cartas
 Cosmo Base por turno	1
-Compra por turno	2 (quem começa a partida não compra no primeiro turno dele)
+Compra por turno	1 (quem começa a partida não compra no primeiro turno dele)
 Limite de cartas na mão	7 (descarta o excesso na End Phase)
 Strike	1 por Devotee por turno
 Dano entre turnos	Persistente
@@ -781,7 +781,7 @@ Se um Strike causar Soul zero aos dois Gods simultaneamente por efeitos aplicáv
 | Parâmetro | Parâmetro inicial |
 | --- | --- |
 | Soul / Attack de God de referência | 20 / 3; Soul entre 15 e 22 por God. Os valores de cada God (Soul, Attack, Awaken) são os da carta do God no Card Forge (`data/cards.json`, ids `<facção>-001`) desde 29/10/2026; em 29/10/2026: Athena 22/2/Awaken 5, Poseidon 22/1/4, Hades 18/2/7, Artemis 20/1/3, Ares 18/3/7 |
-| Compras | 2 por turno; quem começa a partida não compra no primeiro turno dele; limite de 7 cartas na mão |
+| Compras | 1 por turno; quem começa a partida não compra no primeiro turno dele; limite de 7 cartas na mão |
 | Bases | 1 por turno próprio; entra Prepared |
 | Latent | Limite de 3; Bases Prepared viram Latent no fim do seu turno; persiste |
 | Retorno do Tartarus | Uma vez por carta física/rodada |

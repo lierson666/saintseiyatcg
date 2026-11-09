@@ -4,6 +4,13 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-11-09 — Cap. XI (tabela de parâmetros) e §65 — Compras por turno
+
+- **Antes:** as duas tabelas diziam 2 compras por turno, contra §7 e §55 (1 compra, autor, 01/11/2026).
+- **Depois:** 1 compra por turno nas duas tabelas; o resto da linha não mudou.
+- **Motivo:** autor, 09/11/2026: alinhar as tabelas ao §55, achado ao escrever os guias do Cosmo Hub.
+- **Pendências:** nenhuma; o motor já compra 1 (§55). Segue aberta a ordem do mulligan (§55 devolve, embaralha e compra; §63 compra e depois embaralha).
+
 ## 2026-11-08 — §58 — "Não pode ser alvo de Moments e Techniques inimigos" e "Soul não pode ser reduzido"
 
 - **Antes:** a única proteção contra alvo era o @Immune por facção (§43A); o guia não previa travar o Soul por inteiro.
