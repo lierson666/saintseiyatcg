@@ -471,8 +471,12 @@ def deck_summary(row, names):
     with lock:
         rating = conn.execute('select avg(stars) a, count(*) n from deck_ratings where shared_id = ?', (row['id'],)).fetchone()
         favorites = conn.execute('select count(*) from deck_favorites where shared_id = ?', (row['id'],)).fetchone()[0]
+        cur = conn.execute('select data from deck_versions where shared_id = ? and version = ?', (row['id'], row['version'])).fetchone()
+        data = json.loads(cur['data']) if cur else {}
         return {'id': row['id'], 'name': row['name'], 'god': row['god'], 'archetype': row['archetype'], 'visibility': row['visibility'], 'version': row['version'],
-                'author': names.get(row['owner_id']), 'rating': round(rating['a'], 2) if rating['a'] else None, 'ratings': rating['n'], 'favorites': favorites, 'updated_at': row['updated_at'], 'forked_from': row['forked_from'], 'stats': deck_stats(row)}
+                'author': names.get(row['owner_id']), 'rating': round(rating['a'], 2) if rating['a'] else None, 'ratings': rating['n'], 'favorites': favorites, 'updated_at': row['updated_at'], 'forked_from': row['forked_from'], 'stats': deck_stats(row),
+                # lista enxuta para a vitrine (carta-chave, contagem); a lista completa fica em /decks/<id>
+                'domain': data.get('domain_id'), 'main': [[str(e.get('card_id')), int(e.get('quantity') or 1)] for e in data.get('main_deck', []) if isinstance(e, dict)]}
 
 
 DECK_SORTS = {

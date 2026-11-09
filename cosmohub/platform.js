@@ -59,7 +59,25 @@ const newsTile = n => `<a class="hub-tile" href="#/article/${esc(n.slug)}"><b>${
 const pct = r => `${Math.round(r * 100)}%`;
 // Winrate só de duelos online (autor, 08/11/2026); abaixo da amostra mínima mostra a taxa com a contagem ao lado.
 const winText = s => s?.matches ? `${pct(s.win_rate)} in ${s.matches} online duel${s.matches === 1 ? '' : 's'}` : 'No online duels yet';
-const deckTile = d => `<a class="hub-tile" href="#/deck/${esc(d.id)}"><b>${esc(d.name)}</b><small>${esc(godName(d.god))}${d.archetype ? ` · ${esc(d.archetype)}` : ''} · ${esc(d.author || '')}${d.rating ? ` · ★ ${d.rating}` : ''}</small><small class="hub-win">${winText(d.stats)}</small></a>`;
+const RARITY_RANK = {Divine: 4, Legendary: 3, Uncommon: 2, Common: 1};
+const godSymbol = god => { const g = godName(god).toLowerCase(); return GODS.includes(g) ? `<img class="hub-sym" src="/CARD-TEMPLATE/symbols/${g}.xs.webp" alt="" width="20" height="20">` : ''; };
+// Carta-chave (como a arte do arquétipo no MTGGoldfish): a de maior raridade com arte; empate vai para mais cópias e maior custo.
+function keyCard(d) {
+  if (!registry) return null;
+  const tools = listTools(registry);
+  const pick = (d.main || []).map(([id, n]) => ({c: tools.card(id), n})).filter(x => x.c && artOf(x.c.id))
+    .sort((a, b) => (RARITY_RANK[b.c.rarity] || 0) - (RARITY_RANK[a.c.rarity] || 0) || b.n - a.n || (Number(b.c.cost) || 0) - (Number(a.c.cost) || 0))[0];
+  return pick?.c || tools.card(d.god);
+}
+const deckCount = d => (d.main || []).reduce((n, [, q]) => n + q, 0);
+const deckTile = d => {
+  const key = keyCard(d);
+  const g = godName(d.god).toLowerCase(), art = key ? artImg(key.id, key.name) : '';
+  return `<a class="hub-deck" href="#/deck/${esc(d.id)}"><i>${art || (GODS.includes(g) ? `<img class="hub-deck-sym" src="/CARD-TEMPLATE/symbols/${g}.xs.webp" alt="">` : '')}</i><span><b>${esc(d.name)}</b>
+    <small>${godSymbol(d.god)}${esc(godName(d.god))}${d.archetype ? ` · ${esc(d.archetype)}` : ''}</small>
+    <small>${esc(d.author || '')}${d.main ? ` · ${deckCount(d)} cards` : ''}${d.rating ? ` · ★ ${d.rating}` : ''}</small><small class="hub-win">${winText(d.stats)}</small></span></a>`;
+};
+const deckTiles = (list, none) => list.length ? `<div class="hub-decks">${list.map(deckTile).join('')}</div>` : empty(none);
 const eventTile = t => `<a class="hub-tile" href="#/tournament/${esc(t.id)}"><b>${esc(t.name)}</b><small>${esc(t.format)} · ${esc(t.category)} · ${esc(t.status)}</small></a>`;
 
 const artOf = id => artCards?.get(id)?.ilustracao;
@@ -93,7 +111,7 @@ async function home() {
     </div>
     <h2>The Gods</h2><div class="hub-gods">${gods.map(g => `<a class="hub-god" href="#/codex/cards/${q(g.faction)}">${artImg(g.id, '')}<span>${esc(g.name)}</span></a>`).join('')}</div>
     ${f ? `<h2>Latest News</h2>${tiles(f.news, newsTile, 'Nothing published yet.')}
-    <h2>Featured Decks</h2>${tiles(f.decks, deckTile, 'Nothing published yet.')}
+    <h2>Featured Decks</h2>${deckTiles(f.decks, 'Nothing published yet.')}
     <h2>Balance Updates</h2>${tiles(f.balance, newsTile, 'Nothing published yet.')}
     <h2>Tournament Highlights</h2>${tiles(f.tournaments, eventTile, 'Nothing published yet.')}` : ''}`;
 }
@@ -213,13 +231,13 @@ async function cardPage(id) {
 // Página da carta: decks públicos cuja versão atual usa a carta (God e Domain contam), melhores primeiro.
 async function cardDecks(c) {
   const {decks: list, total} = await api(`/decks?card=${q(gameId(c))}&sort=winrate&limit=12`).catch(() => ({decks: [], total: 0}));
-  return `<h2>Public decks with this card${total ? ` (${total})` : ''}</h2>${tiles(list, deckTile, 'No public deck uses this card yet.')}`;
+  return `<h2>Public decks with this card${total ? ` (${total})` : ''}</h2>${deckTiles(list, 'No public deck uses this card yet.')}`;
 }
 
 // ---------- Perfil público (Cosmo Hub 2.0, P2): mesma conta do jogo, só dados públicos (servidor: /api/players/<user>) ----------
 const playerLink = name => name ? `<a href="#/player/${esc(String(name).toLowerCase())}">${esc(name)}</a>` : '';
 async function playerPage(username) {
-  const [p, decksOf] = await Promise.all([call(`/api/players/${q(username)}`), api(`/decks?author=${q(username)}&limit=24`), loadArt()]);
+  const [p, decksOf] = await Promise.all([call(`/api/players/${q(username)}`), api(`/decks?author=${q(username)}&limit=24`), loadArt(), loadRegistry()]);
   const god = p.favorite_god ? String(p.favorite_god).replace(/^god-/, '').toLowerCase() : '';
   const r = p.rank || {}, st = p.stats || {};
   const done = p.achievements.filter(a => a.done).length;
@@ -230,7 +248,7 @@ async function playerPage(username) {
         <div class="hub-tile"><b>${st.played ? `${st.winrate}%` : '—'}</b><small>${st.played || 0} online duels · ${st.wins || 0} wins · ${st.losses || 0} losses</small></div>
         <div class="hub-tile"><b>${done} / ${p.achievements.length}</b><small>Achievements</small></div></div></div></div>
     <h2>Achievements</h2><div class="hub-grid">${p.achievements.map(a => `<div class="hub-tile ${a.done ? 'is-done' : 'is-locked'}"><b>${a.done ? '★ ' : ''}${esc(a.name)}</b><small>${esc(a.description)}</small></div>`).join('')}</div>
-    <h2>Public decks</h2>${tiles(decksOf.decks, deckTile, 'No public decks yet.')}
+    <h2>Public decks</h2>${deckTiles(decksOf.decks, 'No public decks yet.')}
     <h2>Recent online duels</h2>${p.recent.length ? `<div class="hub-scroll"><table class="hub-table"><tbody>${p.recent.map(d => `<tr><td>${when(d.date)}</td><td>${result[d.result] || ''}</td><td>${esc(godName(d.god))} vs ${esc(godName(d.opponent_god))}</td></tr>`).join('')}</tbody></table></div>` : empty('No online duels yet.')}`;
 }
 
@@ -265,12 +283,19 @@ const GODS = ['athena', 'poseidon', 'hades', 'ares', 'artemis'];
 const SORTS = [['recent', 'Most recent'], ['winrate', 'Best online win rate'], ['rating', 'Best rated'], ['popular', 'Most favorited']];
 async function decks() {
   const p = new URLSearchParams(query()), god = GODS.includes(p.get('g')) ? p.get('g') : '', sort = SORTS.some(([k]) => k === p.get('s')) ? p.get('s') : 'recent', page = Math.max(1, Number(p.get('p')) || 1);
-  const link = changes => { const n = new URLSearchParams({g: god, s: sort, p: page, ...changes}); [...n].forEach(([k, v]) => { if (!v || (k === 's' && v === 'recent') || (k === 'p' && v === '1')) n.delete(k); }); return `#/decks${String(n) ? `?${n}` : ''}`; };
-  const [lib, mine, account] = await Promise.all([api(`/decks?sort=${sort}&page=${page}&limit=24${god ? `&god=god-${god}` : ''}`), api('/decks?mine=1').catch(signedOut), call('/api/decks').catch(signedOut)]);
+  const link = changes => { const n = new URLSearchParams({g: god, s: sort, p: page, v: p.get('v') === 'table' ? 'table' : '', ...changes}); [...n].forEach(([k, v]) => { if (!v || (k === 's' && v === 'recent') || (k === 'p' && v === '1')) n.delete(k); }); return `#/decks${String(n) ? `?${n}` : ''}`; };
+  const view = p.get('v') === 'table' ? 'table' : 'tiles';
+  const [lib, mine, account, meta] = await Promise.all([api(`/decks?sort=${sort}&page=${page}&limit=24${god ? `&god=god-${god}` : ''}`), api('/decks?mine=1').catch(signedOut), call('/api/decks').catch(signedOut), api('/meta').catch(() => null), loadRegistry(), loadArt()]);
   const open = lib.decks;
-  const chip = (g, label) => `<a class="hub-chip" href="${link({g, p: 1})}" ${god === g ? 'aria-current="true"' : ''}>${g ? `<img src="/CARD-TEMPLATE/symbols/${g}.xs.webp" alt="" width="20" height="20">` : ''}${label}</a>`;
-  const tools = `<div class="hub-chips" role="group" aria-label="God">${chip('', 'All')}${GODS.map(g => chip(g, godName(g))).join('')}</div>
-    <div class="hub-row"><label class="hub-inline">Sort <select data-nav="sort">${SORTS.map(([k, l]) => `<option value="${link({s: k, p: 1})}" ${k === sort ? 'selected' : ''}>${l}</option>`).join('')}</select></label><span class="hub-muted">${lib.total} decks</span></div>`;
+  // Metagame (como o MTGGoldfish): cada Deus com fatia dos duelos online e winrate; clicar filtra a lista.
+  const godMeta = Object.fromEntries((meta?.gods || []).map(g => [godName(g.god).toLowerCase(), g]));
+  const metaTile = g => { const m = godMeta[g]; return `<a class="hub-meta" href="${link({g: god === g ? '' : g, p: 1})}" ${god === g ? 'aria-current="true"' : ''}><img src="/CARD-TEMPLATE/symbols/${g}.xs.webp" alt="" width="36" height="36"><b>${esc(godName(g))}</b>
+    <small>${m ? `${pct(m.share)} of the meta` : 'No online duels yet'}</small><small class="hub-win">${m?.sample_ok ? `${pct(m.win_rate)} win rate` : m ? `${m.matches} duels (small sample)` : ''}</small></a>`; };
+  const tools = `<h2>Metagame</h2><p class="hub-muted">${meta ? `${meta.matches} online duels. ` : ''}Pick a God to filter the decks.</p><div class="hub-metas">${GODS.map(metaTile).join('')}</div>
+    <h2>Public decks</h2><div class="hub-row"><label class="hub-inline">Sort <select data-nav="sort">${SORTS.map(([k, l]) => `<option value="${link({s: k, p: 1})}" ${k === sort ? 'selected' : ''}>${l}</option>`).join('')}</select></label>
+    <nav class="hub-seg" aria-label="View"><a href="${link({v: ''})}" ${view === 'tiles' ? 'aria-current="true"' : ''}>Tiles</a><a href="${link({v: 'table'})}" ${view === 'table' ? 'aria-current="true"' : ''}>Table</a></nav><span class="hub-muted">${lib.total} decks${god ? ` · ${esc(godName(god))}` : ''}</span></div>`;
+  const table = list => list.length ? `<div class="hub-scroll"><table class="hub-table hub-decktable"><thead><tr><th>Deck</th><th>God</th><th>Author</th><th>Win rate</th><th>Duels</th><th>Cards</th><th>Rating</th><th>Updated</th></tr></thead><tbody>${list.map(d => `<tr>
+    <td><a href="#/deck/${esc(d.id)}">${esc(d.name)}</a></td><td>${godSymbol(d.god)}${esc(godName(d.god))}</td><td>${playerLink(d.author)}</td><td>${d.stats?.matches ? pct(d.stats.win_rate) : '—'}</td><td>${d.stats?.matches || 0}</td><td>${deckCount(d)}</td><td>${d.rating ? `★ ${d.rating}` : '—'}</td><td>${when(d.updated_at)}</td></tr>`).join('')}</tbody></table></div>` : empty(god ? 'No public decks for this God yet.' : 'Nothing published yet.');
   const pager = lib.pages > 1 ? `<nav class="hub-row hub-pager" aria-label="Pages">${page > 1 ? `<a class="kv-ghost" href="${link({p: page - 1})}">← Previous</a>` : ''}<span class="hub-muted">Page ${lib.page} of ${lib.pages}</span>${page < lib.pages ? `<a class="kv-ghost" href="${link({p: page + 1})}">Next →</a>` : ''}</nav>` : '';
   const share = account ? `<h2>Share a deck</h2><form class="hub-form" data-do="share-deck">
       <label>Deck<select name="deck_id" required>${account.decks.map(d => `<option value="${esc(d.id)}">${esc(d.data?.alpha_nome || d.data?.nome || d.data?.name || d.id)}</option>`).join('')}</select></label>
@@ -278,8 +303,8 @@ async function decks() {
       <label>Archetype<input name="archetype" maxlength="60"></label><label>Strategy<textarea name="strategy" maxlength="4000" rows="3"></textarea></label><button>Share</button></form>` : '';
   const importForm = account ? `<h2>Import a deck list</h2><form class="hub-form" data-do="import-list"><label>Deck list<textarea name="list" rows="8" required placeholder="Name: My deck&#10;God&#10;1 Athena (god-athena)&#10;Domain&#10;1 Jamir Tower (athena-v6-063)&#10;Deck&#10;3 Gemini Saga (athena-v6-013)"></textarea></label><button>Add to my decks</button></form>`
     : `<p class="hub-muted"><a href="/login/?next=${q('/cosmohub/#/decks')}">Sign in</a> to import deck lists and copy decks to your account.</p>`;
-  return `<h1>Decks</h1><p class="hub-lead">Decks marked Public in the game show up here, with comments and online win rate.</p><h2>Public decks</h2>${tools}${tiles(open, deckTile, god ? 'No public decks for this God yet.' : 'Nothing published yet.')}${pager}${importForm}
-    ${mine ? `<h2>My decks</h2>${tiles(mine.decks, d => deckTile(d), 'You have not shared a deck yet.')}` : ''}${share}`;
+  return `<h1>Decks</h1><p class="hub-lead">Decks marked Public in the game show up here, with comments and online win rate.</p>${tools}${view === 'table' ? table(open) : deckTiles(open, god ? 'No public decks for this God yet.' : 'Nothing published yet.')}${pager}
+    ${mine ? `<h2>My decks</h2>${deckTiles(mine.decks, 'You have not shared a deck yet. Mark a deck Public in the game.')}` : ''}${importForm}${share}`;
 }
 
 // Curva de Cosmo (custo 0–7+) e tipos, lidas do registro canônico.
@@ -296,25 +321,44 @@ function curveHtml(main, tools) {
     <p class="hub-muted">${Object.entries(types).map(([t, n]) => `${n} ${esc(t)}`).join(' · ')}</p>`;
 }
 
+const TYPE_ORDER = [['Devotee', 'Devotees'], ['Spell', 'Spells'], ['Equipment', 'Equipment']];
+function deckSections(d, tools, visual) {
+  const entry = (cid, n) => ({c: tools.card(cid), cid, n});
+  const sort = (a, b) => (Number(a.c?.cost) || 0) - (Number(b.c?.cost) || 0) || String(a.c?.name).localeCompare(String(b.c?.name));
+  const main = (d.data.main_deck || []).map(e => entry(e.card_id, e.quantity || 1));
+  const groups = [['God and Domain', [entry(d.data.god || 'god-athena', 1), ...(d.data.domain_id ? [entry(d.data.domain_id, 1)] : [])]],
+    ...TYPE_ORDER.map(([t, label]) => [label, main.filter(x => x.c?.type === t).sort(sort)]),
+    ['Other', main.filter(x => !TYPE_ORDER.some(([t]) => x.c?.type === t)).sort(sort)]].filter(([, list]) => list.length);
+  const total = list => list.reduce((n, x) => n + x.n, 0);
+  const href = x => `#/card/${esc(x.c?.id || x.cid)}`;
+  if (visual) return groups.map(([label, list]) => `<h3>${esc(label)} <span>(${total(list)})</span></h3><div class="hub-cards">${list.map(x => `<a class="hub-thumb" href="${href(x)}"><em class="hub-qty">${x.n}×</em><i>${x.c && artImg(x.c.id, x.c.name) || '<span class="hub-noart" aria-hidden="true"></span>'}</i><b>${esc(x.c?.name || x.cid)}</b></a>`).join('')}</div>`).join('');
+  return groups.map(([label, list]) => `<table class="hub-table hub-list"><thead><tr><th colspan="2">${esc(label)} <span>(${total(list)})</span></th><th>Cost</th><th>Rarity</th></tr></thead><tbody>${list.map(x => `<tr><td class="hub-n">${x.n}</td><td><a href="${href(x)}">${esc(x.c?.name || x.cid)}</a></td><td>${x.c?.cost ?? '—'}</td><td>${esc(x.c?.rarity || '—')}</td></tr>`).join('')}</tbody></table>`).join('');
+}
+function breakdown(main, tools) {
+  const by = {};
+  for (const e of main) { const r = tools.card(e.card_id)?.rarity; if (r) by[r] = (by[r] || 0) + (e.quantity || 1); }
+  return `<p class="hub-muted">${Object.keys(RARITY_RANK).filter(r => by[r]).map(r => `${by[r]} ${esc(r)}`).join(' · ')}</p>`;
+}
 async function deckPage(id) {
-  const [d, reg] = await Promise.all([api(`/decks/${q(id)}`), loadRegistry()]);
+  const [d, reg] = await Promise.all([api(`/decks/${q(id)}`), loadRegistry(), loadArt()]);
   const tools = listTools(reg), main = d.data.main_deck || [];
-  const row = (n, cid) => `<a class="hub-tile" href="#/card/${esc(tools.card(cid)?.id || cid)}"><b>${n} × ${esc(tools.nameOf(cid))}</b></a>`;
+  const visual = new URLSearchParams(query()).get('v') !== 'text';
   const s = d.stats || {}, now_ = s.current_version || {};
   const small = s.matches && !s.sample_ok ? ' <small class="hub-muted">(small sample)</small>' : '';
   const add = d.mine ? `<button data-do="fork-deck" data-id="${esc(id)}">Add to my decks</button>` : `<a class="kv-ghost" href="/login/?next=${q(`/cosmohub/#/deck/${id}`)}">Sign in to add to your decks</a>`;
-  return `<h1>${esc(d.name)}</h1><p class="hub-muted">${playerLink(d.author)} · ${esc(godName(d.god))} · v${d.version} · ${esc(d.visibility)}${d.rating ? ` · ★ ${d.rating} (${d.ratings})` : ''} · ${d.favorites} favorites</p>
-    <div class="hub-grid"><div class="hub-tile"><b>Win rate ${s.matches ? pct(s.win_rate) : '—'}${small}</b><small>${s.matches || 0} online duels · ${s.wins || 0} wins · all versions</small></div>
-      <div class="hub-tile"><b>This version ${now_.matches ? pct(now_.win_rate) : '—'}</b><small>${now_.matches || 0} online duels with v${d.version}</small></div></div>
-    ${d.strategy ? `<div class="hub-rule">${esc(d.strategy)}</div>` : ''}
+  const count = main.reduce((n, e) => n + (e.quantity || 1), 0);
+  return `<h1>${esc(d.name)}</h1><p class="hub-muted">${godSymbol(d.god)}${esc(godName(d.god))}${d.archetype ? ` · ${esc(d.archetype)}` : ''} · ${playerLink(d.author)} · v${d.version} · ${when(d.versions[0]?.at)} · ${esc(d.visibility)}${d.rating ? ` · ★ ${d.rating} (${d.ratings})` : ''} · ${d.favorites} favorites</p>
+    <div class="hub-deckpage"><section aria-label="Deck list"><div class="hub-row"><nav class="hub-seg" aria-label="View"><a href="#/deck/${esc(id)}" ${visual ? 'aria-current="true"' : ''}>Visual</a><a href="#/deck/${esc(id)}?v=text" ${visual ? '' : 'aria-current="true"'}>Text</a></nav><span class="hub-muted">${count} cards</span></div>
+      ${deckSections(d, tools, visual)}</section>
+    <aside class="hub-side"><div class="hub-tile"><b>Win rate ${s.matches ? pct(s.win_rate) : '—'}${small}</b><small>${s.matches || 0} online duels · ${s.wins || 0} wins · all versions</small></div>
+      <div class="hub-tile"><b>This version ${now_.matches ? pct(now_.win_rate) : '—'}</b><small>${now_.matches || 0} online duels with v${d.version}</small></div>
     <div class="hub-row">${add}<button data-do="copy-list" data-id="${esc(id)}">Copy list</button><button data-do="copy-link" data-id="${esc(id)}">Copy link</button>
       ${d.mine && !d.mine.owner ? `<label>Rate <select data-change="rate-deck" data-id="${esc(id)}"><option value="">—</option>${[1, 2, 3, 4, 5].map(st => `<option ${d.mine.stars === st ? 'selected' : ''}>${st}</option>`).join('')}</select></label>` : ''}
       ${d.mine ? `<button data-do="favorite-deck" data-id="${esc(id)}">${d.mine.favorite ? 'Remove favorite' : 'Favorite'}</button>` : ''}
       ${d.mine?.owner ? `<select data-change="deck-visibility" data-id="${esc(id)}" aria-label="Visibility">${['private', 'unlisted', 'public'].map(v => `<option ${d.visibility === v ? 'selected' : ''}>${v}</option>`).join('')}</select>` : ''}</div>
-    ${curveHtml(main, tools)}
-    <h2>God and Domain</h2><div class="hub-grid">${row(1, d.data.god || 'god-athena')}${d.data.domain_id ? row(1, d.data.domain_id) : ''}</div>
-    <h2>Cards (${main.reduce((n, e) => n + (e.quantity || 1), 0)})</h2>${tiles(main, e => row(e.quantity || 1, e.card_id), 'This deck has no cards.')}
-    <h2>Version history</h2><p class="hub-muted">${d.versions.map(v => `v${v.version} (${when(v.at)})`).join(' · ')}</p>
+    ${curveHtml(main, tools)}${breakdown(main, tools)}
+    <h2>Version history</h2><p class="hub-muted">${d.versions.map(v => `v${v.version} (${when(v.at)})`).join(' · ')}</p></aside></div>
+    ${d.strategy ? `<h2>Strategy</h2><div class="hub-rule">${esc(d.strategy)}</div>` : ''}
     ${d.visibility === 'private' ? '' : await discussion(`deck:${id}`)}`;
 }
 
