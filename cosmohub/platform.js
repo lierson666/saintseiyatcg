@@ -358,6 +358,28 @@ function boardToken(c, cid) {
   const stats = c?.type === 'Devotee' && c.attack != null ? gem('atk', c.attack) + gem('hp', c.hp ?? '') : '';
   return `<span class="hub-board"><span class="btok ${!file ? 'is-noart' : fr?.w ? 'is-framed' : ''}" style="${style}"><span class="btok__name">${esc(cardName(c) || cid)}</span>${stats}</span></span>`;
 }
+// Nome que não cabe na carta do campo: primeiro diminui a fonte (até 75%); se ainda cortar, passa devagar em loop.
+// Com "reduzir movimento" no sistema fica a reticência.
+const NAME_MIN = .75, MARQUEE_SPEED = 28; // px por segundo
+function fitNames(root = document) {
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  for (const el of root.querySelectorAll('.btok__name')) {
+    const text = el.dataset.name ?? (el.dataset.name = el.textContent);
+    el.classList.remove('is-marquee');
+    el.style.removeProperty('--fit');
+    el.textContent = text;
+    const box = el.clientWidth;
+    if (!box || el.scrollWidth <= box) continue;
+    el.style.setProperty('--fit', Math.max(NAME_MIN, box / el.scrollWidth).toFixed(3));
+    if (el.scrollWidth <= box || still) continue;
+    el.classList.add('is-marquee');
+    el.innerHTML = `<span class="btok__run" aria-hidden="true"><span>${esc(text)}</span><span>${esc(text)}</span></span><span class="hub-sr">${esc(text)}</span>`;
+    const run = el.firstElementChild;
+    run.style.animationDuration = `${(run.scrollWidth / 2 / MARQUEE_SPEED).toFixed(1)}s`;
+  }
+}
+let fitTimer = 0;
+addEventListener('resize', () => { clearTimeout(fitTimer); fitTimer = setTimeout(() => fitNames(), 150); });
 const TYPE_ORDER = [['Devotee', 'Devotees'], ['Spell', 'Spells'], ['Equipment', 'Equipment']];
 function deckSections(d, tools, visual) {
   const entry = (cid, n) => ({c: tools.card(cid), cid, n});
@@ -712,6 +734,7 @@ async function render() {
   try {
     root.innerHTML = !view ? empty('Page not found.') : !apiUp && NEEDS_API.has(name) ? `<h1>${TITLES[name]}</h1>${soon()}` : await view(arg && decodeURIComponent(arg), arg2 && decodeURIComponent(arg2));
     root.querySelectorAll('img[data-fallback]').forEach(armFallback);
+    document.fonts?.ready.then(() => fitNames(root)); // mede com a fonte final
     filterCards();
     filterRules();
   } catch (e) {

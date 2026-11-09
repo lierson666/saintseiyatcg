@@ -315,3 +315,12 @@ a.hub-chip { text-decoration: none; }
   .hub-top .ss-lang { margin-left: 0; }
   .hub-top .ss-lang button { padding: 10px 9px; }
 }
+
+/* Nome longo na carta do campo: fonte menor (--fit) e, se ainda cortar, rolagem lenta em loop */
+.hub-board .btok__name { font-size: calc(8.4cqw * var(--fit, 1)); }
+.hub-board .btok__name.is-marquee { text-overflow: clip; -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+.btok__run { display: inline-flex; animation: hub-marquee linear infinite; animation-delay: 1.2s; }
+.btok__run > span { padding-right: 2.2em; }
+.hub-mini:hover .btok__run, .hub-mini:focus-visible .btok__run { animation-play-state: paused; }
+@keyframes hub-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) { .btok__run { animation: none; } }
