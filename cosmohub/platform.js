@@ -2,6 +2,7 @@
 import {renderLiveCard} from '/shared/live-card.js';
 import {mountKV} from '/shared/kv-sky.js';
 import {decklistIndex, deckToText, textToDeck} from '/shared/decklist-text.js?v=20261108-1';
+import {readFilters, filtersQuery, filterCatalog} from './codex-filter.js?v=20261109-p1';
 
 const API = '/api/platform';
 // Sem a API da plataforma no servidor, Codex e home seguem funcionando; o resto diz que abre em breve em vez de dar erro.
@@ -120,12 +121,22 @@ async function codex(tab = 'cards', faction = '') {
     const {items} = await api(`/content?kind=${kind}`);
     return `${head}${tiles(items, newsTile, 'Nothing published yet.')}`;
   }
-  const opts = (key, chosen) => [...new Set(reg.cards.map(c => c[key]).filter(Boolean))].sort().map(v => `<option ${v === chosen ? 'selected' : ''}>${esc(v)}</option>`).join('');
-  return `${head}<div class="hub-row"><input id="card-q" type="search" placeholder="Search" aria-label="Search cards">
-    <select id="card-faction" aria-label="Faction"><option value="">All factions</option>${opts('faction', faction)}</select>
-    <select id="card-type" aria-label="Type"><option value="">All types</option>${opts('type')}</select>
-    <select id="card-rarity" aria-label="Rarity"><option value="">All rarities</option>${opts('rarity')}</select>
-    <input id="card-cost" type="number" min="0" placeholder="Cost" aria-label="Cost"></div><div id="card-list"></div>`;
+  const f = readFilters(query());
+  if (faction && !f.faction) f.faction = faction; // link antigo #/codex/cards/Athena
+  const opts = (values, chosen) => values.map(v => `<option ${v === chosen ? 'selected' : ''}>${esc(v)}</option>`).join('');
+  const distinct = key => [...new Set(reg.cards.map(c => c[key]).filter(Boolean))].sort();
+  const counts = reg.cards.flatMap(c => c.keywords || []).reduce((m, k) => m.set(k, (m.get(k) || 0) + 1), new Map());
+  const keywords = [...counts].filter(([, n]) => n > 1).map(([k]) => k).sort(); // texto solto de uma carta só não vira filtro
+  const factions = distinct('faction');
+  const chip = v => `<button type="button" class="hub-chip" data-faction="${esc(v)}" aria-pressed="${f.faction === v}">${v === 'Neutral' ? '' : `<img src="/CARD-TEMPLATE/symbols/${esc(v.toLowerCase())}.xs.webp" alt="" width="20" height="20">`}${esc(v)}</button>`;
+  return `${head}<div class="hub-chips" role="group" aria-label="Faction"><button type="button" class="hub-chip" data-faction="" aria-pressed="${!f.faction}">All</button>${factions.map(chip).join('')}</div>
+    <form class="hub-row hub-filters" id="card-filters" role="search" aria-label="Filter cards"><input id="card-q" name="q" type="search" placeholder="Search name, ability or id" aria-label="Search cards" value="${esc(f.q)}">
+    <select id="card-type" name="type" aria-label="Type"><option value="">All types</option>${opts(distinct('type'), f.type)}</select>
+    <select id="card-rarity" name="rarity" aria-label="Rarity"><option value="">All rarities</option>${opts(distinct('rarity'), f.rarity)}</select>
+    <select id="card-cost" name="cost" aria-label="Cost"><option value="">Any cost</option>${opts(['0', '1', '2', '3', '4', '5', '6', '7+'], f.cost)}</select>
+    <select id="card-keyword" name="keyword" aria-label="Keyword"><option value="">All keywords</option>${opts(keywords, f.keyword)}</select>
+    <input type="hidden" name="faction" value="${esc(f.faction)}"><button type="button" class="kv-ghost hub-clear" data-clear>Clear</button></form>
+    <div id="card-list" aria-live="polite"></div>`;
 }
 
 // Arte ainda sem versão leve cai no JPG original.
@@ -133,17 +144,33 @@ function armFallback(img) {
   img.addEventListener('error', () => { if (img.getAttribute('src') !== img.dataset.fallback) img.src = img.dataset.fallback; }, {once: true});
 }
 
-function filterCards() {
-  const list = document.getElementById('card-list');
-  if (!list) return;
-  const val = id => document.getElementById(id).value;
-  const term = val('card-q').toLowerCase();
-  const found = registry.cards.filter(c => c.publication !== 'cut'
-    && (!term || [c.name, c.name_pt, ...c.abilities, ...c.keywords].join(' ').toLowerCase().includes(term))
-    && (!val('card-faction') || c.faction === val('card-faction')) && (!val('card-type') || c.type === val('card-type'))
-    && (!val('card-rarity') || c.rarity === val('card-rarity')) && (val('card-cost') === '' || c.cost === Number(val('card-cost'))));
-  list.innerHTML = `<p class="hub-muted">${found.length} cards</p>` + (found.length ? `<div class="hub-cards">${found.slice(0, 120).map(c => `<a class="hub-thumb" href="#/card/${esc(c.id)}"><i>${artImg(c.id)}</i><b>${esc(c.name)}</b><small>${esc(c.faction)} · ${esc(c.type)}${c.cost != null ? ` · ${c.cost}` : ''}</small></a>`).join('')}</div>` : empty('No cards match.'));
+// Lista completa em páginas de 60: rolar até o fim (ou o botão) carrega mais. Filtros vão para a URL sem recarregar a tela.
+const PAGE = 60;
+let shownCards = PAGE, moreObserver = null;
+const cardThumb = c => `<a class="hub-thumb" href="#/card/${esc(c.id)}"><i>${artImg(c.id, c.name) || '<span class="hub-noart" aria-hidden="true"></span>'}</i><b>${esc(c.name)}</b><small>${esc(c.faction)} · ${esc(c.type)}${c.cost != null ? ` · ${c.cost}` : ''}</small></a>`;
+function cardFilters() {
+  const form = document.getElementById('card-filters');
+  return form ? Object.fromEntries(new FormData(form)) : null;
+}
+function filterCards(reset = true) {
+  const list = document.getElementById('card-list'), f = cardFilters();
+  if (!list || !f) return;
+  if (reset) shownCards = PAGE;
+  const found = filterCatalog(registry.cards, f);
+  const qs = filtersQuery(f), path = location.hash.split('?')[0].replace(/^#\/codex\/?$/, '#/codex/cards');
+  history.replaceState(null, '', path + (qs ? `?${qs}` : ''));
+  document.querySelectorAll('.hub-chip[data-faction]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.faction === f.faction)));
+  const more = found.length > shownCards;
+  list.innerHTML = `<p class="hub-muted">${found.length} cards</p>` + (found.length
+    ? `<div class="hub-cards">${found.slice(0, shownCards).map(cardThumb).join('')}</div>${more ? `<button type="button" class="kv-ghost hub-more" id="card-more">Show more (${found.length - shownCards})</button>` : ''}`
+    : empty('No cards match these filters.'));
   list.querySelectorAll('img[data-fallback]').forEach(armFallback);
+  moreObserver?.disconnect();
+  const btn = document.getElementById('card-more');
+  if (btn && 'IntersectionObserver' in window) {
+    moreObserver = new IntersectionObserver(e => { if (e[0].isIntersecting) { shownCards += PAGE; filterCards(false); } }, {rootMargin: '600px'});
+    moreObserver.observe(btn);
+  }
 }
 
 function filterRules() {
@@ -202,16 +229,40 @@ async function nexus(tab = 'news') {
 // ---------- Decks ----------
 const signedOut = e => e.status === 401 ? null : Promise.reject(e);
 
+// Biblioteca: filtro por God, ordenação e página ficam na URL (#/decks?g=hades&s=winrate&p=2).
+const GODS = ['athena', 'poseidon', 'hades', 'ares', 'artemis'];
+const SORTS = [['recent', 'Most recent'], ['winrate', 'Best online win rate'], ['rating', 'Best rated'], ['popular', 'Most favorited']];
 async function decks() {
-  const [{decks: open}, mine, account] = await Promise.all([api('/decks'), api('/decks?mine=1').catch(signedOut), call('/api/decks').catch(signedOut)]);
+  const p = new URLSearchParams(query()), god = GODS.includes(p.get('g')) ? p.get('g') : '', sort = SORTS.some(([k]) => k === p.get('s')) ? p.get('s') : 'recent', page = Math.max(1, Number(p.get('p')) || 1);
+  const link = changes => { const n = new URLSearchParams({g: god, s: sort, p: page, ...changes}); [...n].forEach(([k, v]) => { if (!v || (k === 's' && v === 'recent') || (k === 'p' && v === '1')) n.delete(k); }); return `#/decks${String(n) ? `?${n}` : ''}`; };
+  const [lib, mine, account] = await Promise.all([api(`/decks?sort=${sort}&page=${page}&limit=24${god ? `&god=god-${god}` : ''}`), api('/decks?mine=1').catch(signedOut), call('/api/decks').catch(signedOut)]);
+  const open = lib.decks;
+  const chip = (g, label) => `<a class="hub-chip" href="${link({g, p: 1})}" ${god === g ? 'aria-current="true"' : ''}>${g ? `<img src="/CARD-TEMPLATE/symbols/${g}.xs.webp" alt="" width="20" height="20">` : ''}${label}</a>`;
+  const tools = `<div class="hub-chips" role="group" aria-label="God">${chip('', 'All')}${GODS.map(g => chip(g, godName(g))).join('')}</div>
+    <div class="hub-row"><label class="hub-inline">Sort <select data-nav="sort">${SORTS.map(([k, l]) => `<option value="${link({s: k, p: 1})}" ${k === sort ? 'selected' : ''}>${l}</option>`).join('')}</select></label><span class="hub-muted">${lib.total} decks</span></div>`;
+  const pager = lib.pages > 1 ? `<nav class="hub-row hub-pager" aria-label="Pages">${page > 1 ? `<a class="kv-ghost" href="${link({p: page - 1})}">← Previous</a>` : ''}<span class="hub-muted">Page ${lib.page} of ${lib.pages}</span>${page < lib.pages ? `<a class="kv-ghost" href="${link({p: page + 1})}">Next →</a>` : ''}</nav>` : '';
   const share = account ? `<h2>Share a deck</h2><form class="hub-form" data-do="share-deck">
-      <label>Deck<select name="deck_id" required>${account.decks.map(d => `<option value="${esc(d.id)}">${esc(d.data?.name || d.id)}</option>`).join('')}</select></label>
+      <label>Deck<select name="deck_id" required>${account.decks.map(d => `<option value="${esc(d.id)}">${esc(d.data?.alpha_nome || d.data?.nome || d.data?.name || d.id)}</option>`).join('')}</select></label>
       <label>Visibility<select name="visibility"><option value="private">Private</option><option value="unlisted">Unlisted</option><option value="public">Public</option></select></label>
       <label>Archetype<input name="archetype" maxlength="60"></label><label>Strategy<textarea name="strategy" maxlength="4000" rows="3"></textarea></label><button>Share</button></form>` : '';
   const importForm = account ? `<h2>Import a deck list</h2><form class="hub-form" data-do="import-list"><label>Deck list<textarea name="list" rows="8" required placeholder="Name: My deck&#10;God&#10;1 Athena (god-athena)&#10;Domain&#10;1 Jamir Tower (athena-v6-063)&#10;Deck&#10;3 Gemini Saga (athena-v6-013)"></textarea></label><button>Add to my decks</button></form>`
     : `<p class="hub-muted"><a href="/login/?next=${q('/cosmohub/#/decks')}">Sign in</a> to import deck lists and copy decks to your account.</p>`;
-  return `<h1>Decks</h1><p class="hub-lead">Decks marked Public in the game show up here, with comments and online win rate.</p><h2>Public decks</h2>${tiles(open, deckTile, 'Nothing published yet.')}${importForm}
+  return `<h1>Decks</h1><p class="hub-lead">Decks marked Public in the game show up here, with comments and online win rate.</p><h2>Public decks</h2>${tools}${tiles(open, deckTile, god ? 'No public decks for this God yet.' : 'Nothing published yet.')}${pager}${importForm}
     ${mine ? `<h2>My decks</h2>${tiles(mine.decks, d => deckTile(d), 'You have not shared a deck yet.')}` : ''}${share}`;
+}
+
+// Curva de Cosmo (custo 0–7+) e tipos, lidas do registro canônico.
+function curveHtml(main, tools) {
+  const curve = Array(8).fill(0), types = {};
+  for (const e of main) {
+    const c = tools.card(e.card_id), n = e.quantity || 1;
+    if (!c) continue;
+    curve[Math.min(7, Math.max(0, Number(c.cost) || 0))] += n;
+    types[c.type] = (types[c.type] || 0) + n;
+  }
+  const peak = Math.max(1, ...curve);
+  return `<h2>Cosmo curve</h2><div class="hub-curve" role="img" aria-label="Cosmo curve: ${curve.map((n, i) => `${n} at cost ${i === 7 ? '7+' : i}`).join(', ')}">${curve.map((n, i) => `<span style="--h:${n / peak}"><i>${n || ''}</i><b>${i === 7 ? '7+' : i}</b></span>`).join('')}</div>
+    <p class="hub-muted">${Object.entries(types).map(([t, n]) => `${n} ${esc(t)}`).join(' · ')}</p>`;
 }
 
 async function deckPage(id) {
@@ -225,10 +276,11 @@ async function deckPage(id) {
     <div class="hub-grid"><div class="hub-tile"><b>Win rate ${s.matches ? pct(s.win_rate) : '—'}${small}</b><small>${s.matches || 0} online duels · ${s.wins || 0} wins · all versions</small></div>
       <div class="hub-tile"><b>This version ${now_.matches ? pct(now_.win_rate) : '—'}</b><small>${now_.matches || 0} online duels with v${d.version}</small></div></div>
     ${d.strategy ? `<div class="hub-rule">${esc(d.strategy)}</div>` : ''}
-    <div class="hub-row">${add}<button data-do="copy-list" data-id="${esc(id)}">Copy list</button>
+    <div class="hub-row">${add}<button data-do="copy-list" data-id="${esc(id)}">Copy list</button><button data-do="copy-link" data-id="${esc(id)}">Copy link</button>
       ${d.mine && !d.mine.owner ? `<label>Rate <select data-change="rate-deck" data-id="${esc(id)}"><option value="">—</option>${[1, 2, 3, 4, 5].map(st => `<option ${d.mine.stars === st ? 'selected' : ''}>${st}</option>`).join('')}</select></label>` : ''}
       ${d.mine ? `<button data-do="favorite-deck" data-id="${esc(id)}">${d.mine.favorite ? 'Remove favorite' : 'Favorite'}</button>` : ''}
       ${d.mine?.owner ? `<select data-change="deck-visibility" data-id="${esc(id)}" aria-label="Visibility">${['private', 'unlisted', 'public'].map(v => `<option ${d.visibility === v ? 'selected' : ''}>${v}</option>`).join('')}</select>` : ''}</div>
+    ${curveHtml(main, tools)}
     <h2>God and Domain</h2><div class="hub-grid">${row(1, d.data.god || 'god-athena')}${d.data.domain_id ? row(1, d.data.domain_id) : ''}</div>
     <h2>Cards (${main.reduce((n, e) => n + (e.quantity || 1), 0)})</h2>${tiles(main, e => row(e.quantity || 1, e.card_id), 'This deck has no cards.')}
     <h2>Version history</h2><p class="hub-muted">${d.versions.map(v => `v${v.version} (${when(v.at)})`).join(' · ')}</p>
@@ -286,7 +338,7 @@ async function tournamentPage(id) {
   const match = m => `<tr><td>${m.round}</td><td>${esc(m.a)}</td><td>${m.b ? esc(m.b) : 'Bye'}</td><td>${m.a_score ?? '–'} : ${m.b_score ?? '–'}</td><td>${esc(m.status)}</td>
     <td>${t.status === 'running' && m.b && m.status !== 'confirmed' ? `<form class="hub-row" data-do="${t.can_run ? 'resolve-match' : 'report-match'}" data-id="${m.id}"><input name="a_score" type="number" min="0" max="99" required aria-label="${esc(m.a)} score"><input name="b_score" type="number" min="0" max="99" required aria-label="${esc(m.b)} score"><button>${t.can_run ? 'Resolve' : 'Report'}</button></form>` : ''}</td></tr>`;
   return `<h1>${esc(t.name)}</h1><p class="hub-muted">${esc(t.format)} · ${esc(t.mode)} · ${esc(t.category)} · ${esc(t.status)}${t.sanctioned ? ' · sanctioned' : ' · not sanctioned'}${t.location ? ` · ${esc(t.location)}` : ''} · Organizer ${esc(t.organizer)}</p>
-    <div class="hub-row">${t.status === 'open' ? `${account ? `<select id="reg-deck" aria-label="Deck">${account.decks.map(d => `<option value="${esc(d.id)}">${esc(d.data?.name || d.id)}</option>`).join('')}</select>` : ''}<button data-do="t-register" data-id="${esc(id)}">Register</button><button data-do="t-simple" data-verb="checkin" data-id="${esc(id)}">Check in</button>` : ''}
+    <div class="hub-row">${t.status === 'open' ? `${account ? `<select id="reg-deck" aria-label="Deck">${account.decks.map(d => `<option value="${esc(d.id)}">${esc(d.data?.alpha_nome || d.data?.nome || d.data?.name || d.id)}</option>`).join('')}</select>` : ''}<button data-do="t-register" data-id="${esc(id)}">Register</button><button data-do="t-simple" data-verb="checkin" data-id="${esc(id)}">Check in</button>` : ''}
       <button data-do="t-simple" data-verb="drop" data-id="${esc(id)}">Drop</button>
       ${t.can_run && t.status === 'open' ? `<button data-do="t-simple" data-verb="start" data-id="${esc(id)}">Start event</button>` : ''}
       ${t.can_run && t.status === 'running' ? `<button data-do="t-simple" data-verb="next-round" data-id="${esc(id)}">Next round</button><button data-do="t-simple" data-verb="close" data-id="${esc(id)}">Close event</button>` : ''}</div>
@@ -331,6 +383,10 @@ const ACTIONS = {
     const [d, reg] = await Promise.all([api(`/decks/${q(el.dataset.id)}`), loadRegistry()]);
     await navigator.clipboard.writeText(deckToText({...d.data, nome: d.name}, listTools(reg).nameOf));
     alertBox('Deck list copied. Paste it in the game: Play › Choose your deck › Import list.');
+  },
+  'copy-link': async el => {
+    await navigator.clipboard.writeText(`${location.origin}/cosmohub/#/deck/${el.dataset.id}`);
+    alertBox('Link copied.');
   },
   'import-list': async (_, data) => {
     const {deck, errors} = textToDeck(data.list, listTools(await loadRegistry()).index);
@@ -401,29 +457,45 @@ document.addEventListener('click', e => {
   if (el) run(ACTIONS[el.dataset.do], el);
 });
 document.addEventListener('change', e => {
+  if (e.target.dataset?.nav) { location.hash = e.target.value; return; }
   const fn = CHANGES[e.target.dataset?.change];
   if (fn) run(fn, e.target);
 });
+document.addEventListener('click', e => {
+  const chip = e.target.closest('.hub-chip[data-faction]');
+  if (chip) { document.querySelector('#card-filters [name=faction]').value = chip.dataset.faction; filterCards(); }
+  if (e.target.closest('#card-more')) { shownCards += PAGE; filterCards(false); }
+  if (e.target.closest('[data-retry]')) render();
+  if (e.target.closest('[data-clear]')) { document.querySelectorAll('#card-filters input, #card-filters select').forEach(el => { el.value = ''; }); filterCards(); }
+});
+document.addEventListener('submit', e => { if (e.target.id === 'card-filters') e.preventDefault(); });
 document.addEventListener('input', e => {
-  if (e.target.closest('.hub-row')?.querySelector('#card-q')) filterCards();
+  if (e.target.closest('#card-filters')) filterCards();
   if (e.target.id === 'rule-q') filterRules();
 });
 
 // ---------- Rotas ----------
 const ROUTES = {'': home, codex, card: cardPage, rule: rulePage, nexus, article, decks, deck: deckPage, guilds, guild: guildPage, tournaments, tournament: tournamentPage, notifications: inbox, console: consolePage};
 
+// Rota = #/secao/arg/arg2?filtros. query() devolve só os filtros.
+const query = () => location.hash.split('?')[1] || '';
+const skeleton = () => `<div class="hub-skeleton" aria-hidden="true"><i class="hub-sk-title"></i><i class="hub-sk-line"></i><div class="hub-cards">${'<i class="hub-sk-card"></i>'.repeat(8)}</div></div><p class="hub-sr">Loading…</p>`;
 async function render() {
-  const [, name = '', arg, arg2] = location.hash.split('/');
+  const [, name = '', arg, arg2] = location.hash.split('?')[0].split('/');
   const section = {card: 'codex', rule: 'codex', article: 'nexus', deck: 'decks', guild: 'guilds', tournament: 'tournaments'}[name] || name;
   document.querySelectorAll('.hub-nav a').forEach(a => (a.dataset.section === section ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current')));
   const view = ROUTES[name];
+  const slow = setTimeout(() => { root.innerHTML = skeleton(); }, 120); // só aparece se a seção demorar
   try {
     root.innerHTML = !view ? empty('Page not found.') : !apiUp && NEEDS_API.has(name) ? `<h1>${TITLES[name]}</h1>${soon()}` : await view(arg && decodeURIComponent(arg), arg2 && decodeURIComponent(arg2));
     root.querySelectorAll('img[data-fallback]').forEach(armFallback);
     filterCards();
     filterRules();
   } catch (e) {
-    root.innerHTML = `<p class="hub-error" role="alert">${esc(e.status === 401 ? 'Sign in to continue.' : e.status === 403 ? 'You do not have permission to see this.' : e.message)}</p>`;
+    root.innerHTML = `<div class="hub-error" role="alert"><p>${esc(e.status === 401 ? 'Sign in to continue.' : e.status === 403 ? 'You do not have permission to see this.' : e.message || 'Something went wrong. Please try again.')}</p>
+      ${e.status === 401 ? `<a class="kv-ghost" href="/login/?next=${q('/cosmohub/' + location.hash)}">Sign in</a>` : '<button type="button" class="kv-ghost" data-retry>Try again</button>'}</div>`;
+  } finally {
+    clearTimeout(slow);
   }
 }
 

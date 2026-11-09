@@ -1,5 +1,8 @@
 // Textos do Cosmo Hub em PT-BR: somam-se ao dicionário do jogo (shared/i18n-pt.js) antes de shared/i18n.js carregar.
 Object.assign(self.ssI18nPT.strings, {
+    'Search name, ability or id': 'Buscar nome, habilidade ou id', 'All keywords': 'Todas as palavras-chave', 'Any cost': 'Qualquer custo', 'Clear': 'Limpar', 'No cards match these filters.': 'Nenhuma carta com esses filtros.', 'Filter cards': 'Filtrar cartas',
+    'Most recent': 'Mais recentes', 'Best online win rate': 'Maior taxa de vitória online', 'Best rated': 'Mais bem avaliados', 'Most favorited': 'Mais favoritados', 'Sort': 'Ordenar', '← Previous': '← Anterior', 'Next →': 'Próxima →',
+    'No public decks for this God yet.': 'Nenhum deck público deste Deus ainda.', 'Cosmo curve': 'Curva de Cosmo', 'Copy link': 'Copiar link', 'Link copied.': 'Link copiado.', 'Try again': 'Tentar de novo', 'Loading…': 'Carregando…',
     'Import a deck list': 'Importar lista de deck', 'Deck list': 'Lista do deck', 'Add to my decks': 'Adicionar aos meus decks', 'Copy list': 'Copiar lista', 'Sign in to add to your decks': 'Entre para adicionar aos seus decks',
     'to import deck lists and copy decks to your account.': 'para importar listas e copiar decks para sua conta.', 'No online duels yet': 'Nenhum duelo online ainda', '(small sample)': '(amostra pequena)', 'God and Domain': 'Deus e Domínio', 'all versions': 'todas as versões',
     'Decks marked Public in the game show up here, with comments and online win rate.': 'Decks marcados como Público no jogo aparecem aqui, com comentários e taxa de vitória online.',

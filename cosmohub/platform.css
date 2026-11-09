@@ -123,3 +123,57 @@ button:hover { border-color: #e6c36a88; background: #e6c36a14; }
 }
 @media (prefers-reduced-motion: reduce) { .hub-module, .hub-thumb i, .hub-fan a, .hub-god, button, input, select, textarea { transition: none; } .hub-module:hover, .hub-thumb:hover i { transform: none; } }
 .hub-win { display: block; margin-top: 4px; color: var(--kv-gold, #e9c45c); } /* winrate online do deck (autor, 08/11/2026) */
+
+/* ---------- Cosmo Hub 2.0, P1 (09/11/2026): mármore escuro, metal e símbolos das facções; só CSS, nada pesa na Arena ---------- */
+:root { --hub-marble: radial-gradient(120% 80% at 15% 0%, #ffffff0a 0%, transparent 55%), linear-gradient(135deg, #12131c 0%, #0b0c14 45%, #14121a 100%);
+  --hub-metal: linear-gradient(135deg, #f3dc9a, #b8913f 45%, #f7e7b4 60%, #9c7a32); }
+.hub-tile, .hub-empty, .hub-thumb i { background: var(--hub-marble); }
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible { outline: 2px solid var(--kv-gold); outline-offset: 3px; }
+.hub-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* Facções com símbolo (CARD-TEMPLATE/symbols) */
+.hub-chips { display: flex; gap: 8px; margin: 16px 0 0; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
+.hub-chips::-webkit-scrollbar { display: none; }
+.hub-chip { display: inline-flex; flex: 0 0 auto; align-items: center; gap: 8px; min-height: 44px; padding: 0 16px; border: 1px solid var(--kv-line); border-radius: var(--kv-pill); background: #f5f1e60d; color: var(--kv-muted); font: 600 11px var(--kv-sans); letter-spacing: .18em; text-transform: uppercase; cursor: pointer; }
+.hub-chip img { width: 20px; height: 20px; object-fit: contain; }
+.hub-chip:hover { border-color: #e6c36a88; }
+.hub-chip[aria-pressed="true"], .hub-chip[aria-current="true"] { border-color: var(--kv-gold); color: var(--kv-gold); box-shadow: inset 0 0 0 1px #e6c36a33; }
+.hub-filters select, .hub-filters input { min-height: 44px; }
+.hub-clear { min-height: 44px; }
+.hub-more { display: block; margin: 24px auto 0; min-height: 44px; }
+.hub-noart { display: block; width: 100%; height: 100%; background: radial-gradient(circle at 50% 40%, #e6c36a14, transparent 60%); }
+
+/* Skeleton: só aparece se a seção demorar mais de 120 ms (platform.js render) */
+.hub-skeleton i { display: block; border-radius: 10px; background: linear-gradient(90deg, #ffffff08 25%, #ffffff14 50%, #ffffff08 75%) 0 0 / 300% 100%; animation: hub-shine 1.4s linear infinite; }
+.hub-sk-title { width: min(320px, 70%); height: 44px; margin: 8px 0 16px; }
+.hub-sk-line { width: min(560px, 90%); height: 16px; margin-bottom: 24px; }
+.hub-sk-card { aspect-ratio: 1488 / 2091; }
+@keyframes hub-shine { to { background-position: -300% 0; } }
+.hub-error { display: grid; gap: 12px; justify-items: start; }
+.hub-error p { margin: 0; }
+
+@media (max-width: 900px) {
+  /* Menu em uma linha que rola de lado: o conteúdo não desce (auditoria 2.0, problema 4) */
+  .hub-nav { min-width: 0; max-width: 100%; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; scroll-snap-type: x proximity; -webkit-mask-image: linear-gradient(90deg, #000 88%, transparent); mask-image: linear-gradient(90deg, #000 88%, transparent); }
+  .hub-nav::-webkit-scrollbar { display: none; }
+  .hub-nav a { flex: 0 0 auto; scroll-snap-align: start; }
+  .hub-filters input, .hub-filters select { flex: 1 1 calc(50% - 8px); }
+}
+@media (prefers-reduced-motion: reduce) { .hub-skeleton i { animation: none; } }
+.hub-inline { display: inline-flex; align-items: center; gap: 8px; }
+.hub-inline select { width: auto; min-height: 44px; }
+a.hub-chip { text-decoration: none; }
+.hub-pager { justify-content: center; }
+.hub-pager a { min-height: 44px; display: inline-flex; align-items: center; }
+.hub-curve { display: grid; grid-template-columns: repeat(8, 1fr); align-items: end; gap: 6px; height: 120px; max-width: 420px; }
+.hub-curve span { display: grid; grid-template-rows: 1fr auto; height: 100%; text-align: center; }
+.hub-curve i { align-self: end; height: calc(var(--h) * 100%); min-height: 2px; border-radius: 6px 6px 2px 2px; background: var(--hub-metal); color: #1a1408; font: 600 11px/1.6 var(--kv-sans); font-style: normal; }
+.hub-curve b { margin-top: 4px; color: var(--kv-muted); font: 500 12px var(--kv-sans); }
+.hub-filters #card-q { flex: 3 1 260px; }
+.hub-page { grid-template-columns: minmax(0, 1fr); } .hub-page > * { min-width: 0; } /* coluna não cresce com o menu que rola de lado */
+@media (max-width: 900px) {
+  .hub-filters select { min-width: 0; padding-left: 12px; padding-right: 28px; font-size: 14px; text-overflow: ellipsis; }
+  .hub-tabs { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+  .hub-tabs::-webkit-scrollbar { display: none; }
+  .hub-tabs a { flex: 0 0 auto; }
+}
