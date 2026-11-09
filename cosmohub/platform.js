@@ -69,12 +69,19 @@ function keyCard(d) {
     .sort((a, b) => (RARITY_RANK[b.c.rarity] || 0) - (RARITY_RANK[a.c.rarity] || 0) || b.n - a.n || (Number(b.c.cost) || 0) - (Number(a.c.cost) || 0))[0];
   return pick?.c || tools.card(d.god);
 }
+// Splash: o Deus do deck primeiro, depois as outras facções de Deus que aparecem nas cartas (neutras não contam).
+function deckGods(god, ids) {
+  const out = [godName(god).toLowerCase()];
+  if (registry) { const tools = listTools(registry); for (const id of ids) { const f = String(tools.card(id)?.faction || '').toLowerCase(); if (GODS.includes(f) && !out.includes(f)) out.push(f); } }
+  return out;
+}
+const godsLabel = (god, ids) => deckGods(god, ids).map(g => `<span class="hub-godname">${godSymbol(g)}${esc(godName(g))}</span>`).join('<span class="hub-slash" aria-hidden="true"> / </span>');
 const deckCount = d => (d.main || []).reduce((n, [, q]) => n + q, 0);
 const deckTile = d => {
   const key = keyCard(d);
   const g = godName(d.god).toLowerCase(), art = key ? artImg(key.id, key.name) : '';
   return `<a class="hub-deck" href="#/deck/${esc(d.id)}"><i>${art || (GODS.includes(g) ? `<img class="hub-deck-sym" src="/CARD-TEMPLATE/symbols/${g}.xs.webp" alt="">` : '')}</i><span><b>${esc(d.name)}</b>
-    <small>${godSymbol(d.god)}${esc(godName(d.god))}${d.archetype ? ` · ${esc(d.archetype)}` : ''}</small>
+    <small>${godsLabel(d.god, (d.main || []).map(([id]) => id))}${d.archetype ? ` · ${esc(d.archetype)}` : ''}</small>
     <small>${esc(d.author || '')}${d.main ? ` · ${deckCount(d)} cards` : ''}${d.rating ? ` · ★ ${d.rating}` : ''}</small><small class="hub-win">${winText(d.stats)}</small></span></a>`;
 };
 const deckTiles = (list, none) => list.length ? `<div class="hub-decks">${list.map(deckTile).join('')}</div>` : empty(none);
@@ -236,20 +243,35 @@ async function cardDecks(c) {
 
 // ---------- Perfil público (Cosmo Hub 2.0, P2): mesma conta do jogo, só dados públicos (servidor: /api/players/<user>) ----------
 const playerLink = name => name ? `<a href="#/player/${esc(String(name).toLowerCase())}">${esc(name)}</a>` : '';
+// Avatar como no jogo: Deus usa o rosto do HUD (Card Forge, hud_rosto); personagem usa a arte com o rosto no topo.
+function avatarStyle(id) {
+  const g = /^god-(\w+)$/.exec(id || ''), forge = artCards?.get(g ? `${g[1]}-001` : id);
+  if (g && forge?.hud_rosto) { const h = forge.hud_rosto; return `background-image:url('/card-forge/art-web/${esc(h.imagem)}');background-size:${h.zoom}% auto;background-position:${h.x}% ${h.y}%`; }
+  return forge ? `background-image:url('${thumb(forge.id)}');background-size:cover;background-position:50% 18%` : '';
+}
+const ROMAN = ['', 'I', 'II', 'III', 'IV'];
+const rankName = r => (r.tier === 'Kamui' ? 'Kamui' : r.tier ? `${r.tier} ${ROMAN[r.division] || ''}`.trim() : 'Unranked');
+const rankEmblem = r => (r.tier ? `<img class="pf-emblem" src="./assets/rank/${r.tier === 'Kamui' ? 'kamui' : `${esc(r.tier.toLowerCase())}-emblem`}.webp" alt="" width="96" height="96">` : '');
 async function playerPage(username) {
   const [p, decksOf] = await Promise.all([call(`/api/players/${q(username)}`), api(`/decks?author=${q(username)}&limit=24`), loadArt(), loadRegistry()]);
-  const god = p.favorite_god ? String(p.favorite_god).replace(/^god-/, '').toLowerCase() : '';
+  const fav = p.favorite_god ? String(p.favorite_god).replace(/^god-/, '').toLowerCase() : '';
   const r = p.rank || {}, st = p.stats || {};
-  const done = p.achievements.filter(a => a.done).length;
-  const result = {win: 'Win', loss: 'Loss', draw: 'Draw'};
-  return `<div class="hub-profile"><div class="hub-avatar">${artImg(p.avatar_card || (god && `${god}-001`) || '', p.username, true)}</div><div>
-      <h1>${esc(p.username)}</h1><p class="hub-muted">Joined ${when(p.joined)}${god ? ` · Favorite God <img class="hub-sym" src="/CARD-TEMPLATE/symbols/${esc(god)}.xs.webp" alt="" width="20" height="20"> ${esc(godName(god))}` : ''}</p>
-      <div class="hub-grid"><div class="hub-tile"><b>${esc(r.tier || 'Unranked')}${r.division ? ` ${esc(r.division)}` : ''}</b><small>Level ${esc(r.level ?? 1)}${r.title ? ` · ${esc(r.title)}` : ''}</small></div>
-        <div class="hub-tile"><b>${st.played ? `${st.winrate}%` : '—'}</b><small>${st.played || 0} online duels · ${st.wins || 0} wins · ${st.losses || 0} losses</small></div>
-        <div class="hub-tile"><b>${done} / ${p.achievements.length}</b><small>Achievements</small></div></div></div></div>
-    <h2>Achievements</h2><div class="hub-grid">${p.achievements.map(a => `<div class="hub-tile ${a.done ? 'is-done' : 'is-locked'}"><b>${a.done ? '★ ' : ''}${esc(a.name)}</b><small>${esc(a.description)}</small></div>`).join('')}</div>
-    <h2>Public decks</h2>${deckTiles(decksOf.decks, 'No public decks yet.')}
-    <h2>Recent online duels</h2>${p.recent.length ? `<div class="hub-scroll"><table class="hub-table"><tbody>${p.recent.map(d => `<tr><td>${when(d.date)}</td><td>${result[d.result] || ''}</td><td>${esc(godName(d.god))} vs ${esc(godName(d.opponent_god))}</td></tr>`).join('')}</tbody></table></div>` : empty('No online duels yet.')}`;
+  const done = p.achievements.filter(a => a.done).length, total = p.achievements.length;
+  const banner = fav && artOf(`${fav}-001`) ? ` style="--pf-bg:url('${thumb(`${fav}-001`)}')"` : '';
+  const pips = r.tier && r.tier !== 'Kamui' ? `<span class="pf-pips" aria-label="${r.pips || 0} of 6 pips">${Array.from({length: 6}, (_, i) => `<i class="${i < (r.pips || 0) ? 'on' : ''}"></i>`).join('')}</span>` : '';
+  const stat = (label, value, extra = '') => `<div class="pf-stat"><b>${value}</b><small>${label}</small>${extra}</div>`;
+  const result = {win: ['Win', 'is-win'], loss: ['Loss', 'is-loss'], draw: ['Draw', 'is-draw']};
+  const side = g => g ? `${godSymbol(g)}${esc(godName(g))}` : '<span class="hub-muted">—</span>';
+  const ach = [...p.achievements].sort((a, b) => Number(b.done) - Number(a.done));
+  return `<section class="pf-hero"${banner}>
+      <div class="pf-id"><span class="pf-avatar" role="img" aria-label="${esc(p.username)}" style="${avatarStyle(p.avatar_card || p.favorite_god || 'god-athena')}"></span>
+        <div><h1 class="pf-name">${esc(p.username)}</h1><p class="pf-meta">Joined ${when(p.joined)}${fav ? `<span class="pf-dot" aria-hidden="true">·</span><span>Favorite God</span> <span class="hub-godname">${godSymbol(fav)}${esc(godName(fav))}</span>` : ''}</p></div></div>
+      <div class="pf-rank">${rankEmblem(r)}<div><b>${esc(rankName(r))}</b><small>${r.tier === 'Kamui' ? `${r.points || 0} pts · ` : ''}Level ${esc(r.level ?? 1)}${r.title ? ` · ${esc(r.title)}` : ''}</small>${pips}</div></div>
+    </section>
+    <div class="pf-stats">${stat('Win rate', st.played ? `${st.winrate}%` : '—', st.played ? `<span class="pf-bar" aria-hidden="true"><i style="width:${st.winrate}%"></i></span>` : '')}${stat('Online duels', st.played || 0)}${stat('Wins', st.wins || 0)}${stat('Losses', st.losses || 0)}${stat('Achievements', `${done}/${total}`, `<span class="pf-bar" aria-hidden="true"><i style="width:${total ? 100 * done / total : 0}%"></i></span>`)}</div>
+    <h2>Public decks <span class="hub-count">${decksOf.total ?? decksOf.decks.length}</span></h2>${deckTiles(decksOf.decks, 'No public decks yet.')}
+    <section><h2>Recent online duels</h2>${p.recent.length ? `<ol class="pf-duels">${p.recent.map(d => { const [label, cls] = result[d.result] || ['—', '']; return `<li><span class="pf-result ${cls}">${label}</span><span class="pf-vs">${side(d.god)}<span class="hub-muted"> vs </span>${side(d.opponent_god)}</span><time class="hub-muted">${when(d.date)}</time></li>`; }).join('')}</ol>` : empty('No online duels yet.')}</section>
+      <section><h2>Achievements <span class="hub-count">${done}/${total}</span></h2><ul class="pf-ach">${ach.map(a => `<li class="${a.done ? 'is-done' : 'is-locked'}"><span class="pf-ach__icon" aria-hidden="true">${a.done ? '★' : '☆'}</span><span><b>${esc(a.name)}</b><small>${esc(a.description)}</small></span><span class="hub-sr">${a.done ? 'Unlocked' : 'Locked'}</span></li>`).join('')}</ul></section>`;
 }
 
 async function rulePage(id) {
@@ -295,7 +317,7 @@ async function decks() {
     <h2>Public decks</h2><div class="hub-row"><label class="hub-inline">Sort <select data-nav="sort">${SORTS.map(([k, l]) => `<option value="${link({s: k, p: 1})}" ${k === sort ? 'selected' : ''}>${l}</option>`).join('')}</select></label>
     <nav class="hub-seg" aria-label="View"><a href="${link({v: ''})}" ${view === 'tiles' ? 'aria-current="true"' : ''}>Tiles</a><a href="${link({v: 'table'})}" ${view === 'table' ? 'aria-current="true"' : ''}>Table</a></nav><span class="hub-muted">${lib.total} decks${god ? ` · ${esc(godName(god))}` : ''}</span></div>`;
   const table = list => list.length ? `<div class="hub-scroll"><table class="hub-table hub-decktable"><thead><tr><th>Deck</th><th>God</th><th>Author</th><th>Win rate</th><th>Duels</th><th>Cards</th><th>Rating</th><th>Updated</th></tr></thead><tbody>${list.map(d => `<tr>
-    <td><a href="#/deck/${esc(d.id)}">${esc(d.name)}</a></td><td>${godSymbol(d.god)}${esc(godName(d.god))}</td><td>${playerLink(d.author)}</td><td>${d.stats?.matches ? pct(d.stats.win_rate) : '—'}</td><td>${d.stats?.matches || 0}</td><td>${deckCount(d)}</td><td>${d.rating ? `★ ${d.rating}` : '—'}</td><td>${when(d.updated_at)}</td></tr>`).join('')}</tbody></table></div>` : empty(god ? 'No public decks for this God yet.' : 'Nothing published yet.');
+    <td><a href="#/deck/${esc(d.id)}">${esc(d.name)}</a></td><td>${godsLabel(d.god, (d.main || []).map(([id]) => id))}</td><td>${playerLink(d.author)}</td><td>${d.stats?.matches ? pct(d.stats.win_rate) : '—'}</td><td>${d.stats?.matches || 0}</td><td>${deckCount(d)}</td><td>${d.rating ? `★ ${d.rating}` : '—'}</td><td>${when(d.updated_at)}</td></tr>`).join('')}</tbody></table></div>` : empty(god ? 'No public decks for this God yet.' : 'Nothing published yet.');
   const pager = lib.pages > 1 ? `<nav class="hub-row hub-pager" aria-label="Pages">${page > 1 ? `<a class="kv-ghost" href="${link({p: page - 1})}">← Previous</a>` : ''}<span class="hub-muted">Page ${lib.page} of ${lib.pages}</span>${page < lib.pages ? `<a class="kv-ghost" href="${link({p: page + 1})}">Next →</a>` : ''}</nav>` : '';
   const share = account ? `<h2>Share a deck</h2><form class="hub-form" data-do="share-deck">
       <label>Deck<select name="deck_id" required>${account.decks.map(d => `<option value="${esc(d.id)}">${esc(d.data?.alpha_nome || d.data?.nome || d.data?.name || d.id)}</option>`).join('')}</select></label>
@@ -331,7 +353,9 @@ function deckSections(d, tools, visual) {
     ['Other', main.filter(x => !TYPE_ORDER.some(([t]) => x.c?.type === t)).sort(sort)]].filter(([, list]) => list.length);
   const total = list => list.reduce((n, x) => n + x.n, 0);
   const href = x => `#/card/${esc(x.c?.id || x.cid)}`;
-  if (visual) return groups.map(([label, list]) => `<h3>${esc(label)} <span>(${total(list)})</span></h3><div class="hub-cards">${list.map(x => `<a class="hub-thumb" href="${href(x)}"><em class="hub-qty">${x.n}×</em><i>${x.c && artImg(x.c.id, x.c.name) || '<span class="hub-noart" aria-hidden="true"></span>'}</i><b>${esc(x.c?.name || x.cid)}</b></a>`).join('')}</div>`).join('');
+  // Visual: a carta inteira como no campo do jogo (carta viva), pequena; sem carta viva cai na arte com o nome.
+  const mini = x => { const live = x.c && peekHtml(x.c.id); return `<a class="hub-mini" href="${href(x)}" aria-label="${x.n} × ${esc(x.c?.name || x.cid)}"><em class="hub-qty">${x.n}×</em>${live || `<span class="hub-thumb"><i>${x.c && artImg(x.c.id, x.c.name) || '<span class="hub-noart" aria-hidden="true"></span>'}</i><b>${esc(x.c?.name || x.cid)}</b></span>`}</a>`; };
+  if (visual) return groups.map(([label, list]) => `<h3>${esc(label)} <span>(${total(list)})</span></h3><div class="hub-minis">${list.map(mini).join('')}</div>`).join('');
   return groups.map(([label, list]) => `<table class="hub-table hub-list"><thead><tr><th colspan="2">${esc(label)} <span>(${total(list)})</span></th><th>Cost</th><th>Rarity</th></tr></thead><tbody>${list.map(x => `<tr><td class="hub-n">${x.n}</td><td><a href="${href(x)}">${esc(x.c?.name || x.cid)}</a></td><td>${x.c?.cost ?? '—'}</td><td>${esc(x.c?.rarity || '—')}</td></tr>`).join('')}</tbody></table>`).join('');
 }
 function breakdown(main, tools) {
@@ -347,7 +371,7 @@ async function deckPage(id) {
   const small = s.matches && !s.sample_ok ? ' <small class="hub-muted">(small sample)</small>' : '';
   const add = d.mine ? `<button data-do="fork-deck" data-id="${esc(id)}">Add to my decks</button>` : `<a class="kv-ghost" href="/login/?next=${q(`/cosmohub/#/deck/${id}`)}">Sign in to add to your decks</a>`;
   const count = main.reduce((n, e) => n + (e.quantity || 1), 0);
-  return `<h1>${esc(d.name)}</h1><p class="hub-muted">${godSymbol(d.god)}${esc(godName(d.god))}${d.archetype ? ` · ${esc(d.archetype)}` : ''} · ${playerLink(d.author)} · v${d.version} · ${when(d.versions[0]?.at)} · ${esc(d.visibility)}${d.rating ? ` · ★ ${d.rating} (${d.ratings})` : ''} · ${d.favorites} favorites</p>
+  return `<h1>${esc(d.name)}</h1><p class="hub-muted">${godsLabel(d.god, main.map(e => e.card_id))}${d.archetype ? ` · ${esc(d.archetype)}` : ''} · ${playerLink(d.author)} · v${d.version} · ${when(d.versions[0]?.at)} · ${esc(d.visibility)}${d.rating ? ` · ★ ${d.rating} (${d.ratings})` : ''} · ${d.favorites} favorites</p>
     <div class="hub-deckpage"><section aria-label="Deck list"><div class="hub-row"><nav class="hub-seg" aria-label="View"><a href="#/deck/${esc(id)}" ${visual ? 'aria-current="true"' : ''}>Visual</a><a href="#/deck/${esc(id)}?v=text" ${visual ? '' : 'aria-current="true"'}>Text</a></nav><span class="hub-muted">${count} cards</span></div>
       ${deckSections(d, tools, visual)}</section>
     <aside class="hub-side"><div class="hub-tile"><b>Win rate ${s.matches ? pct(s.win_rate) : '—'}${small}</b><small>${s.matches || 0} online duels · ${s.wins || 0} wins · all versions</small></div>
@@ -651,7 +675,10 @@ document.addEventListener('mouseover', e => {
   placePeek(e.clientX, e.clientY);
 });
 document.addEventListener('mousemove', e => { if (!peek.hidden) placePeek(e.clientX, e.clientY); });
-addEventListener('hashchange', () => { peek.hidden = true; peekLink = null; });
+addEventListener('hashchange', () => { peek.hidden = true; peekLink = null; document.getElementById('hub-user').open = false; });
+// Menu da conta fecha ao clicar fora ou com Esc.
+document.addEventListener('click', e => { const m = document.getElementById('hub-user'); if (m.open && !m.contains(e.target)) m.open = false; });
+document.addEventListener('keydown', e => { const m = document.getElementById('hub-user'); if (e.key === 'Escape' && m.open) { m.open = false; m.querySelector('summary').focus(); } });
 
 // ---------- Rotas ----------
 const ROUTES = {'': home, codex, card: cardPage, player: playerPage, rule: rulePage, nexus, article, decks, deck: deckPage, guilds, guild: guildPage, tournaments, tournament: tournamentPage, notifications: inbox, console: consolePage, staff: staffPage, collection: collectionPage};
@@ -662,7 +689,7 @@ const skeleton = () => `<div class="hub-skeleton" aria-hidden="true"><i class="h
 async function render() {
   const [, name = '', arg, arg2] = location.hash.split('?')[0].split('/');
   const section = {player: 'decks', card: 'codex', rule: 'codex', article: 'nexus', deck: 'decks', guild: 'guilds', tournament: 'tournaments'}[name] || name;
-  document.querySelectorAll('.hub-nav a').forEach(a => (a.dataset.section === section ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current')));
+  document.querySelectorAll('.hub-nav a, .hub-user__menu a[data-section]').forEach(a => (a.dataset.section === section ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current')));
   const view = ROUTES[name];
   owning = null;
   const slow = setTimeout(() => { root.innerHTML = skeleton(); }, 120); // só aparece se a seção demorar
@@ -687,12 +714,13 @@ async function refreshMe() {
   document.getElementById('hub-staff').hidden = !(staff.mod || me?.roles?.includes('publisher'));
   document.getElementById('hub-unread').textContent = me?.unread || '';
   document.getElementById('hub-console').hidden = !me?.developer;
-  document.getElementById('hub-inbox').hidden = !me;
+  document.getElementById('hub-user').hidden = !me;
   document.getElementById('hub-collection').hidden = !me;
   document.getElementById('hub-signin').hidden = !!me;
   const user = me && await call('/api/me').catch(() => null); // mesma conta do jogo: o perfil público usa o username
   const link = document.getElementById('hub-me');
   link.hidden = !user?.username;
+  if (user) { await loadArt(); document.getElementById('hub-user-av').style.cssText = avatarStyle(user.avatar_card || 'god-athena'); }
   if (user?.username) link.href = `#/player/${encodeURIComponent(user.username)}`; // o Hub é público; o login libera comentar, avaliar e copiar decks
 }
 

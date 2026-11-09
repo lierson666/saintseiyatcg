@@ -1,5 +1,6 @@
 // Textos do Cosmo Hub em PT-BR: somam-se ao dicionário do jogo (shared/i18n-pt.js) antes de shared/i18n.js carregar.
 Object.assign(self.ssI18nPT.strings, {
+    'Account menu': 'Menu da conta', 'Online duels': 'Duelos online', 'Wins': 'Vitórias', 'Losses': 'Derrotas', 'Unlocked': 'Desbloqueada', 'Locked': 'Bloqueada',
     'Metagame': 'Metagame', 'Pick a God to filter the decks.': 'Escolha um Deus para filtrar os decks.', 'of the meta': 'do meta', 'win rate': 'de vitórias', 'Tiles': 'Blocos', 'Table': 'Tabela', 'Visual': 'Visual', 'Text': 'Texto',
     'Deck': 'Deck', 'God': 'Deus', 'Author': 'Autor', 'Win rate': 'Taxa de vitória', 'Duels': 'Duelos', 'Rating': 'Nota', 'Updated': 'Atualizado', 'Cost': 'Custo', 'Rarity': 'Raridade', 'Devotees': 'Devotos', 'Spells': 'Momentos e Técnicas', 'Equipment': 'Equipamentos', 'Other': 'Outras', 'Strategy': 'Estratégia',
     'You have not shared a deck yet. Mark a deck Public in the game.': 'Você ainda não publicou um deck. Marque um deck como Público no jogo.',
