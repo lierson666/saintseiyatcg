@@ -467,13 +467,25 @@ def deck_stats(row):
 
 
 def deck_summary(row, names):
-    rating = conn.execute('select avg(stars) a, count(*) n from deck_ratings where shared_id = ?', (row['id'],)).fetchone()
-    favorites = conn.execute('select count(*) from deck_favorites where shared_id = ?', (row['id'],)).fetchone()[0]
-    return {'id': row['id'], 'name': row['name'], 'god': row['god'], 'archetype': row['archetype'], 'visibility': row['visibility'], 'version': row['version'],
-            'author': names.get(row['owner_id']), 'rating': round(rating['a'], 2) if rating['a'] else None, 'ratings': rating['n'], 'favorites': favorites, 'updated_at': row['updated_at'], 'forked_from': row['forked_from'], 'stats': deck_stats(row)}
+    # conexão SQLite única entre threads: várias leituras seguidas precisam da trava (lista de decks e páginas simultâneas)
+    with lock:
+        rating = conn.execute('select avg(stars) a, count(*) n from deck_ratings where shared_id = ?', (row['id'],)).fetchone()
+        favorites = conn.execute('select count(*) from deck_favorites where shared_id = ?', (row['id'],)).fetchone()[0]
+        return {'id': row['id'], 'name': row['name'], 'god': row['god'], 'archetype': row['archetype'], 'visibility': row['visibility'], 'version': row['version'],
+                'author': names.get(row['owner_id']), 'rating': round(rating['a'], 2) if rating['a'] else None, 'ratings': rating['n'], 'favorites': favorites, 'updated_at': row['updated_at'], 'forked_from': row['forked_from'], 'stats': deck_stats(row)}
+
+
+DECK_SORTS = {
+    'recent': lambda d: -d['updated_at'],
+    # winrate só com duelos online; deck sem duelo vai para o fim, e empate desempata por volume
+    'winrate': lambda d: (d['stats']['win_rate'] is None, -(d['stats']['win_rate'] or 0), -d['stats']['matches']),
+    'rating': lambda d: (d['rating'] is None, -(d['rating'] or 0), -d['ratings']),
+    'popular': lambda d: (-d['favorites'], -d['stats']['matches']),
+}
 
 
 def list_decks(h):
+    """Biblioteca pública com filtro por God, ordenação e páginas (?god=&sort=&page=&limit=)."""
     q = h.query()
     sql, args = "select * from shared_decks where visibility='public'", []
     if q.get('god'):
@@ -482,9 +494,14 @@ def list_decks(h):
     if q.get('mine') == '1':
         user = h.require_user()
         sql, args = 'select * from shared_decks where owner_id = ?', [user['id']]
-    rows = conn.execute(sql + ' order by updated_at desc limit 100', args).fetchall()
+    # shortcut: ordena em Python sobre até 1000 decks (winrate é calculado); passar para tabela de estatística quando passar disso
+    rows = conn.execute(sql + ' order by updated_at desc limit 1000', args).fetchall()
     names = public_names(r['owner_id'] for r in rows)
-    h.send_json(200, {'decks': [deck_summary(r, names) for r in rows]})
+    decks = sorted((deck_summary(r, names) for r in rows), key=DECK_SORTS.get(q.get('sort'), DECK_SORTS['recent']))
+    limit = min(max(int(q['limit']) if q.get('limit', '').isdigit() else 24, 1), 100)
+    pages = max(1, -(-len(decks) // limit))
+    page = min(max(int(q['page']) if q.get('page', '').isdigit() else 1, 1), pages)
+    h.send_json(200, {'decks': decks[(page - 1) * limit:page * limit], 'total': len(decks), 'page': page, 'pages': pages})
 
 
 def read_deck(h, sid):

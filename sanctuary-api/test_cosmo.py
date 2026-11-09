@@ -236,6 +236,20 @@ class Decks(Base):
         self.raw('DELETE', '/api/decks/auto', cookie=self.users['edu'])
         self.assertEqual(self.raw('GET', f'{P}/decks/{sid}')[0], 404)
 
+    def test_biblioteca_filtra_ordena_e_pagina(self):
+        # Cosmo Hub 2.0 P1: ?god=&sort=&page=&limit= na lista pública de decks.
+        for i, god in enumerate(['god-hades', 'god-hades', 'god-ares']):
+            self.raw('PUT', f'/api/decks/lib{i}', {'data': {'nome': f'Lib {i}', 'god': god, 'main_deck': [{'card_id': f'c{i}', 'quantity': 1}], 'public': True}, 'revision': 0}, cookie=self.users['dev'])
+        mine = lambda body: [d['name'] for d in body['decks'] if d['name'].startswith('Lib')]
+        self.assertEqual(sorted(mine(self.raw('GET', f'{P}/decks?god=god-hades')[1])), ['Lib 0', 'Lib 1'])
+        caio = server.db.execute("select id from users where email = 'dev@example.com'").fetchone()[0]
+        h1 = cosmo.deck_hash({'god': 'god-hades', 'main_deck': [{'card_id': 'c1', 'quantity': 1}]})
+        server.db.execute('insert into duels (challenge_id, a_id, b_id, winner, finished_at, a_hash) values (700, ?, 0, ?, 1, ?)', (caio, 'a', h1))
+        self.assertEqual(mine(self.raw('GET', f'{P}/decks?god=god-hades&sort=winrate')[1])[0], 'Lib 1')
+        page = self.raw('GET', f'{P}/decks?god=god-hades&limit=1&page=2')[1]
+        self.assertEqual((page['total'], page['pages'], page['page'], len(page['decks'])), (2, 2, 2, 1))
+        self.assertEqual(self.raw('GET', f'{P}/decks?page=999&limit=abc')[0], 200)  # parâmetro ruim não quebra
+
     def test_comunidade(self):
         self.deck('duda', 'pub')
         sid = self.as_('duda', 'POST', '/decks', {'deck_id': 'pub', 'visibility': 'public'})[1]['id']
