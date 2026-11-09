@@ -10,7 +10,7 @@ import {startCardFx} from '../shared/vfx/card-mount.js?v=20261104-vfx1';
 import {printedEquipmentBonuses, signedBonus} from '../shared/card-visual-values.js';
 import {displayCard, typeWord} from '../shared/card-i18n.js?v=20261031-kw1';
 import {unlock, playMusic, setVolume, volume} from './audio.js?v=20261106-menu1';
-import {loadMyDecks, saveMyDecks, findDeck, syncDecks, onDeckStatus, deckCovers, setDeckCover} from './deck-store.js?v=20261031-2';
+import {loadMyDecks, saveMyDecks, findDeck, syncDecks, onDeckStatus, deckCovers, setDeckCover, adoptAccountDeck, setDeckUser} from './deck-store.js?v=20261109-hub2';
 import {mountKV} from '../shared/kv-sky.js?v=20261104-pub1';
 import {animFile} from '../shared/anim-data.js?v=1';
 import {countryOptions, countryName} from '../shared/countries.js?v=20261031-i18n1';
@@ -80,7 +80,7 @@ function deckBox(d, act) {
 // Botão direito num deck da tela Decks (autor, 31/10/2026): duplicar, trocar capa, excluir (Starter não exclui).
 function deckMenu(d) {
   const m = ui.deckMenu;
-  if (m?.id !== d.id) return '';
+  if (!m || m.id !== d.id) return ''; // deck sem id (cache antigo) não abre menu nem quebra a tela
   const own = loadMyDecks().some(x => x.id === d.id);
   return `<div class="lb-ctx" role="menu" style="left:${m.x}px;top:${m.y}px">
     <button role="menuitem" data-act="deck-dup" data-deck="${esc(d.id)}">Duplicate</button>
@@ -390,6 +390,34 @@ async function submitProfile(form) {
 }
 
 // ---------- Criador de decks ----------
+// Cosmo Hub (autor, 09/11/2026): o editor do Hub é este mesmo construtor, embutido (?builder=new|<id>&embed=1).
+// Embutido, sem o menu do jogo; ao sair do construtor avisa o Hub, depois de o deck chegar à conta.
+const HUB = new URLSearchParams(location.search), EMBED = HUB.get('embed') === '1' && parent !== window;
+let embedOpen = false, embedSaved = false;
+if (EMBED) document.documentElement.classList.add('lb-embed');
+async function embedOpenFromHub() {
+  const want = HUB.get('builder');
+  if (!EMBED || embedOpen || !want) return;
+  // Direto da conta, sem o syncDecks completo (que regrava o cache inteiro): o Hub edita um deck por vez.
+  const [me, list] = await Promise.all(['/api/me', '/api/decks'].map(u => fetch(u, {credentials: 'same-origin'}).then(r => (r.ok ? r.json() : null)).catch(() => null)));
+  setDeckUser(me?.username);
+  let deck = null;
+  if (want !== 'new') {
+    const found = list?.decks?.find(d => d.id === want);
+    if (!found) return parent.postMessage({type: 'sstcg-builder-close', error: 'not-found'}, location.origin);
+    deck = {...found.data, id: found.id}; // o id vale o da conta (dados antigos podem vir sem id)
+    adoptAccountDeck(me?.username, deck, found.revision);
+  }
+  openBuilder(deck); embedOpen = true; render();
+}
+function embedClose() {
+  const post = () => parent.postMessage({type: 'sstcg-builder-close', saved: embedSaved, id: ui.builder?.deck?.id || null}, location.origin);
+  embedOpen = false;
+  if (!embedSaved) return post();
+  const wait = setTimeout(post, 6000); // sem resposta do servidor: o deck já está no cache e sincroniza depois
+  embedWaiting = () => { clearTimeout(wait); embedWaiting = null; post(); };
+}
+let embedWaiting = null;
 function openBuilder(deck) {
   const base = deck ? structuredClone(deck) : {id: null, nome: 'New deck', god: 'god-athena', domain_id: null, main_deck: []};
   if (deck?.preset) { base.id = null; base.nome = `${deck.alpha_nome || deck.nome} (copy)`; delete base.preset; }
@@ -623,6 +651,7 @@ function render() {
   if (ui.big) upgradeArt(root.querySelector('.lb-big'));
   if (screen === ui.screen) SCROLLERS.forEach((sel, i) => { const el = root.querySelector(sel); if (el) el.scrollTop = keep[i]; });
   root.dataset.screen = ui.screen;
+  if (embedOpen && ui.screen !== 'builder') embedClose();
 }
 
 // ---------- Ações ----------
@@ -683,6 +712,7 @@ function saveDeck() {
   const at = mine.findIndex(x => x.id === d.id);
   if (at >= 0) mine[at] = d; else mine.push(d);
   saveMyDecks(mine);
+  if (EMBED) embedSaved = true;
   if (!ui.deckA) ui.deckA = d.id;
   remember();
 }
@@ -917,12 +947,14 @@ async function init() {
   if (!findDeck(ui.deckA, presets)) ui.deckA = presets[0]?.id;
   if (!findDeck(ui.deckB, presets)) ui.deckB = presets[1]?.id || presets[0]?.id;
   render();
+  embedOpenFromHub(); // Cosmo Hub: abre o construtor (deck novo ou da conta)
   // Conta do sanctuary-api (login no /login/). Sem API (dev local), o lobby segue sem o nome no topo.
-  fetch('/api/me', {credentials: 'same-origin'}).then(r => r.ok ? r.json() : null).then(u => { if (u) { ui.user = u; if (!u.complete) ui.screen = 'profile'; render(); startSocial(); loadRank().then(r => { ui.rank = r; if (r && ui.screen !== 'builder') render(); }); loadEconomy().then(e => { ui.econ = e; if (e && ui.screen !== 'builder') render(); }); if (u.username) syncDecks(u.username, () => { if (ui.screen !== 'builder') render(); }); } }).catch(() => {});
+  fetch('/api/me', {credentials: 'same-origin'}).then(r => r.ok ? r.json() : null).then(u => { if (u) { ui.user = u; if (!u.complete) ui.screen = 'profile'; render(); startSocial(); loadRank().then(r => { ui.rank = r; if (r && ui.screen !== 'builder') render(); }); loadEconomy().then(e => { ui.econ = e; if (e && ui.screen !== 'builder') render(); }); if (u.username && !EMBED) syncDecks(u.username, () => { if (ui.screen !== 'builder') render(); }); } }).catch(() => {});
 }
 // Aviso discreto do salvamento dos decks (conta ou só este aparelho); não bloqueia nada.
 let deckNote = null, deckNoteTimer = 0;
 onDeckStatus(({text, kind}) => {
+  if (embedWaiting && !/device only/.test(text)) embedWaiting();
   if (!deckNote) { deckNote = document.createElement('p'); deckNote.className = 'kv-status lb-deckstatus'; deckNote.setAttribute('role', 'status'); document.body.append(deckNote); }
   deckNote.className = `kv-status lb-deckstatus ${kind === 'warn' ? '' : kind}`; deckNote.textContent = text; deckNote.hidden = false;
   clearTimeout(deckNoteTimer); deckNoteTimer = setTimeout(() => { deckNote.hidden = true; }, 5000);

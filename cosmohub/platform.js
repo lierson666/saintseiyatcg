@@ -2,7 +2,6 @@
 import {renderLiveCard} from '/shared/live-card.js';
 import {mountKV} from '/shared/kv-sky.js';
 import {decklistIndex, deckToText, textToDeck} from '/shared/decklist-text.js?v=20261108-1';
-import {validateDeck, colorErrors, DECK_SIZE, COPY_LIMIT, SPLASH_LIMIT} from '/shared/deck-v3.js';
 import {readFilters, filtersQuery, filterCatalog, filterCollection, describe, sortCards} from './codex-filter.js?v=20261109-cx1';
 
 const API = '/api/platform';
@@ -576,117 +575,22 @@ async function deckPage(id) {
     ${d.visibility === 'private' ? '' : await discussion(`deck:${id}`)}`;
 }
 
-// ---------- Editor de decks (autor, 09/11/2026) ----------
-// Mesmas regras do construtor do jogo (shared/deck-v3.js): 50 cartas, 3 cópias, cores do Deus + Domínio + neutras, splash até 15.
-// Salva nos decks da conta (PUT /api/decks, com revisão); incompleto pode salvar, acima de 50 não, como no jogo.
-let bld = null;
-const facOf = c => String(c?.faction || 'neutral').toLowerCase();
-const bldQty = id => bld.data.main_deck.find(e => e.card_id === id)?.quantity || 0;
+// ---------- Editor de decks ----------
+// É o construtor do jogo, embutido (autor, 09/11/2026: "igual do jogo"): mesma tela, mesmas regras, salva na conta.
+// Ao sair do construtor (Concluir, Cancelar ou Excluir) ele avisa por postMessage, depois de o deck chegar ao servidor.
 async function builderPage(deckId) {
-  const [reg, account] = await Promise.all([loadRegistry(), call('/api/decks'), loadArt()]);
-  const tools = listTools(reg), saved = deckId && account.decks.find(d => d.id === deckId);
-  if (deckId && !saved) throw new Error('This deck is not in your account.');
-  const data = saved ? structuredClone(saved.data) : {god: 'god-athena', domain_id: '', main_deck: []};
-  data.main_deck = (data.main_deck || []).filter(e => tools.card(e.card_id));
-  bld = {id: saved?.id || null, revision: saved?.revision || 0, data, tools, reg, dirty: false};
-  const domains = reg.cards.filter(c => c.type === 'Domain' && c.publication !== 'cut');
-  const god = facOf(tools.card(data.god));
-  const opts = `<option value="">Choose a Domain</option>${GODS.map(g => `<optgroup label="${esc(godName(g))}">${domains.filter(c => facOf(c) === g).map(c => `<option value="${esc(c.id)}" ${c.id === data.domain_id ? 'selected' : ''}>${esc(cardName(c))}</option>`).join('')}</optgroup>`).join('')}`;
-  return `<h1>${saved ? 'Edit deck' : 'New deck'}</h1>
-    <div class="hub-bld">
-      <section class="hub-bld__pool" aria-label="Cards">
-        <div class="hub-searchbar"><input id="bld-q" type="search" placeholder="Search cards… e.g. c<=2 t:devotee" aria-label="Search cards" autocomplete="off">
-          <label class="hub-inline"><input type="checkbox" id="bld-all"> All factions</label></div>
-        <p class="hub-muted" id="bld-found"></p><div id="bld-pool" class="hub-bld__grid"></div>
-      </section>
-      <aside class="hub-bld__deck" aria-label="Your deck">
-        <label>Name<input id="bld-name" maxlength="60" value="${esc(data.alpha_nome || data.nome || 'New deck')}"></label>
-        <div class="hub-bld__pick"><label>God<select id="bld-god">${GODS.map(g => `<option value="god-${g}" ${g === god ? 'selected' : ''}>${esc(godName(g))}</option>`).join('')}</select></label>
-          <label>Domain<select id="bld-domain">${opts}</select></label></div>
-        <div id="bld-deck"></div>
-        <div class="hub-bld__actions"><button type="button" class="kv-ghost hub-bld__jump" data-bld="jump">Deck <span id="bld-n">0</span> / ${DECK_SIZE}</button><a class="kv-ghost" href="#/decks">Cancel</a><button type="button" class="kv-ghost" data-bld="copy">Copy list</button><button type="button" class="hub-bld__save" data-bld="save">Save</button></div>
-      </aside>
-    </div>`;
+  await call('/api/me'); // sem login: o render mostra Entrar
+  const src = `/playtest/?embed=1&builder=${encodeURIComponent(deckId || 'new')}`;
+  return `<h1 class="hub-sr">${deckId ? 'Edit deck' : 'New deck'}</h1><div class="hub-embed"><iframe src="${esc(src)}" title="Deck builder" allow="clipboard-write"></iframe></div>`;
 }
-function paintPool() {
-  const box = document.getElementById('bld-pool');
-  if (!box || !bld) return;
-  const all = document.getElementById('bld-all').checked, god = facOf(bld.tools.card(bld.data.god)), dom = facOf(bld.tools.card(bld.data.domain_id));
-  const found = sortCards(filterCatalog(bld.reg.cards, {q: document.getElementById('bld-q').value}).filter(c => !['God', 'Domain'].includes(c.type)
-    && (all || [god, dom, 'neutral'].includes(facOf(c)))), 'cost', '', cardName);
-  document.getElementById('bld-found').textContent = `${found.length} cards`;
-  box.innerHTML = found.slice(0, 240).map(c => { const n = bldQty(c.id); return `<div class="hub-bld__card${n ? ' is-in' : ''}">
-    <button type="button" data-add="${esc(c.id)}" aria-label="Add ${esc(cardName(c))}"><i>${artImg(c.id, '') || '<span class="hub-noart" aria-hidden="true"></span>'}</i><b>${esc(cardName(c))}</b><small>${c.cost ?? '—'} · ${esc(c.type === 'Spell' ? c.subtypes?.[0] || c.type : c.type)}</small></button>
-    ${n ? `<em>${n}</em><button type="button" class="hub-bld__minus" data-sub="${esc(c.id)}" aria-label="Remove one ${esc(cardName(c))}">−</button>` : ''}</div>`; }).join('') || empty('No cards match this search.');
-  box.querySelectorAll('img[data-fallback]').forEach(armFallback);
-}
-function bldErrors() {
-  const {tools, data} = bld, index = new Map(bld.reg.cards.map(c => [gameId(c), c])), factionOf = id => tools.card(id) && facOf(tools.card(id));
-  const name = id => cardName(tools.card(id)) || id;
-  return [...validateDeck(data, index), ...colorErrors(data, factionOf)].filter(e => e.code !== 'size').map(e => ({
-    size: `${e.total} / ${DECK_SIZE} cards.`, domain: 'Choose a Domain.', copies: `${name(e.card_id)}: at most ${COPY_LIMIT} copies.`,
-    identity: `${name(e.card_id)} is outside the colors of your God and Domain.`, splash: `${e.count} splash cards (at most ${SPLASH_LIMIT}).`,
-  }[e.code] || `${name(e.card_id)}: ${e.code}`));
-}
-function paintDeck() {
-  const box = document.getElementById('bld-deck');
-  if (!box || !bld) return;
-  const {tools, data} = bld, size = data.main_deck.reduce((n, e) => n + e.quantity, 0), errors = bldErrors();
-  const order = ['Devotee', 'Equipment', 'Technique', 'Moment'], kind = c => (c.type === 'Spell' ? c.subtypes?.[0] || 'Technique' : c.type);
-  const rows = data.main_deck.map(e => ({...e, c: tools.card(e.card_id)})).sort((a, b) => (Number(a.c.cost) || 0) - (Number(b.c.cost) || 0) || cardName(a.c).localeCompare(cardName(b.c)));
-  const groups = order.map(k => [k, rows.filter(r => kind(r.c) === k)]).filter(([, r]) => r.length);
-  document.getElementById('bld-n').textContent = size;
-  box.innerHTML = `<p class="hub-bld__count"><b class="${size === DECK_SIZE ? 'is-ok' : size > DECK_SIZE ? 'is-over' : ''}">${size}</b> / ${DECK_SIZE}</p>
-    ${errors.length ? `<ul class="hub-bld__errors" role="status">${errors.map(t => `<li>${esc(t)}</li>`).join('')}</ul>` : (size === DECK_SIZE ? '<p class="hub-bld__ok" role="status">Ready to play.</p>' : '')}
-    ${groups.map(([k, list]) => `<h3><span>${esc(k)}</span> (${list.reduce((n, r) => n + r.quantity, 0)})</h3><ul class="hub-bld__list">${list.map(r => `<li>
-      <button type="button" data-sub="${esc(r.card_id)}" aria-label="Remove one">−</button><b>${r.quantity}</b><a href="#/card/${esc(r.c.id)}" target="_blank" rel="noopener">${esc(cardName(r.c))}</a><small>${r.c.cost ?? ''}</small>
-      <button type="button" data-add="${esc(r.card_id)}" aria-label="Add one" ${r.quantity >= COPY_LIMIT ? 'disabled' : ''}>+</button></li>`).join('')}</ul>`).join('') || empty('Click a card to add it.')}
-    ${size ? `<h2>Analysis</h2>${deckAnalysis(data.main_deck, tools)}${curveHtml(data.main_deck, tools)}` : ''}`;
-}
-function bldChange(id, delta) {
-  const list = bld.data.main_deck, entry = list.find(e => e.card_id === id), n = (entry?.quantity || 0) + delta;
-  if (n > COPY_LIMIT) return alertBox(`At most ${COPY_LIMIT} copies of a card.`, true);
-  if (!entry && n > 0) list.push({card_id: id, quantity: n});
-  else if (entry && n <= 0) list.splice(list.indexOf(entry), 1);
-  else if (entry) entry.quantity = n;
-  bld.dirty = true;
-  paintDeck(); paintPool();
-}
-async function bldSave() {
-  const size = bld.data.main_deck.reduce((n, e) => n + e.quantity, 0);
-  if (size > DECK_SIZE) return alertBox(`Decks can have at most ${DECK_SIZE} cards. Remove ${size - DECK_SIZE} to save.`, true);
-  const id = bld.id || `my-${Date.now().toString(36)}`, name = document.getElementById('bld-name').value.trim() || 'New deck';
-  const data = {...bld.data, id, nome: name, alpha_nome: undefined};
-  try {
-    const r = await call(`/api/decks/${encodeURIComponent(id)}`, 'PUT', {data, revision: bld.revision});
-    Object.assign(bld, {id, revision: r.revision, dirty: false});
-    alertBox(`"${name}" saved. It is in your decks in the game.`);
-    if (location.hash !== `#/build/${id}`) history.replaceState(null, '', `#/build/${id}`);
-  } catch (e) {
-    alertBox(e.status === 409 ? 'This deck changed on another device. Reload the page to see that version.' : e.status === 401 ? 'Sign in to save.' : e.message, true);
-  }
-}
-document.addEventListener('click', e => {
-  if (!bld || !e.target.closest('.hub-bld')) return;
-  const add = e.target.closest('[data-add]'), sub = e.target.closest('[data-sub]'), act = e.target.closest('[data-bld]')?.dataset.bld;
-  if (add) bldChange(add.dataset.add, 1);
-  if (sub) bldChange(sub.dataset.sub, -1);
-  if (act === 'save') bldSave();
-  if (act === 'jump') document.getElementById('bld-deck').scrollIntoView({behavior: 'smooth'});
-  if (act === 'copy') navigator.clipboard.writeText(deckToText({...bld.data, nome: document.getElementById('bld-name').value}, bld.tools.nameOf)).then(() => alertBox('Deck list copied.'));
+const fitEmbed = () => document.documentElement.style.setProperty('--hub-head', `${document.querySelector('.hub-top').getBoundingClientRect().bottom}px`);
+addEventListener('resize', () => { if (document.querySelector('.hub-embed')) fitEmbed(); });
+addEventListener('message', e => {
+  if (e.origin !== location.origin || e.data?.type !== 'sstcg-builder-close') return;
+  if (e.data.error) alertBox('This deck is not in your account.', true);
+  else if (e.data.saved) alertBox('Deck saved to your account.');
+  location.hash = '#/decks';
 });
-document.addEventListener('change', e => {
-  if (!bld || !e.target.closest('.hub-bld')) return;
-  if (e.target.id === 'bld-god') { bld.data.god = e.target.value; bld.dirty = true; }
-  if (e.target.id === 'bld-domain') { bld.data.domain_id = e.target.value; bld.dirty = true; }
-  if (['bld-god', 'bld-domain', 'bld-all'].includes(e.target.id)) { paintDeck(); paintPool(); }
-});
-let bldTimer;
-document.addEventListener('input', e => {
-  if (e.target.id === 'bld-q') { clearTimeout(bldTimer); bldTimer = setTimeout(paintPool, 150); }
-  if (e.target.id === 'bld-name' && bld) bld.dirty = true;
-});
-addEventListener('beforeunload', e => { if (bld?.dirty && document.querySelector('.hub-bld')) e.preventDefault(); });
 
 // ---------- Discussões ----------
 async function discussion(target) {
@@ -1008,7 +912,7 @@ async function render() {
     document.fonts?.ready.then(() => fitNames(root)); // mede com a fonte final
     filterCards();
     filterRules();
-    if (name === 'build') { paintDeck(); paintPool(); } else bld = null;
+    if (name === 'build') fitEmbed();
     if (name !== 'decks') nx = null;
   } catch (e) {
     root.innerHTML = `<div class="hub-error" role="alert"><p>${esc(e.status === 401 ? 'Sign in to continue.' : e.status === 403 ? 'You do not have permission to see this.' : e.message || 'Something went wrong. Please try again.')}</p>

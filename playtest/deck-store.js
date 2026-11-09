@@ -102,3 +102,14 @@ export function syncDecks(username, onDone = () => {}) {
     onDone();
   });
 }
+
+// Cosmo Hub (editor embutido): abre um deck da conta sem esperar o syncDecks. Grava no cache com a revisão do
+// servidor, para salvar depois não virar conflito (cópia "other device").
+export const setDeckUser = username => { user = username || user; };
+export function adoptAccountDeck(username, deck, revision) {
+  setDeckUser(username);
+  write(KEY, [...loadMyDecks().filter(d => d.id !== deck.id), deck]);
+  const m = metaAll();
+  mine(m).rev[deck.id] = revision;
+  write(META, m);
+}

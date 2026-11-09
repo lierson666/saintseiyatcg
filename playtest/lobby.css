@@ -830,3 +830,8 @@ body { font: 300 15px/1.45 var(--kv-sans); }
   .lb-builder > .lb-list__actions .lb-ghost { flex: 1 1 0; padding: 0 8px; font-size: 13px; }
   .lb-builder > .lb-list__actions .lb-play--small { flex: 1.3 1 0; padding: 0 12px; letter-spacing: .14em; }
 }
+
+/* Construtor embutido no Cosmo Hub (?embed=1): sem o menu do jogo; ações coladas embaixo. */
+.lb-embed .lb-top, .lb-embed .lb-deckstatus { display: none; }
+.lb-embed .lb-list__actions { bottom: env(safe-area-inset-bottom); }
+.lb-embed .lb-builder > .lb-list__actions { bottom: env(safe-area-inset-bottom); }

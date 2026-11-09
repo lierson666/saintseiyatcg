@@ -42,6 +42,7 @@ Object.assign(self.ssI18nPT.strings, {
     'Copy to my decks': 'Copiar para meus decks', 'Sign in to copy': 'Entrar para copiar', 'Favorites': 'Favoritos', 'Favorite': 'Favoritar', 'Remove favorite': 'Tirar dos favoritos', 'Rate': 'Avaliar', 'Visibility': 'Visibilidade', 'Version history': 'Histórico de versões',
     'No online duels yet. Win rate appears after the first online duels with this deck.': 'Sem duelos online ainda. A taxa de vitória aparece depois dos primeiros duelos online com este deck.', 'Deck Nexus': 'Deck Nexus',
     'Grouped by type, sorted by cost': 'Por tipo, em ordem de custo', 'Unlisted': 'Não listado',
+    'Deck saved to your account.': 'Deck salvo na sua conta.',
 });
 self.ssI18nPT.patterns.push(['{w0} online duels. Pick a God to filter the decks.', '{0} duelos online. Escolha um Deus para filtrar os decks.'], ['{w0} of the meta', '{0} do meta'], ['{w0} win rate', '{0} de vitórias'], ['{w0} duels (small sample)', '{0} duelos (amostra pequena)']);
 self.ssI18nPT.patterns.push(['Search {w0} cards… e.g. f:athena c>=5', 'Buscar entre {0} cartas… ex.: f:athena c>=5'], ['{w0} online duels. {1}', '{0} duelos online. {1}'], ['Win rates appear after {w0} duels per God.', 'A taxa de vitória aparece depois de {0} duelos por Deus.']);
