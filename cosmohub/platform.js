@@ -367,16 +367,14 @@ async function decks() {
 
 // Curva de Cosmo (custo 0–7+) e tipos, lidas do registro canônico.
 function curveHtml(main, tools) {
-  const curve = Array(8).fill(0), types = {};
+  const curve = Array(8).fill(0);
   for (const e of main) {
     const c = tools.card(e.card_id), n = e.quantity || 1;
     if (!c) continue;
     curve[Math.min(7, Math.max(0, Number(c.cost) || 0))] += n;
-    types[c.type] = (types[c.type] || 0) + n;
   }
   const peak = Math.max(1, ...curve);
-  return `<h2>Cosmo curve</h2><div class="hub-curve" role="img" aria-label="Cosmo curve: ${curve.map((n, i) => `${n} at cost ${i === 7 ? '7+' : i}`).join(', ')}">${curve.map((n, i) => `<span style="--h:${n / peak}"><i>${n || ''}</i><b>${i === 7 ? '7+' : i}</b></span>`).join('')}</div>
-    <p class="hub-muted">${Object.entries(types).map(([t, n]) => `${n} ${esc(t)}`).join(' · ')}</p>`;
+  return `<h2>Cosmo curve</h2><div class="hub-curve" role="img" aria-label="Cosmo curve: ${curve.map((n, i) => `${n} at cost ${i === 7 ? '7+' : i}`).join(', ')}">${curve.map((n, i) => `<span style="--h:${n / peak}"><i>${n || ''}</i><b>${i === 7 ? '7+' : i}</b></span>`).join('')}</div>`;
 }
 
 // Carta do campo, igual à mesa do duelo (playtest/divine/board.css): arte no enquadramento do Forge, nome em cima,
@@ -428,6 +426,31 @@ function deckSections(d, tools, visual) {
   if (visual) return groups.map(([label, list]) => `<h3>${esc(label)} <span>(${total(list)})</span></h3><div class="hub-minis">${list.map(mini).join('')}</div>`).join('');
   return groups.map(([label, list]) => `<table class="hub-table hub-list"><thead><tr><th colspan="2">${esc(label)} <span>(${total(list)})</span></th><th>Cost</th><th>Rarity</th></tr></thead><tbody>${list.map(x => `<tr><td class="hub-n">${x.n}</td><td><a href="${href(x)}">${esc(cardName(x.c) || x.cid)}</a></td><td>${x.c?.cost ?? '—'}</td><td>${esc(x.c?.rarity || '—')}</td></tr>`).join('')}</tbody></table>`).join('');
 }
+// Análise do deck igual à do construtor do jogo (playtest/lobby.js, deckStats): mesmos números e cores.
+const FACTION_COLORS = {athena: '#b0872a', poseidon: '#2f86d6', ares: '#d9533e', hades: '#8f5fe0', artemis: '#35a56b', neutral: '#99a2b1'};
+const KIND_COLORS = {Devotee: '#b0872a', Equipment: '#1f98ba', Technique: '#d0587a', Moment: '#7a80e8'};
+function donut(title, rows, total) { // legenda com número e %, para a cor nunca ser o único sinal
+  let at = 0;
+  const gap = rows.length > 1 ? 1 : 0, pc = n => Math.round(n / total * 100);
+  return `<section class="hub-statcard"><h3>${title}</h3><div class="hub-donut"><div class="hub-donut__ring" role="img" aria-label="${esc(title)}: ${rows.map(r => `${esc(r.label)} ${r.n}`).join(', ')}">
+      <svg viewBox="0 0 42 42" aria-hidden="true"><g transform="rotate(-90 21 21)">${rows.map(r => { const p = r.n / total * 100, w = Math.max(p - gap, .5), c = `<circle cx="21" cy="21" r="15.915" fill="none" stroke="${r.color}" stroke-width="6.5" stroke-dasharray="${w} ${100 - w}" stroke-dashoffset="${-at}"><title>${esc(r.label)}: ${r.n} (${pc(r.n)}%)</title></circle>`; at += p; return c; }).join('')}</g></svg>
+      <span><b>${total}</b></span></div>
+    <ul class="hub-legend">${rows.map(r => `<li><i style="background:${r.color}"></i>${r.icon || ''}<span>${esc(r.label)}</span><b>${r.n}</b><small>${pc(r.n)}%</small></li>`).join('')}</ul></div></section>`;
+}
+function deckAnalysis(main, tools) {
+  const list = main.map(e => ({card: tools.card(e.card_id), n: e.quantity || 1})).filter(e => e.card);
+  const size = list.reduce((s, e) => s + e.n, 0);
+  if (!size) return '';
+  const sum = (arr, f) => arr.reduce((s, e) => s + f(e.card) * e.n, 0), tally = (arr, key) => arr.reduce((m, e) => m.set(key(e.card), (m.get(key(e.card)) || 0) + e.n), new Map());
+  const devs = list.filter(e => e.card.type === 'Devotee'), nDevs = sum(devs, () => 1), costed = list.filter(e => e.card.cost != null);
+  const avg = sum(costed, c => c.cost) / Math.max(1, sum(costed, () => 1)), cosmo = sum(list, c => (c.cosmoble ? 1 : 0)), early = sum(costed, c => (c.cost <= 2 ? 1 : 0));
+  const kinds = tally(list, c => (c.type === 'Spell' ? c.subtypes?.[0] || 'Technique' : c.type)), facs = tally(list, c => String(c.faction || 'neutral').toLowerCase());
+  const tile = (value, label, note = '') => `<div class="hub-stat"><b>${value}</b><span>${label}</span>${note ? `<small>${note}</small>` : ''}</div>`;
+  return `<div class="hub-stats">${tile(avg.toFixed(1), 'Average cost')}${tile(`${Math.round(cosmo / size * 100)}%`, 'Cosmoble', `${cosmo} / ${size}`)}
+      ${tile(nDevs, 'Devotees', nDevs ? `${(sum(devs, c => c.attack || 0) / nDevs).toFixed(1)} ATK · ${(sum(devs, c => c.hp || 0) / nDevs).toFixed(1)} HP` : '')}${tile(early, 'Early plays', 'Cost 2 or less')}</div>
+    ${donut('Card type', Object.keys(KIND_COLORS).filter(k => kinds.get(k)).map(k => ({label: k, n: kinds.get(k), color: KIND_COLORS[k]})), size)}
+    ${donut('Faction', Object.keys(FACTION_COLORS).filter(f => facs.get(f)).map(f => ({label: f === 'neutral' ? 'Neutral' : f[0].toUpperCase() + f.slice(1), n: facs.get(f), color: FACTION_COLORS[f], icon: f === 'neutral' ? '' : `<img src="/CARD-TEMPLATE/symbols/${f}.xs.webp" alt="">`})), size)}`;
+}
 function breakdown(main, tools) {
   const by = {};
   for (const e of main) { const r = tools.card(e.card_id)?.rarity; if (r) by[r] = (by[r] || 0) + (e.quantity || 1); }
@@ -450,6 +473,7 @@ async function deckPage(id) {
       ${d.mine && !d.mine.owner ? `<label>Rate <select data-change="rate-deck" data-id="${esc(id)}"><option value="">—</option>${[1, 2, 3, 4, 5].map(st => `<option ${d.mine.stars === st ? 'selected' : ''}>${st}</option>`).join('')}</select></label>` : ''}
       ${d.mine ? `<button data-do="favorite-deck" data-id="${esc(id)}">${d.mine.favorite ? 'Remove favorite' : 'Favorite'}</button>` : ''}
       ${d.mine?.owner ? `<select data-change="deck-visibility" data-id="${esc(id)}" aria-label="Visibility">${['private', 'unlisted', 'public'].map(v => `<option ${d.visibility === v ? 'selected' : ''}>${v}</option>`).join('')}</select>` : ''}</div>
+    <h2>Analysis</h2>${deckAnalysis(main, tools)}
     ${curveHtml(main, tools)}${breakdown(main, tools)}
     <h2>Version history</h2><p class="hub-muted">${d.versions.map(v => `v${v.version} (${when(v.at)})`).join(' · ')}</p></aside></div>
     ${d.strategy ? `<h2>Strategy</h2><div class="hub-rule">${esc(d.strategy)}</div>` : ''}
