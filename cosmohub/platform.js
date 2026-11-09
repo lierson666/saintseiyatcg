@@ -7,7 +7,7 @@ import {readFilters, filtersQuery, filterCatalog} from './codex-filter.js?v=2026
 const API = '/api/platform';
 // Sem a API da plataforma no servidor, Codex e home seguem funcionando; o resto diz que abre em breve em vez de dar erro.
 const apiUp = await fetch(`${API}/health`).then(r => r.ok).catch(() => false);
-const NEEDS_API = new Set(['article', 'decks', 'deck', 'guilds', 'guild', 'tournaments', 'tournament', 'notifications', 'console']);
+const NEEDS_API = new Set(['article', 'decks', 'deck', 'player', 'guilds', 'guild', 'tournaments', 'tournament', 'notifications', 'console']);
 const root = document.getElementById('hub');
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
 const when = t => t ? new Date(t * 1000).toLocaleDateString() : '';
@@ -21,7 +21,7 @@ async function call(path, method = 'GET', body) {
 }
 const api = (path, method, body) => call(API + path, method, body);
 const soon = () => `<section class="kv-card hub-soon"><p class="kv-stamp kv-stamp--gold">Opening soon</p><p>This part of the Sanctuary is being prepared. The Codex is already open.</p><div class="hub-cta"><a class="kv-ghost" href="#/codex">Open the Codex</a></div></section>`;
-const TITLES = {decks: 'Decks', guilds: 'Guilds', tournaments: 'Tournaments', notifications: 'Notifications', console: 'Console', article: 'Nexus', deck: 'Decks', guild: 'Guilds', tournament: 'Tournaments'};
+const TITLES = {player: 'Players', decks: 'Decks', guilds: 'Guilds', tournaments: 'Tournaments', notifications: 'Notifications', console: 'Console', article: 'Nexus', deck: 'Decks', guild: 'Guilds', tournament: 'Tournaments'};
 const empty = text => `<p class="hub-empty">${esc(text)}</p>`;
 const tiles = (items, html, none) => items.length ? `<div class="hub-grid">${items.map(html).join('')}</div>` : empty(none);
 const formData = form => {
@@ -200,7 +200,32 @@ async function cardPage(id) {
     <h2>Abilities</h2>${c.abilities.length ? c.abilities.map(a => `<p>${esc(a)}</p>`).join('') : empty('No abilities.')}
     ${c.awaken_text ? `<h2>Awaken</h2><p>${esc(c.awaken_text)}</p>` : ''}${c.ultimate ? `<h2>Ultimate</h2><p>${esc(c.ultimate)}</p>` : ''}
     ${rules.length ? `<h2>Rules</h2>${rules.map(r => `<p><a href="#/rule/${esc(r.id)}">${esc(r.number)}. ${esc(r.title)}</a></p>`).join('')}` : ''}
-    <h2>Rulings</h2>${tiles(rulings, newsTile, 'Nothing published yet.')}</div></div>`;
+    <h2>Rulings</h2>${tiles(rulings, newsTile, 'Nothing published yet.')}</div></div>
+    ${apiUp ? await cardDecks(c) : ''}${apiUp ? await discussion(`card:${id}`) : ''}`;
+}
+
+// Página da carta: decks públicos cuja versão atual usa a carta (God e Domain contam), melhores primeiro.
+async function cardDecks(c) {
+  const {decks: list, total} = await api(`/decks?card=${q(gameId(c))}&sort=winrate&limit=12`).catch(() => ({decks: [], total: 0}));
+  return `<h2>Public decks with this card${total ? ` (${total})` : ''}</h2>${tiles(list, deckTile, 'No public deck uses this card yet.')}`;
+}
+
+// ---------- Perfil público (Cosmo Hub 2.0, P2): mesma conta do jogo, só dados públicos (servidor: /api/players/<user>) ----------
+const playerLink = name => name ? `<a href="#/player/${esc(String(name).toLowerCase())}">${esc(name)}</a>` : '';
+async function playerPage(username) {
+  const [p, decksOf] = await Promise.all([call(`/api/players/${q(username)}`), api(`/decks?author=${q(username)}&limit=24`), loadArt()]);
+  const god = p.favorite_god ? String(p.favorite_god).replace(/^god-/, '').toLowerCase() : '';
+  const r = p.rank || {}, st = p.stats || {};
+  const done = p.achievements.filter(a => a.done).length;
+  const result = {win: 'Win', loss: 'Loss', draw: 'Draw'};
+  return `<div class="hub-profile"><div class="hub-avatar">${artImg(p.avatar_card || (god && `${god}-001`) || '', p.username, true)}</div><div>
+      <h1>${esc(p.username)}</h1><p class="hub-muted">Joined ${when(p.joined)}${god ? ` · Favorite God <img class="hub-sym" src="/CARD-TEMPLATE/symbols/${esc(god)}.xs.webp" alt="" width="20" height="20"> ${esc(godName(god))}` : ''}</p>
+      <div class="hub-grid"><div class="hub-tile"><b>${esc(r.tier || 'Unranked')}${r.division ? ` ${esc(r.division)}` : ''}</b><small>Level ${esc(r.level ?? 1)}${r.title ? ` · ${esc(r.title)}` : ''}</small></div>
+        <div class="hub-tile"><b>${st.played ? `${st.winrate}%` : '—'}</b><small>${st.played || 0} online duels · ${st.wins || 0} wins · ${st.losses || 0} losses</small></div>
+        <div class="hub-tile"><b>${done} / ${p.achievements.length}</b><small>Achievements</small></div></div></div></div>
+    <h2>Achievements</h2><div class="hub-grid">${p.achievements.map(a => `<div class="hub-tile ${a.done ? 'is-done' : 'is-locked'}"><b>${a.done ? '★ ' : ''}${esc(a.name)}</b><small>${esc(a.description)}</small></div>`).join('')}</div>
+    <h2>Public decks</h2>${tiles(decksOf.decks, deckTile, 'No public decks yet.')}
+    <h2>Recent online duels</h2>${p.recent.length ? `<div class="hub-scroll"><table class="hub-table"><tbody>${p.recent.map(d => `<tr><td>${when(d.date)}</td><td>${result[d.result] || ''}</td><td>${esc(godName(d.god))} vs ${esc(godName(d.opponent_god))}</td></tr>`).join('')}</tbody></table></div>` : empty('No online duels yet.')}`;
 }
 
 async function rulePage(id) {
@@ -272,7 +297,7 @@ async function deckPage(id) {
   const s = d.stats || {}, now_ = s.current_version || {};
   const small = s.matches && !s.sample_ok ? ' <small class="hub-muted">(small sample)</small>' : '';
   const add = d.mine ? `<button data-do="fork-deck" data-id="${esc(id)}">Add to my decks</button>` : `<a class="kv-ghost" href="/login/?next=${q(`/cosmohub/#/deck/${id}`)}">Sign in to add to your decks</a>`;
-  return `<h1>${esc(d.name)}</h1><p class="hub-muted">${esc(d.author || '')} · ${esc(godName(d.god))} · v${d.version} · ${esc(d.visibility)}${d.rating ? ` · ★ ${d.rating} (${d.ratings})` : ''} · ${d.favorites} favorites</p>
+  return `<h1>${esc(d.name)}</h1><p class="hub-muted">${playerLink(d.author)} · ${esc(godName(d.god))} · v${d.version} · ${esc(d.visibility)}${d.rating ? ` · ★ ${d.rating} (${d.ratings})` : ''} · ${d.favorites} favorites</p>
     <div class="hub-grid"><div class="hub-tile"><b>Win rate ${s.matches ? pct(s.win_rate) : '—'}${small}</b><small>${s.matches || 0} online duels · ${s.wins || 0} wins · all versions</small></div>
       <div class="hub-tile"><b>This version ${now_.matches ? pct(now_.win_rate) : '—'}</b><small>${now_.matches || 0} online duels with v${d.version}</small></div></div>
     ${d.strategy ? `<div class="hub-rule">${esc(d.strategy)}</div>` : ''}
@@ -292,7 +317,7 @@ async function discussion(target) {
   const {comments} = await api(`/comments?target=${q(target)}&sort=top`);
   const kids = {};
   for (const c of comments) (kids[c.parent_id ?? 0] ||= []).push(c);
-  const node = c => `<div class="hub-comment"><small class="hub-muted">${esc(c.author || 'removed')} · ${when(c.at)} · ${c.score}</small><p>${c.removed ? '<em>Removed</em>' : esc(c.body)}</p>
+  const node = c => `<div class="hub-comment"><small class="hub-muted">${c.author ? playerLink(c.author) : 'removed'} · ${when(c.at)} · ${c.score}</small><p>${c.removed ? '<em>Removed</em>' : esc(c.body)}</p>
     ${c.removed ? '' : `<div class="hub-row"><button data-do="vote" data-id="${c.id}" data-value="1" aria-label="Upvote">▲</button><button data-do="vote" data-id="${c.id}" data-value="-1" aria-label="Downvote">▼</button><button data-do="reply" data-id="${c.id}" data-target="${esc(target)}">Reply</button><button data-do="report-comment" data-id="${c.id}">Report</button></div>`}
     ${(kids[c.id] || []).map(node).join('')}</div>`;
   return `<h2>Discussion</h2><form class="hub-form" data-do="comment" data-target="${esc(target)}"><label>Comment<textarea name="body" maxlength="2000" rows="2" required></textarea></label><button>Post</button></form>
@@ -475,14 +500,14 @@ document.addEventListener('input', e => {
 });
 
 // ---------- Rotas ----------
-const ROUTES = {'': home, codex, card: cardPage, rule: rulePage, nexus, article, decks, deck: deckPage, guilds, guild: guildPage, tournaments, tournament: tournamentPage, notifications: inbox, console: consolePage};
+const ROUTES = {'': home, codex, card: cardPage, player: playerPage, rule: rulePage, nexus, article, decks, deck: deckPage, guilds, guild: guildPage, tournaments, tournament: tournamentPage, notifications: inbox, console: consolePage};
 
 // Rota = #/secao/arg/arg2?filtros. query() devolve só os filtros.
 const query = () => location.hash.split('?')[1] || '';
 const skeleton = () => `<div class="hub-skeleton" aria-hidden="true"><i class="hub-sk-title"></i><i class="hub-sk-line"></i><div class="hub-cards">${'<i class="hub-sk-card"></i>'.repeat(8)}</div></div><p class="hub-sr">Loading…</p>`;
 async function render() {
   const [, name = '', arg, arg2] = location.hash.split('?')[0].split('/');
-  const section = {card: 'codex', rule: 'codex', article: 'nexus', deck: 'decks', guild: 'guilds', tournament: 'tournaments'}[name] || name;
+  const section = {player: 'decks', card: 'codex', rule: 'codex', article: 'nexus', deck: 'decks', guild: 'guilds', tournament: 'tournaments'}[name] || name;
   document.querySelectorAll('.hub-nav a').forEach(a => (a.dataset.section === section ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current')));
   const view = ROUTES[name];
   const slow = setTimeout(() => { root.innerHTML = skeleton(); }, 120); // só aparece se a seção demorar
@@ -504,7 +529,11 @@ async function refreshMe() {
   document.getElementById('hub-unread').textContent = me?.unread || '';
   document.getElementById('hub-console').hidden = !me?.developer;
   document.getElementById('hub-inbox').hidden = !me;
-  document.getElementById('hub-signin').hidden = !!me; // o Hub é público; o login libera comentar, avaliar e copiar decks
+  document.getElementById('hub-signin').hidden = !!me;
+  const user = me && await call('/api/me').catch(() => null); // mesma conta do jogo: o perfil público usa o username
+  const link = document.getElementById('hub-me');
+  link.hidden = !user?.username;
+  if (user?.username) link.href = `#/player/${encodeURIComponent(user.username)}`; // o Hub é público; o login libera comentar, avaliar e copiar decks
 }
 
 mountKV();

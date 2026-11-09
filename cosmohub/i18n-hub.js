@@ -1,5 +1,7 @@
 // Textos do Cosmo Hub em PT-BR: somam-se ao dicionário do jogo (shared/i18n-pt.js) antes de shared/i18n.js carregar.
 Object.assign(self.ssI18nPT.strings, {
+    'My profile': 'Meu perfil', 'Players': 'Jogadores', 'Achievements': 'Conquistas', 'Public decks': 'Decks públicos', 'Recent online duels': 'Duelos online recentes', 'No online duels yet.': 'Nenhum duelo online ainda.', 'No public decks yet.': 'Nenhum deck público ainda.',
+    'Win': 'Vitória', 'Loss': 'Derrota', 'Draw': 'Empate', 'Unranked': 'Sem rank', 'No public deck uses this card yet.': 'Nenhum deck público usa esta carta ainda.', 'Public decks with this card': 'Decks públicos com esta carta', 'Favorite God': 'Deus favorito',
     'Search name, ability or id': 'Buscar nome, habilidade ou id', 'All keywords': 'Todas as palavras-chave', 'Any cost': 'Qualquer custo', 'Clear': 'Limpar', 'No cards match these filters.': 'Nenhuma carta com esses filtros.', 'Filter cards': 'Filtrar cartas',
     'Most recent': 'Mais recentes', 'Best online win rate': 'Maior taxa de vitória online', 'Best rated': 'Mais bem avaliados', 'Most favorited': 'Mais favoritados', 'Sort': 'Ordenar', '← Previous': '← Anterior', 'Next →': 'Próxima →',
     'No public decks for this God yet.': 'Nenhum deck público deste Deus ainda.', 'Cosmo curve': 'Curva de Cosmo', 'Copy link': 'Copiar link', 'Link copied.': 'Link copiado.', 'Try again': 'Tentar de novo', 'Loading…': 'Carregando…',
