@@ -1,5 +1,8 @@
 // Textos do Cosmo Hub em PT-BR: somam-se ao dicionário do jogo (shared/i18n-pt.js) antes de shared/i18n.js carregar.
 Object.assign(self.ssI18nPT.strings, {
+    'Collection': 'Coleção', 'Your game collection, read only. Open boosters and craft cards in the game.': 'Sua coleção do jogo, só leitura. Abra boosters e crie cartas no jogo.', 'Full access: every card is unlocked in this account.': 'Acesso total: todas as cartas estão liberadas nesta conta.',
+    'Open the game once to receive your starter collection and welcome boosters.': 'Abra o jogo uma vez para receber a coleção inicial e os boosters de boas-vindas.', 'Cards': 'Cartas', 'Unopened boosters': 'Boosters fechados', 'Open the game': 'Abrir o jogo',
+    'All cards': 'Todas as cartas', 'Owned': 'Tenho', 'Missing': 'Faltam', 'Cosmetics': 'Cosméticos', 'No cosmetics bought yet. God avatars are free.': 'Nenhum cosmético comprado ainda. Avatares de Deus são grátis.', 'Avatar': 'Avatar', 'Sleeve': 'Sleeve', 'Coin': 'Moeda',
     'Kind': 'Tipo', 'Title': 'Título', 'Body': 'Texto', 'Removed': 'Removido', 'Meta (JSON: rule_refs, card_refs, balance fields)': 'Meta (JSON: rule_refs, card_refs, campos de balanceamento)',
     'Staff': 'Equipe', 'Content': 'Conteúdo', 'Reports': 'Denúncias', 'New article': 'Novo artigo', 'Hide': 'Ocultar', 'Hide comment': 'Ocultar comentário', 'Keep comment': 'Manter comentário', 'No open reports.': 'Nenhuma denúncia aberta.',
     'Open': 'Abrir', 'Preview': 'Prévia', 'Category': 'Categoria', 'Language': 'Idioma', 'Featured': 'Destaque', 'Draft saved.': 'Rascunho salvo.', 'Comment hidden.': 'Comentário ocultado.', 'Open the editor': 'Abrir o editor', 'You': 'Você',

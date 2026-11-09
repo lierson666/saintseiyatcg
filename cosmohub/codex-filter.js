@@ -1,6 +1,6 @@
 // Filtro do Codex (Cosmo Hub 2.0, P1): estado na URL (#/codex/cards?f=Athena&q=seiya…) para o filtro sobreviver a
 // navegação, recarga e link compartilhado. Só lê o registro canônico (data/registry); nenhuma base de cartas paralela.
-export const KEYS = {q: 'q', faction: 'f', type: 't', rarity: 'r', cost: 'c', keyword: 'k'};
+export const KEYS = {q: 'q', faction: 'f', type: 't', rarity: 'r', cost: 'c', keyword: 'k', own: 'o'}; // own: só na Coleção (owned | missing)
 
 export function readFilters(search) {
   const p = new URLSearchParams(search || '');
@@ -22,4 +22,9 @@ export function filterCatalog(cards, f) {
     && (!f.faction || c.faction === f.faction) && (!f.type || c.type === f.type) && (!f.rarity || c.rarity === f.rarity)
     && (f.cost === '' || f.cost == null || (f.cost === '7+' ? Number(c.cost) >= 7 : c.cost === Number(f.cost)))
     && (!f.keyword || (c.keywords || []).includes(f.keyword)));
+}
+
+// Coleção (P4): só o catálogo de cartas que o jogo dá (booster), com o filtro de posse.
+export function filterCollection(cards, f, pool, qty) {
+  return filterCatalog(cards.filter(c => pool.has(c.id)), f).filter(c => !f.own || (f.own === 'owned') === qty(c.id) > 0);
 }

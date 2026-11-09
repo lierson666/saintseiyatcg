@@ -351,6 +351,21 @@ class Guilds(Base):
         self.assertEqual(self.as_('duda', 'POST', f'/guilds/requests/{rid}/accept')[0], 200)
 
 
+class Collection(Base):
+    def test_colecao_so_da_propria_conta_e_so_leitura(self):
+        self.assertEqual(self.raw('GET', P + '/collection')[0], 401)
+        uid = server.db.execute("select id from users where email = 'edu@example.com'").fetchone()[0]
+        server.db.execute("insert or replace into collection values (?, 'athena-v6-001', 2)", (uid,))
+        server.db.execute("insert or replace into inventory values (?, 'sleeve:athena-v6-001', 1)", (uid,))
+        server.db.execute("insert or replace into inventory values (?, 'wildcard-legendary', 3)", (uid,))
+        st, c, _ = self.as_('edu', 'GET', '/collection')
+        self.assertEqual(st, 200)
+        self.assertEqual(c['collection'], {'athena-v6-001': 2})
+        self.assertEqual((c['wildcards']['Legendary'], c['cosmetics'], c['full_access']), (3, ['sleeve:athena-v6-001'], False))
+        self.assertIn('athena-v6-001', sum(c['pool'].values(), []))
+        self.assertEqual(self.as_('duda', 'GET', '/collection')[1]['collection'], {})  # cada um vê só a sua
+
+
 class Tournaments(Base):
     def event(self, players, **options):
         tid = self.as_('dev', 'POST', '/tournaments', {'name': 'Copa', **options})[1]['id']

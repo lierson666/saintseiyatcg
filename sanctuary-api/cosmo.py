@@ -1260,6 +1260,23 @@ def tournament_audit(h, tid):
     h.send_json(200, {'entries': [{**dict(r), 'actor': names.get(r['actor'])} for r in rows]})
 
 
+# ---------- Coleção (P4): só leitura da coleção do jogo ----------
+CATALOG_PATH = Path(__file__).with_name('catalog.json')  # o mesmo do server.py (tools/economy-catalog.py)
+COSMETIC_PREFIXES = ('avatar:', 'sleeve:', 'coin:')
+
+
+def my_collection(h):
+    """Coleção da própria conta, lida do banco do jogo. Não dá a coleção inicial (isso é do jogo, ao abrir a economia)."""
+    user = h.require_user()
+    pool = json.loads(CATALOG_PATH.read_text())['booster']
+    full = bool(main.execute('select full_access from users where id = ?', (user['id'],)).fetchone()[0])
+    cards = {r['card_id']: r['qty'] for r in main.execute('select card_id, qty from collection where user_id = ?', (user['id'],))}
+    items = {r['item']: r['qty'] for r in main.execute('select item, qty from inventory where user_id = ? and qty > 0', (user['id'],))}
+    h.send_json(200, {'full_access': full, 'copy_limit': 3, 'pool': pool, 'collection': cards, 'boosters': items.get('booster-olympus', 0),
+                      'wildcards': {r: items.get(f'wildcard-{r.lower()}', 0) for r in pool},
+                      'cosmetics': sorted(i for i in items if i.startswith(COSMETIC_PREFIXES))})
+
+
 # ---------- Meta Hub ----------
 def meta_hub(h):
     """Só duelos online do Playtest, só agregados. A tabela duels não guarda versão de regra nem deck, e a IA nunca entra nela."""
@@ -1285,7 +1302,7 @@ def meta_hub(h):
 # ---------- rotas ----------
 def _routes():
     table = [
-        ('GET', 'health', health), ('GET', 'me', me), ('GET', 'home', home_feed), ('GET', 'meta', meta_hub),
+        ('GET', 'health', health), ('GET', 'me', me), ('GET', 'home', home_feed), ('GET', 'meta', meta_hub), ('GET', 'collection', my_collection),
         ('GET', 'console', console), ('GET', 'audit', audit_log), ('POST', 'roles', grant_role), ('DELETE', r'roles/([A-Za-z0-9_]{3,20})/([a-z]+)', revoke_role),
         ('GET', 'content', list_content), ('POST', 'content', create_content), ('GET', r'content/([a-z0-9-]+)', read_content),
         ('PATCH', r'content/(\d+)', update_content), ('POST', r'content/(\d+)/publish', publish_content), ('POST', r'content/(\d+)/unpublish', unpublish_content),

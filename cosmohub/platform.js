@@ -2,12 +2,12 @@
 import {renderLiveCard} from '/shared/live-card.js';
 import {mountKV} from '/shared/kv-sky.js';
 import {decklistIndex, deckToText, textToDeck} from '/shared/decklist-text.js?v=20261108-1';
-import {readFilters, filtersQuery, filterCatalog} from './codex-filter.js?v=20261109-p1';
+import {readFilters, filtersQuery, filterCatalog, filterCollection} from './codex-filter.js?v=20261109-p4';
 
 const API = '/api/platform';
 // Sem a API da plataforma no servidor, Codex e home seguem funcionando; o resto diz que abre em breve em vez de dar erro.
 const apiUp = await fetch(`${API}/health`).then(r => r.ok).catch(() => false);
-const NEEDS_API = new Set(['article', 'decks', 'deck', 'player', 'guilds', 'guild', 'tournaments', 'tournament', 'notifications', 'console', 'staff']);
+const NEEDS_API = new Set(['article', 'decks', 'deck', 'player', 'guilds', 'guild', 'tournaments', 'tournament', 'notifications', 'console', 'staff', 'collection']);
 const root = document.getElementById('hub');
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
 const when = t => t ? new Date(t * 1000).toLocaleDateString() : '';
@@ -21,7 +21,7 @@ async function call(path, method = 'GET', body) {
 }
 const api = (path, method, body) => call(API + path, method, body);
 const soon = () => `<section class="kv-card hub-soon"><p class="kv-stamp kv-stamp--gold">Opening soon</p><p>This part of the Sanctuary is being prepared. The Codex is already open.</p><div class="hub-cta"><a class="kv-ghost" href="#/codex">Open the Codex</a></div></section>`;
-const TITLES = {player: 'Players', decks: 'Decks', guilds: 'Guilds', tournaments: 'Tournaments', notifications: 'Notifications', console: 'Console', staff: 'Staff', article: 'Nexus', deck: 'Decks', guild: 'Guilds', tournament: 'Tournaments'};
+const TITLES = {player: 'Players', decks: 'Decks', guilds: 'Guilds', tournaments: 'Tournaments', notifications: 'Notifications', console: 'Console', staff: 'Staff', collection: 'Collection', article: 'Nexus', deck: 'Decks', guild: 'Guilds', tournament: 'Tournaments'};
 const empty = text => `<p class="hub-empty">${esc(text)}</p>`;
 const tiles = (items, html, none) => items.length ? `<div class="hub-grid">${items.map(html).join('')}</div>` : empty(none);
 const formData = form => {
@@ -124,18 +124,22 @@ async function codex(tab = 'cards', faction = '') {
   }
   const f = readFilters(query());
   if (faction && !f.faction) f.faction = faction; // link antigo #/codex/cards/Athena
+  return head + cardFilterForm(reg, f);
+}
+const opts = (values, chosen) => values.map(v => `<option ${v === chosen ? 'selected' : ''}>${esc(v)}</option>`).join('');
+function cardFilterForm(reg, f, extra = '') {
   const opts = (values, chosen) => values.map(v => `<option ${v === chosen ? 'selected' : ''}>${esc(v)}</option>`).join('');
   const distinct = key => [...new Set(reg.cards.map(c => c[key]).filter(Boolean))].sort();
   const counts = reg.cards.flatMap(c => c.keywords || []).reduce((m, k) => m.set(k, (m.get(k) || 0) + 1), new Map());
   const keywords = [...counts].filter(([, n]) => n > 1).map(([k]) => k).sort(); // texto solto de uma carta só não vira filtro
   const factions = distinct('faction');
   const chip = v => `<button type="button" class="hub-chip" data-faction="${esc(v)}" aria-pressed="${f.faction === v}">${v === 'Neutral' ? '' : `<img src="/CARD-TEMPLATE/symbols/${esc(v.toLowerCase())}.xs.webp" alt="" width="20" height="20">`}${esc(v)}</button>`;
-  return `${head}<div class="hub-chips" role="group" aria-label="Faction"><button type="button" class="hub-chip" data-faction="" aria-pressed="${!f.faction}">All</button>${factions.map(chip).join('')}</div>
+  return `<div class="hub-chips" role="group" aria-label="Faction"><button type="button" class="hub-chip" data-faction="" aria-pressed="${!f.faction}">All</button>${factions.map(chip).join('')}</div>
     <form class="hub-row hub-filters" id="card-filters" role="search" aria-label="Filter cards"><input id="card-q" name="q" type="search" placeholder="Search name, ability or id" aria-label="Search cards" value="${esc(f.q)}">
     <select id="card-type" name="type" aria-label="Type"><option value="">All types</option>${opts(distinct('type'), f.type)}</select>
     <select id="card-rarity" name="rarity" aria-label="Rarity"><option value="">All rarities</option>${opts(distinct('rarity'), f.rarity)}</select>
     <select id="card-cost" name="cost" aria-label="Cost"><option value="">Any cost</option>${opts(['0', '1', '2', '3', '4', '5', '6', '7+'], f.cost)}</select>
-    <select id="card-keyword" name="keyword" aria-label="Keyword"><option value="">All keywords</option>${opts(keywords, f.keyword)}</select>
+    <select id="card-keyword" name="keyword" aria-label="Keyword"><option value="">All keywords</option>${opts(keywords, f.keyword)}</select>${extra}
     <input type="hidden" name="faction" value="${esc(f.faction)}"><button type="button" class="kv-ghost hub-clear" data-clear>Clear</button></form>
     <div id="card-list" aria-live="polite"></div>`;
 }
@@ -148,7 +152,8 @@ function armFallback(img) {
 // Lista completa em páginas de 60: rolar até o fim (ou o botão) carrega mais. Filtros vão para a URL sem recarregar a tela.
 const PAGE = 60;
 let shownCards = PAGE, moreObserver = null;
-const cardThumb = c => `<a class="hub-thumb" href="#/card/${esc(c.id)}"><i>${artImg(c.id, c.name) || '<span class="hub-noart" aria-hidden="true"></span>'}</i><b>${esc(c.name)}</b><small>${esc(c.faction)} · ${esc(c.type)}${c.cost != null ? ` · ${c.cost}` : ''}</small></a>`;
+let owning = null; // {pool: Set, qty: id => n} só na página da Coleção
+const cardThumb = c => `<a class="hub-thumb${owning && !owning.qty(c.id) ? ' is-missing' : ''}" href="#/card/${esc(c.id)}">${owning ? `<em class="hub-qty">${owning.qty(c.id)}/${owning.limit}</em>` : ''}<i>${artImg(c.id, c.name) || '<span class="hub-noart" aria-hidden="true"></span>'}</i><b>${esc(c.name)}</b><small>${esc(c.faction)} · ${esc(c.type)}${c.cost != null ? ` · ${c.cost}` : ''}</small></a>`;
 function cardFilters() {
   const form = document.getElementById('card-filters');
   return form ? Object.fromEntries(new FormData(form)) : null;
@@ -157,7 +162,7 @@ function filterCards(reset = true) {
   const list = document.getElementById('card-list'), f = cardFilters();
   if (!list || !f) return;
   if (reset) shownCards = PAGE;
-  const found = filterCatalog(registry.cards, f);
+  const found = owning ? filterCollection(registry.cards, f, owning.pool, owning.qty) : filterCatalog(registry.cards, f);
   const qs = filtersQuery(f), path = location.hash.split('?')[0].replace(/^#\/codex\/?$/, '#/codex/cards');
   history.replaceState(null, '', path + (qs ? `?${qs}` : ''));
   document.querySelectorAll('.hub-chip[data-faction]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.faction === f.faction)));
@@ -398,6 +403,28 @@ async function consolePage() {
     <h2>Audit log</h2><div class="hub-scroll"><table class="hub-table"><tbody>${audit.entries.slice(0, 50).map(e => `<tr><td>${when(e.at)}</td><td>${esc(e.actor_name)}</td><td>${esc(e.action)}</td><td>${esc(e.target)}</td></tr>`).join('') || '<tr><td>No entries.</td></tr>'}</tbody></table></div>`;
 }
 
+// ---------- Coleção (P4): só leitura; abrir booster e criar carta continuam no jogo ----------
+const RARITIES = ['Common', 'Uncommon', 'Legendary', 'Divine'];
+async function collectionPage() {
+  const [c, reg] = await Promise.all([api('/collection'), loadRegistry(), loadArt()]);
+  const all = new Set(Object.values(c.pool).flat());
+  const qty = id => (c.full_access ? c.copy_limit : Math.min(c.collection[id] || 0, c.copy_limit));
+  owning = {pool: all, qty, limit: c.copy_limit};
+  const have = ids => ids.filter(id => qty(id) > 0).length;
+  const nameOf = id => reg.cards.find(x => x.id === id)?.name || (id.startsWith('god-') ? id.slice(4).replace(/^./, m => m.toUpperCase()) : id);
+  const f = readFilters(query());
+  const cosmetic = item => { const [kind, id] = item.split(':'); return `<div class="hub-tile"><b>${esc(nameOf(id))}</b><small>${esc({avatar: 'Avatar', sleeve: 'Sleeve', coin: 'Coin'}[kind] || kind)}</small></div>`; };
+  return `<h1>Collection</h1><p class="hub-lead">Your game collection, read only. Open boosters and craft cards in the game.</p>
+    ${c.full_access ? '<p class="hub-empty">Full access: every card is unlocked in this account.</p>' : !Object.keys(c.collection).length ? '<p class="hub-empty">Open the game once to receive your starter collection and welcome boosters.</p>' : ''}
+    <div class="hub-grid"><div class="hub-tile"><b>${have([...all])} / ${all.size}</b><small>Cards</small></div>
+      ${RARITIES.filter(r => c.pool[r]).map(r => `<div class="hub-tile"><b>${have(c.pool[r])} / ${c.pool[r].length}</b><small>${esc(r)}${c.wildcards[r] ? ` · ${c.wildcards[r]} wildcards` : ''}</small></div>`).join('')}
+      <div class="hub-tile"><b>${c.boosters}</b><small>Unopened boosters</small></div></div>
+    <div class="hub-cta"><a class="kv-ghost" href="/playtest/">Open the game</a></div>
+    <h2>Cards</h2>${cardFilterForm(reg, f, `<select name="own" aria-label="Owned"><option value="">All cards</option><option value="owned" ${f.own === 'owned' ? 'selected' : ''}>Owned</option><option value="missing" ${f.own === 'missing' ? 'selected' : ''}>Missing</option></select>`)}
+    <div id="card-list" aria-live="polite"></div>
+    <h2>Cosmetics</h2>${tiles(c.cosmetics, cosmetic, 'No cosmetics bought yet. God avatars are free.')}`;
+}
+
 // ---------- Staff: editor do Nexus e fila de moderação (permissão decidida no servidor) ----------
 const KINDS = ['news', 'guide', 'lesson', 'ruling', 'balance'];
 const targetLink = t => { const [kind, ...rest] = String(t).split(':'); const id = rest.join(':'); return `#/${kind === 'content' ? 'article' : kind}/${q(id)}`; };
@@ -545,7 +572,7 @@ document.addEventListener('input', e => {
 });
 
 // ---------- Rotas ----------
-const ROUTES = {'': home, codex, card: cardPage, player: playerPage, rule: rulePage, nexus, article, decks, deck: deckPage, guilds, guild: guildPage, tournaments, tournament: tournamentPage, notifications: inbox, console: consolePage, staff: staffPage};
+const ROUTES = {'': home, codex, card: cardPage, player: playerPage, rule: rulePage, nexus, article, decks, deck: deckPage, guilds, guild: guildPage, tournaments, tournament: tournamentPage, notifications: inbox, console: consolePage, staff: staffPage, collection: collectionPage};
 
 // Rota = #/secao/arg/arg2?filtros. query() devolve só os filtros.
 const query = () => location.hash.split('?')[1] || '';
@@ -555,6 +582,7 @@ async function render() {
   const section = {player: 'decks', card: 'codex', rule: 'codex', article: 'nexus', deck: 'decks', guild: 'guilds', tournament: 'tournaments'}[name] || name;
   document.querySelectorAll('.hub-nav a').forEach(a => (a.dataset.section === section ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current')));
   const view = ROUTES[name];
+  owning = null;
   const slow = setTimeout(() => { root.innerHTML = skeleton(); }, 120); // só aparece se a seção demorar
   try {
     root.innerHTML = !view ? empty('Page not found.') : !apiUp && NEEDS_API.has(name) ? `<h1>${TITLES[name]}</h1>${soon()}` : await view(arg && decodeURIComponent(arg), arg2 && decodeURIComponent(arg2));
@@ -578,6 +606,7 @@ async function refreshMe() {
   document.getElementById('hub-unread').textContent = me?.unread || '';
   document.getElementById('hub-console').hidden = !me?.developer;
   document.getElementById('hub-inbox').hidden = !me;
+  document.getElementById('hub-collection').hidden = !me;
   document.getElementById('hub-signin').hidden = !!me;
   const user = me && await call('/api/me').catch(() => null); // mesma conta do jogo: o perfil público usa o username
   const link = document.getElementById('hub-me');

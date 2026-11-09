@@ -190,3 +190,8 @@ a.hub-chip { text-decoration: none; }
 .hub-editor { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 24px; align-items: start; }
 .hub-preview { border: 1px solid var(--kv-line); border-radius: var(--kv-radius); padding: 18px 20px; background: var(--kv-glass); position: sticky; top: 12px; }
 @media (max-width: 860px) { .hub-editor { grid-template-columns: minmax(0, 1fr); } .hub-preview { position: static; } }
+
+/* Coleção (P4): cópias no canto da carta; carta que falta fica apagada */
+.hub-thumb { position: relative; }
+.hub-thumb.is-missing i { filter: grayscale(1) brightness(.45); }
+.hub-qty { position: absolute; top: 8px; right: 8px; z-index: 1; padding: 2px 8px; border-radius: 999px; background: var(--kv-glass); border: 1px solid var(--kv-line); font: 600 12px/1.4 var(--kv-sans, inherit); font-style: normal; }
