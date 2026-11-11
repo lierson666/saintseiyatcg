@@ -10,6 +10,8 @@ import {mountAnimacoes} from './animacoes.js?v=12';
 import {mountArenaForge} from './arena-forge.js?v=20261107-af5';
 import {mountChroniclesForge} from './chronicles-forge.js?v=20261111-cf3';
 import {mountAchievements} from './achievements-forge.js?v=20261111-ach2';
+import {mountEconomy} from './economy-forge.js?v=20261111-eco1';
+import {mountCompliance} from './compliance-forge.js?v=20261111-cf1';
 import {mountNexus} from './nexus.js?v=20261111-nx3';
 import {EDITIONS, editionOf} from '../shared/editions.js?v=20261102-1';
 
@@ -27,6 +29,8 @@ const PAGES = {
   arenas: ['Arena Forge', 'O palco 3D de cada partida.'],
   chronicles: ['Cosmo Chronicles Forge', 'O modo história, cena por cena.'],
   conquistas: ['Achievements Forge', 'Conquistas e títulos, de Common a Divine.'],
+  economia: ['Economy Forge', 'Preços, recompensas e chances, num lugar só.'],
+  conformidade: ['Identity & Compliance Forge', 'Maioridade, termos, chaves e pagamentos.'],
   nexus: ['Nexus', 'O blog do Cosmo Hub, do rascunho ao banner da home.'],
   regras: ['Livro de regras', 'A fonte da verdade.'],
 };
@@ -163,6 +167,8 @@ async function render() {
   if (id === 'arenas') return mountArenaForge($('#content'), {notice, api});
   if (id === 'chronicles') return mountChroniclesForge($('#content'), {notice, api});
   if (id === 'conquistas') return mountAchievements($('#content'), {notice, api});
+  if (id === 'economia') return mountEconomy($('#content'), {notice, api});
+  if (id === 'conformidade') return mountCompliance($('#content'), {notice});
   if (id === 'nexus') return mountNexus($('#content'), {notice});
   $('#content').innerHTML = id === 'cartas' ? (edition ? cardsPage() : editionsPage()) : id === 'decks' ? decksPage() : id === 'regras' ? await rulesPage() : overview();
   if (edition) $('#card-list').innerHTML = cardList(); // contador só existe depois do HTML

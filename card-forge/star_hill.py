@@ -50,6 +50,12 @@ _chron_spec.loader.exec_module(chronicles_forge)
 _ach_spec = importlib.util.spec_from_file_location('star_hill_achievements_forge', Path(__file__).with_name('achievements_forge.py'))
 achievements_forge = importlib.util.module_from_spec(_ach_spec)
 _ach_spec.loader.exec_module(achievements_forge)
+_eco_spec = importlib.util.spec_from_file_location('star_hill_economy_forge', Path(__file__).with_name('economy_forge.py'))
+economy_forge = importlib.util.module_from_spec(_eco_spec)
+_eco_spec.loader.exec_module(economy_forge)
+_comp_spec = importlib.util.spec_from_file_location('star_hill_compliance_proxy', Path(__file__).with_name('compliance_proxy.py'))
+compliance_proxy = importlib.util.module_from_spec(_comp_spec)
+_comp_spec.loader.exec_module(compliance_proxy)
 _nexus_spec = importlib.util.spec_from_file_location('star_hill_nexus_proxy', Path(__file__).with_name('nexus_proxy.py'))
 nexus_proxy = importlib.util.module_from_spec(_nexus_spec)
 _nexus_spec.loader.exec_module(nexus_proxy)
@@ -819,8 +825,12 @@ def get(handler, path):
         handler.reply(200, chronicles_forge.read(ROOT))
     elif path == '/api/star-hill/achievements':
         handler.reply(200, achievements_forge.read(ROOT))
+    elif path == '/api/star-hill/economy':
+        handler.reply(200, economy_forge.read(ROOT))
     elif path.startswith('/api/star-hill/nexus/'):
         nexus_proxy.get(handler, path)
+    elif path == '/api/star-hill/compliance':
+        compliance_proxy.get(nexus_proxy, handler, path)
     elif path.startswith('/api/star-hill/materiais'):
         material_studio.get(handler, path, ROOT)
     elif path.startswith('/api/star-hill/producao'):
@@ -848,6 +858,8 @@ def post(handler, path, raw, atomic_write):
             raise ValueError('Pedido inválido.')
         if path.startswith('/api/star-hill/nexus/'):
             return nexus_proxy.handle_post(handler, path, body)
+        if path.startswith('/api/star-hill/compliance/'):
+            return compliance_proxy.post(nexus_proxy, handler, path, body)
         if path == '/api/star-hill/card-voice':
             return handler.reply(200, {'vozes': save_card_voice(body, atomic_write)})
         if path == '/api/star-hill/card-anim':
@@ -895,6 +907,12 @@ def post(handler, path, raw, atomic_write):
             result = achievements_forge.publish(ROOT, body, atomic_write)
         elif path == '/api/star-hill/achievements/rollback':
             result = achievements_forge.rollback(ROOT, body, atomic_write)
+        elif path == '/api/star-hill/economy':
+            result = economy_forge.save(ROOT, body, atomic_write)
+        elif path == '/api/star-hill/economy/publicar':
+            result = economy_forge.publish(ROOT, body, atomic_write)
+        elif path == '/api/star-hill/economy/rollback':
+            result = economy_forge.rollback(ROOT, body, atomic_write)
         elif path.startswith('/api/star-hill/materiais'):
             result = material_studio.post(path, body, ROOT, atomic_write)
         elif path.startswith('/api/star-hill/producao'):

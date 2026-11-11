@@ -50,7 +50,6 @@ Status: **desenho aprovado pelo autor em 31/10/2026** (/grill-me). Referência: 
 
 ### Falta
 
-- Editar preços e recompensas pelo Star Hill (hoje são constantes no `server.py`).
 - Lugar no Card Forge para subir a arte de fundo dos boosters (pedido do autor, 31/10/2026).
 - Contas existentes recebem a coleção inicial e os 3 boosters na primeira visita à economia.
 
@@ -68,3 +67,16 @@ Status: **desenho aprovado pelo autor em 31/10/2026** (/grill-me). Referência: 
 - Risco aceito pelo autor: o resultado contra a IA vem do navegador e pode ser forjado; o teto é o prêmio da saga, uma vez por conta.
 - Quem venceu missões antes desta mudança não recebe retroativo: o prêmio sai quando a missão entra no progresso.
 - Código: `CHRONICLE_COINS`, `CHRONICLE_BOSSES` e `chronicle_reward()` em `sanctuary-api/server.py`; `reward` de cada `data/chronicles/<missão>.json` repete os valores para a tela.
+
+## ECONOMY FORGE (autor, 11/11/2026)
+
+- **STAR HILL → Economy Forge** (`#economia`): edita preço do booster, pacotes e descontos, boosters de boas-vindas, cosméticos (avatar, sleeve, moeda, multiplicador de Deus, desconto do set), criar carta com coins, cópia extra, vitórias online do dia, prêmio do Cosmo Chronicles e chances do booster (Divine, segunda Legendary, Curingas). Mostra resumo calculado (preço de cada pacote e valor em R$ pelo câmbio de referência), validação, diff contra a versão no ar, versões e rollback.
+- Rascunho em `data/economy.json`; publicado em `sanctuary-api/economy.json` (vai no Docker); histórico imutável em `star-hill/historico/economy/v<N>.json`.
+- O `server.py` lê o publicado **ao iniciar**: depois de publicar, reiniciar o sanctuary-api (e fazer deploy para valer no ar). Arquivo ausente ou inválido: valem os valores deste documento (`economy.DEFAULTS`).
+- A composição do booster (9 Common, 5 Uncommon, 1 Legendary) e a lista de cosméticos continuam no `server.py`.
+- Código: `sanctuary-api/economy.py` (campos, validação, diff; a mesma regra para o servidor e o Forge), `card-forge/economy_forge.py`, `star-hill/economy-forge.js`. Testes: `cd sanctuary-api && python3.12 -m unittest test_economy_forge`.
+- v1 publicada em 11/11/2026 com os valores vigentes (nenhum número mudou).
+
+## Venda de Cosmo Coins (Identity & Payment Forge V1.0, 11/11/2026)
+
+Pacotes com dinheiro real no Economy Forge (`coin_packs`): Bronze R$4,99 = 1.250, Silver R$9,99 = 2.750, Gold R$19,99 = 6.000, Saint R$39,99 = 13.000, Divine R$79,99 = 28.000 e Olympus R$149,99 = 55.000. Tudo desligado por chave; só no navegador; booster só com coins ganhos enquanto `RANDOM_BOOSTERS_PURCHASABLE` estiver desligada. Detalhes, decisões do autor, testes e pendências em `docs/identity-payment-forge.md`.

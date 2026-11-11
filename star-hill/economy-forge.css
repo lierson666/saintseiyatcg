@@ -1,0 +1,7 @@
+/* ECONOMY FORGE: campos por grupo à esquerda, resumo calculado à direita. Tabelas e etiquetas vêm de achievements-forge.css. */
+.eco-workspace { display: grid; grid-template-columns: minmax(0, 1fr) minmax(260px, 340px); gap: 20px; align-items: start; }
+.eco-group { border: 1px solid rgba(255, 255, 255, .12); border-radius: 10px; padding: 12px 14px 14px; margin: 0 0 14px; }
+.eco-group legend { padding: 0 6px; font-weight: 600; letter-spacing: .04em; }
+.eco-summary { position: sticky; top: 12px; border: 1px solid rgba(255, 255, 255, .12); border-radius: 10px; padding: 12px 16px; }
+.eco-sum { margin: 0; padding-left: 18px; display: grid; gap: 6px; font-size: .92em; }
+@media (max-width: 900px) { .eco-workspace { grid-template-columns: 1fr; } .eco-summary { position: static; } }

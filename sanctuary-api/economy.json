@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "version": 1,
+  "published_at": "2026-11-11T14:52:52Z",
+  "fingerprint": "8a33281a7791586d",
+  "rollback_of": null,
+  "booster_price": 1000,
+  "bundles": [
+    {
+      "qty": 1,
+      "off": 0
+    },
+    {
+      "qty": 3,
+      "off": 5
+    },
+    {
+      "qty": 10,
+      "off": 10
+    },
+    {
+      "qty": 25,
+      "off": 20
+    }
+  ],
+  "welcome_boosters": 3,
+  "cosmetics": {
+    "avatar": 500,
+    "sleeve": 1500,
+    "coin": 1000
+  },
+  "god_multiplier": 2,
+  "set_off": 20,
+  "duplicate_coins": {
+    "Common": 25,
+    "Uncommon": 50,
+    "Legendary": 200,
+    "Divine": 500
+  },
+  "craft_coins": {
+    "Common": 15,
+    "Uncommon": 250,
+    "Legendary": 1750,
+    "Divine": 2500
+  },
+  "win_coins": [
+    250,
+    100,
+    100,
+    100,
+    100
+  ],
+  "chronicle_coins": 250,
+  "chronicle_boosters": 1,
+  "chronicle_boss_boosters": 3,
+  "divine_odds": 8,
+  "double_legendary_odds": 10,
+  "wildcard_odds": {
+    "Common": 3,
+    "Uncommon": 5,
+    "Legendary": 24,
+    "Divine": 60
+  },
+  "coins_per_brl": 250
+}

@@ -12,6 +12,10 @@ from urllib.parse import parse_qs, quote, urlparse
 
 import cosmo
 import achievements as ach_core
+import flags
+import identity
+import payments
+import economy as eco_core
 
 DB_PATH = os.environ.get('SANCTUARY_DB', '/data/sanctuary.db')
 ORIGIN = os.environ.get('SANCTUARY_ORIGIN', 'https://saintseiyatcg.com')
@@ -35,9 +39,10 @@ MSG_MAX, MSG_PER_MIN, MSG_KEEP_DAYS, MSG_PAGE = 500, 20, 90, 50
 # Versão da página de login no link de redirecionamento: muda a URL e o navegador não reaproveita a página velha do cache.
 # Age gate deployado somente com verificador externo integrado.
 # Em modo obrigatório, falha fechado para TODAS as contas sem prova verificada no servidor.
-AGE_GATE_REQUIRED = os.environ.get('SANCTUARY_AGE_GATE_REQUIRED') == '1'
-AGE_VERIFICATION_PROVIDER_READY = False  # TODO: integrar provedor e validar resposta server-to-server
-TERMS_VERSION = '2026-11-11-beta-v1'
+# Gate 18+ e chaves do servidor: flags.py (SANCTUARY_<CHAVE>=1). Maioridade em identity.py; pagamentos em payments.py.
+# Termos e Privacidade v2 (11/11/2026): entram compra de Cosmo Coins, reembolso e chargeback. Aceite gravado em legal_acceptances.
+TERMS_VERSION = '2026-11-11-v2'
+PUBLIC_URL = os.environ.get('SANCTUARY_PUBLIC_URL', '').rstrip('/')
 LOGIN_VERSION = '3'
 # Painel do sistema (Star Hill → /admin/, autor 29/10/2026): admins por email; pedidos de acesso vêm da home.
 ADMINS = {e.strip().lower() for e in os.environ.get('SANCTUARY_ADMINS', '').split(',') if e.strip()}
@@ -57,9 +62,12 @@ ARENA_SECRET = os.environ.get('ARENA_SECRET', '')
 # catalog.json vem de tools/economy-catalog.py (cartas do booster por raridade e coleção inicial); Gods e Domains são de todos.
 CATALOG = json.loads(Path(__file__).with_name('catalog.json').read_text())
 BOOSTER = 'booster-olympus'
-PRICES = {BOOSTER: 1000}
+# Números da economia (ECONOMY FORGE, autor 11/11/2026): o publicado pelo STAR HILL (economy.json ao lado deste arquivo),
+# lido ao iniciar. Sem arquivo ou inválido, valem os valores de docs/economia.md (economy.DEFAULTS).
+ECO = eco_core.load(os.environ.get('SANCTUARY_ECONOMY') or Path(__file__).with_name('economy.json'))
+PRICES = {BOOSTER: ECO['booster_price']}
 # Pacotes da loja (autor, 31/10/2026, estilo MTG Arena): quantidade -> desconto em %. Edição pelo Star Hill fica para depois.
-BUNDLES = {1: 0, 3: 5, 10: 10, 25: 20}
+BUNDLES = {b['qty']: b['off'] for b in ECO['bundles']}
 MAX_OPEN = 10  # abrir de uma vez: 1 ou até 10
 
 
@@ -78,16 +86,16 @@ COSMETIC_GROUPS = (
                      ('athena-v6-017', 'Aquarius Camus'), ('hades-v6-197', 'Aries Shion'), ('hades-v6-253', 'Capricorn Shura')]),
     ('Judges of the Underworld', [('hades-v6-181', 'Wyvern Rhadamanthys'), ('hades-v6-183', 'Griffon Minos'), ('hades-v6-185', 'Garuda Aiacos')]),
 )
-COSMETIC_KINDS = {'avatar': 500, 'sleeve': 1500, 'coin': 1000}  # preço da moeda: autor, 01/11/2026
+COSMETIC_KINDS = dict(ECO['cosmetics'])  # preço da moeda: autor, 01/11/2026
 SET_KINDS = ('avatar', 'sleeve')  # a moeda fica fora do set
-SET_OFF = 20  # avatar + sleeve do mesmo personagem
+SET_OFF = ECO['set_off']  # avatar + sleeve do mesmo personagem
 COSMETICS = {cid: name for _, chars in COSMETIC_GROUPS for cid, name in chars}
 
 
 def cosmetic_price(kind, cid):
     if kind == 'avatar' and cid.startswith('god-'):
         return 0
-    return COSMETIC_KINDS[kind] * (2 if cid.startswith('god-') else 1)
+    return COSMETIC_KINDS[kind] * (ECO['god_multiplier'] if cid.startswith('god-') else 1)
 
 
 def set_price(cid):
@@ -100,14 +108,14 @@ def owns_cosmetic(uid, kind, cid):
     if cosmetic_price(kind, cid) == 0:
         return True
     return bool(db.execute('select full_access from users where id = ?', (uid,)).fetchone()[0]) or item_count(uid, f'{kind}:{cid}') > 0
-WELCOME_BOOSTERS = 3
+WELCOME_BOOSTERS = ECO['welcome_boosters']
 STARTER_GRANT = 'starter-v2'  # Onboarding 2.0; trocar os starters de novo pede outra versão
 COSMO_GODS = ('athena', 'poseidon', 'hades', 'ares', 'artemis')
 CHRONICLE_MISSIONS = ('1-1', '1-2', '2-1', '2-2', '2-3', '2-4', '3-1', '3-2', '4-1', '4-2', '4-3', '4-4', '4-5')  # missões do Cosmo Chronicles que existem; progresso só acrescenta
 # Prêmio do Cosmo Chronicles (autor, 11/11/2026; docs/economia.md): só na 1ª vitória de cada missão. 250 coins + 1 booster; chefe paga 3 boosters.
-CHRONICLE_COINS = 250
+CHRONICLE_COINS = ECO['chronicle_coins']
 CHRONICLE_BOSSES = ('1-2', '2-3', '4-5')
-CHRONICLE_BOOSTERS = lambda m: 3 if m in CHRONICLE_BOSSES else 1
+CHRONICLE_BOOSTERS = lambda m: ECO['chronicle_boss_boosters'] if m in CHRONICLE_BOSSES else ECO['chronicle_boosters']
 
 
 def chronicle_reward(uid, mission):
@@ -119,18 +127,18 @@ def chronicle_reward(uid, mission):
     add_item(uid, BOOSTER, CHRONICLE_BOOSTERS(mission))
     return {'mission': mission, 'coins': CHRONICLE_COINS, 'boosters': CHRONICLE_BOOSTERS(mission)}
 COPY_LIMIT = 3
-DUPLICATE_COINS = {'Common': 25, 'Uncommon': 50, 'Legendary': 200, 'Divine': 500}
+DUPLICATE_COINS = dict(ECO['duplicate_coins'])
 # Criar carta direto com coins (autor, 11/11/2026): 250 coins = R$1; o Curinga da raridade, se houver, vem antes.
-CRAFT_COINS = {'Common': 15, 'Uncommon': 250, 'Legendary': 1750, 'Divine': 2500}
-WIN_COINS = (250, 100, 100, 100, 100)  # vitórias online do dia (docs/economia.md); só o duelo é confirmado pelo servidor, a IA vem do navegador
+CRAFT_COINS = dict(ECO['craft_coins'])
+WIN_COINS = tuple(ECO['win_coins'])  # vitórias online do dia (docs/economia.md); só o duelo é confirmado pelo servidor, a IA vem do navegador
 # Booster de 15 cartas (autor, 07/11/2026): 9 Common, 5 Uncommon e 1 Legendary, que vira Divine em 1 de 8.
 # Em 1 de 10 pacotes, uma Uncommon dá lugar a uma segunda Legendary.
 PACK = (('Common', 9), ('Uncommon', 5))
-DIVINE_ODDS = 8
-DOUBLE_LEGENDARY_ODDS = 10
+DIVINE_ODDS = ECO['divine_odds']
+DOUBLE_LEGENDARY_ODDS = ECO['double_legendary_odds']
 # Wildcard estilo MTG Arena: às vezes ocupa a vaga de uma carta da mesma raridade (o pacote segue com 15)
 # e depois vira qualquer carta daquela raridade na Coleção. Chance por pacote, 1 em N.
-WILDCARD_ODDS = {'Common': 3, 'Uncommon': 5, 'Legendary': 24, 'Divine': 60}
+WILDCARD_ODDS = dict(ECO['wildcard_odds'])
 WILDCARD = {r: f'wildcard-{r.lower()}' for r in WILDCARD_ODDS}
 RARITY = {cid: r for r, ids in CATALOG['booster'].items() for cid in ids}
 roll = secrets.SystemRandom()
@@ -242,6 +250,8 @@ def open_db(path=DB_PATH):
     for col in ('a_hash', 'b_hash'):  # impressão da lista de cada lado (cosmo.deck_hash): winrate por deck no Cosmo Hub
         if col not in have:
             db.execute(f'alter table duels add column {col}')
+    identity.migrate(db)  # contas sem estado de identidade viram UNVERIFIED, com evento de auditoria
+    payments.migrate(db)
     db.execute('create unique index if not exists users_username on users(username)')
     db.execute('create unique index if not exists users_friend_code on users(friend_code)')
     for email in filter(None, (e.strip().lower() for e in os.environ.get('SANCTUARY_INVITES', '').split(','))):
@@ -269,18 +279,16 @@ def validate_dob(value):
     return True
 
 
-def valid_cpf(value):
-    # Checagem matemática somente, não confirma titularidade ou idade.
-    digits = re.sub(r'\D', '', str(value))
-    if len(digits) != 11 or len(set(digits)) == 1:
-        return False
-    for n in (9, 10):
-        check = (sum(int(digits[i]) * (n + 1 - i) for i in range(n)) * 10) % 11
-        if check == 10:
-            check = 0
-        if check != int(digits[n]):
-            return False
-    return True
+valid_cpf = identity.valid_cpf  # só a matemática dos dígitos; não confirma titularidade nem idade
+
+
+def legal_ok(uid):
+    return bool(db.execute('select 1 from legal_acceptances where user_id = ? and document_version = ?', (uid, TERMS_VERSION)).fetchone())
+
+
+def gate_ok(uid):
+    """Gate 18+: maioridade (autodeclarada, ou por provedor se IDENTITY_VERIFICATION_ENABLED) e termos atuais aceitos."""
+    return identity.adult(db, uid, require_provider=flags.on('IDENTITY_VERIFICATION_ENABLED')) and legal_ok(uid)
 
 
 def hash_password(password, salt=None):
@@ -305,7 +313,8 @@ def profile(u):  # dados que o próprio jogador vê
     return {'email': u['email'], 'name': u['display_name'], 'username': u['username_display'], 'friend_code': u['friend_code'],
             'country': u['country'], 'phone': u['phone'], 'avatar_card': u['avatar_card'], 'sleeve': u['sleeve'], 'coin': u['coin'], 'complete': bool(u['username']),
             'admin': u['email'] in ADMINS, 'onboarding_cosmo': json.loads(u['onboarding_cosmo'] or '{}'),
-            'chronicles': json.loads(u['chronicles'] or '{}'), 'title': equipped_title(u)}
+            'chronicles': json.loads(u['chronicles'] or '{}'), 'title': equipped_title(u),
+            'identity': identity.public(db, u['id']), 'terms_version': TERMS_VERSION, 'terms_accepted': legal_ok(u['id'])}
 
 
 def season_of(ts):  # temporada = mês do calendário (UTC)
@@ -367,6 +376,7 @@ def coins_of(uid):
 
 def add_coins(uid, delta, reason):
     db.execute('insert into coin_ledger (user_id, delta, reason, created_at) values (?, ?, ?, ?)', (uid, delta, reason, int(time.time())))
+    payments.on_spend(db, uid, delta, reason)  # gasto consome primeiro os coins comprados (exceto booster)
 
 
 def duel_wins_paid(uid):
@@ -759,12 +769,12 @@ class Handler(BaseHTTPRequestHandler):
                 db.execute('update sessions set last_seen = ? where token_hash = ?', (now, token_hash(token.value)))
         return row
 
-    def require_user(self):
+    def require_user(self, gate=True):
         user = self.current_user()
         if not user:
             raise ApiError(401, 'Sign in to continue.')
-        if AGE_GATE_REQUIRED and not age_verified(user['id']):
-            raise ApiError(403, 'Verificação de maioridade necessária.')
+        if gate and flags.on('AGE_GATE_REQUIRED') and not gate_ok(user['id']):
+            raise ApiError(403, 'Confirm your age and accept the current terms to continue.')  # a tela de regularização trata
         return user
 
     def admins(self):
@@ -774,7 +784,7 @@ class Handler(BaseHTTPRequestHandler):
         return cosmo.query_of(self.path)
 
     def require_admin(self):
-        user = self.require_user()
+        user = self.require_user(gate=False)  # o gate 18+ é para jogar; o admin precisa do painel até para regularizar a própria conta
         if user['email'] not in ADMINS:
             raise ApiError(403, 'Admins only.')
         return user
@@ -794,8 +804,27 @@ class Handler(BaseHTTPRequestHandler):
     def dispatch(self, method):
         path = urlparse(self.path).path.rstrip('/')
         try:
+            m = re.fullmatch(r'/api/payments/webhook/([a-z]+)', path)  # vem do provedor: sem Origin; autenticado pela assinatura
+            if m and method == 'POST':
+                return self.payment_webhook(m[1])
+            m = re.fullmatch(r'/api/identity/callback/([a-z]+)', path)
+            if m and method == 'POST':
+                return self.identity_callback(m[1])
             if method != 'GET':
                 self.check_origin()
+            if method == 'GET' and path == '/api/flags':
+                return self.send_json(200, flags.snapshot())
+            if method == 'POST' and path == '/api/me/identity':
+                return self.declare_identity()
+            if method == 'POST' and path == '/api/me/legal':
+                return self.accept_legal()
+            if method == 'GET' and path == '/api/payments/packs':
+                return self.payment_packs()
+            if method == 'POST' and path == '/api/payments/orders':
+                return self.payment_order()
+            m = re.fullmatch(r'/api/payments/orders/(ord_[0-9a-f]{24})', path)
+            if m and method == 'GET':
+                return self.payment_order_status(m[1])
             if method == 'GET' and path == '/api/auth/check':
                 return self.auth_check()
             if method == 'POST' and path == '/api/auth/register':
@@ -807,8 +836,8 @@ class Handler(BaseHTTPRequestHandler):
             if method == 'GET' and path == '/api/username-available':
                 return self.username_available()
             if path == '/api/me':
-                if method == 'GET':
-                    return self.send_json(200, profile(self.require_user()))
+                if method == 'GET':  # sem gate: a tela de regularização precisa do estado da conta
+                    return self.send_json(200, profile(self.require_user(gate=False)))
                 if method == 'PATCH':
                     return self.update_me()
                 if method == 'DELETE':
@@ -893,7 +922,7 @@ class Handler(BaseHTTPRequestHandler):
     def auth_check(self):
         # forward_auth do Caddy: 2xx libera; senão o Caddy devolve esta resposta ao navegador (vai para o login).
         user = self.current_user()
-        if user and (not AGE_GATE_REQUIRED or age_verified(user['id'])):
+        if user and (not flags.on('AGE_GATE_REQUIRED') or gate_ok(user['id'])):
             self.send_response(204)
             self.end_headers()
             return
@@ -915,17 +944,14 @@ class Handler(BaseHTTPRequestHandler):
         fields = clean_profile(body)
         if len(password) < 10:
             raise ApiError(400, 'Use at least 10 characters for the password.')
-        if body.get('birth_date') is not None:
-            validate_dob(body['birth_date'])
-        if body.get('cpf') is not None and not valid_cpf(body['cpf']):
-            raise ApiError(400, 'CPF inválido.')
-        if AGE_GATE_REQUIRED:
-            if not body.get('birth_date') or not body.get('cpf'):
-                raise ApiError(400, 'Nascimento e CPF são necessários para iniciar a verificação.')
-            # Jamais confiar no CPF ou declaração do próprio usuário como prova.
-            if not AGE_VERIFICATION_PROVIDER_READY:
-                raise ApiError(503, 'Verificação de identidade indisponível. Cadastro temporariamente fechado.')
-            raise ApiError(503, 'Integração de verificação etária ainda não ativada.')
+        declared = body.get('birth_date') is not None
+        if declared or flags.on('AGE_GATE_REQUIRED'):  # autodeclaração 18+ (identity.py); menor de idade não abre conta
+            try:
+                adult, *_ = identity.check_declaration(body)
+            except identity.IdentityError as e:
+                raise ApiError(e.status, e.message)
+            if not adult:
+                raise ApiError(403, 'Saint Seiya TCG is for adults 18 or older.')
         if body.get('accept_terms') is not True:
             raise ApiError(400, 'Please accept the privacy terms.')
         supplied_version = body.get('terms_version')
@@ -944,6 +970,15 @@ class Handler(BaseHTTPRequestHandler):
                               fields['country'], fields['phone'], new_friend_code(username), now))
             db.execute('insert into legal_acceptances (user_id, document_version, accepted_at, source) values (?, ?, ?, ?)',
                        (cur.lastrowid, supplied_version or 'legacy-unversioned', now, 'registration'))
+            identity.migrate(db)  # a conta nova nasce UNVERIFIED, com evento
+            if declared:
+                try:
+                    identity.self_declare(db, cur.lastrowid, body)
+                except identity.IdentityError as e:  # ex.: CPF já ligado a outra conta: desfaz o cadastro
+                    for t in ('identity_events', 'identity_status', 'legal_acceptances'):
+                        db.execute(f'delete from {t} where user_id = ?', (cur.lastrowid,))
+                    db.execute('delete from users where id = ?', (cur.lastrowid,))
+                    raise ApiError(e.status, e.message)
             user = db.execute('select * from users where id = ?', (cur.lastrowid,)).fetchone()
         self.send_json(201, profile(user), self.start_session(user['id']))
 
@@ -1027,6 +1062,7 @@ class Handler(BaseHTTPRequestHandler):
             # duelos: o histórico do adversário fica, o apagado vira "Deleted player" (id nulo)
             db.execute('update duels set a_id = null where a_id = ?', (uid,))
             db.execute('update duels set b_id = null where b_id = ?', (uid,))
+            db.execute('update payment_orders set user_id = null where user_id = ?', (uid,))  # registro do pagamento fica, sem a conta
             db.execute('delete from users where id = ?', (user['id'],))
         self.send_json(200, {'ok': True}, self.session_cookie('', 0))
 
@@ -1517,6 +1553,8 @@ class Handler(BaseHTTPRequestHandler):
             welcome(uid)
             if coins_of(uid) < price:
                 raise ApiError(400, 'Not enough Cosmo Coins.')
+            if payments.booster_spendable(db, uid, coins_of(uid)) < price:
+                raise ApiError(400, 'Boosters can only be bought with Cosmo Coins earned by playing.')
             add_coins(uid, -price, f'buy:{BOOSTER}x{qty}')
             add_item(uid, BOOSTER, qty)
             state = economy_of(uid)
@@ -1588,9 +1626,142 @@ class Handler(BaseHTTPRequestHandler):
         self.send_json(200, {'card': cid, **state})
 
     # ---------- painel do sistema (/admin/, aberto pelo Star Hill) ----------
+    # ---------- Identity & Payment Forge V1.0 (autor, 11/11/2026) ----------
+    def read_raw(self):
+        size = int(self.headers.get('Content-Length') or 0)
+        if size > MAX_BODY:
+            raise ApiError(413, 'Request is too large.')
+        return self.rfile.read(size) or b'{}'
+
+    def declare_identity(self):  # autodeclaração 18+ (tela de cadastro e de regularização)
+        user = self.require_user(gate=False)
+        body = self.read_json()
+        with lock:
+            try:
+                identity.self_declare(db, user['id'], body)
+            except identity.IdentityError as e:
+                raise ApiError(e.status, e.message)
+            fresh = db.execute('select * from users where id = ?', (user['id'],)).fetchone()
+        self.send_json(200, profile(fresh))
+
+    def accept_legal(self):  # aceite dos Termos e da Privacidade da versão atual
+        user = self.require_user(gate=False)
+        body = self.read_json()
+        if body.get('accept') is not True or body.get('version') != TERMS_VERSION:
+            raise ApiError(400, 'Please review and accept the current terms.')
+        with lock:
+            if not legal_ok(user['id']):
+                db.execute('insert into legal_acceptances (user_id, document_version, accepted_at, source) values (?, ?, ?, ?)',
+                           (user['id'], TERMS_VERSION, int(time.time()), 'reacceptance'))
+            fresh = db.execute('select * from users where id = ?', (user['id'],)).fetchone()
+        self.send_json(200, profile(fresh))
+
+    def payment_packs(self):
+        user = self.require_user()
+        on = flags.on('PAYMENTS_ENABLED') and flags.on('MERCADO_PAGO_ENABLED')
+        with lock:
+            adult = identity.adult(db, user['id'], require_provider=flags.on('IDENTITY_VERIFICATION_ENABLED'))
+            out = {'enabled': on, 'adult': adult, 'terms_accepted': legal_ok(user['id']), 'terms_version': TERMS_VERSION,
+                   'held': bool(db.execute('select 1 from payment_holds where user_id = ?', (user['id'],)).fetchone()),
+                   'packs': [{k: p[k] for k in ('id', 'name', 'price_cents', 'coins')} for p in ECO['coin_packs']]}
+        self.send_json(200, out)
+
+    def payment_order(self):
+        user = self.require_user()
+        if not flags.on('PAYMENTS_ENABLED'):
+            raise ApiError(503, 'Purchases are not available yet.')
+        body = self.read_json()
+        # shortcut: a chamada ao provedor roda dentro do lock global (bloqueia o servidor ~1 s); separar quando houver volume
+        with lock:
+            if not identity.adult(db, user['id'], require_provider=flags.on('IDENTITY_VERIFICATION_ENABLED')):
+                raise ApiError(403, 'Confirm that you are 18 or older before buying.')
+            if not legal_ok(user['id']):
+                raise ApiError(403, 'Please accept the current terms before buying.')
+            try:
+                out = payments.create_order(db, user['id'], str(body.get('pack', '')), ECO['coin_packs'],
+                                            str(body.get('provider') or 'mercadopago'), PUBLIC_URL or ORIGIN)
+            except payments.PaymentError as e:
+                raise ApiError(e.status, e.message)
+        self.send_json(201, out)
+
+    def payment_order_status(self, order_id):
+        user = self.require_user()
+        with lock:
+            row = db.execute('select * from payment_orders where id = ? and user_id = ?', (order_id, user['id'])).fetchone()
+            if not row:
+                raise ApiError(404, 'Order not found.')
+            out = payments.order_view(row) | {'coins_balance': coins_of(user['id'])}
+        self.send_json(200, out)
+
+    def payment_webhook(self, provider):
+        raw = self.read_raw()
+        try:
+            body = json.loads(raw)
+        except ValueError:
+            body = {}
+        headers = {k.lower(): v for k, v in self.headers.items()}
+        query = {k: v[0] for k, v in parse_qs(urlparse(self.path).query).items()}
+        try:
+            with lock:
+                result = payments.webhook(db, provider, headers, query, body if isinstance(body, dict) else {}, add_coins, coins_of)
+        except payments.PaymentError as e:
+            # 401/404: recusa; erro do provedor (502): 500 para o Mercado Pago reenviar
+            return self.send_json(e.status if e.status in (401, 404) else 500, {'error': e.message})
+        self.send_json(200, {'ok': True, 'result': result})
+
+    def identity_callback(self, provider):
+        if not flags.on('IDENTITY_VERIFICATION_ENABLED') or provider not in identity.PROVIDERS:
+            raise ApiError(404, 'Not found.')
+        raw = self.read_raw()
+        try:
+            result = identity.PROVIDERS[provider].parse_callback(dict(self.headers.items()), raw)
+            with lock:
+                state = identity.provider_result(db, provider, result)
+        except identity.IdentityError as e:
+            raise ApiError(e.status, e.message)
+        except (ValueError, KeyError, TypeError):
+            raise ApiError(400, 'Bad provider payload.')
+        self.send_json(200, {'ok': True, 'state': state})
+
+    def admin_compliance(self, method, path, admin):
+        """IDENTITY & COMPLIANCE FORGE no STAR HILL. Nunca devolve CPF completo (nem é guardado). Toda ação fica em admin_audit."""
+        who = admin['email']
+        with lock:
+            try:
+                if method == 'GET' and path == '/api/admin/compliance':
+                    return self.send_json(200, {'flags': flags.snapshot(), 'terms_version': TERMS_VERSION, 'payments_env': payments.env(),
+                                                'identity': identity.summary(db), 'payments': payments.summary(db),
+                                                'packs': ECO['coin_packs'], 'audit': [dict(r) for r in db.execute('select * from admin_audit order by id desc limit 50')]})
+                m = re.fullmatch(r'/api/admin/identity/([A-Za-z0-9_]{3,20})', path)
+                if m and method == 'POST':
+                    u = db.execute('select id from users where username = ?', (m[1].lower(),)).fetchone()
+                    if not u:
+                        raise ApiError(404, 'No such player.')
+                    body = self.read_json()
+                    state = identity.admin_action(db, u['id'], str(body.get('action', '')), who, body.get('evidence'))
+                    payments.audit(db, who, f'identity:{body.get("action")}', m[1].lower())
+                    return self.send_json(200, {'state': state})
+                m = re.fullmatch(r'/api/admin/payments/(ord_[0-9a-f]{24})/refund', path)
+                if m and method == 'POST':
+                    return self.send_json(200, {'status': payments.refund(db, m[1], who, add_coins, coins_of)})
+                if method == 'POST' and path == '/api/admin/payments/reconcile':
+                    return self.send_json(200, {'changed': payments.reconcile(db, who, add_coins, coins_of)})
+                m = re.fullmatch(r'/api/admin/payments/holds/([A-Za-z0-9_]{3,20})', path)
+                if m and method == 'DELETE':
+                    db.execute('delete from payment_holds where user_id = (select id from users where username = ?)', (m[1].lower(),))
+                    payments.audit(db, who, 'release-hold', m[1].lower())
+                    return self.send_json(200, {'ok': True})
+            except identity.IdentityError as e:
+                raise ApiError(e.status, e.message)
+            except payments.PaymentError as e:
+                raise ApiError(e.status, e.message)
+        raise ApiError(404, 'Not found.')
+
     def admin(self, method, path):
-        self.require_admin()
+        admin = self.require_admin()
         now = int(time.time())
+        if path.startswith('/api/admin/identity') or path.startswith('/api/admin/payments') or path == '/api/admin/compliance':
+            return self.admin_compliance(method, path, admin)
         if method == 'POST' and path == '/api/admin/season-awards':  # premiação certificada de temporada encerrada
             with lock:
                 awards, created = certify_season(self.read_json().get('season'), now)
