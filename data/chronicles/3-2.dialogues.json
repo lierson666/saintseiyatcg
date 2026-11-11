@@ -1,0 +1,53 @@
+{
+ "nota": "Falas da missão 3.2 (rascunho da Saga 01, revisado em 11/11/2026). Máximo de duas frases por fala.",
+ "lines": {
+  "SCENE_1": {
+   "pt": "A Armadura de Ouro se partiu. Os Cavaleiros Negros fugiram com as partes.",
+   "en": "The Gold Cloth broke apart. The Black Saints fled with the pieces."
+  },
+  "SCENE_2": {
+   "pt": "Pela primeira vez, os Cavaleiros de Bronze lutam do mesmo lado.",
+   "en": "For the first time, the Bronze Saints fight on the same side."
+  },
+  "HYOGA_1": {
+   "pt": "Isto não é mais um torneio.",
+   "en": "This is no longer a tournament."
+  },
+  "SEIYA_1": {
+   "pt": "Então lutamos juntos.",
+   "en": "Then we fight together."
+  },
+  "SHIRYU_1": {
+   "pt": "Cada parte que recuperarmos nos leva até Ikki.",
+   "en": "Every piece we recover brings us closer to Ikki."
+  },
+  "PREP_1": {
+   "pt": "Eles são muitos, Seiya. Derrube cinco Devotos e as partes voltam para vocês.",
+   "en": "There are many of them, Seiya. Bring down five Devotees and the pieces come back to you."
+  },
+  "HINT_DOWN": {
+   "pt": "Isso! Siga derrubando os Devotos deles.",
+   "en": "That's it! Keep bringing down their Devotees."
+  },
+  "HINT_HOLD": {
+   "pt": "Não desista, Seiya. Seus amigos lutam com você.",
+   "en": "Don't give up, Seiya. Your friends fight with you."
+  },
+  "WIN_1": {
+   "pt": "Os Cavaleiros Negros caem um a um. As partes da armadura voltam para as mãos certas.",
+   "en": "The Black Saints fall one by one. The Cloth pieces return to the right hands."
+  },
+  "WIN_2": {
+   "pt": "Ainda falta uma parte. Ikki ficou com ela.",
+   "en": "One piece is still missing. Ikki kept it."
+  },
+  "WIN_3": {
+   "pt": "Então vamos buscá-la.",
+   "en": "Then we'll go get it."
+  },
+  "LOSE_1": {
+   "pt": "Vocês nunca vão juntar essa armadura.",
+   "en": "You'll never put that Cloth back together."
+  }
+ }
+}

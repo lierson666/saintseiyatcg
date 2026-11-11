@@ -2,13 +2,14 @@
   "title": "",
   "subtitle": "The Spear of the Forgotten Kingdom",
   "flavour": "",
+  "bonusPower": "+1",
+  "bonusResistance": "",
   "art": {
-    "src": "art/poseidon-v6-123-ref.jpg",
-    "w": 1687.47,
-    "x": -99.74,
-    "y": 0.0,
-    "zoom": 1,
-    "baseW": 1687.47,
-    "provisoria": true
+    "src": "art/poseidon-v6-123.png",
+    "w": 2352.375,
+    "x": -656.7473050458713,
+    "y": -6.192361223992407,
+    "zoom": 1.5,
+    "baseW": 1568.25
   }
 }

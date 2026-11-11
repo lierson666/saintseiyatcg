@@ -2,13 +2,14 @@
   "title": "",
   "subtitle": "The Artist of Suffering",
   "flavour": "\"The finest torment is the one that begins when the battle ends.\"",
+  "bonusPower": "",
+  "bonusResistance": "",
   "art": {
-    "src": "art/ares-v6-300-ref.jpg",
-    "w": 1528.28,
-    "x": -20.14,
-    "y": 0.0,
+    "src": "art/ares-v6-300.png",
+    "w": 1568.25,
+    "x": -38.78119266055046,
+    "y": 43.11285455949286,
     "zoom": 1,
-    "baseW": 1528.28,
-    "provisoria": true
+    "baseW": 1568.25
   }
 }

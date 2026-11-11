@@ -37,6 +37,7 @@
 .rk-result__rank b { font-family: Cinzel, serif; }
 .rk-result__xp { display: grid; grid-template-columns: auto 1fr; gap: 0 10px; align-items: baseline; }
 .rk-result__xp .rk-xp { grid-column: 1 / -1; }
+.rk-result__coins { margin: 8px 0 0; font: 500 15px var(--kv-sans); color: var(--kv-gold-2); }
 .rk-result__lv { justify-self: end; opacity: .8; }
 .rk-result__promo { margin: 4px 0 0; color: #e9c45c; font: 700 13px Cinzel, serif; animation: rk-in .5s ease-out; }
 .rk-result__drop { margin: 4px 0 0; opacity: .7; font-size: 12px; }
@@ -69,3 +70,17 @@
 /* Lendas (autor, 31/10/2026): nome dourado, como os devs no MTG Arena. */
 .is-legend { background: linear-gradient(180deg, #fff3c4, #f1c75b 45%, #c8922e); -webkit-background-clip: text; background-clip: text; color: transparent;
   -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 6px #e6c36a80); font-weight: 600; }
+
+/* Player de música (autor, 07/11/2026): box próprio, bem fino, logo abaixo da placa do oponente; KV (linha fina, vidro, dourado só no foco). */
+.mx-player { position: fixed; z-index: 40; box-sizing: border-box; height: 22px; display: flex; align-items: center; justify-content: center; gap: 0; min-width: 0; padding: 0 8px;
+  border: 1px solid #f5f1e626; border-radius: 999px; background: #10111c8c; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  font: 400 10px Jost, system-ui, sans-serif; letter-spacing: .04em; color: #a8a397; }
+.mx-player[hidden] { display: none; }
+.mx-player button { all: unset; box-sizing: border-box; display: grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; cursor: pointer;
+  color: #a8a397; opacity: .7; transition: color .15s, opacity .15s; }
+.mx-player button:hover, .mx-player button:focus-visible { color: #e6c36a; opacity: 1; }
+.mx-player button:focus-visible { outline: 1px solid #e6c36a; outline-offset: 0; }
+.mx-player svg { width: 10px; height: 10px; fill: currentColor; }
+.mx-player__bar { flex: 1; min-width: 24px; height: 2px; margin: 0 4px 0 8px; border-radius: 1px; background: #f5f1e626; overflow: hidden; }
+.mx-player__bar i { display: block; height: 100%; background: #e6c36a; opacity: .7; transform-origin: left; transform: scaleX(0); transition: transform .5s linear; }
+@media (prefers-reduced-motion: reduce) { .mx-player button, .mx-player__bar i { transition: none; } }

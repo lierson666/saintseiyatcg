@@ -2,13 +2,14 @@
   "title": "",
   "subtitle": "The Emperor's Wisdom Is a Weapon",
   "flavour": "",
+  "bonusPower": "",
+  "bonusResistance": "",
   "art": {
-    "src": "art/poseidon-v6-121-ref.jpg",
-    "w": 1672.34,
-    "x": -92.17,
-    "y": 0.0,
-    "zoom": 1,
-    "baseW": 1672.34,
-    "provisoria": true
+    "src": "art/poseidon-v6-121.png",
+    "w": 1834.8524999999997,
+    "x": -173.42624999999987,
+    "y": -177.7349999999999,
+    "zoom": 1.17,
+    "baseW": 1568.25
   }
 }

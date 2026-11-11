@@ -2,13 +2,23 @@
   "title": "",
   "subtitle": "The Shield That Guards the Sacred Seas",
   "flavour": "",
+  "bonusPower": "+0",
+  "bonusResistance": "+2",
   "art": {
+    "src": "art/poseidon-v6-131.png",
+    "w": 1568.25,
+    "x": -40.125,
+    "y": 0.0,
+    "zoom": 1,
+    "baseW": 1568.25
+  },
+  "art_previous_reference": {
     "src": "art/poseidon-v6-131-ref.jpg",
-    "w": 1488.0,
-    "x": 0.0,
+    "w": 1488,
+    "x": 0,
     "y": -70.5,
     "zoom": 1,
-    "baseW": 1488.0,
+    "baseW": 1488,
     "provisoria": true
   }
 }

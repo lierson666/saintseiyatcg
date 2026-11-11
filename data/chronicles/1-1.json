@@ -1,0 +1,322 @@
+{
+ "nota": "Missão 1.1 do Cosmo Chronicles (CONTEXT/cosmo-chronicles-saga-01.md, 11/11/2026). Regras normais; decks emprestados. Rival sem Moments: a IA não responde fora do turno. Simulação: jogador vence 71–72% contra IA easy (600 partidas, 0 erros).",
+ "id": "1-1",
+ "saga": "saga-01",
+ "chapter": 1,
+ "order": 1,
+ "title": {
+  "pt": "O treino de Marin",
+  "en": "Marin's Training"
+ },
+ "description": {
+  "pt": "Santuário de Athena, Grécia. Antes da armadura, existe o treino: Seiya precisa provar a Marin que consegue lutar até o fim.",
+  "en": "Athena's Sanctuary, Greece. Before the Cloth comes the training: Seiya must prove to Marin that he can fight to the end."
+ },
+ "objective": {
+  "pt": "Vença a partida resolvendo pelo menos 2 Golpes.",
+  "en": "Win the match after resolving at least 2 Strikes."
+ },
+ "level": {
+  "pt": "Iniciante",
+  "en": "Beginner"
+ },
+ "duration": {
+  "pt": "6–10 minutos",
+  "en": "6–10 minutes"
+ },
+ "characters": {
+  "seiya": {
+   "card": "athena-v6-001",
+   "name": {
+    "pt": "Seiya de Pégaso",
+    "en": "Pegasus Seiya"
+   }
+  },
+  "marin": {
+   "card": "athena-v6-021",
+   "chibi": true,
+   "name": {
+    "pt": "Marin",
+    "en": "Marin"
+   }
+  },
+  "narrator": {
+   "name": {
+    "pt": "Narração",
+    "en": "Narration"
+   }
+  }
+ },
+ "requires": [],
+ "next": "1-2",
+ "player": {
+  "character": "seiya",
+  "deck": "chronicle-1-1-seiya"
+ },
+ "rival": {
+  "character": "marin",
+  "deck": "chronicle-1-1-marin",
+  "ai": "easy",
+  "mechanical_god": "god-athena"
+ },
+ "arena": "athena",
+ "music": null,
+ "victory": {
+  "type": "engine",
+  "winner": "player",
+  "min_strikes": 2
+ },
+ "defeat": {
+  "draws_count_as": "defeat",
+  "retry": true
+ },
+ "reward": {
+  "enabled": true,
+  "coins": 250,
+  "boosters": 1,
+  "boss": false
+ },
+ "scenes": {
+  "intro": [
+   {
+    "art": "athena-v6-065",
+    "who": "narrator",
+    "line": "SCENE_1"
+   },
+   {
+    "art": "athena-v6-001",
+    "who": "seiya",
+    "line": "SEIYA_1"
+   },
+   {
+    "art": "athena-v6-021",
+    "who": "marin",
+    "line": "MARIN_1",
+    "pose": "confident"
+   },
+   {
+    "art": "athena-v6-001",
+    "who": "seiya",
+    "line": "SEIYA_2"
+   },
+   {
+    "art": "athena-v6-060",
+    "who": "marin",
+    "line": "MARIN_2",
+    "pose": "explain"
+   }
+  ],
+  "prep": {
+   "who": "marin",
+   "line": "PREP_1",
+   "pose": "tip"
+  },
+  "win": [
+   {
+    "art": "athena-v6-060",
+    "who": "marin",
+    "line": "WIN_1",
+    "pose": "good"
+   },
+   {
+    "art": "athena-v6-001",
+    "who": "seiya",
+    "line": "WIN_2"
+   }
+  ],
+  "objective": [
+   {
+    "art": "athena-v6-021",
+    "who": "marin",
+    "line": "OBJECTIVE_1",
+    "pose": "confident"
+   }
+  ],
+  "lose": [
+   {
+    "art": "athena-v6-021",
+    "who": "marin",
+    "line": "LOSE_1",
+    "pose": "confident"
+   }
+  ]
+ },
+ "hints": [
+  {
+   "id": "HINT_STRIKE",
+   "pose": "tip",
+   "when": [
+    {
+     "stall": 2
+    },
+    {
+     "event": "soul_lost",
+     "player": "A",
+     "atMost": {
+      "soul": 8
+     }
+    }
+   ]
+  }
+ ],
+ "decks": [
+  {
+   "id": "chronicle-1-1-seiya",
+   "god": "god-athena",
+   "domain_id": "athena-v6-065",
+   "main_deck": [
+    {
+     "card_id": "athena-v6-001",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-060",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-036",
+     "quantity": 1
+    },
+    {
+     "card_id": "athena-v6-040",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-043",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-041",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-457",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-490",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-458",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-053",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-054",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-497",
+     "quantity": 2
+    },
+    {
+     "card_id": "athena-v6-044",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-051",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-494",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-491",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-489",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-061",
+     "quantity": 2
+    }
+   ],
+   "nome": "Seiya · Chronicles 1.1",
+   "emprestado": true
+  },
+  {
+   "id": "chronicle-1-1-marin",
+   "nome": "Marin · Chronicles 1.1",
+   "god": "god-athena",
+   "domain_id": "athena-v6-065",
+   "main_deck": [
+    {
+     "card_id": "athena-v6-021",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-040",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-043",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-041",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-457",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-458",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-053",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-494",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-491",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-478",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-051",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-044",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-066",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-042",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-050",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-497",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-488",
+     "quantity": 2
+    }
+   ],
+   "emprestado": true
+  }
+ ]
+}

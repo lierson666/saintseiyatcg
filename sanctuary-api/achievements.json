@@ -1,0 +1,1062 @@
+{
+  "schema_version": 2,
+  "version": 1,
+  "published_at": "2026-11-11T12:59:29Z",
+  "fingerprint": "29ea4e3c800e1231",
+  "rollback_of": null,
+  "anti_farm": {
+    "max_wins_per_opponent_day": 3
+  },
+  "achievements": [
+    {
+      "id": "ach-001",
+      "title": "The Awakening",
+      "title_pt": "O Despertar",
+      "description": "Finish Discover your Cosmo.",
+      "description_pt": "Conclua Descubra seu Cosmo.",
+      "rarity": "Common",
+      "category": "progression",
+      "metric": "cosmo_discovered",
+      "target": 1,
+      "enabled": true,
+      "tracking": "client_reported",
+      "reward": {
+        "title": true,
+        "coins": 0
+      },
+      "visual": {
+        "frame": "common",
+        "effect": "none"
+      }
+    },
+    {
+      "id": "ach-002",
+      "title": "First Cosmo",
+      "title_pt": "Primeiro Cosmo",
+      "description": "Play 1 online duel.",
+      "description_pt": "Jogue 1 duelo online.",
+      "rarity": "Common",
+      "category": "progression",
+      "metric": "played",
+      "target": 1,
+      "enabled": true,
+      "tracking": "server",
+      "reward": {
+        "title": true,
+        "coins": 0
+      },
+      "visual": {
+        "frame": "common",
+        "effect": "none"
+      }
+    },
+    {
+      "id": "ach-003",
+      "title": "Saint Aspirant",
+      "title_pt": "Aspirante a Cavaleiro",
+      "description": "Beat the AI.",
+      "description_pt": "Vença a IA.",
+      "rarity": "Common",
+      "category": "progression",
+      "metric": "ai_wins",
+      "target": 1,
+      "enabled": true,
+      "tracking": "client_reported",
+      "reward": {
+        "title": true,
+        "coins": 0
+      },
+      "visual": {
+        "frame": "common",
+        "effect": "none"
+      }
+    },
+    {
+      "id": "ach-004",
+      "title": "First Blood",
+      "title_pt": "Primeiro Sangue",
+      "description": "Win 1 online duel.",
+      "description_pt": "Vença 1 duelo online.",
+      "rarity": "Common",
+      "category": "competitive",
+      "metric": "wins",
+      "target": 1,
+      "enabled": true,
+      "tracking": "server",
+      "reward": {
+        "title": true,
+        "coins": 0
+      },
+      "visual": {
+        "frame": "common",
+        "effect": "none"
+      }
+    },
+    {
+      "id": "ach-005",
+      "title": "Marin's Disciple",
+      "title_pt": "Discípulo de Marin",
+      "description": "Finish Marin's tutorial.",
+      "description_pt": "Conclua o tutorial da Marin.",
+      "rarity": "Common",
+      "category": "progression",
+      "metric": "tutorial",
+      "target": 1,
+      "enabled": true,
+      "tracking": "pending",
+      "reward": {
+        "title": true,
+        "coins": 0
+      },
+      "visual": {
+        "frame": "common",
+        "effect": "none"
+      }
+    },
+    {
+      "id": "ach-006",
+      "title": "Forger of Destinies",
+      "title_pt": "Forjador de Destinos",
+      "description": "Save 1 deck to your account.",
+      "description_pt": "Salve 1 deck na sua conta.",
+      "rarity": "Common",
+      "category": "collection",
+      "metric": "decks_created",
+      "target": 1,
+      "enabled": true,
+      "tracking": "server",
+      "reward": {
+        "title": true,
+        "coins": 0
+      },
+      "visual": {
+        "frame": "common",
+        "effect": "none"
+      }
+    },
+    {
+      "id": "ach-007",
+      "title": "Under the Stars",
+      "title_pt": "Sob as Estrelas",
+      "description": "Play 10 online duels.",
+      "description_pt": "Jogue 10 duelos online.",
+      "rarity": "Common",
+      "category": "progression",
+      "metric": "played",
+      "target": 10,
+      "enabled": true,
+      "tracking": "server",
+      "reward": {
+        "title": true,
+        "coins": 0
+      },
+      "visual": {
+        "frame": "common",
+        "effect": "none"
+      }
+    },
+    {
+      "id": "ach-008",
+      "title": "Cosmo Guardian",
+      "title_pt": "Guardião do Cosmo",
+      "description": "Win 5 online duels.",
+      "description_pt": "Vença 5 duelos online.",
+      "rarity": "Common",
+      "category": "competitive",
+      "metric": "wins",
+      "target": 5,
+      "enabled": true,
+      "tracking": "server",
+      "reward": {
+        "title": true,
+        "coins": 0
+      },
+      "visual": {
+        "frame": "common",
+        "effect": "none"
+      }
+    },
+    {
+      "id": "ach-009",
+      "title": "Novice Collector",
+      "title_pt": "Colecionador Iniciante",
+      "description": "Collect 25 different cards beyond the starter collection.",
+      "description_pt": "Colecione 25 cartas diferentes além da coleção inicial.",
+      "rarity": "Common",
+      "category": "collection",
+      "metric": "new_cards",
+      "target": 25,
+      "enabled": true,
+      "tracking": "server",
+      "reward": {
+        "title": true,
+        "coins": 0
+      },
+      "visual": {
+        "frame": "common",
+        "effect": "none"
+      }
+    },
+    {
+      "id": "ach-010",
+      "title": "The Chosen One",
+      "title_pt": "O Escolhido",
+      "description": "Open 1 booster.",
+      "description_pt": "Abra 1 booster.",
+      "rarity": "Common",
+      "category": "collection",
+      "metric": "boosters_opened",
+      "target": 1,
+      "enabled": true,
+      "tracking": "server",
+      "reward": {
+        "title": true,
+        "coins": 0
+      },
+      "visual": {
+        "frame": "common",
+        "effect": "none"
+      }
+    },
+    {
+      "id": "ach-011",
+      "title": "Bronze Saint",
+      "title_pt": "Cavaleiro de Bronze",
+      "description": "Win 25 online duels.",
+      "description_pt": "Vença 25 duelos online.",
+      "rarity": "Uncommon",
+      "category": "competitive",
+      "metric": "wins",
+      "target": 25,
+      "enabled": true,
+      "tracking": "server",
+      "reward": {
+        "title": true,
+        "coins": 0
+      },
+      "visual": {
+        "frame": "uncommon",
+        "effect": "glow"
+      }
+    },
+    {
+      "id": "ach-012",
+      "title": "Pegasus Fist",
+      "title_pt": "Punho de Pégaso",
+      "description": "Declare 100 Strikes.",
+      "description_pt": "Declare 100 Golpes.",
+      "rarity": "Uncommon",
+      "category": "competitive",
+      "metric": "strikes",
+      "target": 100,
+      "enabled": true,
+      "tracking": "pending",
+      "reward": {
+        "title": true,
+        "coins": 0
+      },
+      "visual": {
+        "frame": "uncommon",
+        "effect": "glow"
+      }
+    },
+    {
+      "id": "ach-013",
+      "title": "Burning Cosmo",
+      "title_pt": "Cosmo Ardente",
+      "description": "Spend 1000 Cosmo.",
+      "description_pt": "Gaste 1000 de Cosmo.",
+      "rarity": "Uncommon",
+      "category": "competitive",
+      "metric": "cosmo_spent",
+      "target": 1000,
+      "enabled": true,
+      "tracking": "pending",
+      "reward": {
+        "title": true,
+        "coins": 0
+      },
+      "visual": {
+        "frame": "uncommon",
+        "effect": "glow"
+      }
+    },
+    {
+      "id": "ach-014",
+      "title": "Unbreakable Will",
+      "title_pt": "Vontade Inabalável",
+      "description": "Win 1 duel with exactly 1 Soul left.",
+      "description_pt": "Vença 1 duelo com exatamente 1 de Alma.",
+      "rarity": "Uncommon",
+      "category": "competitive",
+      "metric": "wins_soul_1",
+      "target": 1,
+      "enabled": true,
+      "tracking": "pending",
+      "reward": {
+        "title": true,
+        "coins": 0
+      },
+      "visual": {
+        "frame": "uncommon",
+        "effect": "glow"
+      }
+    },
+    {
+      "id": "ach-015",
+      "title": "Beyond the Limits",
+      "title_pt": "Além dos Limites",
+      "description": "Win 3 online duels in a row.",
+      "description_pt": "Vença 3 duelos online seguidos.",
+      "rarity": "Uncommon",
+      "category": "competitive",
+      "metric": "win_streak",
+      "target": 3,
+      "enabled": true,
+      "tracking": "server",
+      "reward": {
+        "title": true,
+        "coins": 0
+      },
+      "visual": {
+        "frame": "uncommon",
+        "effect": "glow"
+      }
+    },
+    {
+      "id": "ach-016",
+      "title": "Master of Cloths",
+      "title_pt": "Mestre das Armaduras",
+      "description": "Play 100 Equipments.",
+      "description_pt": "Jogue 100 Equipamentos.",
+      "rarity": "Uncommon",
+      "category": "competitive",
+      "metric": "equipments_played",
+      "target": 100,
+      "enabled": true,
+      "tracking": "pending",
+      "reward": {
+        "title": true,
+        "coins": 0
+      },
+      "visual": {
+        "frame": "uncommon",
+        "effect": "glow"
+      }
+    },
+    {
+      "id": "ach-017",
+      "title": "Sanctuary Strategist",
+      "title_pt": "Estrategista do Santuário",
+      "description": "Win online duels with 3 different decklists.",
+      "description_pt": "Vença duelos online com 3 listas de deck diferentes.",
+      "rarity": "Uncommon",
+      "category": "competitive",
+      "metric": "winning_decks",
+      "target": 3,
+      "enabled": true,
+      "tracking": "server",
+      "reward": {
+        "title": true,
+        "coins": 0
+      },
+      "visual": {
+        "frame": "uncommon",
+        "effect": "glow"
+      }
+    },
+    {
+      "id": "ach-018",
+      "title": "Survivor of the Twelve Houses",
+      "title_pt": "Sobrevivente das Doze Casas",
+      "description": "Win 100 online duels.",
+      "description_pt": "Vença 100 duelos online.",
+      "rarity": "Uncommon",
+      "category": "competitive",
+      "metric": "wins",
+      "target": 100,
+      "enabled": true,
+      "tracking": "server",
+      "reward": {
+        "title": true,
+        "coins": 0
+      },
+      "visual": {
+        "frame": "uncommon",
+        "effect": "glow"
+      }
+    },
+    {
+      "id": "ach-019",
+      "title": "Breaker of Destinies",
+      "title_pt": "Destruidor de Destinos",
+      "description": "Defeat 250 enemy Devotees.",
+      "description_pt": "Derrote 250 Devotos inimigos.",
+      "rarity": "Uncommon",
+      "category": "competitive",
+      "metric": "devotees_defeated",
+      "target": 250,
+      "enabled": true,
+      "tracking": "pending",
+      "reward": {
+        "title": true,
+        "coins": 0
+      },
+      "visual": {
+        "frame": "uncommon",
+        "effect": "glow"
+      }
+    },
+    {
+      "id": "ach-020",
+      "title": "Cosmos in Harmony",
+      "title_pt": "Cosmos em Harmonia",
+      "description": "Win 10 online duels with each of the five Gods.",
+      "description_pt": "Vença 10 duelos online com cada um dos cinco Deuses.",
+      "rarity": "Uncommon",
+      "category": "competitive",
+      "metric": "faction_wins_each",
+      "target": 10,
+      "enabled": true,
+      "tracking": "server",
+      "reward": {
+        "title": true,
+        "coins": 0
+      },
+      "visual": {
+        "frame": "uncommon",
+        "effect": "glow"
+      }
+    },
+    {
+      "id": "ach-021",
+      "title": "Silver Saint",
+      "title_pt": "Cavaleiro de Prata",
+      "description": "Win 250 online duels.",
+      "description_pt": "Vença 250 duelos online.",
+      "rarity": "Rare",
+      "category": "competitive",
+      "metric": "wins",
+      "target": 250,
+      "enabled": true,
+      "tracking": "server",
+      "reward": {
+        "title": true,
+        "coins": 0
+      },
+      "visual": {
+        "frame": "rare",
+        "effect": "energy-pulse"
+      }
+    },
+    {
+      "id": "ach-022",
+      "title": "Seventh Sense",
+      "title_pt": "Sétimo Sentido",
+      "description": "Win 7 online duels in a row.",
+      "description_pt": "Vença 7 duelos online seguidos.",
+      "rarity": "Rare",
+      "category": "competitive",
+      "metric": "win_streak",
+      "target": 7,
+      "enabled": true,
+      "tracking": "server",
+      "reward": {
+        "title": true,
+        "coins": 0
+      },
+      "visual": {
+        "frame": "rare",
+        "effect": "energy-pulse"
+      }
+    },
+    {
+      "id": "ach-023",
+      "title": "Fist of a Hundred Dragons",
+      "title_pt": "Punho dos Cem Dragões",
+      "description": "Declare 1000 Strikes.",
+      "description_pt": "Declare 1000 Golpes.",
+      "rarity": "Rare",
+      "category": "competitive",
+      "metric": "strikes",
+      "target": 1000,
+      "enabled": true,
+      "tracking": "pending",
+      "reward": {
+        "title": true,
+        "coins": 0
+      },
+      "visual": {
+        "frame": "rare",
+        "effect": "energy-pulse"
+      }
+    },
+    {
+      "id": "ach-024",
+      "title": "Immortal of the Sanctuary",
+      "title_pt": "Imortal do Santuário",
+      "description": "Win 50 duels with low Soul.",
+      "description_pt": "Vença 50 duelos com pouca Alma.",
+      "rarity": "Rare",
+      "category": "competitive",
+      "metric": "low_soul_wins",
+      "target": 50,
+      "enabled": true,
+      "tracking": "pending",
+      "reward": {
+        "title": true,
+        "coins": 0
+      },
+      "visual": {
+        "frame": "rare",
+        "effect": "energy-pulse"
+      }
+    },
+    {
+      "id": "ach-025",
+      "title": "Master of Five Constellations",
+      "title_pt": "Mestre das Cinco Constelações",
+      "description": "Win 100 online duels with each of the five Gods.",
+      "description_pt": "Vença 100 duelos online com cada um dos cinco Deuses.",
+      "rarity": "Rare",
+      "category": "competitive",
+      "metric": "faction_wins_each",
+      "target": 100,
+      "enabled": true,
+      "tracking": "server",
+      "reward": {
+        "title": true,
+        "coins": 0
+      },
+      "visual": {
+        "frame": "rare",
+        "effect": "energy-pulse"
+      }
+    },
+    {
+      "id": "ach-026",
+      "title": "The Great Strategist",
+      "title_pt": "O Grande Estrategista",
+      "description": "Win 100 duels against players of your rank.",
+      "description_pt": "Vença 100 duelos contra jogadores do seu rank.",
+      "rarity": "Rare",
+      "category": "competitive",
+      "metric": "equal_rank_wins",
+      "target": 100,
+      "enabled": true,
+      "tracking": "pending",
+      "reward": {
+        "title": true,
+        "coins": 0
+      },
+      "visual": {
+        "frame": "rare",
+        "effect": "energy-pulse"
+      }
+    },
+    {
+      "id": "ach-027",
+      "title": "Executioner of the Gods",
+      "title_pt": "Executor dos Deuses",
+      "description": "Win 500 online duels.",
+      "description_pt": "Vença 500 duelos online.",
+      "rarity": "Rare",
+      "category": "competitive",
+      "metric": "wins",
+      "target": 500,
+      "enabled": true,
+      "tracking": "server",
+      "reward": {
+        "title": true,
+        "coins": 0
+      },
+      "visual": {
+        "frame": "rare",
+        "effect": "energy-pulse"
+      }
+    },
+    {
+      "id": "ach-028",
+      "title": "Beyond Infinity",
+      "title_pt": "Além do Infinito",
+      "description": "Play 1000 online duels.",
+      "description_pt": "Jogue 1000 duelos online.",
+      "rarity": "Rare",
+      "category": "progression",
+      "metric": "played",
+      "target": 1000,
+      "enabled": true,
+      "tracking": "server",
+      "reward": {
+        "title": true,
+        "coins": 0
+      },
+      "visual": {
+        "frame": "rare",
+        "effect": "energy-pulse"
+      }
+    },
+    {
+      "id": "ach-029",
+      "title": "Guardian of the Twelve Houses",
+      "title_pt": "Guardião das Doze Casas",
+      "description": "Reach Gold I in a season.",
+      "description_pt": "Chegue a Ouro I em uma temporada.",
+      "rarity": "Rare",
+      "category": "competitive",
+      "metric": "gold_i",
+      "target": 1,
+      "enabled": true,
+      "tracking": "server",
+      "reward": {
+        "title": true,
+        "coins": 0
+      },
+      "visual": {
+        "frame": "rare",
+        "effect": "energy-pulse"
+      }
+    },
+    {
+      "id": "ach-030",
+      "title": "Inevitable Fate",
+      "title_pt": "Destino Inevitável",
+      "description": "Win 25 duels by emptying the rival deck.",
+      "description_pt": "Vença 25 duelos esvaziando o deck rival.",
+      "rarity": "Rare",
+      "category": "competitive",
+      "metric": "mill_wins",
+      "target": 25,
+      "enabled": true,
+      "tracking": "pending",
+      "reward": {
+        "title": true,
+        "coins": 0
+      },
+      "visual": {
+        "frame": "rare",
+        "effect": "energy-pulse"
+      }
+    },
+    {
+      "id": "ach-031",
+      "title": "Gold Saint",
+      "title_pt": "Cavaleiro de Ouro",
+      "description": "Reach Gold I in 1 season.",
+      "description_pt": "Chegue a Ouro I em 1 temporada.",
+      "rarity": "Epic",
+      "category": "season",
+      "metric": "season_gold_i",
+      "target": 1,
+      "enabled": true,
+      "tracking": "server",
+      "reward": {
+        "title": true,
+        "coins": 0
+      },
+      "visual": {
+        "frame": "epic",
+        "effect": "cosmic-aura"
+      }
+    },
+    {
+      "id": "ach-032",
+      "title": "Eighth Sense",
+      "title_pt": "Oitavo Sentido",
+      "description": "Win 12 online duels in a row.",
+      "description_pt": "Vença 12 duelos online seguidos.",
+      "rarity": "Epic",
+      "category": "competitive",
+      "metric": "win_streak",
+      "target": 12,
+      "enabled": true,
+      "tracking": "server",
+      "reward": {
+        "title": true,
+        "coins": 0
+      },
+      "visual": {
+        "frame": "epic",
+        "effect": "cosmic-aura"
+      }
+    },
+    {
+      "id": "ach-033",
+      "title": "Defier of the Gods",
+      "title_pt": "Aquele que Desafia os Deuses",
+      "description": "Win 1000 online duels.",
+      "description_pt": "Vença 1000 duelos online.",
+      "rarity": "Epic",
+      "category": "competitive",
+      "metric": "wins",
+      "target": 1000,
+      "enabled": true,
+      "tracking": "server",
+      "reward": {
+        "title": true,
+        "coins": 0
+      },
+      "visual": {
+        "frame": "epic",
+        "effect": "cosmic-aura"
+      }
+    },
+    {
+      "id": "ach-034",
+      "title": "Legend of the Twelve Houses",
+      "title_pt": "Lenda das Doze Casas",
+      "description": "Reach Gold I in 3 seasons.",
+      "description_pt": "Chegue a Ouro I em 3 temporadas.",
+      "rarity": "Epic",
+      "category": "season",
+      "metric": "season_gold_i",
+      "target": 3,
+      "enabled": true,
+      "tracking": "server",
+      "reward": {
+        "title": true,
+        "coins": 0
+      },
+      "visual": {
+        "frame": "epic",
+        "effect": "cosmic-aura"
+      }
+    },
+    {
+      "id": "ach-035",
+      "title": "The Last Survivor",
+      "title_pt": "O Último Sobrevivente",
+      "description": "Win 25 duels with exactly 1 Soul left.",
+      "description_pt": "Vença 25 duelos com exatamente 1 de Alma.",
+      "rarity": "Epic",
+      "category": "competitive",
+      "metric": "wins_soul_1",
+      "target": 25,
+      "enabled": true,
+      "tracking": "pending",
+      "reward": {
+        "title": true,
+        "coins": 0
+      },
+      "visual": {
+        "frame": "epic",
+        "effect": "cosmic-aura"
+      }
+    },
+    {
+      "id": "ach-036",
+      "title": "Master of the Cosmo",
+      "title_pt": "Mestre do Cosmo",
+      "description": "Spend 10000 Cosmo in ranked duels.",
+      "description_pt": "Gaste 10000 de Cosmo em duelos ranqueados.",
+      "rarity": "Epic",
+      "category": "competitive",
+      "metric": "ranked_cosmo_spent",
+      "target": 10000,
+      "enabled": true,
+      "tracking": "pending",
+      "reward": {
+        "title": true,
+        "coins": 0
+      },
+      "visual": {
+        "frame": "epic",
+        "effect": "cosmic-aura"
+      }
+    },
+    {
+      "id": "ach-037",
+      "title": "Wrath of Athena",
+      "title_pt": "A Ira de Athena",
+      "description": "Win 500 online duels with Athena.",
+      "description_pt": "Vença 500 duelos online com Athena.",
+      "rarity": "Epic",
+      "category": "competitive",
+      "metric": "athena_wins",
+      "target": 500,
+      "enabled": true,
+      "tracking": "server",
+      "reward": {
+        "title": true,
+        "coins": 0
+      },
+      "visual": {
+        "frame": "epic",
+        "effect": "cosmic-aura"
+      }
+    },
+    {
+      "id": "ach-038",
+      "title": "Lord of the Seven Seas",
+      "title_pt": "Senhor dos Sete Mares",
+      "description": "Win 500 online duels with Poseidon.",
+      "description_pt": "Vença 500 duelos online com Poseidon.",
+      "rarity": "Epic",
+      "category": "competitive",
+      "metric": "poseidon_wins",
+      "target": 500,
+      "enabled": true,
+      "tracking": "server",
+      "reward": {
+        "title": true,
+        "coins": 0
+      },
+      "visual": {
+        "frame": "epic",
+        "effect": "cosmic-aura"
+      }
+    },
+    {
+      "id": "ach-039",
+      "title": "Emperor of the Underworld",
+      "title_pt": "Imperador do Submundo",
+      "description": "Win 500 online duels with Hades.",
+      "description_pt": "Vença 500 duelos online com Hades.",
+      "rarity": "Epic",
+      "category": "competitive",
+      "metric": "hades_wins",
+      "target": 500,
+      "enabled": true,
+      "tracking": "server",
+      "reward": {
+        "title": true,
+        "coins": 0
+      },
+      "visual": {
+        "frame": "epic",
+        "effect": "cosmic-aura"
+      }
+    },
+    {
+      "id": "ach-040",
+      "title": "God of War",
+      "title_pt": "Deus da Guerra",
+      "description": "Win 500 online duels with Ares.",
+      "description_pt": "Vença 500 duelos online com Ares.",
+      "rarity": "Epic",
+      "category": "competitive",
+      "metric": "ares_wins",
+      "target": 500,
+      "enabled": true,
+      "tracking": "server",
+      "reward": {
+        "title": true,
+        "coins": 0
+      },
+      "visual": {
+        "frame": "epic",
+        "effect": "cosmic-aura"
+      }
+    },
+    {
+      "id": "ach-041",
+      "title": "Moon Hunter",
+      "title_pt": "Caçador da Lua",
+      "description": "Win 500 online duels with Artemis.",
+      "description_pt": "Vença 500 duelos online com Ártemis.",
+      "rarity": "Legendary",
+      "category": "competitive",
+      "metric": "artemis_wins",
+      "target": 500,
+      "enabled": true,
+      "tracking": "server",
+      "reward": {
+        "title": true,
+        "coins": 0
+      },
+      "visual": {
+        "frame": "legendary",
+        "effect": "divine-light"
+      }
+    },
+    {
+      "id": "ach-042",
+      "title": "Ninth Sense",
+      "title_pt": "Nono Sentido",
+      "description": "Win 20 online duels in a row.",
+      "description_pt": "Vença 20 duelos online seguidos.",
+      "rarity": "Legendary",
+      "category": "competitive",
+      "metric": "win_streak",
+      "target": 20,
+      "enabled": true,
+      "tracking": "server",
+      "reward": {
+        "title": true,
+        "coins": 0
+      },
+      "visual": {
+        "frame": "legendary",
+        "effect": "divine-light"
+      }
+    },
+    {
+      "id": "ach-043",
+      "title": "Divine Ascension",
+      "title_pt": "Ascensão Divina",
+      "description": "Reach Kamui.",
+      "description_pt": "Chegue a Kamui.",
+      "rarity": "Legendary",
+      "category": "competitive",
+      "metric": "kamui",
+      "target": 1,
+      "enabled": true,
+      "tracking": "server",
+      "reward": {
+        "title": true,
+        "coins": 0
+      },
+      "visual": {
+        "frame": "legendary",
+        "effect": "divine-light"
+      }
+    },
+    {
+      "id": "ach-044",
+      "title": "Eternal Legend",
+      "title_pt": "Lenda Eterna",
+      "description": "Reach Kamui in 5 seasons.",
+      "description_pt": "Chegue a Kamui em 5 temporadas.",
+      "rarity": "Legendary",
+      "category": "season",
+      "metric": "season_kamui",
+      "target": 5,
+      "enabled": true,
+      "tracking": "server",
+      "reward": {
+        "title": true,
+        "coins": 0
+      },
+      "visual": {
+        "frame": "legendary",
+        "effect": "divine-light"
+      }
+    },
+    {
+      "id": "ach-045",
+      "title": "TOP 100",
+      "title_pt": "TOP 100",
+      "description": "Finish a season in the TOP 100.",
+      "description_pt": "Termine uma temporada no TOP 100.",
+      "rarity": "Divine",
+      "category": "season",
+      "metric": "season_top",
+      "target": 100,
+      "enabled": true,
+      "tracking": "server",
+      "reward": {
+        "title": true,
+        "coins": 0
+      },
+      "visual": {
+        "frame": "divine",
+        "effect": "starfield"
+      }
+    },
+    {
+      "id": "ach-046",
+      "title": "TOP 50",
+      "title_pt": "TOP 50",
+      "description": "Finish a season in the TOP 50.",
+      "description_pt": "Termine uma temporada no TOP 50.",
+      "rarity": "Divine",
+      "category": "season",
+      "metric": "season_top",
+      "target": 50,
+      "enabled": true,
+      "tracking": "server",
+      "reward": {
+        "title": true,
+        "coins": 0
+      },
+      "visual": {
+        "frame": "divine",
+        "effect": "starfield"
+      }
+    },
+    {
+      "id": "ach-047",
+      "title": "TOP 20",
+      "title_pt": "TOP 20",
+      "description": "Finish a season in the TOP 20.",
+      "description_pt": "Termine uma temporada no TOP 20.",
+      "rarity": "Divine",
+      "category": "season",
+      "metric": "season_top",
+      "target": 20,
+      "enabled": true,
+      "tracking": "server",
+      "reward": {
+        "title": true,
+        "coins": 0
+      },
+      "visual": {
+        "frame": "divine",
+        "effect": "starfield"
+      }
+    },
+    {
+      "id": "ach-048",
+      "title": "TOP 10",
+      "title_pt": "TOP 10",
+      "description": "Finish a season in the TOP 10.",
+      "description_pt": "Termine uma temporada no TOP 10.",
+      "rarity": "Divine",
+      "category": "season",
+      "metric": "season_top",
+      "target": 10,
+      "enabled": true,
+      "tracking": "server",
+      "reward": {
+        "title": true,
+        "coins": 0
+      },
+      "visual": {
+        "frame": "divine",
+        "effect": "starfield"
+      }
+    },
+    {
+      "id": "ach-049",
+      "title": "TOP 3",
+      "title_pt": "TOP 3",
+      "description": "Finish a season in the TOP 3.",
+      "description_pt": "Termine uma temporada no TOP 3.",
+      "rarity": "Divine",
+      "category": "season",
+      "metric": "season_top",
+      "target": 3,
+      "enabled": true,
+      "tracking": "server",
+      "reward": {
+        "title": true,
+        "coins": 0
+      },
+      "visual": {
+        "frame": "divine",
+        "effect": "starfield"
+      }
+    },
+    {
+      "id": "ach-050",
+      "title": "God of the Cosmo",
+      "title_pt": "O Deus do Cosmo",
+      "description": "Finish a season in 1st place.",
+      "description_pt": "Termine uma temporada em 1º lugar.",
+      "rarity": "Divine",
+      "category": "season",
+      "metric": "season_top",
+      "target": 1,
+      "enabled": true,
+      "tracking": "server",
+      "reward": {
+        "title": true,
+        "coins": 0
+      },
+      "visual": {
+        "frame": "divine",
+        "effect": "starfield"
+      }
+    }
+  ]
+}

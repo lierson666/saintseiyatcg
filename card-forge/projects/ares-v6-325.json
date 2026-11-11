@@ -2,13 +2,14 @@
   "title": "",
   "subtitle": "The Weak Shall Fall",
   "flavour": "\"Mercy is a luxury reserved for those who survive.\"",
+  "bonusPower": "",
+  "bonusResistance": "",
   "art": {
-    "src": "art/ares-v6-325-ref.jpg",
-    "w": 1669.53,
-    "x": -90.76,
-    "y": 0.0,
+    "src": "art/ares-v6-325.png",
+    "w": 1568.25,
+    "x": -40.125,
+    "y": 0,
     "zoom": 1,
-    "baseW": 1669.53,
-    "provisoria": true
+    "baseW": 1568.25
   }
 }

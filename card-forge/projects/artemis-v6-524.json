@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "Where the Hunt Begins",
+  "flavour": "",
+  "bonusPower": "",
+  "bonusResistance": "",
+  "art": {
+    "src": "art/artemis-v6-524.png",
+    "w": 1568.25,
+    "x": -40.125,
+    "y": 0.0,
+    "zoom": 1,
+    "baseW": 1568.25
+  }
+}

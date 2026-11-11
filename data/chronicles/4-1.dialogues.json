@@ -1,0 +1,45 @@
+{
+ "nota": "Falas da missão 4.1 (rascunho da Saga 01, revisado em 11/11/2026). Máximo de duas frases por fala.",
+ "lines": {
+  "SCENE_1": {
+   "pt": "Os Cavaleiros Negros se espalham com as partes da armadura. Nas montanhas, um reflexo escuro espera Hyoga.",
+   "en": "The Black Saints scatter with the Cloth pieces. In the mountains, a dark reflection awaits Hyoga."
+  },
+  "BLACKSWAN_1": {
+   "pt": "Minha técnica é a sua, sem piedade.",
+   "en": "My technique is yours, without mercy."
+  },
+  "HYOGA_1": {
+   "pt": "A sua falta de piedade é só frio.",
+   "en": "Your lack of mercy is only cold."
+  },
+  "PREP_1": {
+   "pt": "Ele copia seus golpes, Hyoga. Mas o frio dele não tem o que você protege.",
+   "en": "He copies your blows, Hyoga. But his cold has nothing to protect."
+  },
+  "HINT_SWAN": {
+   "pt": "O Cisne Negro entrou. Seja mais rápido que o seu reflexo.",
+   "en": "Black Swan has entered. Be faster than your reflection."
+  },
+  "HINT_HOLD": {
+   "pt": "Não perca a calma, Hyoga. O gelo mais puro vence.",
+   "en": "Stay calm, Hyoga. The purest ice wins."
+  },
+  "WIN_1": {
+   "pt": "O gelo de Hyoga é mais puro. O Cisne Negro cai na neve.",
+   "en": "Hyoga's ice is purer. Black Swan falls into the snow."
+  },
+  "WIN_2": {
+   "pt": "Você venceu com algo que eu nunca tive.",
+   "en": "You won with something I never had."
+  },
+  "WIN_3": {
+   "pt": "Uma parte da armadura volta para Athena.",
+   "en": "One piece of the Cloth returns to Athena."
+  },
+  "LOSE_1": {
+   "pt": "Frio sem piedade sempre vence.",
+   "en": "Merciless cold always wins."
+  }
+ }
+}

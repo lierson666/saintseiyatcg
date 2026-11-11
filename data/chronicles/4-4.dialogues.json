@@ -1,0 +1,45 @@
+{
+ "nota": "Falas da missão 4.4 (rascunho da Saga 01, 11/11/2026). Máximo de duas frases por fala.",
+ "lines": {
+  "SCENE_1": {
+   "pt": "Só falta um reflexo. O Pégaso Negro fica entre Seiya e a Fênix.",
+   "en": "Only one reflection is left. Black Pegasus stands between Seiya and the Phoenix."
+  },
+  "RIVAL_1": {
+   "pt": "Quantos meteoros você aguenta?",
+   "en": "How many meteors can you take?"
+  },
+  "HERO_1": {
+   "pt": "Mais um do que você.",
+   "en": "One more than you."
+  },
+  "PREP_1": {
+   "pt": "Ele copia os seus meteoros, Seiya. Use a armadura e escolha a hora certa.",
+   "en": "He copies your meteors, Seiya. Use the Cloth and pick the right moment."
+  },
+  "HINT_KEY": {
+   "pt": "O Pégaso Negro entrou. Mostre qual meteoro é o verdadeiro.",
+   "en": "Black Pegasus has entered. Show which meteor is the true one."
+  },
+  "HINT_HOLD": {
+   "pt": "Levante, Seiya. Um Cavaleiro não cai duas vezes do mesmo jeito.",
+   "en": "Get up, Seiya. A Saint does not fall the same way twice."
+  },
+  "WIN_1": {
+   "pt": "Os meteoros de Seiya brilham mais forte. O Pégaso Negro cai.",
+   "en": "Seiya's meteors shine brighter. Black Pegasus falls."
+  },
+  "WIN_2": {
+   "pt": "Um a mais... você tinha razão.",
+   "en": "One more... you were right."
+  },
+  "WIN_3": {
+   "pt": "Agora só falta o Ikki.",
+   "en": "Now only Ikki is left."
+  },
+  "LOSE_1": {
+   "pt": "Você não aguentou nem os meus meteoros.",
+   "en": "You could not even take my meteors."
+  }
+ }
+}

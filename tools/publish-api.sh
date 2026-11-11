@@ -8,7 +8,7 @@ REMOTE=mamaco-dev
 API=/home/dev/sanctuary-api
 python3 tools/deploy-guard.py check --env playtest --host "$REMOTE" --path /home/dev/saintseiyatcg/data
 
-changes=$(cd sanctuary-api && rsync -az --checksum --itemize-changes server.py cosmo.py cosmo_pairing.py catalog.json Dockerfile "$REMOTE:$API/")
+changes=$(cd sanctuary-api && rsync -az --checksum --itemize-changes server.py cosmo.py cosmo_pairing.py achievements.py achievements.json catalog.json Dockerfile "$REMOTE:$API/")
 if ! grep -q '^<f' <<<"$changes"; then
   echo "Nada mudou; API não reconstruída."
   exit 0

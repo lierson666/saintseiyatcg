@@ -145,6 +145,19 @@ class Cms(Base):
         self.assertEqual(self.as_('dev', 'PATCH', f'/content/{c["id"]}', {'title': 'Hello 2'})[1]['revision'], 2)
         self.assertEqual(len(self.raw('GET', P + '/content/hello-cosmo')[1]['revisions']), 2)
 
+    def test_apagar_post(self):
+        st, c, _ = self.as_('dev', 'POST', '/content', {'kind': 'news', 'slug': 'apagar-me', 'title': 'Apagar', 'body': 'Texto'})
+        self.as_('dev', 'POST', f'/content/{c["id"]}/publish', {})
+        self.assertEqual(self.as_('dev', 'POST', '/comments', {'target': 'content:apagar-me', 'body': 'oi'})[0], 201)
+        self.assertEqual(self.as_('caio', 'DELETE', f'/content/{c["id"]}')[0], 403)  # sem papel de publisher
+        self.assertEqual(self.as_('dev', 'DELETE', f'/content/{c["id"]}')[0], 200)
+        self.assertEqual(self.raw('GET', P + '/content/apagar-me')[0], 404)
+        self.assertNotIn('apagar-me', [x['slug'] for x in self.as_('dev', 'GET', '/content?all=1')[1]['items']])
+        self.assertEqual(self.as_('dev', 'DELETE', f'/content/{c["id"]}')[0], 404)
+        self.assertTrue(any(e['action'] == 'content.delete' for e in self.as_('dev', 'GET', '/audit')[1]['entries']))
+        st, again, _ = self.as_('dev', 'POST', '/content', {'kind': 'news', 'slug': 'apagar-me', 'title': 'De novo', 'body': 'Texto'})
+        self.assertEqual(st, 201)  # o slug volta a ficar livre, sem herdar a conversa antiga
+
     def test_agendado_nao_aparece(self):
         st, c, _ = self.as_('dev', 'POST', '/content', {'kind': 'news', 'slug': 'futuro', 'title': 'F', 'body': 'B'})
         self.as_('dev', 'POST', f'/content/{c["id"]}/publish', {'publish_at': 4102444800})

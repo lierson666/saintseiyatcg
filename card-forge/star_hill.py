@@ -44,6 +44,15 @@ _production_spec.loader.exec_module(arena_production)
 _vfx_gen_spec = importlib.util.spec_from_file_location('star_hill_vfx_generate', Path(__file__).with_name('vfx_generate.py'))
 vfx_generate = importlib.util.module_from_spec(_vfx_gen_spec)
 _vfx_gen_spec.loader.exec_module(vfx_generate)
+_chron_spec = importlib.util.spec_from_file_location('star_hill_chronicles_forge', Path(__file__).with_name('chronicles_forge.py'))
+chronicles_forge = importlib.util.module_from_spec(_chron_spec)
+_chron_spec.loader.exec_module(chronicles_forge)
+_ach_spec = importlib.util.spec_from_file_location('star_hill_achievements_forge', Path(__file__).with_name('achievements_forge.py'))
+achievements_forge = importlib.util.module_from_spec(_ach_spec)
+_ach_spec.loader.exec_module(achievements_forge)
+_nexus_spec = importlib.util.spec_from_file_location('star_hill_nexus_proxy', Path(__file__).with_name('nexus_proxy.py'))
+nexus_proxy = importlib.util.module_from_spec(_nexus_spec)
+_nexus_spec.loader.exec_module(nexus_proxy)
 
 
 def encoded(value):
@@ -397,7 +406,7 @@ def publish_site(root=ROOT):
 # Telas do Olympus Arena (autor, 30/10/2026): home, fundos, cores, textos, animações e áudio que o jogo lê em playtest/telas.js.
 TELAS = 'data/olympus-telas.json'
 ANIM_GROUPS = {'compra', 'conjurar', 'cosmo', 'gatilho', 'ataque', 'dano', 'morte', 'turno', 'ultimate'}
-SOUND_EVENTS = {'ultimate', 'clique', 'play', 'voltar', 'turno', 'compra', 'conjurar', 'equipar_armadura', 'equipar_arma', 'cosmo', 'gatilho', 'ataque', 'dano', 'morte', 'vitoria', 'derrota',
+SOUND_EVENTS = {'ultimate', 'clique', 'play', 'turno', 'compra', 'conjurar', 'equipar_armadura', 'equipar_arma', 'cosmo', 'gatilho', 'ataque', 'dano', 'morte', 'vitoria', 'derrota',
                 'hover', 'hover_mao', 'hover_base', 'passar_turno', 'receber_turno',
                 'declarar_ataque', 'carga', 'impacto', 'impacto_deus', 'dano_deus', 'poder_divino', 'poder_dominio', 'awaken', 'morte_deus'}
 IMAGE_DIRS = ('card-forge/art-web/', 'star-hill/assets/', 'playtest/assets/', 'LOGO/')
@@ -423,7 +432,7 @@ def validate_telas(value, root=ROOT):
     if not isinstance(value, dict) or value.get('versao') != 1 or set(value) != {'versao', 'home', 'fundos', 'cores', 'textos', 'animacoes', 'audio'}:
         fail('Estrutura das telas inválida.')
     home = value['home']
-    if not isinstance(home, dict) or set(home) != {'slides', 'blocos', 'botao_play'}:
+    if not isinstance(home, dict) or set(home) != {'slides', 'botao_play'}:
         fail('Home inválida.')
     if not isinstance(home['slides'], list) or not 1 <= len(home['slides']) <= 12:
         fail('O carrossel precisa de 1 a 12 slides.')
@@ -433,13 +442,6 @@ def validate_telas(value, root=ROOT):
         image(slide['imagem'])
         for k in ('carimbo', 'linha1', 'linha2', 'texto'):
             text(slide[k])
-    if not isinstance(home['blocos'], list) or len(home['blocos']) > 6:
-        fail('A home aceita até 6 blocos.')
-    for bloco in home['blocos']:
-        if not isinstance(bloco, dict) or set(bloco) != {'imagem', 'rotulo', 'titulo', 'destino'} or bloco['destino'] not in {'decks', 'profile', 'options', 'play'}:
-            fail('Bloco inválido.')
-        image(bloco['imagem'])
-        text(bloco['rotulo']); text(bloco['titulo'])
     text(home['botao_play'], 30, False)
     fundos = value['fundos']
     if not isinstance(fundos, dict) or set(fundos) != {'lobby', 'duelo', 'duelo_opacidade'}:
@@ -567,21 +569,6 @@ def anim_ids(root=ROOT):
     return {*ANIM_EFFECTS, *(e['id'] for e in imported)}
 
 
-LEGEND_CLASSES = re.compile(r'Saint|Marin|Satellite|Specter|Berserker|Angel')
-
-
-def plain_devotees(root=ROOT):
-    """Devotees sem a regra de lendário (guia: personagem nomeado de Saints, Marines, Satellites, Specters, Berserkers e Angels; Ikki não).
-    Só o lendário tem animação própria; o resto usa a da facção (autor, 06/11/2026)."""
-    cards_path, ids_path = root / 'data/cards.json', root / 'shared/character-identity.js'
-    if not cards_path.exists() or not ids_path.exists():
-        return set()
-    named = {k for k, v in re.findall(r"'([\w-]+)':\s*('[^']*'|null)", ids_path.read_text(encoding='utf-8')) if v != 'null'}
-    cards = json.loads(cards_path.read_text(encoding='utf-8'))
-    cards = cards.get('cartas', cards) if isinstance(cards, dict) else cards
-    return {c['id'] for c in cards if c.get('tipo') == 'Devotee' and not (c['id'] in named and c['id'] != 'athena-v6-009' and any(LEGEND_CLASSES.search(s) for s in c.get('subtipos', [])))}
-
-
 def draft_ids(root=ROOT):
     """Rascunho e teste ainda não podem ser escolhidos num momento: só o que foi aprovado."""
     path = root / 'data/vfx-catalog.json'
@@ -682,8 +669,6 @@ def save_card_anim(body, atomic_write, root=ROOT):
         chosen, known = [*(body.get(k) for k in ANIM_MOMENTS), *body['linhas']], anim_ids(root) - draft_ids(root)
         if any(v is not None and v is not False and v not in known and not NEW_FX.fullmatch(str(v)) for v in chosen):  # False: sem animação de propósito
             raise ValueError('Efeito inválido.')
-        if card in plain_devotees(root) and any(v is not None for v in chosen):
-            raise ValueError('Só personagem lendário tem animação própria. Esta carta usa a animação da facção.')
         entry = {k: body[k] for k in ANIM_MOMENTS if body.get(k) is not None}
         lines = body['linhas']
         while lines and lines[-1] is None:
@@ -830,6 +815,12 @@ def get(handler, path):
         handler.reply(200, {'arquivo': TELAS, 'revisao': revision(text), 'conteudo': json.loads(text)})
     elif path == '/api/star-hill/arenas':
         handler.reply(200, arena_forge.read(ROOT))
+    elif path == '/api/star-hill/chronicles':
+        handler.reply(200, chronicles_forge.read(ROOT))
+    elif path == '/api/star-hill/achievements':
+        handler.reply(200, achievements_forge.read(ROOT))
+    elif path.startswith('/api/star-hill/nexus/'):
+        nexus_proxy.get(handler, path)
     elif path.startswith('/api/star-hill/materiais'):
         material_studio.get(handler, path, ROOT)
     elif path.startswith('/api/star-hill/producao'):
@@ -855,6 +846,8 @@ def post(handler, path, raw, atomic_write):
         body = json.loads(raw)
         if not isinstance(body, dict):
             raise ValueError('Pedido inválido.')
+        if path.startswith('/api/star-hill/nexus/'):
+            return nexus_proxy.handle_post(handler, path, body)
         if path == '/api/star-hill/card-voice':
             return handler.reply(200, {'vozes': save_card_voice(body, atomic_write)})
         if path == '/api/star-hill/card-anim':
@@ -894,6 +887,14 @@ def post(handler, path, raw, atomic_write):
             result = save_telas(body, atomic_write)
         elif path == '/api/star-hill/arenas':
             result = arena_forge.save(ROOT, body, atomic_write)
+        elif path == '/api/star-hill/chronicles':
+            result = chronicles_forge.save(ROOT, body, atomic_write)
+        elif path == '/api/star-hill/achievements':
+            result = achievements_forge.save(ROOT, body, atomic_write)
+        elif path == '/api/star-hill/achievements/publicar':
+            result = achievements_forge.publish(ROOT, body, atomic_write)
+        elif path == '/api/star-hill/achievements/rollback':
+            result = achievements_forge.rollback(ROOT, body, atomic_write)
         elif path.startswith('/api/star-hill/materiais'):
             result = material_studio.post(path, body, ROOT, atomic_write)
         elif path.startswith('/api/star-hill/producao'):

@@ -2,13 +2,23 @@
   "title": "",
   "subtitle": "The Armor of the Ocean's Master",
   "flavour": "",
+  "bonusPower": "+2",
+  "bonusResistance": "+5",
   "art": {
-    "src": "art/poseidon-v6-092-ref.jpg",
-    "w": 1488.0,
-    "x": 0.0,
-    "y": -275.71,
+    "src": "art/poseidon-v6-092.png",
+    "w": 1568.25,
+    "x": -40.125,
+    "y": 0.0,
     "zoom": 1,
-    "baseW": 1488.0,
+    "baseW": 1568.25
+  },
+  "art_previous_reference": {
+    "src": "art/poseidon-v6-092-ref.jpg",
+    "w": 1488,
+    "x": 34.075114678899126,
+    "y": -625.519990653446,
+    "zoom": 1,
+    "baseW": 1488,
     "provisoria": true
   }
 }

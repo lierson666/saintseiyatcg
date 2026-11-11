@@ -58,8 +58,8 @@
   .rail .rail__row b { font: 700 14px/1 "Cinzel", Georgia, serif; white-space: nowrap; color: #f5f1e6; }
   .rail .rail__row b small { font-size: .72em; opacity: .7; }
   .rail .rail__cap { display: block; grid-column: 1 / -1; font: 600 8px/9px "Jost", system-ui, sans-serif; letter-spacing: .05em; text-align: center; text-transform: uppercase; white-space: nowrap; color: #a8a397; }
-  .rail .rail__row--cosmo { --tone: var(--god); order: -2; cursor: pointer; }
-  .rail .rail__row--latent { --tone: var(--latent); order: -1; cursor: pointer; }
+  .rail .rail__row--cosmo { --tone: var(--cosmo-base); order: -2; cursor: pointer; } /* Base sempre azul (autor, 07/11/2026) */
+  .rail .rail__row--latent { --tone: var(--cosmo-latent); order: -1; cursor: pointer; }
   .rail .rail__row--cosmo, .rail .rail__row--latent { border-color: rgba(var(--tone), .5); background: linear-gradient(180deg, rgba(var(--tone), .16), #10111cb8); }
   .rail .rail__row--cosmo b, .rail .rail__row--latent b { color: rgb(var(--tone)); }
   .rail .rail__sym { display: block; width: 19px; height: 19px; background: rgb(var(--tone)); -webkit-mask: var(--m) center / contain no-repeat; mask: var(--m) center / contain no-repeat; filter: drop-shadow(0 0 4px rgb(var(--tone))); }
@@ -68,7 +68,7 @@
   .rail .is-zero { border-color: #f5f1e61f; background: #10111cb8; }
   .rail .is-zero .rail__sym { filter: none; opacity: .55; }
   .rail .is-zero b { opacity: .7; }
-  .rail .rail__row .cosmo__sigil, .rail .rail__row .orb.flame, .rail .cosmo__pips { display: none; }
+  .rail .rail__row .cosmo__sigil, .rail .rail__row .orb.flame, .rail .rail__row .latent-beams, .rail .cosmo__pips { display: none; }
   /* Domain sob a barra de vida do Deus: nome à vista e aceso quando há o que usar. */
   .rail .sanctum .sanctum__domain { position: absolute; left: 66px; width: 30vw; height: 30px; aspect-ratio: auto; display: flex; flex-direction: row; align-items: center; padding: 0 6px; overflow: visible; border: 1px solid #e6c36a66; border-radius: var(--kv-pill); background: var(--art) center 30% / cover no-repeat, #0b0d22; }
   .rail .sanctum--me .sanctum__domain { top: calc(100% + 40px); }

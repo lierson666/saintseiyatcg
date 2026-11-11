@@ -11,6 +11,12 @@
       "inspecao": "cosmic-aura",
       "forca": 0.55,
       "cor": "#8cffb0"
+    },
+    "athena-v6-009": {
+      "holo": "divine-holo",
+      "forca": 0.6,
+      "velocidade": 1,
+      "cor": "#e6c36a"
     }
   },
   "composicoes": {

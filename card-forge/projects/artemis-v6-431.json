@@ -2,21 +2,14 @@
   "title": "",
   "subtitle": "Vanguard of the Olympian Host",
   "flavour": "\"Heaven does not ask the earth for permission. It judges.\"",
+  "bonusPower": "",
+  "bonusResistance": "",
   "art": {
-    "src": "art/artemis-v6-431-ref.jpg",
-    "w": 1488.0,
-    "x": 0.0,
-    "y": -276.72,
-    "zoom": 1,
-    "baseW": 1488.0,
-    "provisoria": true,
-    "nota_provisoria": "Arte provisória da carta anterior; não representa o novo personagem. Substituir pela arte aprovada (docs/artemis-v2-art-direction.md)."
-  },
-  "identidade": {
-    "versao": "artemis-v2.0",
-    "nome_anterior": "MOONLIGHT HUNTRESS CAPTAIN",
-    "continuidade": "Tenkai-hen Josō Overture (2004)",
-    "perfil_arte": "celestial_angel",
-    "arte_representa_personagem": false
+    "src": "art/artemis-v6-431.png",
+    "w": 1881.8999999999999,
+    "x": -202.53853211009164,
+    "y": -23.32916328023373,
+    "zoom": 1.2,
+    "baseW": 1568.25
   }
 }

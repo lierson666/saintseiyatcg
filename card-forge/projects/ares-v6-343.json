@@ -2,13 +2,14 @@
   "title": "",
   "subtitle": "The Blade Carried by the Storm",
   "flavour": "\"Lior's laughter is the last sound heard before the storm tears its victims apart.\"",
+  "bonusPower": "",
+  "bonusResistance": "",
   "art": {
-    "src": "art/ares-v6-343-ref.jpg",
-    "w": 1488.0,
-    "x": 0.0,
-    "y": -70.5,
+    "src": "art/ares-v6-343.png",
+    "w": 1568.25,
+    "x": -32.2008027522935,
+    "y": 139.93886642555265,
     "zoom": 1,
-    "baseW": 1488.0,
-    "provisoria": true
+    "baseW": 1568.25
   }
 }

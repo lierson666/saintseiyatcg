@@ -1,0 +1,362 @@
+{
+ "nota": "Missão 2.1 do Cosmo Chronicles (CONTEXT/cosmo-chronicles-saga-01.md, 11/11/2026). Regras normais; decks emprestados; Sagitário só em cena. Simulação (rival easy, 400 partidas por linha, 0 erros): jogador vence 63,5% (IA easy) e 67% (IA normal). A IA quase nunca cumpre o objetivo porque joga a armadura antes de Seiya; o objetivo é para pessoas, com dica e preparação explicando a ordem.",
+ "id": "2-1",
+ "saga": "saga-01",
+ "chapter": 2,
+ "order": 1,
+ "title": {
+  "pt": "O primeiro combate",
+  "en": "The First Battle"
+ },
+ "description": {
+  "pt": "Tóquio, Japão. A Guerra Galáctica começa, e Seiya estreia contra Geki, o Cavaleiro de Urso.",
+  "en": "Tokyo, Japan. The Galaxian Wars begin, and Seiya's first opponent is Geki, the Bear Saint."
+ },
+ "objective": {
+  "pt": "Vença com a Armadura de Pégaso V2 vestida em Seiya.",
+  "en": "Win after putting the Pegasus Cloth V2 on Seiya."
+ },
+ "level": {
+  "pt": "Iniciante",
+  "en": "Beginner"
+ },
+ "duration": {
+  "pt": "8–12 minutos",
+  "en": "8–12 minutes"
+ },
+ "characters": {
+  "seiya": {
+   "card": "athena-v6-001",
+   "name": {
+    "pt": "Seiya de Pégaso",
+    "en": "Pegasus Seiya"
+   }
+  },
+  "geki": {
+   "card": "athena-v6-029",
+   "name": {
+    "pt": "Geki de Urso",
+    "en": "Bear Geki"
+   }
+  },
+  "saori": {
+   "card": "athena-v6-056",
+   "name": {
+    "pt": "Saori Kido",
+    "en": "Saori Kido"
+   }
+  },
+  "marin": {
+   "card": "athena-v6-021",
+   "chibi": true,
+   "name": {
+    "pt": "Marin, na lembrança de Seiya",
+    "en": "Marin, in Seiya's memory"
+   }
+  },
+  "narrator": {
+   "name": {
+    "pt": "Narração",
+    "en": "Narration"
+   }
+  }
+ },
+ "requires": [
+  "1-2"
+ ],
+ "next": "2-2",
+ "player": {
+  "character": "seiya",
+  "deck": "chronicle-2-1-seiya"
+ },
+ "rival": {
+  "character": "geki",
+  "deck": "chronicle-2-1-geki",
+  "ai": "easy",
+  "mechanical_god": "god-athena"
+ },
+ "arena": "olympus",
+ "music": null,
+ "victory": {
+  "type": "engine",
+  "winner": "player",
+  "requires": [
+   {
+    "event": "equipped",
+    "player": "A",
+    "card": "athena-v6-002",
+    "cards": {
+     "bearer": "athena-v6-001"
+    }
+   }
+  ]
+ },
+ "defeat": {
+  "draws_count_as": "defeat",
+  "retry": true
+ },
+ "reward": {
+  "enabled": true,
+  "coins": 250,
+  "boosters": 1,
+  "boss": false
+ },
+ "scenes": {
+  "intro": [
+   {
+    "art": "athena-v6-062",
+    "who": "narrator",
+    "line": "SCENE_1"
+   },
+   {
+    "art": "athena-v6-081",
+    "who": "narrator",
+    "line": "SCENE_2"
+   },
+   {
+    "art": "athena-v6-056",
+    "who": "saori",
+    "line": "SAORI_1"
+   },
+   {
+    "art": "athena-v6-029",
+    "who": "geki",
+    "line": "GEKI_1"
+   },
+   {
+    "art": "athena-v6-001",
+    "who": "seiya",
+    "line": "SEIYA_1"
+   }
+  ],
+  "prep": {
+   "who": "marin",
+   "line": "PREP_1",
+   "pose": "tip"
+  },
+  "win": [
+   {
+    "art": "athena-v6-062",
+    "who": "narrator",
+    "line": "WIN_1"
+   },
+   {
+    "art": "athena-v6-002",
+    "who": "seiya",
+    "line": "WIN_2"
+   }
+  ],
+  "objective": [
+   {
+    "art": "athena-v6-002",
+    "who": "marin",
+    "line": "OBJECTIVE_1",
+    "pose": "confident"
+   }
+  ],
+  "lose": [
+   {
+    "art": "athena-v6-029",
+    "who": "geki",
+    "line": "LOSE_1"
+   }
+  ]
+ },
+ "hints": [
+  {
+   "id": "HINT_CLOTH",
+   "pose": "point",
+   "when": [
+    {
+     "event": "card_played",
+     "player": "A",
+     "card": "athena-v6-001"
+    }
+   ]
+  },
+  {
+   "id": "HINT_GEKI",
+   "pose": "tip",
+   "when": [
+    {
+     "stall": 2
+    },
+    {
+     "event": "soul_lost",
+     "player": "A",
+     "atMost": {
+      "soul": 8
+     }
+    }
+   ]
+  }
+ ],
+ "decks": [
+  {
+   "id": "chronicle-2-1-seiya",
+   "god": "god-athena",
+   "domain_id": "athena-v6-062",
+   "main_deck": [
+    {
+     "card_id": "athena-v6-001",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-002",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-060",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-053",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-054",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-052",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-061",
+     "quantity": 2
+    },
+    {
+     "card_id": "athena-v6-040",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-043",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-041",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-457",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-490",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-458",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-494",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-491",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-051",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-497",
+     "quantity": 2
+    },
+    {
+     "card_id": "athena-v6-056",
+     "quantity": 1
+    }
+   ],
+   "nome": "Seiya · Chronicles 2.1",
+   "emprestado": true
+  },
+  {
+   "id": "chronicle-2-1-geki",
+   "god": "god-athena",
+   "domain_id": "athena-v6-062",
+   "main_deck": [
+    {
+     "card_id": "athena-v6-029",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-034",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-040",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-457",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-462",
+     "quantity": 2
+    },
+    {
+     "card_id": "neutral-v6-468",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-466",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-044",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-491",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-494",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-478",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-053",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-054",
+     "quantity": 1
+    },
+    {
+     "card_id": "athena-v6-052",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-497",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-056",
+     "quantity": 2
+    },
+    {
+     "card_id": "athena-v6-041",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-051",
+     "quantity": 2
+    },
+    {
+     "card_id": "neutral-v6-458",
+     "quantity": 1
+    }
+   ],
+   "nome": "Geki · Chronicles 2.1",
+   "emprestado": true
+  }
+ ]
+}

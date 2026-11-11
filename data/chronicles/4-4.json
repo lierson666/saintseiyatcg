@@ -1,0 +1,321 @@
+{
+ "nota": "Missão 4.4 do Cosmo Chronicles (CONTEXT/cosmo-chronicles-saga-01.md, 11/11/2026). Regras normais; só vencer. Cavaleiros Negros com Athena só mecânica (decisão do autor, 11/11/2026). Simulação (rival IA hard, 120 partidas por linha, 0 erros): jogador vence 52,5% (IA easy) e 57,5% (IA normal); mediana de 16–17 rodadas.",
+ "id": "4-4",
+ "saga": "saga-01",
+ "chapter": 4,
+ "order": 4,
+ "title": {
+  "pt": "Pégaso Negro",
+  "en": "Black Pegasus"
+ },
+ "description": {
+  "pt": "O último reflexo fica entre Seiya e Ikki.",
+  "en": "The last reflection stands between Seiya and Ikki."
+ },
+ "level": {
+  "pt": "Avançado",
+  "en": "Advanced"
+ },
+ "duration": {
+  "pt": "12–18 minutos",
+  "en": "12–18 minutes"
+ },
+ "characters": {
+  "seiya": {
+   "card": "athena-v6-001",
+   "name": {
+    "pt": "Seiya de Pégaso",
+    "en": "Pegasus Seiya"
+   }
+  },
+  "bpeg": {
+   "card": "neutral-v6-451",
+   "name": {
+    "pt": "Pégaso Negro",
+    "en": "Black Pegasus"
+   }
+  },
+  "marin": {
+   "card": "athena-v6-021",
+   "name": {
+    "pt": "Marin, na lembrança de Seiya",
+    "en": "Marin, in Seiya's memory"
+   }
+  },
+  "narrator": {
+   "name": {
+    "pt": "Narração",
+    "en": "Narration"
+   }
+  }
+ },
+ "requires": [
+  "4-3"
+ ],
+ "next": "4-5",
+ "player": {
+  "character": "seiya",
+  "deck": "chronicle-4-4-seiya"
+ },
+ "rival": {
+  "character": "bpeg",
+  "deck": "chronicle-4-4-bpeg",
+  "ai": "hard",
+  "mechanical_god": "god-athena"
+ },
+ "arena": "olympus",
+ "music": null,
+ "victory": {
+  "type": "engine",
+  "winner": "player"
+ },
+ "defeat": {
+  "draws_count_as": "defeat",
+  "retry": true
+ },
+ "reward": {
+  "enabled": true,
+  "coins": 250,
+  "boosters": 1,
+  "boss": false
+ },
+ "scenes": {
+  "intro": [
+   {
+    "art": "neutral-v6-451",
+    "who": "narrator",
+    "line": "SCENE_1"
+   },
+   {
+    "art": "neutral-v6-451",
+    "who": "bpeg",
+    "line": "RIVAL_1"
+   },
+   {
+    "art": "athena-v6-001",
+    "who": "seiya",
+    "line": "HERO_1"
+   }
+  ],
+  "prep": {
+   "who": "marin",
+   "line": "PREP_1",
+   "pose": "explain"
+  },
+  "win": [
+   {
+    "art": "athena-v6-002",
+    "who": "narrator",
+    "line": "WIN_1"
+   },
+   {
+    "art": "neutral-v6-451",
+    "who": "bpeg",
+    "line": "WIN_2"
+   },
+   {
+    "art": "athena-v6-001",
+    "who": "seiya",
+    "line": "WIN_3"
+   }
+  ],
+  "lose": [
+   {
+    "art": "neutral-v6-451",
+    "who": "bpeg",
+    "line": "LOSE_1"
+   }
+  ]
+ },
+ "hints": [
+  {
+   "id": "HINT_KEY",
+   "when": [
+    {
+     "event": "card_played",
+     "player": "B",
+     "card": "neutral-v6-451"
+    }
+   ]
+  },
+  {
+   "id": "HINT_HOLD",
+   "when": [
+    {
+     "stall": 2
+    },
+    {
+     "event": "soul_lost",
+     "player": "A",
+     "atMost": {
+      "soul": 8
+     }
+    }
+   ]
+  }
+ ],
+ "decks": [
+  {
+   "id": "chronicle-4-4-seiya",
+   "god": "god-athena",
+   "domain_id": "athena-v6-062",
+   "main_deck": [
+    {
+     "card_id": "athena-v6-001",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-002",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-060",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-053",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-054",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-052",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-061",
+     "quantity": 2
+    },
+    {
+     "card_id": "athena-v6-040",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-043",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-041",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-457",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-490",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-458",
+     "quantity": 2
+    },
+    {
+     "card_id": "neutral-v6-494",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-491",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-051",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-497",
+     "quantity": 2
+    },
+    {
+     "card_id": "athena-v6-056",
+     "quantity": 1
+    },
+    {
+     "card_id": "neutral-v6-462",
+     "quantity": 1
+    }
+   ],
+   "nome": "Seiya · Chronicles 4.4",
+   "emprestado": true
+  },
+  {
+   "id": "chronicle-4-4-bpeg",
+   "god": "god-athena",
+   "domain_id": "athena-v6-062",
+   "main_deck": [
+    {
+     "card_id": "athena-v6-002",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-060",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-053",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-054",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-052",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-061",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-040",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-043",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-041",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-457",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-490",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-494",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-491",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-497",
+     "quantity": 2
+    },
+    {
+     "card_id": "neutral-v6-489",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-462",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-451",
+     "quantity": 3
+    }
+   ],
+   "nome": "Black Pegasus · Chronicles 4.4",
+   "emprestado": true
+  }
+ ]
+}

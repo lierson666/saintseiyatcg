@@ -2,13 +2,14 @@
   "title": "",
   "subtitle": "The First Wound of War",
   "flavour": "\"Every war begins with a single wound.\"",
+  "bonusPower": "",
+  "bonusResistance": "",
   "art": {
-    "src": "art/ares-v6-322-ref.jpg",
-    "w": 1488.0,
-    "x": 0.0,
-    "y": -54.33,
+    "src": "art/ares-v6-322.png",
+    "w": 1568.25,
+    "x": -40.125,
+    "y": 0,
     "zoom": 1,
-    "baseW": 1488.0,
-    "provisoria": true
+    "baseW": 1568.25
   }
 }

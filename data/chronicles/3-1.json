@@ -1,0 +1,350 @@
+{
+ "nota": "Missão 3.1 do Cosmo Chronicles (CONTEXT/cosmo-chronicles-saga-01.md, 11/11/2026). Objetivo: resistir a 6 turnos próprios (victory.survive_turns); vencer antes também conclui; Soul a 0 é derrota. Cavaleiros Negros neutros; Deus só mecânico (Athena), por decisão do autor em 11/11/2026, no lugar do Patrono de Cena. Simulação (rival normal, 300 partidas por linha, 0 erros): o jogador cumpre a missão em 69,7% (IA easy) e 74% (IA normal); vence a partida antes em 13–20%. Mediana de 12–13 rodadas.",
+ "id": "3-1",
+ "saga": "saga-01",
+ "chapter": 3,
+ "order": 1,
+ "title": {
+  "pt": "A interrupção",
+  "en": "The Interruption"
+ },
+ "description": {
+  "pt": "Tóquio, Japão. Ikki invade o torneio, e os Cavaleiros Negros cercam a arena. Seiya e Shun precisam resistir.",
+  "en": "Tokyo, Japan. Ikki storms the tournament, and the Black Saints surround the arena. Seiya and Shun must hold on."
+ },
+ "level": {
+  "pt": "Intermediário",
+  "en": "Intermediate"
+ },
+ "duration": {
+  "pt": "8–12 minutos",
+  "en": "8–12 minutes"
+ },
+ "objective": {
+  "pt": "Resista a 6 turnos seus. Vencer antes também conta.",
+  "en": "Hold on for 6 of your turns. Winning earlier also counts."
+ },
+ "characters": {
+  "seiya": {
+   "card": "athena-v6-001",
+   "name": {
+    "pt": "Seiya de Pégaso",
+    "en": "Pegasus Seiya"
+   }
+  },
+  "shun": {
+   "card": "athena-v6-007",
+   "name": {
+    "pt": "Shun de Andrômeda",
+    "en": "Andromeda Shun"
+   }
+  },
+  "ikki": {
+   "card": "athena-v6-009",
+   "name": {
+    "pt": "Ikki de Fênix",
+    "en": "Phoenix Ikki"
+   }
+  },
+  "black": {
+   "card": "neutral-v6-451",
+   "name": {
+    "pt": "Cavaleiros Negros",
+    "en": "Black Saints"
+   }
+  },
+  "marin": {
+   "card": "athena-v6-021",
+   "chibi": true,
+   "name": {
+    "pt": "Marin, na lembrança de Seiya",
+    "en": "Marin, in Seiya's memory"
+   }
+  },
+  "narrator": {
+   "name": {
+    "pt": "Narração",
+    "en": "Narration"
+   }
+  }
+ },
+ "requires": [
+  "2-4"
+ ],
+ "next": "3-2",
+ "player": {
+  "character": "seiya",
+  "deck": "chronicle-3-1-seiya-shun"
+ },
+ "rival": {
+  "character": "black",
+  "deck": "chronicle-3-1-black-saints",
+  "ai": "normal",
+  "mechanical_god": "god-athena"
+ },
+ "arena": "olympus",
+ "music": null,
+ "victory": {
+  "type": "engine_or_survive",
+  "winner": "player",
+  "survive_turns": 6
+ },
+ "defeat": {
+  "draws_count_as": "defeat",
+  "retry": true
+ },
+ "reward": {
+  "enabled": true,
+  "coins": 250,
+  "boosters": 1,
+  "boss": false
+ },
+ "scenes": {
+  "intro": [
+   {
+    "art": "athena-v6-080",
+    "who": "narrator",
+    "line": "SCENE_1"
+   },
+   {
+    "art": "athena-v6-007",
+    "who": "shun",
+    "line": "SHUN_1"
+   },
+   {
+    "art": "athena-v6-009",
+    "who": "ikki",
+    "line": "IKKI_1"
+   },
+   {
+    "art": "neutral-v6-451",
+    "who": "narrator",
+    "line": "SCENE_2"
+   },
+   {
+    "art": "athena-v6-001",
+    "who": "seiya",
+    "line": "SEIYA_1"
+   }
+  ],
+  "prep": {
+   "who": "marin",
+   "line": "PREP_1",
+   "pose": "explain"
+  },
+  "win": [
+   {
+    "art": "athena-v6-009",
+    "who": "narrator",
+    "line": "WIN_1"
+   },
+   {
+    "art": "athena-v6-007",
+    "who": "shun",
+    "line": "WIN_2"
+   },
+   {
+    "art": "athena-v6-001",
+    "who": "seiya",
+    "line": "WIN_3"
+   }
+  ],
+  "lose": [
+   {
+    "art": "athena-v6-009",
+    "who": "ikki",
+    "line": "LOSE_1"
+   }
+  ]
+ },
+ "hints": [
+  {
+   "id": "HINT_BLACK",
+   "pose": "point",
+   "when": [
+    {
+     "event": "card_played",
+     "player": "B",
+     "card": "neutral-v6-454"
+    },
+    {
+     "event": "card_played",
+     "player": "B",
+     "card": "neutral-v6-451"
+    }
+   ]
+  },
+  {
+   "id": "HINT_HOLD",
+   "pose": "tip",
+   "when": [
+    {
+     "stall": 2
+    },
+    {
+     "event": "soul_lost",
+     "player": "A",
+     "atMost": {
+      "soul": 10
+     }
+    }
+   ]
+  }
+ ],
+ "decks": [
+  {
+   "id": "chronicle-3-1-seiya-shun",
+   "god": "god-athena",
+   "domain_id": "athena-v6-062",
+   "main_deck": [
+    {
+     "card_id": "athena-v6-001",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-002",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-007",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-008",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-046",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-053",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-054",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-052",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-061",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-040",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-043",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-041",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-457",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-494",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-491",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-497",
+     "quantity": 2
+    },
+    {
+     "card_id": "neutral-v6-489",
+     "quantity": 3
+    }
+   ],
+   "nome": "Seiya e Shun · Chronicles 3.1",
+   "emprestado": true
+  },
+  {
+   "id": "chronicle-3-1-black-saints",
+   "god": "god-athena",
+   "domain_id": "athena-v6-062",
+   "main_deck": [
+    {
+     "card_id": "neutral-v6-451",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-453",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-454",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-456",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-492",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-498",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-458",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-600",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-601",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-604",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-476",
+     "quantity": 2
+    },
+    {
+     "card_id": "neutral-v6-490",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-602",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-603",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-605",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-452",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-455",
+     "quantity": 3
+    }
+   ],
+   "nome": "Cavaleiros Negros · Chronicles 3.1",
+   "emprestado": true
+  }
+ ]
+}

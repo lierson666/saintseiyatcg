@@ -2,13 +2,14 @@
   "title": "",
   "subtitle": "Her Prayers Echo Through the Depths",
   "flavour": "",
+  "bonusPower": "",
+  "bonusResistance": "",
   "art": {
-    "src": "art/poseidon-v6-114-ref.jpg",
-    "w": 1488.0,
-    "x": 0.0,
-    "y": -276.72,
-    "zoom": 1,
-    "baseW": 1488.0,
-    "provisoria": true
+    "src": "art/poseidon-v6-114.png",
+    "w": 1725.075,
+    "x": -148.01594036697247,
+    "y": -64.83604010890792,
+    "zoom": 1.1,
+    "baseW": 1568.25
   }
 }

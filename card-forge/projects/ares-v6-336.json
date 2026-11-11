@@ -2,13 +2,14 @@
   "title": "",
   "subtitle": "Armor of the Crimson Inferno",
   "flavour": "\"The flames of Ethon burn within every plate of crimson steel.\"",
+  "bonusPower": "+2",
+  "bonusResistance": "+1",
   "art": {
-    "src": "art/ares-v6-336-ref.jpg",
-    "w": 1488.0,
-    "x": 0.0,
-    "y": -70.5,
-    "zoom": 1,
-    "baseW": 1488.0,
-    "provisoria": true
+    "src": "art/ares-v6-336.png",
+    "w": 1944.63,
+    "x": -224.89149082568804,
+    "y": -454.4713044538364,
+    "zoom": 1.24,
+    "baseW": 1568.25
   }
 }

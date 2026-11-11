@@ -1,0 +1,1553 @@
+{
+ "versao": 1,
+ "nome": "The Awakening of Cosmo",
+ "decks": {
+  "A": "rulebook2-athena-d171",
+  "B": "preview-poseidon-tide"
+ },
+ "gods": {
+  "A": "god-athena",
+  "B": "god-poseidon"
+ },
+ "preparo": {
+  "A": {
+   "mao": [
+    "A:040:1",
+    "A:027:1",
+    "A:040:2",
+    "A:001:1",
+    "A:034:1",
+    "A:053:1",
+    "A:043:1"
+   ],
+   "compras": [
+    "A:034:2",
+    "A:002:1",
+    "A:028:1",
+    "A:054:1",
+    "A:052:1"
+   ]
+  },
+  "B": {
+   "mao": [
+    "B:107:1",
+    "B:105:1",
+    "B:105:2",
+    "B:106:1",
+    "B:107:2",
+    "B:099:1",
+    "B:108:1"
+   ],
+   "compras": [
+    "B:103:1",
+    "B:111:1",
+    "B:111:2",
+    "B:103:2",
+    "B:108:2"
+   ]
+  }
+ },
+ "linha": [
+  {
+   "licao": "resource",
+   "a": {
+    "type": "base",
+    "key": "A",
+    "uid": "A:040:1"
+   }
+  },
+  {
+   "a": {
+    "type": "endTurn",
+    "key": "A"
+   }
+  },
+  {
+   "licao": "poseidon_responde",
+   "a": {
+    "type": "base",
+    "key": "B",
+    "uid": "B:105:1"
+   }
+  },
+  {
+   "a": {
+    "type": "play",
+    "key": "B",
+    "uid": "B:107:1"
+   }
+  },
+  {
+   "a": {
+    "type": "endTurn",
+    "key": "B"
+   }
+  },
+  {
+   "a": {
+    "type": "base",
+    "key": "A",
+    "uid": "A:040:2"
+   }
+  },
+  {
+   "licao": "first_devotee",
+   "a": {
+    "type": "play",
+    "key": "A",
+    "uid": "A:027:1"
+   }
+  },
+  {
+   "a": {
+    "type": "endTurn",
+    "key": "A"
+   }
+  },
+  {
+   "a": {
+    "type": "base",
+    "key": "B",
+    "uid": "B:105:2"
+   }
+  },
+  {
+   "a": {
+    "type": "endTurn",
+    "key": "B"
+   }
+  },
+  {
+   "a": {
+    "type": "base",
+    "key": "A",
+    "uid": "A:034:1"
+   }
+  },
+  {
+   "licao": "combat",
+   "a": {
+    "type": "strike",
+    "key": "A",
+    "uid": "A:027:1",
+    "choice": {
+     "target": "B:107:1"
+    }
+   }
+  },
+  {
+   "a": {
+    "type": "play",
+    "key": "A",
+    "uid": "A:001:1"
+   }
+  },
+  {
+   "a": {
+    "type": "endTurn",
+    "key": "A"
+   }
+  },
+  {
+   "a": {
+    "type": "base",
+    "key": "B",
+    "uid": "B:099:1"
+   }
+  },
+  {
+   "licao": "guardian_entra",
+   "a": {
+    "type": "play",
+    "key": "B",
+    "uid": "B:106:1"
+   }
+  },
+  {
+   "a": {
+    "type": "play",
+    "key": "B",
+    "uid": "B:107:2"
+   }
+  },
+  {
+   "a": {
+    "type": "endTurn",
+    "key": "B"
+   }
+  },
+  {
+   "a": {
+    "type": "base",
+    "key": "A",
+    "uid": "A:043:1"
+   }
+  },
+  {
+   "licao": "technique",
+   "a": {
+    "type": "play",
+    "key": "A",
+    "uid": "A:053:1",
+    "choice": {
+     "target": "A:001:1"
+    }
+   }
+  },
+  {
+   "licao": "guardian",
+   "a": {
+    "type": "strike",
+    "key": "A",
+    "uid": "A:001:1",
+    "choice": {
+     "target": "B:106:1"
+    }
+   }
+  },
+  {
+   "a": {
+    "type": "endTurn",
+    "key": "A"
+   }
+  },
+  {
+   "a": {
+    "type": "base",
+    "key": "B",
+    "uid": "B:103:1"
+   }
+  },
+  {
+   "a": {
+    "type": "play",
+    "key": "B",
+    "uid": "B:108:1"
+   }
+  },
+  {
+   "a": {
+    "type": "endTurn",
+    "key": "B"
+   }
+  },
+  {
+   "a": {
+    "type": "base",
+    "key": "A",
+    "uid": "A:034:2"
+   }
+  },
+  {
+   "licao": "equipment",
+   "a": {
+    "type": "play",
+    "key": "A",
+    "uid": "A:002:1",
+    "choice": {
+     "bearer": "A:001:1"
+    }
+   }
+  },
+  {
+   "a": {
+    "type": "play",
+    "key": "A",
+    "uid": "A:028:1"
+   }
+  },
+  {
+   "a": {
+    "type": "endTurn",
+    "key": "A"
+   }
+  },
+  {
+   "a": {
+    "type": "base",
+    "key": "B",
+    "uid": "B:111:1"
+   }
+  },
+  {
+   "a": {
+    "type": "strike",
+    "key": "B",
+    "uid": "B:108:1",
+    "choice": {
+     "target": "A:028:1"
+    }
+   },
+   "resposta": {
+    "licao": "combat_trick",
+    "a": {
+     "type": "play",
+     "key": "A",
+     "uid": "A:054:1",
+     "choice": {
+      "target": "A:028:1"
+     }
+    }
+   }
+  },
+  {
+   "a": {
+    "type": "endTurn",
+    "key": "B"
+   }
+  },
+  {
+   "licao": "moment",
+   "a": {
+    "type": "play",
+    "key": "A",
+    "uid": "A:052:1"
+   }
+  },
+  {
+   "licao": "divine",
+   "waterPrison": true,
+   "a": {
+    "type": "strike",
+    "key": "A",
+    "uid": "A:001:1",
+    "choice": {
+     "target": "god:B"
+    }
+   }
+  }
+ ],
+ "steps": [
+  {
+   "id": "T001_ARENA",
+   "phase": "guided",
+   "lesson": "arena",
+   "pose": "point",
+   "say": [
+    "ARENA"
+   ],
+   "focus": [
+    "god:B"
+   ],
+   "ai": "scripted",
+   "done": {
+    "next": true
+   },
+   "spot": true
+  },
+  {
+   "id": "T001_MY_GOD",
+   "phase": "guided",
+   "lesson": "arena",
+   "pose": "explain",
+   "say": [
+    "MY_GOD"
+   ],
+   "focus": [
+    "god:A"
+   ],
+   "ai": "scripted",
+   "done": {
+    "next": true
+   },
+   "spot": true
+  },
+  {
+   "id": "T001_CARD_OPEN",
+   "phase": "guided",
+   "lesson": "card",
+   "pose": "down",
+   "say": [
+    "CARD_OPEN"
+   ],
+   "focus": [
+    "hand:A:027:1"
+   ],
+   "ai": "scripted",
+   "done": {
+    "inspect": "A:027:1"
+   },
+   "requires": {
+    "hand": "A:027:1"
+   }
+  },
+  {
+   "id": "T001_CARD_NAME",
+   "phase": "guided",
+   "lesson": "card",
+   "pose": "explain",
+   "say": [
+    "CARD_NAME"
+   ],
+   "focus": [],
+   "ai": "scripted",
+   "done": {
+    "next": true
+   },
+   "hotspot": "name"
+  },
+  {
+   "id": "T001_CARD_FACTION",
+   "phase": "guided",
+   "lesson": "card",
+   "pose": "explain",
+   "say": [
+    "CARD_FACTION"
+   ],
+   "focus": [],
+   "ai": "scripted",
+   "done": {
+    "next": true
+   },
+   "hotspot": "faction"
+  },
+  {
+   "id": "T001_CARD_COST",
+   "phase": "guided",
+   "lesson": "card",
+   "pose": "explain",
+   "say": [
+    "CARD_COST"
+   ],
+   "focus": [],
+   "ai": "scripted",
+   "done": {
+    "next": true
+   },
+   "hotspot": "cost"
+  },
+  {
+   "id": "T001_CARD_TYPE",
+   "phase": "guided",
+   "lesson": "card",
+   "pose": "explain",
+   "say": [
+    "CARD_TYPE"
+   ],
+   "focus": [],
+   "ai": "scripted",
+   "done": {
+    "next": true
+   },
+   "hotspot": "type"
+  },
+  {
+   "id": "T001_CARD_ABILITIES",
+   "phase": "guided",
+   "lesson": "card",
+   "pose": "explain",
+   "say": [
+    "CARD_ABILITIES"
+   ],
+   "focus": [],
+   "ai": "scripted",
+   "done": {
+    "next": true
+   },
+   "hotspot": "abilities"
+  },
+  {
+   "id": "T001_CARD_STATS",
+   "phase": "guided",
+   "lesson": "card",
+   "pose": "explain",
+   "say": [
+    "CARD_ATK"
+   ],
+   "focus": [],
+   "ai": "scripted",
+   "done": {
+    "next": true
+   },
+   "hotspot": "atk"
+  },
+  {
+   "id": "T001_CARD_HP",
+   "phase": "guided",
+   "lesson": "card",
+   "pose": "explain",
+   "say": [
+    "CARD_HP"
+   ],
+   "focus": [],
+   "ai": "scripted",
+   "done": {
+    "next": true
+   },
+   "hotspot": "hp"
+  },
+  {
+   "id": "T001_RES_BASE",
+   "phase": "guided",
+   "lesson": "resource",
+   "pose": "point",
+   "say": [
+    "RES_BASE"
+   ],
+   "focus": [
+    "bank:base"
+   ],
+   "ai": "scripted",
+   "done": {
+    "next": true
+   },
+   "spot": true,
+   "closeCard": true
+  },
+  {
+   "id": "T001_RES_LATENT",
+   "phase": "guided",
+   "lesson": "resource",
+   "pose": "point",
+   "say": [
+    "RES_LATENT"
+   ],
+   "focus": [
+    "bank:latent"
+   ],
+   "ai": "scripted",
+   "done": {
+    "next": true
+   },
+   "spot": true
+  },
+  {
+   "id": "T001_BASE_1",
+   "phase": "guided",
+   "lesson": "resource",
+   "pose": "down",
+   "say": [
+    "BASE_1"
+   ],
+   "focus": [
+    "hand:A:040:1"
+   ],
+   "ai": "scripted",
+   "allow": [
+    {
+     "type": "base",
+     "uid": "A:040:1"
+    }
+   ],
+   "done": {
+    "event": "base_placed",
+    "player": "A",
+    "uid": "A:040:1"
+   }
+  },
+  {
+   "id": "T001_END_1",
+   "phase": "guided",
+   "lesson": "resource",
+   "pose": "tip",
+   "say": [
+    "END_1"
+   ],
+   "focus": [
+    "end"
+   ],
+   "ai": "scripted",
+   "allow": [
+    {
+     "type": "endTurn"
+    }
+   ],
+   "done": {
+    "event": "turn_start",
+    "player": "B"
+   }
+  },
+  {
+   "id": "T001_RIVAL_1",
+   "phase": "guided",
+   "lesson": "rival_turn",
+   "pose": "wait",
+   "say": [
+    "RIVAL_1"
+   ],
+   "focus": [],
+   "ai": "scripted",
+   "done": {
+    "event": "turn_start",
+    "player": "A"
+   }
+  },
+  {
+   "id": "T001_ROUND_2",
+   "phase": "guided",
+   "lesson": "turn_start",
+   "pose": "explain",
+   "say": [
+    "ROUND_2"
+   ],
+   "focus": [
+    "bank:latent"
+   ],
+   "ai": "scripted",
+   "done": {
+    "next": true
+   },
+   "spot": true
+  },
+  {
+   "id": "T001_BASE_2",
+   "phase": "guided",
+   "lesson": "cost",
+   "pose": "down",
+   "say": [
+    "BASE_2"
+   ],
+   "focus": [
+    "hand:A:040:2"
+   ],
+   "ai": "scripted",
+   "allow": [
+    {
+     "type": "base",
+     "uid": "A:040:2"
+    }
+   ],
+   "done": {
+    "event": "base_placed",
+    "player": "A",
+    "uid": "A:040:2"
+   }
+  },
+  {
+   "id": "T001_DEVOTEE",
+   "phase": "guided",
+   "lesson": "play_devotee",
+   "pose": "down",
+   "say": [
+    "DEVOTEE"
+   ],
+   "focus": [
+    "hand:A:027:1"
+   ],
+   "ai": "scripted",
+   "allow": [
+    {
+     "type": "play",
+     "uid": "A:027:1"
+    }
+   ],
+   "done": {
+    "event": "entered",
+    "uid": "A:027:1"
+   },
+   "requires": {
+    "hand": "A:027:1"
+   }
+  },
+  {
+   "id": "T001_NOT_READY",
+   "phase": "guided",
+   "lesson": "play_devotee",
+   "pose": "explain",
+   "say": [
+    "NOT_READY"
+   ],
+   "focus": [
+    "field:A:027:1"
+   ],
+   "ai": "scripted",
+   "done": {
+    "next": true
+   },
+   "spot": true
+  },
+  {
+   "id": "T001_END_2",
+   "phase": "guided",
+   "lesson": "play_devotee",
+   "pose": "tip",
+   "say": [
+    "END_2"
+   ],
+   "focus": [
+    "end"
+   ],
+   "ai": "scripted",
+   "allow": [
+    {
+     "type": "endTurn"
+    }
+   ],
+   "done": {
+    "event": "turn_start",
+    "player": "B"
+   }
+  },
+  {
+   "id": "T001_RIVAL_2",
+   "phase": "guided",
+   "lesson": "rival_turn",
+   "pose": "wait",
+   "say": [
+    "RIVAL_2"
+   ],
+   "focus": [],
+   "ai": "scripted",
+   "done": {
+    "event": "turn_start",
+    "player": "A"
+   }
+  },
+  {
+   "id": "T001_BASE_3",
+   "phase": "guided",
+   "lesson": "combat",
+   "pose": "down",
+   "say": [
+    "BASE_3"
+   ],
+   "focus": [
+    "hand:A:034:1"
+   ],
+   "ai": "scripted",
+   "allow": [
+    {
+     "type": "base",
+     "uid": "A:034:1"
+    }
+   ],
+   "done": {
+    "event": "base_placed",
+    "player": "A",
+    "uid": "A:034:1"
+   }
+  },
+  {
+   "id": "T001_COMPARE",
+   "phase": "guided",
+   "lesson": "combat",
+   "pose": "explain",
+   "say": [
+    "COMPARE"
+   ],
+   "focus": [
+    "field:A:027:1",
+    "field:B:107:1"
+   ],
+   "ai": "scripted",
+   "done": {
+    "next": true
+   },
+   "spot": true,
+   "requires": {
+    "field": [
+     "A:027:1",
+     "B:107:1"
+    ]
+   },
+   "fallback": "T001_SEIYA"
+  },
+  {
+   "id": "T001_STRIKE_1",
+   "phase": "guided",
+   "lesson": "combat",
+   "pose": "point",
+   "say": [
+    "STRIKE_1"
+   ],
+   "focus": [
+    "field:A:027:1"
+   ],
+   "ai": "scripted",
+   "allow": [
+    {
+     "type": "strike",
+     "uid": "A:027:1",
+     "target": "B:107:1"
+    }
+   ],
+   "done": {
+    "event": "strike_resolve",
+    "attacker": "A:027:1"
+   },
+   "aimFocus": "field:B:107:1",
+   "requires": {
+    "field": [
+     "A:027:1",
+     "B:107:1"
+    ]
+   },
+   "fallback": "T001_SEIYA"
+  },
+  {
+   "id": "T001_RESULT",
+   "phase": "guided",
+   "lesson": "combat",
+   "pose": "good",
+   "say": [
+    "RESULT"
+   ],
+   "focus": [
+    "tartarus:B"
+   ],
+   "ai": "scripted",
+   "done": {
+    "next": true
+   },
+   "spot": true
+  },
+  {
+   "id": "T001_SEIYA",
+   "phase": "guided",
+   "lesson": "combat",
+   "pose": "down",
+   "say": [
+    "SEIYA"
+   ],
+   "focus": [
+    "hand:A:001:1"
+   ],
+   "ai": "scripted",
+   "allow": [
+    {
+     "type": "play",
+     "uid": "A:001:1"
+    }
+   ],
+   "done": {
+    "event": "entered",
+    "uid": "A:001:1"
+   },
+   "requires": {
+    "hand": "A:001:1"
+   }
+  },
+  {
+   "id": "T001_END_3",
+   "phase": "guided",
+   "lesson": "combat",
+   "pose": "tip",
+   "say": [
+    "END_3"
+   ],
+   "focus": [
+    "end"
+   ],
+   "ai": "scripted",
+   "allow": [
+    {
+     "type": "endTurn"
+    }
+   ],
+   "done": {
+    "event": "turn_start",
+    "player": "B"
+   }
+  },
+  {
+   "id": "T001_RIVAL_3",
+   "phase": "guided",
+   "lesson": "rival_turn",
+   "pose": "wait",
+   "say": [
+    "RIVAL_3"
+   ],
+   "focus": [],
+   "ai": "scripted",
+   "done": {
+    "event": "turn_start",
+    "player": "A"
+   }
+  },
+  {
+   "id": "T001_GUARDIAN",
+   "phase": "guided",
+   "lesson": "guardian",
+   "pose": "wait",
+   "say": [
+    "GUARDIAN"
+   ],
+   "focus": [
+    "field:B:106:1"
+   ],
+   "ai": "scripted",
+   "done": {
+    "next": true
+   },
+   "spot": true,
+   "requires": {
+    "field": [
+     "B:106:1"
+    ]
+   },
+   "fallback": "T001_END_4"
+  },
+  {
+   "id": "T001_BASE_4",
+   "phase": "guided",
+   "lesson": "technique",
+   "pose": "down",
+   "say": [
+    "BASE_4"
+   ],
+   "focus": [
+    "hand:A:043:1"
+   ],
+   "ai": "scripted",
+   "allow": [
+    {
+     "type": "base",
+     "uid": "A:043:1"
+    }
+   ],
+   "done": {
+    "event": "base_placed",
+    "player": "A",
+    "uid": "A:043:1"
+   }
+  },
+  {
+   "id": "T001_TECHNIQUE",
+   "phase": "guided",
+   "lesson": "technique",
+   "pose": "point",
+   "say": [
+    "TECHNIQUE"
+   ],
+   "focus": [
+    "hand:A:053:1"
+   ],
+   "ai": "scripted",
+   "allow": [
+    {
+     "type": "play",
+     "uid": "A:053:1"
+    }
+   ],
+   "done": {
+    "event": "spell_resolved",
+    "uid": "A:053:1"
+   },
+   "requires": {
+    "hand": "A:053:1",
+    "field": [
+     "A:001:1"
+    ]
+   },
+   "fallback": "T001_END_4"
+  },
+  {
+   "id": "T001_GUARD_STRIKE",
+   "phase": "guided",
+   "lesson": "guardian",
+   "pose": "point",
+   "say": [
+    "GUARD_STRIKE"
+   ],
+   "focus": [
+    "field:A:001:1"
+   ],
+   "ai": "scripted",
+   "allow": [
+    {
+     "type": "strike",
+     "uid": "A:001:1",
+     "target": "B:106:1"
+    }
+   ],
+   "done": {
+    "event": "strike_resolve",
+    "attacker": "A:001:1"
+   },
+   "aimFocus": "field:B:106:1",
+   "requires": {
+    "field": [
+     "A:001:1",
+     "B:106:1"
+    ]
+   },
+   "fallback": "T001_END_4"
+  },
+  {
+   "id": "T001_DOMAIN_SEEN",
+   "phase": "guided",
+   "lesson": "domain",
+   "pose": "good",
+   "say": [
+    "DOMAIN_SEEN"
+   ],
+   "focus": [
+    "domain:A"
+   ],
+   "ai": "scripted",
+   "done": {
+    "next": true
+   },
+   "spot": true
+  },
+  {
+   "id": "T001_DOMAIN_WHAT",
+   "phase": "guided",
+   "lesson": "domain",
+   "pose": "explain",
+   "say": [
+    "DOMAIN_WHAT"
+   ],
+   "focus": [
+    "domain:A"
+   ],
+   "ai": "scripted",
+   "done": {
+    "next": true
+   },
+   "spot": true
+  },
+  {
+   "id": "T001_RESONANCE",
+   "phase": "guided",
+   "lesson": "domain",
+   "pose": "tip",
+   "say": [
+    "RESONANCE"
+   ],
+   "focus": [
+    "domain:A"
+   ],
+   "ai": "scripted",
+   "done": {
+    "next": true
+   },
+   "spot": true
+  },
+  {
+   "id": "T001_GOD_POWER",
+   "phase": "guided",
+   "lesson": "god",
+   "pose": "explain",
+   "say": [
+    "GOD_POWER"
+   ],
+   "focus": [
+    "god:A"
+   ],
+   "ai": "scripted",
+   "done": {
+    "next": true
+   },
+   "spot": true
+  },
+  {
+   "id": "T001_END_4",
+   "phase": "guided",
+   "lesson": "technique",
+   "pose": "tip",
+   "say": [
+    "END_4"
+   ],
+   "focus": [
+    "end"
+   ],
+   "ai": "scripted",
+   "allow": [
+    {
+     "type": "endTurn"
+    }
+   ],
+   "done": {
+    "event": "turn_start",
+    "player": "B"
+   }
+  },
+  {
+   "id": "T001_RIVAL_4",
+   "phase": "guided",
+   "lesson": "rival_turn",
+   "pose": "wait",
+   "say": [
+    "RIVAL_4"
+   ],
+   "focus": [],
+   "ai": "scripted",
+   "done": {
+    "event": "turn_start",
+    "player": "A"
+   }
+  },
+  {
+   "id": "T001_BASE_5",
+   "phase": "guided",
+   "lesson": "equipment",
+   "pose": "down",
+   "say": [
+    "BASE_5"
+   ],
+   "focus": [
+    "hand:A:034:2"
+   ],
+   "ai": "scripted",
+   "allow": [
+    {
+     "type": "base",
+     "uid": "A:034:2"
+    }
+   ],
+   "done": {
+    "event": "base_placed",
+    "player": "A",
+    "uid": "A:034:2"
+   }
+  },
+  {
+   "id": "T001_EQUIP",
+   "phase": "guided",
+   "lesson": "equipment",
+   "pose": "explain",
+   "say": [
+    "EQUIP"
+   ],
+   "focus": [
+    "hand:A:002:1"
+   ],
+   "ai": "scripted",
+   "allow": [
+    {
+     "type": "play",
+     "uid": "A:002:1"
+    }
+   ],
+   "done": {
+    "event": "entered",
+    "uid": "A:002:1"
+   },
+   "requires": {
+    "hand": "A:002:1",
+    "field": [
+     "A:001:1"
+    ]
+   },
+   "fallback": "T001_JABU"
+  },
+  {
+   "id": "T001_JABU",
+   "phase": "guided",
+   "lesson": "equipment",
+   "pose": "down",
+   "say": [
+    "JABU"
+   ],
+   "focus": [
+    "hand:A:028:1"
+   ],
+   "ai": "scripted",
+   "allow": [
+    {
+     "type": "play",
+     "uid": "A:028:1"
+    }
+   ],
+   "done": {
+    "event": "entered",
+    "uid": "A:028:1"
+   },
+   "requires": {
+    "hand": "A:028:1"
+   }
+  },
+  {
+   "id": "T001_END_5",
+   "phase": "guided",
+   "lesson": "equipment",
+   "pose": "tip",
+   "say": [
+    "END_5"
+   ],
+   "focus": [
+    "end"
+   ],
+   "ai": "scripted",
+   "allow": [
+    {
+     "type": "endTurn"
+    }
+   ],
+   "done": {
+    "event": "turn_start",
+    "player": "B"
+   }
+  },
+  {
+   "id": "T001_TRICK_WAIT",
+   "phase": "guided",
+   "lesson": "combat_trick",
+   "pose": "wait",
+   "say": [
+    "TRICK_WAIT"
+   ],
+   "focus": [],
+   "ai": "scripted",
+   "done": {
+    "event": "strike_declared",
+    "player": "B"
+   },
+   "abort": {
+    "event": "turn_start",
+    "player": "A"
+   },
+   "fallback": "T001_MOMENT"
+  },
+  {
+   "id": "T001_TRICK",
+   "phase": "guided",
+   "lesson": "combat_trick",
+   "pose": "point",
+   "say": [
+    "TRICK"
+   ],
+   "focus": [
+    "hand:A:054:1"
+   ],
+   "ai": "scripted",
+   "allow": [
+    {
+     "type": "play",
+     "uid": "A:054:1"
+    }
+   ],
+   "done": {
+    "event": "spell_resolved",
+    "uid": "A:054:1"
+   },
+   "blockPass": true,
+   "requires": {
+    "hand": "A:054:1"
+   },
+   "abort": {
+    "event": "strike_resolve",
+    "player": "B"
+   },
+   "fallback": "T001_RIVAL_5"
+  },
+  {
+   "id": "T001_TRICK_DONE",
+   "phase": "guided",
+   "lesson": "combat_trick",
+   "pose": "good",
+   "say": [
+    "TRICK_DONE"
+   ],
+   "focus": [],
+   "ai": "scripted",
+   "done": {
+    "event": "strike_resolve",
+    "player": "B"
+   }
+  },
+  {
+   "id": "T001_RIVAL_5",
+   "phase": "guided",
+   "lesson": "rival_turn",
+   "pose": "wait",
+   "say": [
+    "RIVAL_5"
+   ],
+   "focus": [],
+   "ai": "scripted",
+   "done": {
+    "event": "turn_start",
+    "player": "A"
+   }
+  },
+  {
+   "id": "T001_MOMENT",
+   "phase": "guided",
+   "lesson": "moment",
+   "pose": "point",
+   "say": [
+    "MOMENT"
+   ],
+   "focus": [
+    "hand:A:052:1"
+   ],
+   "ai": "scripted",
+   "allow": [
+    {
+     "type": "play",
+     "uid": "A:052:1"
+    }
+   ],
+   "done": {
+    "event": "spell_resolved",
+    "uid": "A:052:1"
+   },
+   "requires": {
+    "hand": "A:052:1"
+   },
+   "fallback": "T001_KEY_PIERCE"
+  },
+  {
+   "id": "T001_KEY_PIERCE",
+   "phase": "guided",
+   "lesson": "keywords",
+   "pose": "explain",
+   "say": [
+    "KEY_PIERCE"
+   ],
+   "focus": [],
+   "ai": "scripted",
+   "done": {
+    "next": true
+   }
+  },
+  {
+   "id": "T001_KEY_LONG",
+   "phase": "guided",
+   "lesson": "keywords",
+   "pose": "tip",
+   "say": [
+    "KEY_LONG"
+   ],
+   "focus": [],
+   "ai": "scripted",
+   "done": {
+    "next": true
+   }
+  },
+  {
+   "id": "T001_DIVINE",
+   "phase": "guided",
+   "lesson": "divine",
+   "pose": "point",
+   "say": [
+    "DIVINE_STRIKE"
+   ],
+   "focus": [
+    "field:A:001:1"
+   ],
+   "ai": "scripted",
+   "allow": [
+    {
+     "type": "strike",
+     "uid": "A:001:1",
+     "target": "god:B"
+    }
+   ],
+   "done": {
+    "event": "divine_power",
+    "ability": "WATER PRISON"
+   },
+   "aimFocus": "god:B",
+   "waterPrison": true,
+   "requires": {
+    "field": [
+     "A:001:1"
+    ]
+   },
+   "abort": {
+    "event": "strike_resolve",
+    "attacker": "A:001:1"
+   },
+   "fallback": "T001_EXAM_INTRO"
+  },
+  {
+   "id": "T001_DIVINE_SEEN",
+   "phase": "guided",
+   "lesson": "divine",
+   "pose": "wait",
+   "say": [
+    "DIVINE_SEEN"
+   ],
+   "focus": [
+    "god:B"
+   ],
+   "ai": "scripted",
+   "done": {
+    "next": true
+   },
+   "spot": true,
+   "waterPrison": true
+  },
+  {
+   "id": "T001_GOD_COMMAND",
+   "phase": "guided",
+   "lesson": "god",
+   "pose": "explain",
+   "say": [
+    "GOD_COMMAND"
+   ],
+   "focus": [
+    "god:A"
+   ],
+   "ai": "scripted",
+   "done": {
+    "next": true
+   },
+   "spot": true
+  },
+  {
+   "id": "T001_AWAKEN",
+   "phase": "guided",
+   "lesson": "god",
+   "pose": "tip",
+   "say": [
+    "AWAKEN"
+   ],
+   "focus": [
+    "god:A"
+   ],
+   "ai": "scripted",
+   "done": {
+    "next": true
+   },
+   "spot": true
+  },
+  {
+   "id": "T001_ULTIMATE",
+   "phase": "guided",
+   "lesson": "god",
+   "pose": "confident",
+   "say": [
+    "ULTIMATE"
+   ],
+   "focus": [
+    "god:A"
+   ],
+   "ai": "scripted",
+   "done": {
+    "next": true
+   },
+   "spot": true
+  },
+  {
+   "id": "T001_EXAM_INTRO",
+   "phase": "assisted",
+   "lesson": "exam",
+   "pose": "good",
+   "say": [
+    "EXAM_1",
+    "EXAM_2"
+   ],
+   "focus": [],
+   "ai": "assisted",
+   "done": {
+    "next": true
+   }
+  },
+  {
+   "id": "T001_EXAM",
+   "phase": "assisted",
+   "lesson": "exam",
+   "pose": "tip",
+   "say": [
+    "EXAM_GOALS"
+   ],
+   "focus": [],
+   "ai": "assisted",
+   "done": {
+    "exam": true
+   }
+  },
+  {
+   "id": "T001_PHASE_BOX",
+   "phase": "assisted",
+   "lesson": "free",
+   "pose": "point",
+   "say": [
+    "PHASE_BOX"
+   ],
+   "focus": [
+    "phase"
+   ],
+   "ai": "assisted",
+   "done": {
+    "next": true
+   },
+   "spot": true,
+   "revealPhase": true
+  },
+  {
+   "id": "T001_DECK_RULE",
+   "phase": "assisted",
+   "lesson": "free",
+   "pose": "explain",
+   "say": [
+    "DECK_RULE_1",
+    "DECK_RULE_2"
+   ],
+   "focus": [],
+   "ai": "assisted",
+   "done": {
+    "next": true
+   }
+  },
+  {
+   "id": "T001_FAREWELL",
+   "phase": "assisted",
+   "lesson": "free",
+   "pose": "good",
+   "say": [
+    "BYE_1",
+    "BYE_2",
+    "BYE_CLOCK",
+    "BYE_3"
+   ],
+   "focus": [],
+   "ai": "assisted",
+   "done": {
+    "next": true
+   },
+   "final": true,
+   "revealPhase": true
+  }
+ ],
+ "poses": {
+  "wave": "02_saudacao",
+  "point": "03_apontar_direita",
+  "down": "04_apontar_baixo",
+  "explain": "05_explicando",
+  "confident": "06_confianca",
+  "tip": "07_dica",
+  "wait": "08_pensando",
+  "good": "09_aprovacao",
+  "cheer": "10_vitoria",
+  "idle": "01_idle"
+ },
+ "hotspots": {
+  "name": [
+   25,
+   7,
+   50,
+   8.5
+  ],
+  "faction": [
+   78,
+   4.5,
+   18,
+   13
+  ],
+  "cost": [
+   6,
+   4.5,
+   18,
+   13
+  ],
+  "type": [
+   30,
+   57.5,
+   40,
+   5
+  ],
+  "abilities": [
+   15,
+   70,
+   70,
+   10
+  ],
+  "atk": [
+   3,
+   55,
+   14,
+   11
+  ],
+  "hp": [
+   83,
+   55,
+   14,
+   11
+  ]
+ }
+}

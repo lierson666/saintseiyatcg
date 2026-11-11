@@ -3,6 +3,14 @@
   "subtitle": "A Thousand Paths, None Leading Home",
   "flavour": "",
   "art": {
+    "src": "art/poseidon-v6-147.png",
+    "w": 1568.25,
+    "x": -40.125,
+    "y": 0.0,
+    "zoom": 1,
+    "baseW": 1568.25
+  },
+  "art_previous_reference": {
     "src": "art/poseidon-v6-147-ref.jpg",
     "w": 1488.0,
     "x": 0.0,

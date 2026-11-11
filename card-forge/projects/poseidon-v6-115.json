@@ -2,13 +2,14 @@
   "title": "",
   "subtitle": "Every Current Carries a Secret",
   "flavour": "",
+  "bonusPower": "",
+  "bonusResistance": "",
   "art": {
-    "src": "art/poseidon-v6-115-ref.jpg",
-    "w": 1488.0,
-    "x": 0.0,
-    "y": -104.41,
+    "src": "art/poseidon-v6-115.png",
+    "w": 1568.25,
+    "x": -40.125,
+    "y": 0,
     "zoom": 1,
-    "baseW": 1488.0,
-    "provisoria": true
+    "baseW": 1568.25
   }
 }

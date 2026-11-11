@@ -2,13 +2,14 @@
   "title": "",
   "subtitle": "The Reef Protects Its Own",
   "flavour": "",
+  "bonusPower": "+0",
+  "bonusResistance": "+1",
   "art": {
-    "src": "art/poseidon-v6-124-ref.jpg",
-    "w": 1488.0,
-    "x": 0.0,
-    "y": -76.57,
+    "src": "art/poseidon-v6-124.png",
+    "w": 1568.25,
+    "x": -30.5370412844037,
+    "y": -277.5091281290638,
     "zoom": 1,
-    "baseW": 1488.0,
-    "provisoria": true
+    "baseW": 1568.25
   }
 }

@@ -17,6 +17,14 @@ async function call(path, method = 'GET', body) {
 }
 export const loadEconomy = () => call('/api/economy').catch(() => null);
 
+// Wildcard (estilo MTG Arena, autor 07/11/2026): sai no lugar de uma carta do booster e vira qualquer carta da mesma raridade.
+const RARITY_PT = {Common: 'Common', Uncommon: 'Uncommon', Legendary: 'Legendary', Divine: 'Divine'};
+const isWild = id => String(id).startsWith('wildcard-');
+const wildRarity = id => Object.keys(RARITY_PT).find(r => `wildcard-${r.toLowerCase()}` === id);
+const wildFace = rarity => `<div class="ec-wild ec-wild--${rarity.toLowerCase()}"><b>Wildcard</b><small>${RARITY_PT[rarity]}</small><p>Trade it for any ${RARITY_PT[rarity]} card in the Collection.</p></div>`;
+const faceOf = (face, id, cls) => (isWild(id) ? wildFace(wildRarity(id)) : face(id, cls));
+export const redeemWildcard = (card, pay) => call('/api/wildcards/redeem', 'POST', {card, pay});
+
 // Quantas cópias o jogador pode pôr no deck (sem conta ou com acesso total: o limite normal).
 export const ownedLimit = (e, id, kind) => !e || e.full_access || kind === 'God' || kind === 'Domain' ? COPY_LIMIT : Math.min(COPY_LIMIT, e.collection[id] || 0);
 // Cartas do deck que faltam na coleção: [{card_id, have, need}].
@@ -124,14 +132,15 @@ export function storeScreen(e, art = () => null, me = null, view = {}) {
         <i class="ec-coin" aria-hidden="true"></i>${b.off ? `<s>${fmt(full)}</s>` : ''}${fmt(b.price)}</button></li>`; };
   // Abrir 1 ou 10 de uma vez; com menos de 10, "Open all (N)".
   const opens = e.boosters > 1 ? `<button class="ec-cta ec-cta--open" data-act="open-booster" data-count="${Math.min(10, e.boosters)}">${e.boosters >= 10 ? 'Open 10' : `Open all (${e.boosters})`}</button>` : '';
-  const odds = [['10', 'Common'], ['3', 'Uncommon'], ['1', 'Legendary or Divine']];
+  const odds = [['9', 'Common'], ['5', 'Uncommon'], ['1', 'Legendary or Divine']];
   const tab = TABS.some(([t]) => t === view.tab) && (view.tab === 'boosters' || e.cosmetics) ? view.tab : 'boosters';
   const boosters = `<article class="ec-feature">
       <div class="ec-feature__pack">${pack()}</div>
       <div class="ec-feature__info">
         <p class="ec-eyebrow">Booster · All Gods</p>
         <h2>Olympus</h2>
-        <ul class="ec-odds" aria-label="Each booster has 14 cards">${odds.map(([n, r]) => `<li><b>${n}</b>${r}</li>`).join('')}</ul>
+        <ul class="ec-odds" aria-label="Each booster has 15 cards">${odds.map(([n, r]) => `<li><b>${n}</b>${r}</li>`).join('')}</ul>
+        <p class="ec-hint ec-odds__extra">Always 15 cards. 1 in 10 boosters brings a second Legendary, and some bring a Wildcard.</p>
         <p class="ec-note">A Divine card replaces the Legendary in about 1 of 8 boosters. Copies beyond 3 turn into Cosmo Coins.</p>
         ${e.boosters ? `<div class="ec-actions"><button class="ec-cta" data-act="open-booster" data-count="1">Open 1</button>${opens}</div>` : ''}
         <ul class="ec-bundles" aria-label="Buy boosters">${bundles.map(bundle).join('')}</ul>
@@ -152,15 +161,27 @@ export function storeScreen(e, art = () => null, me = null, view = {}) {
 export function collectionScreen(e, list, face, filter = 'all', {bar = '', slot = 150} = {}) { // bar/slot: filtros do pool (lobby.js)
   if (!e) return `<section class="lb-page"><header class="lb-page__head"><h1>Collection</h1><p>Sign in to see your collection.</p></header></section>`;
   const owned = c => c.kind === 'Domain' || e.full_access ? COPY_LIMIT : e.collection[c.id] || 0;
+  const wild = e.wildcards || {}, wilds = Object.entries(wild).filter(([, n]) => n > 0);
+  // Botão Craft: carta do booster com menos de 3 cópias. Usa a wildcard da raridade; sem ela, mostra o preço em coins (docs/economia.md).
+  const price = c => e.prices?.craft?.[c.rarity];
+  const craft = c => {
+    if (e.full_access || c.kind === 'Domain' || owned(c) >= COPY_LIMIT || !RARITY_PT[c.rarity]) return '';
+    const attrs = `class="ec-craft" data-act="craft" data-id="${esc(c.id)}" data-rarity="${esc(c.rarity)}"`;
+    if (wild[c.rarity] > 0) return `<button ${attrs}>Craft</button>`;
+    if (!price(c)) return '';
+    const short = e.coins < price(c);
+    return `<button ${attrs} data-price="${price(c)}" ${short ? `disabled title="Not enough Cosmo Coins"` : ''} aria-label="Craft for ${fmt(price(c))} Cosmo Coins">Craft <i class="ec-coin" aria-hidden="true"></i>${fmt(price(c))}</button>`;
+  };
   const shown = list.filter(c => filter === 'all' || (filter === 'owned' ? owned(c) > 0 : owned(c) === 0));
   const have = list.filter(c => owned(c) > 0).length;
   const pill = (v, label) => `<button class="lb-pill ${filter === v ? 'is-active' : ''}" data-act="collection-filter" data-value="${v}">${label}</button>`;
   return `<section class="lb-page ec-collection">
     <header class="lb-page__head"><h1>Collection</h1><p>${have} of ${list.length} cards${e.full_access ? ' · full access' : ''}. Open boosters to get more.</p>
-      <div class="lb-pills">${pill('all', 'All')}${pill('owned', 'Owned')}${pill('missing', 'Missing')}</div></header>
+      <div class="lb-pills">${pill('all', 'All')}${pill('owned', 'Owned')}${pill('missing', 'Missing')}</div>
+      ${wilds.length ? `<ul class="ec-wallet-wild" aria-label="Your wildcards">${wilds.map(([r, n]) => `<li class="is-${r.toLowerCase()}"><b>${n}</b>${RARITY_PT[r]} Wildcard</li>`).join('')}</ul>` : ''}</header>
     ${bar}
     <div class="lb-grid ec-grid" style="--slot:${slot}px">${shown.map(c => `<div class="ec-card ${owned(c) ? '' : 'is-missing'}">${face(c.id)}
-      <i class="lb-slot__count">${c.kind === 'Domain' ? 'Domain' : `${owned(c)} / ${COPY_LIMIT}`}</i></div>`).join('') || '<p class="lb-empty">Nothing here.</p>'}</div>
+      <i class="lb-slot__count">${c.kind === 'Domain' ? 'Domain' : `${owned(c)} / ${COPY_LIMIT}`}</i>${craft(c)}</div>`).join('') || '<p class="lb-empty">Nothing here.</p>'}</div>
   </section>`;
 }
 
@@ -233,7 +254,7 @@ export async function openBooster(face, done, count = 1, open = 1) {
   const coins = r.cards.reduce((n, c) => n + c.coins, 0);
   if (r.packs?.length > 1) summary(dlg, r, face, coins);
   else dlg.innerHTML = `<div class="ec-open__cards">${r.cards.map((c, i) => `<button class="ec-flip is-${c.rarity.toLowerCase()} ${c.new ? 'is-new' : ''}" style="--i:${i}" data-i="${i}" data-id="${esc(c.id)}" aria-label="Reveal card ${i + 1}">
-      <span class="ec-flip__back"><img src="${LOGO}" alt=""></span><span class="ec-flip__front">${face(c.id)}
+      <span class="ec-flip__back"><img src="${LOGO}" alt=""></span><span class="ec-flip__front">${faceOf(face, c.id)}
       ${c.new ? '<b class="ec-tag ec-tag--new">New</b>' : ''}${c.coins ? `<b class="ec-tag ec-tag--coins">+${c.coins}</b>` : ''}</span></button>`).join('')}</div>
     <footer class="ec-open__foot"><button class="kv-ghost" data-reveal>Reveal all</button>
       ${coins ? `<p class="kv-status ec-open__coins" hidden>Extra copies: +${fmt(coins)} Cosmo Coins</p>` : ''}
@@ -246,7 +267,7 @@ export async function openBooster(face, done, count = 1, open = 1) {
     ev.preventDefault();
     const b = ev.target.closest('.ec-flip.is-open, .ec-sum__card');
     if (!zoom.hidden || !b) return unzoom();
-    zoom.innerHTML = face(b.dataset.id, 'lb-card--big');
+    zoom.innerHTML = faceOf(face, b.dataset.id, 'lb-card--big');
     zoom.hidden = false;
   });
   dlg.addEventListener('cancel', ev => { if (!zoom.hidden) { ev.preventDefault(); unzoom(); } });
@@ -318,7 +339,7 @@ function summary(dlg, r, face, coins) {
   const fresh = list.filter(c => c.new).length;
   dlg.innerHTML = `<header class="ec-sum__head"><h2>${r.packs.length} boosters opened</h2>
       <p>${r.cards.length} cards · ${fresh} new${coins ? ` · +${fmt(coins)} Cosmo Coins from extra copies` : ''}</p></header>
-    <div class="ec-sum">${list.map((c, i) => `<div class="ec-sum__card is-${c.rarity.toLowerCase()}" style="--i:${i}" data-id="${esc(c.id)}">${face(c.id)}
+    <div class="ec-sum">${list.map((c, i) => `<div class="ec-sum__card is-${c.rarity.toLowerCase()}" style="--i:${i}" data-id="${esc(c.id)}">${faceOf(face, c.id)}
       ${c.n > 1 ? `<b class="ec-tag ec-tag--count">×${c.n}</b>` : ''}${c.new ? '<b class="ec-tag ec-tag--new">New</b>' : ''}</div>`).join('')}</div>
     <footer class="ec-open__foot"><p class="kv-status">Right-click a card to see it big.</p><button class="kv-button is-gold" data-close>Done</button></footer>
     <div class="ec-zoom" hidden></div>`;

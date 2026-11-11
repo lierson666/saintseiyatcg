@@ -5,9 +5,12 @@ import {loadCanon} from '../shared/canon-cards.js';
 import {printedKind} from '../shared/rules-policy.js';
 import {addPreviewCards} from '../shared/preview-cards.js';
 import {canonIndex, validateDeck, colorErrors, DECK_SIZE, SPLASH_LIMIT} from '../shared/deck-v3.js';
-import {loadTelas, mountTelas} from './telas-editor.js?v=20261107-deus1';
+import {loadTelas, mountTelas} from './telas-editor.js?v=20261111-forge2';
 import {mountAnimacoes} from './animacoes.js?v=12';
 import {mountArenaForge} from './arena-forge.js?v=20261107-af5';
+import {mountChroniclesForge} from './chronicles-forge.js?v=20261111-cf3';
+import {mountAchievements} from './achievements-forge.js?v=20261111-ach2';
+import {mountNexus} from './nexus.js?v=20261111-nx3';
 import {EDITIONS, editionOf} from '../shared/editions.js?v=20261102-1';
 
 const $ = s => document.querySelector(s);
@@ -18,9 +21,13 @@ const PAGES = {
   visao: ['Visão geral', 'Cosmo System, sob seu controle.'],
   cartas: ['Cartas · Card Forge', 'Cada carta, uma constelação.'],
   decks: ['Decks iniciais', 'Os decks prontos do jogo.'],
-  telas: ['Telas e som', 'Telas, sons, músicas e animações do jogo.'],
+  hud: ['HUD Forge', 'Home, fundos, cores, textos e duelo.'],
+  som: ['Sound Forge', 'Músicas e sons do jogo.'],
   animacoes: ['Animações', 'Efeitos dos golpes e das habilidades.'],
   arenas: ['Arena Forge', 'O palco 3D de cada partida.'],
+  chronicles: ['Cosmo Chronicles Forge', 'O modo história, cena por cena.'],
+  conquistas: ['Achievements Forge', 'Conquistas e títulos, de Common a Divine.'],
+  nexus: ['Nexus', 'O blog do Cosmo Hub, do rascunho ao banner da home.'],
   regras: ['Livro de regras', 'A fonte da verdade.'],
 };
 let forge = [], cards, decks = [], status = null, rules = null;
@@ -144,15 +151,19 @@ async function rulesPage() {
 
 async function render() {
   const [route, editionCode] = location.hash.slice(1).split('/');
+  if (route === 'telas') return location.replace('#hud'); // "Telas e som" virou HUD Forge e Sound Forge (11/11/2026)
   const id = PAGES[route] ? route : 'visao';
   const edition = id === 'cartas' && EDITIONS.find(e => e.code === decodeURIComponent(editionCode || '')) || null;
   openEdition(edition);
   $('#breadcrumb').textContent = edition ? `${PAGES[id][0]} / ${edition.name}` : PAGES[id][0];
   $('#page-title').textContent = id === 'cartas' && !edition ? 'Qual edição você vai abrir?' : PAGES[id][1];
   for (const a of document.querySelectorAll('.sidebar nav a')) a.toggleAttribute('aria-current', a.hash === '#' + id);
-  if (id === 'telas') { await loadTelas(api); return mountTelas($('#content'), {api, notice}); }
+  if (id === 'hud' || id === 'som') { await loadTelas(api); return mountTelas($('#content'), {api, notice, area: id}); }
   if (id === 'animacoes') return mountAnimacoes($('#content'), {notice, api});
   if (id === 'arenas') return mountArenaForge($('#content'), {notice, api});
+  if (id === 'chronicles') return mountChroniclesForge($('#content'), {notice, api});
+  if (id === 'conquistas') return mountAchievements($('#content'), {notice, api});
+  if (id === 'nexus') return mountNexus($('#content'), {notice});
   $('#content').innerHTML = id === 'cartas' ? (edition ? cardsPage() : editionsPage()) : id === 'decks' ? decksPage() : id === 'regras' ? await rulesPage() : overview();
   if (edition) $('#card-list').innerHTML = cardList(); // contador só existe depois do HTML
 }

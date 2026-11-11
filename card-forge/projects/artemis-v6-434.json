@@ -2,21 +2,14 @@
   "title": "",
   "subtitle": "Armor of the Unbound Angel",
   "flavour": "\"It does not shine to be seen. It shines to protect.\"",
+  "bonusPower": "+3",
+  "bonusResistance": "+3",
   "art": {
-    "src": "art/artemis-v6-434-ref.jpg",
-    "w": 1608.13,
-    "x": -60.07,
-    "y": 0.0,
-    "zoom": 1,
-    "baseW": 1608.13,
-    "provisoria": true,
-    "nota_provisoria": "Arte provisória da carta anterior; não representa o novo personagem. Substituir pela arte aprovada (docs/artemis-v2-art-direction.md)."
-  },
-  "identidade": {
-    "versao": "artemis-v2.0",
-    "nome_anterior": "PRIMAL GUARDIAN ARMOR",
-    "continuidade": "Tenkai-hen Josō Overture (2004)",
-    "perfil_arte": "celestial_glory",
-    "arte_representa_personagem": false
+    "src": "art/artemis-v6-434.png",
+    "w": 1834.8525,
+    "x": -170.79196100917432,
+    "y": -374.2442195627434,
+    "zoom": 1.17,
+    "baseW": 1568.25
   }
 }

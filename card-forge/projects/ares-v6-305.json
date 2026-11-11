@@ -2,13 +2,14 @@
   "title": "",
   "subtitle": "No Retreat, No Mercy",
   "flavour": "\"Every thrust brings me closer to victory, even if it brings me closer to death.\"",
+  "bonusPower": "",
+  "bonusResistance": "",
   "art": {
-    "src": "art/ares-v6-305-ref.jpg",
-    "w": 1488.0,
-    "x": 0.0,
-    "y": -276.72,
+    "src": "art/ares-v6-305.png",
+    "w": 1568.25,
+    "x": -70.58463302752295,
+    "y": -192.16500731469444,
     "zoom": 1,
-    "baseW": 1488.0,
-    "provisoria": true
+    "baseW": 1568.25
   }
 }

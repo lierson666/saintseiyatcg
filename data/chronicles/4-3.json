@@ -1,0 +1,312 @@
+{
+ "nota": "Missão 4.3 do Cosmo Chronicles (CONTEXT/cosmo-chronicles-saga-01.md, 11/11/2026). Regras normais; só vencer. Cavaleiros Negros com Athena só mecânica (decisão do autor, 11/11/2026). Simulação (rival IA hard, 100 partidas por linha, 0 erros): jogador vence 41,0% (IA easy) e 44,0% (IA normal); mediana de 17–18 rodadas.",
+ "id": "4-3",
+ "saga": "saga-01",
+ "chapter": 4,
+ "order": 3,
+ "title": {
+  "pt": "Andrômeda Negra",
+  "en": "Black Andromeda"
+ },
+ "description": {
+  "pt": "Shun precisa lutar de verdade para chegar ao irmão.",
+  "en": "Shun must truly fight to reach his brother."
+ },
+ "level": {
+  "pt": "Avançado",
+  "en": "Advanced"
+ },
+ "duration": {
+  "pt": "12–18 minutos",
+  "en": "12–18 minutes"
+ },
+ "characters": {
+  "shun": {
+   "card": "athena-v6-007",
+   "name": {
+    "pt": "Shun de Andrômeda",
+    "en": "Andromeda Shun"
+   }
+  },
+  "bandro": {
+   "card": "neutral-v6-454",
+   "name": {
+    "pt": "Andrômeda Negra",
+    "en": "Black Andromeda"
+   }
+  },
+  "seiya": {
+   "card": "athena-v6-001",
+   "name": {
+    "pt": "Seiya de Pégaso",
+    "en": "Pegasus Seiya"
+   }
+  },
+  "narrator": {
+   "name": {
+    "pt": "Narração",
+    "en": "Narration"
+   }
+  }
+ },
+ "requires": [
+  "4-2"
+ ],
+ "next": "4-4",
+ "player": {
+  "character": "shun",
+  "deck": "chronicle-4-3-shun"
+ },
+ "rival": {
+  "character": "bandro",
+  "deck": "chronicle-4-3-bandro",
+  "ai": "hard",
+  "mechanical_god": "god-athena"
+ },
+ "arena": "olympus",
+ "music": null,
+ "victory": {
+  "type": "engine",
+  "winner": "player"
+ },
+ "defeat": {
+  "draws_count_as": "defeat",
+  "retry": true
+ },
+ "reward": {
+  "enabled": true,
+  "coins": 250,
+  "boosters": 1,
+  "boss": false
+ },
+ "scenes": {
+  "intro": [
+   {
+    "art": "neutral-v6-454",
+    "who": "narrator",
+    "line": "SCENE_1"
+   },
+   {
+    "art": "neutral-v6-454",
+    "who": "bandro",
+    "line": "RIVAL_1"
+   },
+   {
+    "art": "athena-v6-007",
+    "who": "shun",
+    "line": "HERO_1"
+   }
+  ],
+  "prep": {
+   "who": "seiya",
+   "line": "PREP_1"
+  },
+  "win": [
+   {
+    "art": "athena-v6-008",
+    "who": "narrator",
+    "line": "WIN_1"
+   },
+   {
+    "art": "neutral-v6-454",
+    "who": "bandro",
+    "line": "WIN_2"
+   },
+   {
+    "art": "athena-v6-007",
+    "who": "shun",
+    "line": "WIN_3"
+   }
+  ],
+  "lose": [
+   {
+    "art": "neutral-v6-454",
+    "who": "bandro",
+    "line": "LOSE_1"
+   }
+  ]
+ },
+ "hints": [
+  {
+   "id": "HINT_KEY",
+   "when": [
+    {
+     "event": "card_played",
+     "player": "B",
+     "card": "neutral-v6-454"
+    }
+   ]
+  },
+  {
+   "id": "HINT_HOLD",
+   "when": [
+    {
+     "stall": 2
+    },
+    {
+     "event": "soul_lost",
+     "player": "A",
+     "atMost": {
+      "soul": 8
+     }
+    }
+   ]
+  }
+ ],
+ "decks": [
+  {
+   "id": "chronicle-4-3-shun",
+   "god": "god-athena",
+   "domain_id": "athena-v6-062",
+   "main_deck": [
+    {
+     "card_id": "athena-v6-007",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-008",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-046",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-053",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-054",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-052",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-061",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-040",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-043",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-041",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-457",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-490",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-494",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-491",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-497",
+     "quantity": 2
+    },
+    {
+     "card_id": "neutral-v6-489",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-462",
+     "quantity": 3
+    }
+   ],
+   "nome": "Shun · Chronicles 4.3",
+   "emprestado": true
+  },
+  {
+   "id": "chronicle-4-3-bandro",
+   "god": "god-athena",
+   "domain_id": "athena-v6-062",
+   "main_deck": [
+    {
+     "card_id": "athena-v6-008",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-046",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-053",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-054",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-052",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-061",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-040",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-043",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-041",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-457",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-490",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-494",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-491",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-497",
+     "quantity": 2
+    },
+    {
+     "card_id": "neutral-v6-489",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-462",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-454",
+     "quantity": 3
+    }
+   ],
+   "nome": "Black Andromeda · Chronicles 4.3",
+   "emprestado": true
+  }
+ ]
+}

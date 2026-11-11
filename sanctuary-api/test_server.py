@@ -223,6 +223,8 @@ class Api(unittest.TestCase):
         results['v'] = {'winner': 'B', 'reason': 'soul'}
         msgs = self.call('GET', '/api/chat/Aiolia_H', cookie=a)[1]['messages']
         self.assertEqual((msgs[-1]['kind'], msgs[-1]['body']), ('result', '🏆 Aiolia_H won the duel.'))
+        self.assertEqual([self.call('GET', '/api/rank', cookie=c)[1]['duel_coins_today'] for c in (b, a)], [250, 0])  # só quem venceu ganha, e uma vez
+        self.assertEqual(self.call('GET', '/api/rank', cookie=b)[1]['duel_coins_today'], 250)
         self.assertEqual(self.call('POST', f"/api/challenges/{ch['id']}/decline", cookie=b)[0], 409)
         self.call('GET', '/api/chat/Aiolia_H', cookie=a)  # reler o chat não duplica o duelo
         # perfil: contagem única, adversário, God e data
@@ -282,7 +284,18 @@ class Api(unittest.TestCase):
         p = self.call('GET', '/api/profile/Mu_Rank', cookie=c)[1]
         self.assertEqual(p['rank']['tier'], 'Steel')
         done = {a['id'] for a in p['achievements'] if a['done']}
-        self.assertEqual(done, {'ai-1', 'ai-10'})  # 10 vitórias com XP contra a IA (a 11ª bateu no teto e não conta)
+        self.assertEqual(done, {'ach-003'})  # Achievements V1.0: vitória contra a IA (só as 10 que deram XP contam)
+        self.assertNotIn('value', p['achievements'][0])  # perfil de outro jogador não mostra contagens
+
+    def test_premio_por_vitoria_online(self):
+        uid = server.db.execute("insert into users (email, password_hash, display_name, created_at) values ('win@example.com', 'x', 'Win', 1)").lastrowid
+        for match in range(7):
+            server.pay_duel_win(uid, match)
+        self.assertEqual(tuple(server.duel_wins_paid(uid)), (5, 650))  # 250 + 4 x 100, e para aí no dia
+        server.db.execute("update coin_ledger set created_at = created_at - 86400 where user_id = ?", (uid,))
+        server.pay_duel_win(uid, 99)
+        self.assertEqual(tuple(server.duel_wins_paid(uid)), (1, 250))  # dia novo volta aos 250
+        self.assertEqual(server.coins_of(uid), 900)
 
     def test_economia(self):
         reg = lambda email, user: self.call('POST', '/api/auth/register', {'email': email, 'name': user + ' Name', 'username': user, 'country': 'BR', 'password': 'x' * 12, 'accept_terms': True})[2]
@@ -292,13 +305,13 @@ class Api(unittest.TestCase):
         c, adm = reg('econ@example.com', 'Seiya_Econ'), reg('econ-adm@example.com', 'Saga_Adm')
         self.assertEqual(self.call('GET', '/api/economy')[0], 401)
         e = self.call('GET', '/api/economy', cookie=c)[1]
-        self.assertEqual((e['coins'], e['boosters'], e['full_access'], sum(e['collection'].values())), (0, 3, False, 300))  # boas-vindas
+        self.assertEqual((e['coins'], e['boosters'], e['full_access'], sum(e['collection'].values())), (0, 3, False, 250))  # boas-vindas: 5 starters de 50
         self.assertEqual(self.call('GET', '/api/economy', cookie=c)[1]['boosters'], 3)  # boas-vindas uma vez só
         self.assertEqual(self.call('POST', '/api/store/buy', {'item': 'booster'}, cookie=c)[0], 400)  # sem coins
         st, o, _, _ = self.call('POST', '/api/boosters/open', cookie=c)
         rar = [x['rarity'] for x in o['cards']]
-        self.assertEqual((st, len(rar), rar.count('Common'), rar.count('Uncommon'), o['boosters']), (200, 14, 10, 3, 2))
-        self.assertIn(rar[-1], ('Legendary', 'Divine'))
+        self.assertEqual((st, len(rar), o['boosters']), (200, 15, 2))  # 15 cartas sempre, wildcard incluída
+        self.assertEqual(sum(o['wildcards'].values()), sum(1 for x in o['cards'] if x.get('wildcard')))
         self.assertTrue(all(n <= 3 for n in o['collection'].values()))
         self.assertEqual(o['coins'], sum(x['coins'] for x in o['cards']))  # repetidas acima de 3 viram coins
         # Star Hill: dar coins exige motivo; acesso total; boosters
@@ -319,10 +332,29 @@ class Api(unittest.TestCase):
         self.assertEqual((before - b['coins'], b['boosters']), (20000, 26))
         self.assertEqual(self.call('POST', '/api/boosters/open', {'count': 11}, cookie=c)[0], 400)
         o = self.call('POST', '/api/boosters/open', {'count': 10}, cookie=c)[1]
-        self.assertEqual((len(o['packs']), len(o['cards']), o['boosters']), (10, 140, 16))
+        self.assertEqual((len(o['packs']), len(o['cards']), o['boosters']), (10, 150, 16))
+        self.assertTrue(all(len(p) == 15 for p in o['packs']))
         self.call('POST', '/api/admin/users/Seiya_Econ/economy', {'boosters': -14}, cookie=adm)
         o = self.call('POST', '/api/boosters/open', {'count': 10}, cookie=c)[1]  # "Open all (2)"
         self.assertEqual((len(o['packs']), o['boosters']), (2, 0))
+        # wildcard: troca por carta da mesma raridade, só com wildcard e até 3 cópias
+        self.call('POST', '/api/admin/users/Seiya_Econ/economy', {'wildcards': {'Legendary': 1}}, cookie=adm)
+        leg = next(cid for cid, r in server.RARITY.items() if r == 'Legendary' and o['collection'].get(cid, 0) < 2)
+        e0 = self.call('GET', '/api/economy', cookie=c)[1]
+        have, wild, before = e0['collection'].get(leg, 0), e0['wildcards']['Legendary'], e0['coins']  # o booster também pode ter dado wildcard
+        st, w, _, _ = self.call('POST', '/api/wildcards/redeem', {'card': leg}, cookie=c)
+        self.assertEqual((st, w['collection'][leg], w['wildcards']['Legendary']), (200, have + 1, wild - 1))
+        # criar em coins (Legendary 1750) mesmo tendo wildcard; sem coins ou sem wildcard, recusa
+        self.assertEqual(w['prices']['craft'], {'Common': 15, 'Uncommon': 250, 'Legendary': 1750, 'Divine': 2500})
+        self.call('POST', '/api/admin/users/Seiya_Econ/economy', {'coins': 1750, 'reason': 'test', 'wildcards': {'Legendary': 1}}, cookie=adm)
+        st, w, _, _ = self.call('POST', '/api/wildcards/redeem', {'card': leg, 'pay': 'coins'}, cookie=c)
+        self.assertEqual((st, w['collection'][leg], w['coins'], w['wildcards']['Legendary']), (200, have + 2, before, wild))
+        self.call('POST', '/api/admin/users/Seiya_Econ/economy', {'coins': -w['coins'], 'reason': 'test', 'wildcards': {'Legendary': -wild}}, cookie=adm)
+        poor = next(cid for cid, r in server.RARITY.items() if r == 'Legendary' and cid != leg and w['collection'].get(cid, 0) < 3)
+        self.assertEqual(self.call('POST', '/api/wildcards/redeem', {'card': poor, 'pay': 'wildcard'}, cookie=c)[0], 400)  # sem wildcard
+        self.assertEqual(self.call('POST', '/api/wildcards/redeem', {'card': poor}, cookie=c)[0], 400)  # sem wildcard nem coins
+        self.call('POST', '/api/admin/users/Seiya_Econ/economy', {'coins': before, 'reason': 'test'}, cookie=adm)
+        self.assertEqual(self.call('POST', '/api/wildcards/redeem', {'card': 'god-athena'}, cookie=c)[0], 400)  # fora do booster
         # cosméticos: avatar e sleeve por personagem, set com -20%; usar só o que tem
         cos = {i['id']: i for g in o['cosmetics'] for i in g['items']}
         self.assertEqual((cos['god-hades']['avatar']['price'], cos['god-hades']['sleeve']['price'], cos['athena-v6-001']['set']), (0, 3000, 1600))
@@ -352,12 +384,37 @@ class Api(unittest.TestCase):
         self.assertEqual(self.call('PATCH', '/api/me', {'coin': 'athena-v6-001'}, cookie=c)[1]['coin'], 'athena-v6-001')
         self.assertEqual(self.call('GET', '/api/profile/Seiya_Econ', cookie=c)[1]['coin'], 'athena-v6-001')
         self.assertEqual(self.call('GET', '/api/profile/Saga_Adm', cookie=c)[0], 200)
+        saved = self.call('PATCH', '/api/me', {'onboarding_cosmo': {'seen': True, 'last': 'ares', 'tried': ['ares', 'zeus'], 'x': 1}}, cookie=c)[1]['onboarding_cosmo']
+        self.assertEqual(saved, {'seen': True, 'last': 'ares', 'tried': ['ares']})
+        # Cosmo Chronicles: só missão conhecida, e o progresso nunca encolhe
+        self.assertEqual(self.call('GET', '/api/me', cookie=c)[1]['chronicles'], {})
+        self.assertEqual(self.call('PATCH', '/api/me', {'chronicles': {'completed': ['9-9', 'x']}}, cookie=c)[1]['chronicles'], {'completed': []})
+        self.assertEqual(self.call('PATCH', '/api/me', {'chronicles': {'completed': ['1-2']}}, cookie=c)[1]['chronicles'], {'completed': ['1-2']})
+        self.assertEqual(self.call('PATCH', '/api/me', {'chronicles': {'completed': []}}, cookie=c)[1]['chronicles'], {'completed': ['1-2']})
+        # prêmio do Chronicles: 1ª vitória paga 250 coins + booster (chefe 3), uma vez só
+        e0 = self.call('GET', '/api/economy', cookie=c)[1]
+        r = self.call('PATCH', '/api/me', {'chronicles': {'completed': ['1-2', '1-1']}}, cookie=c)[1]
+        self.assertEqual(r['chronicle_rewards'], [{'mission': '1-1', 'coins': 250, 'boosters': 1}])
+        self.assertNotIn('chronicle_rewards', self.call('PATCH', '/api/me', {'chronicles': {'completed': ['1-1']}}, cookie=c)[1])
+        e1 = self.call('GET', '/api/economy', cookie=c)[1]
+        self.assertEqual((e1['coins'] - e0['coins'], e1['boosters'] - e0['boosters']), (250, 1))
+        self.assertEqual(self.call('PATCH', '/api/me', {'chronicles': {'completed': ['2-3']}}, cookie=c)[1]['chronicle_rewards'], [{'mission': '2-3', 'coins': 250, 'boosters': 3}])
         # duelo online: deck com carta que não tem é recusado; acesso total libera
         rare = next(cid for cid in server.CATALOG['booster']['Divine'] if cid not in server.CATALOG['starter'])
         with server.lock:
             other = server.db.execute("select id from users where username = 'saga_adm'").fetchone()[0]
             self.assertEqual(server.missing_cards(other, {'main_deck': [{'card_id': rare, 'quantity': 3}]}), [rare])
             self.assertEqual(server.missing_cards(other, {'main_deck': [{'card_id': 'athena-v6-001', 'quantity': 3}]}), [])
+        # coleção inicial nova: completa o que falta uma vez, sem tirar nem somar cópia
+        with server.lock:
+            one, more = list(server.CATALOG['starter'])[:2]
+            q = lambda cid: server.db.execute('select qty from collection where user_id = ? and card_id = ?', (other, cid)).fetchone()[0]
+            server.db.execute("delete from coin_ledger where user_id = ? and reason = ?", (other, server.STARTER_GRANT))
+            server.db.execute('update collection set qty = 0 where user_id = ? and card_id = ?', (other, one))
+            server.db.execute('update collection set qty = 9 where user_id = ? and card_id = ?', (other, more))
+            packs = server.item_count(other, server.BOOSTER)
+            server.welcome(other); server.welcome(other)
+            self.assertEqual((q(one), q(more), server.item_count(other, server.BOOSTER)), (server.CATALOG['starter'][one], 9, packs))
         # mil pacotes: Divine perto de 1 em 8, nunca God nem Domain
         uid = server.db.execute("select id from users where username = 'seiya_econ'").fetchone()[0]
         with server.lock:

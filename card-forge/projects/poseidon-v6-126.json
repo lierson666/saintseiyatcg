@@ -3,6 +3,14 @@
   "subtitle": "No Prison Is Deeper Than the Sea",
   "flavour": "",
   "art": {
+    "src": "art/poseidon-v6-126.png",
+    "w": 1568.25,
+    "x": -40.125,
+    "y": 0.0,
+    "zoom": 1,
+    "baseW": 1568.25
+  },
+  "art_previous_reference": {
     "src": "art/poseidon-v6-126-ref.jpg",
     "w": 1518.88,
     "x": -15.44,

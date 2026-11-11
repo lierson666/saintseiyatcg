@@ -2,13 +2,14 @@
   "title": "",
   "subtitle": "The Face of War",
   "flavour": "\"Behind the iron mask, only the desire for blood remains.\"",
+  "bonusPower": "+1",
+  "bonusResistance": "",
   "art": {
-    "src": "art/ares-v6-315-ref.jpg",
-    "w": 1488.0,
-    "x": 0.0,
-    "y": -277.31,
-    "zoom": 1,
-    "baseW": 1488.0,
-    "provisoria": true
+    "src": "art/ares-v6-315.png",
+    "w": 1944.6299999999999,
+    "x": -232.04779816513758,
+    "y": -479.1239123455788,
+    "zoom": 1.24,
+    "baseW": 1568.25
   }
 }

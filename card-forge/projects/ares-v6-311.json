@@ -2,13 +2,14 @@
   "title": "",
   "subtitle": "Bound by Blood, Forged for War",
   "flavour": "\"My blood belongs to Ares. My enemies shall pay the rest.\"",
+  "bonusPower": "",
+  "bonusResistance": "",
   "art": {
-    "src": "art/ares-v6-311-ref.jpg",
-    "w": 1488.0,
-    "x": 0.0,
-    "y": -275.21,
+    "src": "art/ares-v6-311.png",
+    "w": 1562.1240234375,
+    "x": -37.06201171875,
+    "y": 0,
     "zoom": 1,
-    "baseW": 1488.0,
-    "provisoria": true
+    "baseW": 1562.1240234375
   }
 }

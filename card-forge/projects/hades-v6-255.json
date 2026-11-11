@@ -2,13 +2,14 @@
   "title": "",
   "subtitle": "The Fallen Emperor Returns",
   "flavour": "",
+  "bonusPower": "",
+  "bonusResistance": "",
   "art": {
-    "src": "art/hades-v6-255-ref.jpg",
-    "w": 1488.0,
-    "x": 0.0,
-    "y": -49.27,
-    "zoom": 1,
-    "baseW": 1488.0,
-    "provisoria": true
+    "src": "art/hades-v6-255.png",
+    "w": 2885.58,
+    "x": -409.1575668908722,
+    "y": -263.6211796204384,
+    "zoom": 1.8399999999999999,
+    "baseW": 1568.25
   }
 }

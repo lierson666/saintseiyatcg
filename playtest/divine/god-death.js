@@ -5,7 +5,7 @@
 const THEME = {
   athena: {glow: '255, 214, 120', star: '#ffe8b0', crack: 'light', burst: 'explosion'},
   poseidon: {glow: '90, 180, 255', star: '#bfe6ff', crack: 'ice', burst: 'bubbles'},
-  hades: {glow: '170, 100, 255', star: '#d8c0ff', crack: 'dark', burst: 'dark'},
+  hades: {glow: '170, 100, 255', star: '#d8c0ff', crack: 'vx-0826b75ed129', burst: 'vx-0826b75ed129'}, // Trevas é só de Saga e Kanon; Hades usa Void implosion (autor, 08/11/2026)
   ares: {glow: '255, 110, 50', star: '#ffc890', crack: 'fire', burst: 'explosion'},
   artemis: {glow: '200, 255, 235', star: '#e8fff6', crack: 'sparkle', burst: 'light'},
 };

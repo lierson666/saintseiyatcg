@@ -11,6 +11,7 @@ from pathlib import Path
 from urllib.parse import parse_qs, quote, urlparse
 
 import cosmo
+import achievements as ach_core
 
 DB_PATH = os.environ.get('SANCTUARY_DB', '/data/sanctuary.db')
 ORIGIN = os.environ.get('SANCTUARY_ORIGIN', 'https://saintseiyatcg.com')
@@ -32,6 +33,11 @@ NO_PLAYER = 'No player with this friend code.'
 # Chat (etapa 3): só entre amigos; 500 caracteres; 20 mensagens por minuto; histórico de 90 dias.
 MSG_MAX, MSG_PER_MIN, MSG_KEEP_DAYS, MSG_PAGE = 500, 20, 90, 50
 # Versão da página de login no link de redirecionamento: muda a URL e o navegador não reaproveita a página velha do cache.
+# Age gate deployado somente com verificador externo integrado.
+# Em modo obrigatório, falha fechado para TODAS as contas sem prova verificada no servidor.
+AGE_GATE_REQUIRED = os.environ.get('SANCTUARY_AGE_GATE_REQUIRED') == '1'
+AGE_VERIFICATION_PROVIDER_READY = False  # TODO: integrar provedor e validar resposta server-to-server
+TERMS_VERSION = '2026-11-11-beta-v1'
 LOGIN_VERSION = '3'
 # Painel do sistema (Star Hill → /admin/, autor 29/10/2026): admins por email; pedidos de acesso vêm da home.
 ADMINS = {e.strip().lower() for e in os.environ.get('SANCTUARY_ADMINS', '').split(',') if e.strip()}
@@ -95,29 +101,59 @@ def owns_cosmetic(uid, kind, cid):
         return True
     return bool(db.execute('select full_access from users where id = ?', (uid,)).fetchone()[0]) or item_count(uid, f'{kind}:{cid}') > 0
 WELCOME_BOOSTERS = 3
+STARTER_GRANT = 'starter-v2'  # Onboarding 2.0; trocar os starters de novo pede outra versão
+COSMO_GODS = ('athena', 'poseidon', 'hades', 'ares', 'artemis')
+CHRONICLE_MISSIONS = ('1-1', '1-2', '2-1', '2-2', '2-3', '2-4', '3-1', '3-2', '4-1', '4-2', '4-3', '4-4', '4-5')  # missões do Cosmo Chronicles que existem; progresso só acrescenta
+# Prêmio do Cosmo Chronicles (autor, 11/11/2026; docs/economia.md): só na 1ª vitória de cada missão. 250 coins + 1 booster; chefe paga 3 boosters.
+CHRONICLE_COINS = 250
+CHRONICLE_BOSSES = ('1-2', '2-3', '4-5')
+CHRONICLE_BOOSTERS = lambda m: 3 if m in CHRONICLE_BOSSES else 1
+
+
+def chronicle_reward(uid, mission):
+    """Paga uma vez por missão (marca 'chronicle:<id>' no livro-razão). Devolve o prêmio pago ou None."""
+    reason = f'chronicle:{mission}'
+    if db.execute('select 1 from coin_ledger where user_id = ? and reason = ?', (uid, reason)).fetchone():
+        return None
+    add_coins(uid, CHRONICLE_COINS, reason)
+    add_item(uid, BOOSTER, CHRONICLE_BOOSTERS(mission))
+    return {'mission': mission, 'coins': CHRONICLE_COINS, 'boosters': CHRONICLE_BOOSTERS(mission)}
 COPY_LIMIT = 3
 DUPLICATE_COINS = {'Common': 25, 'Uncommon': 50, 'Legendary': 200, 'Divine': 500}
-PACK = (('Common', 10), ('Uncommon', 3))  # + 1 Legendary, que vira Divine em 1 de 8 pacotes
+# Criar carta direto com coins (autor, 11/11/2026): 250 coins = R$1; o Curinga da raridade, se houver, vem antes.
+CRAFT_COINS = {'Common': 15, 'Uncommon': 250, 'Legendary': 1750, 'Divine': 2500}
+WIN_COINS = (250, 100, 100, 100, 100)  # vitórias online do dia (docs/economia.md); só o duelo é confirmado pelo servidor, a IA vem do navegador
+# Booster de 15 cartas (autor, 07/11/2026): 9 Common, 5 Uncommon e 1 Legendary, que vira Divine em 1 de 8.
+# Em 1 de 10 pacotes, uma Uncommon dá lugar a uma segunda Legendary.
+PACK = (('Common', 9), ('Uncommon', 5))
 DIVINE_ODDS = 8
+DOUBLE_LEGENDARY_ODDS = 10
+# Wildcard estilo MTG Arena: às vezes ocupa a vaga de uma carta da mesma raridade (o pacote segue com 15)
+# e depois vira qualquer carta daquela raridade na Coleção. Chance por pacote, 1 em N.
+WILDCARD_ODDS = {'Common': 3, 'Uncommon': 5, 'Legendary': 24, 'Divine': 60}
+WILDCARD = {r: f'wildcard-{r.lower()}' for r in WILDCARD_ODDS}
 RARITY = {cid: r for r, ids in CATALOG['booster'].items() for cid in ids}
 roll = secrets.SystemRandom()
-# Conquistas (autor, 31/10/2026): derivadas do que o servidor já guarda, sem tabela própria.
-# (id, nome, descrição, medida, alvo); medidas: played/wins online, tier (melhor desta temporada ou da anterior), level, ai_wins.
-ACHIEVEMENTS = (
-    ('first-victory', 'First Victory', 'Win an online duel.', 'wins', 1),
-    ('duels-10', 'Initiate', 'Play 10 online duels.', 'played', 10),
-    ('duels-50', 'Veteran', 'Play 50 online duels.', 'played', 50),
-    ('duels-100', 'Legend of the Arena', 'Play 100 online duels.', 'played', 100),
-    ('wins-10', 'Rising Saint', 'Win 10 online duels.', 'wins', 10),
-    ('wins-50', 'Champion of Athena', 'Win 50 online duels.', 'wins', 50),
-    ('rank-bronze', 'Bronze Saint', 'Reach Bronze.', 'tier', 2),
-    ('rank-silver', 'Silver Saint', 'Reach Silver.', 'tier', 3),
-    ('rank-gold', 'Gold Saint', 'Reach Gold.', 'tier', 4),
-    ('rank-kamui', 'Kamui', 'Reach Kamui.', 'tier', 5),
-    *((f'level-{lv}', title, f'Reach level {lv}.', 'level', lv) for lv, title in reversed(TITLES)),
-    ('ai-1', 'Sparring Partner', 'Beat the AI.', 'ai_wins', 1),
-    ('ai-10', 'Training Grounds', 'Beat the AI 10 times.', 'ai_wins', 10),
-)
+# Conquistas e títulos (ACHIEVEMENTS FORGE V1.0, autor 11/11/2026): o catálogo é o publicado pelo STAR HILL
+# (achievements.json ao lado deste arquivo); regras de métrica e validação em achievements.py. Substitui as 17 conquistas
+# derivadas de 31/10/2026. Desbloqueio guardado em achievement_unlocks: uma vez só por jogador e conquista.
+ACH_PATH = Path(os.environ.get('SANCTUARY_ACHIEVEMENTS') or Path(__file__).with_name('achievements.json'))
+_ach_cache = {'mtime': None, 'catalog': {'version': 0, 'achievements': []}}
+
+
+def ach_catalog():
+    """Catálogo publicado; relido quando o arquivo muda (publicar no STAR HILL vale sem reiniciar o servidor local)."""
+    try:
+        mtime = ACH_PATH.stat().st_mtime
+    except OSError:
+        return _ach_cache['catalog']
+    if mtime != _ach_cache['mtime']:
+        data = json.loads(ACH_PATH.read_text(encoding='utf-8'))
+        if not ach_core.check(data):  # catálogo inválido não entra: segue o último bom
+            _ach_cache.update(mtime=mtime, catalog=data)
+    return _ach_cache['catalog']
+
+
 CHALLENGE_SECONDS = 60
 SUSPENDED = 'This account is suspended.'
 OLD_FORM = 'Please reload this page to see the new sign-up form.'
@@ -158,6 +194,14 @@ create table if not exists collection (user_id integer not null, card_id text no
 create table if not exists inventory (user_id integer not null, item text not null, qty integer not null, primary key (user_id, item));
 create table if not exists blocks (user_id integer not null, blocked_id integer not null, created_at integer not null,
   primary key (user_id, blocked_id));
+create table if not exists achievement_unlocks (user_id integer not null, ach_id text not null, unlocked_at integer, recorded_at integer not null,
+  source text not null, catalog_version integer not null, coins integer not null default 0, primary key (user_id, ach_id));
+create table if not exists achievement_counters (user_id integer not null, key text not null, value integer not null, primary key (user_id, key));
+create table if not exists season_awards (season text not null, user_id integer, place integer not null, tier text not null, score integer not null,
+  wins integer not null, awarded_at integer not null, snapshot_hash text not null, unique (season, place));
+create trigger if not exists season_awards_fixed before update of season, place, tier, score, wins, awarded_at, snapshot_hash on season_awards
+  begin select raise(abort, 'season awards are immutable'); end;
+create trigger if not exists season_awards_kept before delete on season_awards begin select raise(abort, 'season awards are immutable'); end;
 """
 
 lock = threading.Lock()
@@ -170,9 +214,20 @@ def open_db(path=DB_PATH):
     db.row_factory = sqlite3.Row
     db.executescript('pragma journal_mode=wal; pragma foreign_keys=on;' + SCHEMA)
     cosmo.open_db(path)
+    # Aceites legais versionados: tabela separada para preservar contas e snapshots antigos.
+    db.execute('''create table if not exists legal_acceptances (
+        id integer primary key autoincrement, user_id integer not null,
+        document_version text not null, accepted_at integer not null,
+        source text not null, foreign key (user_id) references users(id) on delete cascade
+    )''')
+    db.execute('''create table if not exists age_verifications (
+        user_id integer primary key references users(id) on delete cascade,
+        provider text not null, verified_at integer not null,
+        assurance text not null, reference text not null
+    )''')
     # Migração do cadastro completo: colunas novas em contas antigas (ficam vazias até o perfil ser completado).
     have = {r['name'] for r in db.execute('pragma table_info(users)')}
-    for col in ('username', 'username_display', 'country', 'phone', 'friend_code', 'avatar_card', 'sleeve', 'coin', 'accepted_terms_at', 'last_seen', 'status', 'suspended_at', 'full_access'):
+    for col in ('username', 'username_display', 'country', 'phone', 'friend_code', 'avatar_card', 'sleeve', 'coin', 'accepted_terms_at', 'last_seen', 'status', 'suspended_at', 'full_access', 'onboarding_cosmo', 'chronicles', 'title_equipped'):
         if col not in have:
             db.execute(f'alter table users add column {col}')
     have = {r['name'] for r in db.execute('pragma table_info(messages)')}
@@ -192,6 +247,40 @@ def open_db(path=DB_PATH):
     for email in filter(None, (e.strip().lower() for e in os.environ.get('SANCTUARY_INVITES', '').split(','))):
         db.execute('insert or ignore into invites values (?, ?)', (email, int(time.time())))
     return db
+
+
+def age_verified(uid):
+    row = db.execute('select provider, assurance, reference from age_verifications where user_id = ?', (uid,)).fetchone()
+    return bool(row and row['provider'] != 'self-declared' and row['assurance'] == 'adult-verified' and row['reference'])
+
+
+def validate_dob(value):
+    # Autodeclaração: filtro preliminar. NÃO comprova identidade nem maioridade.
+    from datetime import date
+    try:
+        born = date.fromisoformat(str(value))
+    except (TypeError, ValueError):
+        raise ApiError(400, 'Informe uma data de nascimento válida.')
+    today = date.today()
+    if born > today or born.year < today.year - 120:
+        raise ApiError(400, 'Data de nascimento inválida.')
+    if (today.year - born.year - ((today.month, today.day) < (born.month, born.day))) < 18:
+        raise ApiError(403, 'Saint Seiya TCG é exclusivo para maiores de 18 anos.')
+    return True
+
+
+def valid_cpf(value):
+    # Checagem matemática somente, não confirma titularidade ou idade.
+    digits = re.sub(r'\D', '', str(value))
+    if len(digits) != 11 or len(set(digits)) == 1:
+        return False
+    for n in (9, 10):
+        check = (sum(int(digits[i]) * (n + 1 - i) for i in range(n)) * 10) % 11
+        if check == 10:
+            check = 0
+        if check != int(digits[n]):
+            return False
+    return True
 
 
 def hash_password(password, salt=None):
@@ -215,7 +304,8 @@ def new_friend_code(display):  # Nome#1234, único
 def profile(u):  # dados que o próprio jogador vê
     return {'email': u['email'], 'name': u['display_name'], 'username': u['username_display'], 'friend_code': u['friend_code'],
             'country': u['country'], 'phone': u['phone'], 'avatar_card': u['avatar_card'], 'sleeve': u['sleeve'], 'coin': u['coin'], 'complete': bool(u['username']),
-            'admin': u['email'] in ADMINS}
+            'admin': u['email'] in ADMINS, 'onboarding_cosmo': json.loads(u['onboarding_cosmo'] or '{}'),
+            'chronicles': json.loads(u['chronicles'] or '{}'), 'title': equipped_title(u)}
 
 
 def season_of(ts):  # temporada = mês do calendário (UTC)
@@ -227,7 +317,7 @@ def season_name(n):
     return f'{n // 12}-{n % 12 + 1:02d}'
 
 
-def climb(results, now=None, floor=0):
+def climb(results, now=None, floor=0, on_step=None):
     """Refaz a escalada a partir dos duelos online [(finished_at, 'win'|'loss'|'draw')] em ordem.
     Steel: vitória +2 pips, derrota 0. Demais: +1/-1. 6 pips por divisão (IV→I); não cai de tier.
     Kamui não tem divisão: pontos (+1/-1, mínimo 0). Virada do mês: um tier abaixo, divisão IV, sem pips."""
@@ -265,6 +355,8 @@ def climb(results, now=None, floor=0):
                 r['division'] += 1
                 r['pips'] = PIPS - 1
         best = dict(r) if best is None or key(r) > key(best) else best
+        if on_step:
+            on_step(ts, cur, r)
     show = lambda r: r and {'tier': TIERS[r['tier']], 'division': r['division']}
     return {**r, 'tier': TIERS[r['tier']], 'season': season_name(season), 'season_ends': calendar.timegm(((season + 1) // 12, (season + 1) % 12 + 1, 1, 0, 0, 0)), 'best': show(best), 'last_season': show(last) if last else None}
 
@@ -275,6 +367,17 @@ def coins_of(uid):
 
 def add_coins(uid, delta, reason):
     db.execute('insert into coin_ledger (user_id, delta, reason, created_at) values (?, ?, ?, ?)', (uid, delta, reason, int(time.time())))
+
+
+def duel_wins_paid(uid):
+    day = int(time.time()) // 86400 * 86400
+    return db.execute("select count(*), coalesce(sum(delta), 0) from coin_ledger where user_id = ? and reason like 'duel-win:%' and created_at >= ?", (uid, day)).fetchone()
+
+
+def pay_duel_win(uid, challenge_id):
+    paid = duel_wins_paid(uid)[0]
+    if paid < len(WIN_COINS):
+        add_coins(uid, WIN_COINS[paid], f'duel-win:{challenge_id}')
 
 
 def add_item(uid, item, qty):
@@ -288,11 +391,13 @@ def item_count(uid, item):
 
 def welcome(uid):
     """Primeira visita à economia: coleção dos 5 decks iniciais + boosters de boas-vindas (uma vez; marca no livro-razão)."""
-    if db.execute("select 1 from coin_ledger where user_id = ? and reason = 'welcome'", (uid,)).fetchone():
-        return
-    db.executemany('insert or ignore into collection values (?, ?, ?)', [(uid, cid, n) for cid, n in CATALOG['starter'].items()])
-    add_item(uid, BOOSTER, WELCOME_BOOSTERS)
-    add_coins(uid, 0, 'welcome')
+    seen = {r[0] for r in db.execute("select reason from coin_ledger where user_id = ? and reason in ('welcome', ?)", (uid, STARTER_GRANT))}
+    if 'welcome' not in seen:
+        add_item(uid, BOOSTER, WELCOME_BOOSTERS)
+        add_coins(uid, 0, 'welcome')
+    if STARTER_GRANT not in seen:  # só completa o que falta: nunca tira nem soma cópia de quem já tem
+        db.executemany('insert into collection values (?, ?, ?) on conflict(user_id, card_id) do update set qty = max(qty, excluded.qty)', [(uid, cid, n) for cid, n in CATALOG['starter'].items()])
+        add_coins(uid, 0, STARTER_GRANT)
 
 
 def gain_card(uid, cid):
@@ -307,13 +412,36 @@ def gain_card(uid, cid):
     return have == 0, 0
 
 
+def pack_slots():
+    """Raridade de cada uma das 15 vagas e quais viram wildcard. Sem banco: só o sorteio."""
+    counts = dict(PACK)
+    tops = ['Divine' if roll.randrange(DIVINE_ODDS) == 0 else 'Legendary']
+    if roll.randrange(DOUBLE_LEGENDARY_ODDS) == 0:
+        counts['Uncommon'] -= 1
+        tops.append('Legendary')
+    slots = [[r, False] for r, n in counts.items() for _ in range(n)] + [[r, False] for r in tops]
+    for rarity, odds in WILDCARD_ODDS.items():
+        if roll.randrange(odds):
+            continue
+        # Vaga da mesma raridade; sem ela (Divine num pacote com Legendary, por exemplo), a vaga de cima.
+        same = [s for s in slots if s[0] == rarity and not s[1]]
+        slot = same[0] if same else slots[-1]
+        slot[0], slot[1] = rarity, True
+    return slots
+
+
 def open_pack(uid):
-    top = 'Divine' if roll.randrange(DIVINE_ODDS) == 0 else 'Legendary'
-    pulls = [cid for rarity, n in PACK for cid in roll.sample(CATALOG['booster'][rarity], n)] + [roll.choice(CATALOG['booster'][top])]
+    slots = pack_slots()
+    picks = {r: iter(roll.sample(CATALOG['booster'][r], sum(1 for s in slots if s[0] == r and not s[1]))) for r in WILDCARD}
     out = []
-    for cid in pulls:
+    for rarity, wild in slots:
+        if wild:
+            add_item(uid, WILDCARD[rarity], 1)
+            out.append({'id': WILDCARD[rarity], 'rarity': rarity, 'wildcard': True, 'new': True, 'coins': 0})
+            continue
+        cid = next(picks[rarity])
         new, coins = gain_card(uid, cid)
-        out.append({'id': cid, 'rarity': RARITY[cid], 'new': new, 'coins': coins})
+        out.append({'id': cid, 'rarity': rarity, 'new': new, 'coins': coins})
     return out
 
 
@@ -334,8 +462,9 @@ def missing_cards(uid, deck):
 def economy_of(uid):
     u = db.execute('select full_access from users where id = ?', (uid,)).fetchone()
     return {'coins': coins_of(uid), 'boosters': item_count(uid, BOOSTER), 'full_access': bool(u['full_access']),
+            'wildcards': {r: item_count(uid, item) for r, item in WILDCARD.items()},
             'collection': {r['card_id']: r['qty'] for r in db.execute('select card_id, qty from collection where user_id = ?', (uid,))},
-            'prices': {'booster': PRICES[BOOSTER], 'bundles': [{'qty': q, 'off': off, 'price': bundle_price(q)} for q, off in BUNDLES.items()]},
+            'prices': {'booster': PRICES[BOOSTER], 'craft': CRAFT_COINS, 'bundles': [{'qty': q, 'off': off, 'price': bundle_price(q)} for q, off in BUNDLES.items()]},
             'cosmetics': [{'group': g, 'items': [{'id': cid, 'name': name, 'set': set_price(cid),
                                                    **{k: {'price': cosmetic_price(k, cid), 'owned': owns_cosmetic(uid, k, cid)} for k in COSMETIC_KINDS}}
                                                   for cid, name in chars]} for g, chars in COSMETIC_GROUPS],
@@ -377,6 +506,167 @@ def kamui_board(limit=20):
             board.append({'username': name, 'points': r['points']})
     board.sort(key=lambda b: -b['points'])
     return board[:limit]
+
+
+# ---------- conquistas (ACHIEVEMENTS FORGE V1.0) ----------
+# Chamadores seguram o lock. Medidas só do que o servidor guarda; ver achievements.METRICS.
+GOLD_I = lambda r: r['tier'] > 4 or (r['tier'] == 4 and r['division'] == 1)
+
+
+def ach_count(times):
+    return {'value': len(times), 'times': sorted(times)}
+
+
+def counter(uid, key):
+    row = db.execute('select value from achievement_counters where user_id = ? and key = ?', (uid, key)).fetchone()
+    return row[0] if row else 0
+
+
+def bump(uid, key, n=1):
+    db.execute('insert into achievement_counters values (?, ?, ?) on conflict(user_id, key) do update set value = value + excluded.value', (uid, key, n))
+
+
+def measure(uid):
+    """{métrica: {value, times, at}} de um jogador. times[i] = quando a contagem chegou a i + 1 (data real ou nenhuma)."""
+    cap = int(ach_catalog().get('anti_farm', {}).get('max_wins_per_opponent_day', 3))
+    rows = db.execute('select * from duels where a_id = ? or b_id = ? order by finished_at, challenge_id', (uid, uid)).fetchall()
+    played, wins, streak_t, per_god, decks, per_opp = [], [], [], {g: [] for g in ach_core.GODS}, {}, {}
+    streak = 0
+    for d in rows:
+        a = d['a_id'] == uid
+        ts, opp = d['finished_at'], d['b_id'] if a else d['a_id']
+        played.append(ts)
+        if not d['winner'] or d['winner'] != ('A' if a else 'B'):
+            streak = 0
+            continue
+        key = (opp, ts // 86400)
+        per_opp[key] = per_opp.get(key, 0) + 1
+        if per_opp[key] > cap:  # anti-farm: vitória repetida contra o mesmo adversário no dia não conta nem quebra a sequência
+            continue
+        wins.append(ts)
+        streak += 1
+        if streak > len(streak_t):
+            streak_t.append(ts)
+        god = str((d['a_god'] if a else d['b_god']) or '').removeprefix('god-')
+        if god in per_god:
+            per_god[god].append(ts)
+        deck = d['a_hash'] if a else d['b_hash']
+        if deck and deck not in decks:
+            decks[deck] = ts
+    each = min(len(t) for t in per_god.values())
+    out = {'played': ach_count(played), 'wins': ach_count(wins), 'win_streak': {'value': len(streak_t), 'times': streak_t},
+           **{f'{g}_wins': ach_count(t) for g, t in per_god.items()},
+           'faction_wins_each': {'value': each, 'times': [max(t[i] for t in per_god.values()) for i in range(each)]},
+           'winning_decks': ach_count(list(decks.values()))}
+    gold, kamui = {}, {}
+    if floor_of(uid) != KAMUI:  # conta fixada em Kamui não subiu: não ganha título de rank
+        def step(ts, season, r):
+            if GOLD_I(r):
+                gold.setdefault(season, ts)
+            if r['tier'] == KAMUI:
+                kamui.setdefault(season, ts)
+        climb(online_results(uid), floor=0, on_step=step)
+    out.update({'gold_i': {'value': int(bool(gold)), 'times': sorted(gold.values())[:1]}, 'season_gold_i': ach_count(list(gold.values())),
+                'kamui': {'value': int(bool(kamui)), 'times': sorted(kamui.values())[:1]}, 'season_kamui': ach_count(list(kamui.values()))})
+    best = db.execute('select place, awarded_at from season_awards where user_id = ? order by place, awarded_at limit 1', (uid,)).fetchone()
+    out['season_top'] = {'value': best['place'] if best else 0, 'at': best['awarded_at'] if best else None}
+    out['ai_wins'] = ach_count([r[0] for r in db.execute("select created_at from ai_xp where user_id = ? and result = 'win'", (uid,))])
+    out['decks_created'] = {'value': db.execute('select count(*) from decks where user_id = ?', (uid,)).fetchone()[0]}
+    out['new_cards'] = {'value': sum(1 for r in db.execute('select card_id from collection where user_id = ? and qty > 0', (uid,)) if r[0] not in CATALOG['starter'])}
+    out['boosters_opened'] = {'value': counter(uid, 'boosters_opened')}
+    u = db.execute('select onboarding_cosmo, chronicles from users where id = ?', (uid,)).fetchone()
+    out['cosmo_discovered'] = {'value': int(json.loads(u['onboarding_cosmo'] or '{}').get('seen') is True)}
+    out['chronicles_missions'] = {'value': len(json.loads(u['chronicles'] or '{}').get('completed', []))}
+    return out
+
+
+def sync_achievements(uid):
+    """Desbloqueia o que o jogador já cumpriu. Idempotente: a chave (jogador, conquista) impede duas linhas e dois pagamentos.
+    Desbloqueio e Cosmo Coins na mesma transação. Primeira vez do jogador = migração (datas só quando dá para saber)."""
+    cat = ach_catalog()
+    values = measure(uid)
+    now, new = int(time.time()), []
+    source = 'live' if counter(uid, 'synced') else 'migration'
+    db.execute('savepoint ach')
+    try:
+        for a, at in ach_core.unlockable(cat, values):
+            coins = a['reward']['coins'] if ach_core.tracking(a['metric']) == 'server' else 0
+            cur = db.execute('insert or ignore into achievement_unlocks values (?, ?, ?, ?, ?, ?, ?)', (uid, a['id'], at, now, source, cat.get('version', 0), coins))
+            if cur.rowcount == 1:
+                if coins:
+                    add_coins(uid, coins, f"achievement:{a['id']}")
+                new.append(a['id'])
+        if source == 'migration':
+            bump(uid, 'synced')
+        db.execute('release ach')
+    except Exception:
+        db.execute('rollback to ach')
+        db.execute('release ach')
+        raise
+    return values, new
+
+
+def achievements_of(uid, public=False):
+    values, new = sync_achievements(uid)
+    unlocked = {r['ach_id']: r['unlocked_at'] for r in db.execute('select ach_id, unlocked_at from achievement_unlocks where user_id = ?', (uid,))}
+    items = ach_core.progress(ach_catalog(), values, unlocked)
+    if public:  # para os outros: só o que tem e quando; nada do tamanho da coleção
+        items = [{k: v for k, v in i.items() if k not in ('value', 'metric')} for i in items]
+    return items, new
+
+
+def equipped_title(u):
+    tid = u['title_equipped'] if 'title_equipped' in u.keys() else None
+    if not tid or not db.execute('select 1 from achievement_unlocks where user_id = ? and ach_id = ?', (u['id'], tid)).fetchone():
+        return None
+    return ach_core.title_of(ach_catalog(), tid)
+
+
+def season_bounds(name):
+    m = re.fullmatch(r'(\d{4})-(\d{2})', str(name or ''))
+    if not m or not 1 <= int(m[2]) <= 12:
+        raise ApiError(400, 'Season must look like 2026-10.')
+    n = int(m[1]) * 12 + int(m[2]) - 1
+    return n, calendar.timegm(((n + 1) // 12, (n + 1) % 12 + 1, 1, 0, 0, 0))
+
+
+def certify_season(name, now=None):
+    """Season Awards: foto do fim da temporada, só de temporada encerrada. Uma vez só (gravada, depois nunca muda).
+    Entra quem jogou duelo online na temporada, sem suspensão e sem conta fixada em Kamui. TOP 100 por rank no fim do mês."""
+    now = time.time() if now is None else now
+    n, end = season_bounds(name)
+    if n >= season_of(now):
+        raise ApiError(400, 'This season has not ended yet.')
+    done = db.execute('select place, user_id, tier, score, wins, snapshot_hash from season_awards where season = ? order by place', (name,)).fetchall()
+    if done:
+        return [dict(r) for r in done], False
+    start = calendar.timegm((n // 12, n % 12 + 1, 1, 0, 0, 0))
+    ids = [r[0] for r in db.execute('select distinct u.id from users u join duels d on u.id in (d.a_id, d.b_id) '
+                                     'where u.suspended_at is null and d.finished_at >= ? and d.finished_at < ?', (start, end))]
+    rows = []
+    for uid in ids:
+        if floor_of(uid) == KAMUI:
+            continue
+        res = [x for x in online_results(uid) if x[0] < end]
+        r = climb(res, now=end - 1)
+        t = TIERS.index(r['tier'])
+        rows.append({'user_id': uid, 'tier': r['tier'], 'score': r['pips'] + r['points'], 'key': (t, -(r['division'] or 0), r['pips'] + r['points']),
+                     'wins': sum(1 for ts, x in res if x == 'win' and ts >= start)})
+    top = ach_core.award_order(rows)[:100]
+    snap = [{'place': i, 'user_id': r['user_id'], 'tier': r['tier'], 'score': r['score'], 'wins': r['wins']} for i, r in enumerate(top, 1)]
+    digest = hashlib.sha256(json.dumps({'season': name, 'top': snap}, sort_keys=True).encode()).hexdigest()
+    db.execute('savepoint awards')
+    try:
+        for e in snap:
+            db.execute('insert into season_awards values (?, ?, ?, ?, ?, ?, ?, ?)', (name, e['user_id'], e['place'], e['tier'], e['score'], e['wins'], int(now), digest))
+        db.execute('release awards')
+    except Exception:
+        db.execute('rollback to awards')
+        db.execute('release awards')
+        raise
+    for e in snap:
+        sync_achievements(e['user_id'])
+    return [{**e, 'snapshot_hash': digest} for e in snap], True
 
 
 def clean_profile(body, partial=False):
@@ -473,6 +763,8 @@ class Handler(BaseHTTPRequestHandler):
         user = self.current_user()
         if not user:
             raise ApiError(401, 'Sign in to continue.')
+        if AGE_GATE_REQUIRED and not age_verified(user['id']):
+            raise ApiError(403, 'Verificação de maioridade necessária.')
         return user
 
     def admins(self):
@@ -523,6 +815,10 @@ class Handler(BaseHTTPRequestHandler):
                     return self.delete_me()
             if method == 'POST' and path == '/api/me/password':
                 return self.change_password()
+            if method == 'GET' and path == '/api/achievements':
+                return self.my_achievements()
+            if method == 'POST' and path == '/api/me/title':
+                return self.equip_title()
             if method == 'POST' and path == '/api/presence':
                 return self.presence()
             if method == 'GET' and path == '/api/friends':
@@ -562,6 +858,8 @@ class Handler(BaseHTTPRequestHandler):
                 return self.store_buy()
             if method == 'POST' and path == '/api/boosters/open':
                 return self.booster_open()
+            if method == 'POST' and path == '/api/wildcards/redeem':
+                return self.wildcard_redeem()
             if method == 'GET' and path == '/api/rank':
                 return self.rank()
             if method == 'POST' and path == '/api/xp/ai':
@@ -594,7 +892,8 @@ class Handler(BaseHTTPRequestHandler):
 
     def auth_check(self):
         # forward_auth do Caddy: 2xx libera; senão o Caddy devolve esta resposta ao navegador (vai para o login).
-        if self.current_user():
+        user = self.current_user()
+        if user and (not AGE_GATE_REQUIRED or age_verified(user['id'])):
             self.send_response(204)
             self.end_headers()
             return
@@ -616,8 +915,22 @@ class Handler(BaseHTTPRequestHandler):
         fields = clean_profile(body)
         if len(password) < 10:
             raise ApiError(400, 'Use at least 10 characters for the password.')
+        if body.get('birth_date') is not None:
+            validate_dob(body['birth_date'])
+        if body.get('cpf') is not None and not valid_cpf(body['cpf']):
+            raise ApiError(400, 'CPF inválido.')
+        if AGE_GATE_REQUIRED:
+            if not body.get('birth_date') or not body.get('cpf'):
+                raise ApiError(400, 'Nascimento e CPF são necessários para iniciar a verificação.')
+            # Jamais confiar no CPF ou declaração do próprio usuário como prova.
+            if not AGE_VERIFICATION_PROVIDER_READY:
+                raise ApiError(503, 'Verificação de identidade indisponível. Cadastro temporariamente fechado.')
+            raise ApiError(503, 'Integração de verificação etária ainda não ativada.')
         if body.get('accept_terms') is not True:
             raise ApiError(400, 'Please accept the privacy terms.')
+        supplied_version = body.get('terms_version')
+        if supplied_version is not None and supplied_version != TERMS_VERSION:
+            raise ApiError(400, 'Please update the registration page and review the current terms.')
         now = int(time.time())
         with lock:
             if not db.execute('select 1 from invites where email = ?', (email,)).fetchone():
@@ -629,6 +942,8 @@ class Handler(BaseHTTPRequestHandler):
                              'friend_code, accepted_terms_at) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
                              (email, fields['display_name'], hash_password(password), now, username.lower(), username,
                               fields['country'], fields['phone'], new_friend_code(username), now))
+            db.execute('insert into legal_acceptances (user_id, document_version, accepted_at, source) values (?, ?, ?, ?)',
+                       (cur.lastrowid, supplied_version or 'legacy-unversioned', now, 'registration'))
             user = db.execute('select * from users where id = ?', (cur.lastrowid,)).fetchone()
         self.send_json(201, profile(user), self.start_session(user['id']))
 
@@ -645,6 +960,7 @@ class Handler(BaseHTTPRequestHandler):
         user = self.require_user()
         body = self.read_json()
         fields = clean_profile(body, partial=True)
+        rewards = []
         with lock:
             if 'username' in body and not user['username']:  # conta antiga completando o perfil: escolhe o nome uma vez
                 username = str(body['username']).strip()
@@ -655,10 +971,24 @@ class Handler(BaseHTTPRequestHandler):
             for kind, col in (('avatar', 'avatar_card'), ('sleeve', 'sleeve'), ('coin', 'coin')):  # cosmético só se for do jogador
                 if fields.get(col) and not owns_cosmetic(user['id'], kind, fields[col]):
                     raise ApiError(400, 'Get this in the Store first.')
+            if isinstance(body.get('onboarding_cosmo'), dict):  # progresso de Descubra seu Cosmo: só campos e Deuses conhecidos
+                o = body['onboarding_cosmo']
+                fields['onboarding_cosmo'] = json.dumps({'seen': o.get('seen') is True, 'last': o.get('last') if o.get('last') in COSMO_GODS else None,
+                                                         'tried': [g for g in COSMO_GODS if g in (o.get('tried') if isinstance(o.get('tried'), list) else [])]})
+            if isinstance(body.get('chronicles'), dict):  # Cosmo Chronicles: só IDs conhecidos, nunca apaga missão já concluída
+                sent = body['chronicles'].get('completed')
+                have = set(json.loads(user['chronicles'] or '{}').get('completed', []))
+                before = set(have)
+                have |= {m for m in CHRONICLE_MISSIONS if m in (sent if isinstance(sent, list) else [])}
+                fields['chronicles'] = json.dumps({'completed': [m for m in CHRONICLE_MISSIONS if m in have]})
+                rewards = [r for r in (chronicle_reward(user['id'], m) for m in CHRONICLE_MISSIONS if m in have - before) if r]
             if fields:
                 db.execute(f'update users set {", ".join(k + " = ?" for k in fields)} where id = ?', (*fields.values(), user['id']))
             fresh = db.execute('select * from users where id = ?', (user['id'],)).fetchone()
-        self.send_json(200, profile(fresh))
+        out = profile(fresh)
+        if rewards:
+            out['chronicle_rewards'] = rewards  # a tela de desfecho mostra o que entrou
+        self.send_json(200, out)
 
     def change_password(self):
         user = self.require_user()
@@ -689,6 +1019,9 @@ class Handler(BaseHTTPRequestHandler):
             db.execute('delete from challenges where from_id = ? or to_id = ?', (uid, uid))
             db.execute('delete from reports where reporter_id = ?', (uid,))
             db.execute('delete from ai_xp where user_id = ?', (uid,))
+            db.execute('delete from achievement_unlocks where user_id = ?', (uid,))
+            db.execute('delete from achievement_counters where user_id = ?', (uid,))
+            db.execute('update season_awards set user_id = null where user_id = ?', (uid,))  # o lugar fica no histórico, sem a conta
             db.execute('delete from access_requests where email = ?', (user['email'],))
             db.execute('delete from login_attempts where email = ?', (user['email'],))
             # duelos: o histórico do adversário fica, o apagado vira "Deleted player" (id nulo)
@@ -1021,7 +1354,7 @@ class Handler(BaseHTTPRequestHandler):
             if d['god']:
                 gods[d['god']] = gods.get(d['god'], 0) + 1
         self.send_json(200, {'username': full['username'], 'joined': full['joined'], 'avatar_card': full['avatar_card'], 'rank': full['rank'],
-                             'achievements': full['achievements'], 'stats': full['stats'], 'favorite_god': max(gods, key=gods.get) if gods else None,
+                             'achievements': full['achievements'], 'title': full['title'], 'stats': full['stats'], 'favorite_god': max(gods, key=gods.get) if gods else None,
                              'recent': [{k: d[k] for k in ('result', 'god', 'opponent_god', 'date')} for d in full['recent']]})
 
     def profile_data(self, u):
@@ -1042,12 +1375,10 @@ class Handler(BaseHTTPRequestHandler):
                                'god': d['a_god'] if side == 'A' else d['b_god'], 'opponent_god': d['b_god'] if side == 'A' else d['a_god'], 'date': d['finished_at']})
         played = len(rows)
         r = rank_of(uid)
-        # shortcut: vitórias contra a IA só contam quando deram XP (teto diário); trocar se o autor quiser contar todas.
-        ai_wins = db.execute("select count(*) from ai_xp where user_id = ? and result = 'win'", (uid,)).fetchone()[0]
-        tier = max(TIERS.index(t['tier']) for t in (r, r['best'], r['last_season']) if t)
-        have = {'played': played, 'wins': wins, 'tier': tier, 'level': r['level'], 'ai_wins': ai_wins}
-        achievements = [{'id': i, 'name': n, 'description': d, 'done': have[m] >= goal} for i, n, d, m, goal in ACHIEVEMENTS]
-        return {'rank': {k: r[k] for k in ('tier', 'division', 'pips', 'points', 'level', 'title')}, 'achievements': achievements, 'username': u['username_display'], 'country': u['country'], 'joined': u['created_at'],
+        with lock:
+            achievements, _ = achievements_of(uid, public=True)
+            title = equipped_title(u)
+        return {'rank': {k: r[k] for k in ('tier', 'division', 'pips', 'points', 'level', 'title')}, 'achievements': achievements, 'title': title, 'username': u['username_display'], 'country': u['country'], 'joined': u['created_at'],
                 'avatar_card': u['avatar_card'], 'sleeve': u['sleeve'], 'coin': u['coin'], 'stats': {'played': played, 'wins': wins, 'losses': losses,
                 'winrate': round(100 * wins / played) if played else 0}, 'recent': recent,
                 'recent_all': [{'god': d['a_god'] if d['a_id'] == uid else d['b_god']} for d in rows]}
@@ -1069,7 +1400,29 @@ class Handler(BaseHTTPRequestHandler):
         uid = self.require_user()['id']
         with lock:
             self.settle_pair(uid)  # duelo recém-terminado entra no rank sem esperar o chat
-            self.send_json(200, {**rank_of(uid), 'kamui': kamui_board(), **self.ai_today(uid)})
+            self.send_json(200, {**rank_of(uid), 'kamui': kamui_board(), **self.ai_today(uid), 'duel_coins_today': duel_wins_paid(uid)[1]})
+
+    def my_achievements(self):
+        uid = self.require_user()['id']
+        with lock:
+            items, new = achievements_of(uid)
+            u = db.execute('select * from users where id = ?', (uid,)).fetchone()
+            self.send_json(200, {'achievements': items, 'new': new, 'title': equipped_title(u), 'catalog_version': ach_catalog().get('version', 0)})
+
+    def equip_title(self):
+        """Equipa um título conquistado (ou tira, com id null). Só conquista publicada, ativa e desbloqueada por este jogador."""
+        uid = self.require_user()['id']
+        tid = self.read_json().get('id')
+        with lock:
+            if tid is not None:
+                sync_achievements(uid)
+                if not isinstance(tid, str) or not ach_core.title_of(ach_catalog(), tid):
+                    raise ApiError(400, 'Unknown title.')
+                if not db.execute('select 1 from achievement_unlocks where user_id = ? and ach_id = ?', (uid, tid)).fetchone():
+                    raise ApiError(403, 'Earn this title first.')
+            db.execute('update users set title_equipped = ? where id = ?', (tid, uid))
+            u = db.execute('select * from users where id = ?', (uid,)).fetchone()
+            self.send_json(200, {'title': equipped_title(u)})
 
     def ai_today(self, uid):
         day = int(time.time()) // 86400 * 86400
@@ -1085,6 +1438,7 @@ class Handler(BaseHTTPRequestHandler):
             gained = max(0, min(XP_AI[result], AI_XP_DAY - self.ai_today(uid)['ai_xp_today']))
             if gained:
                 db.execute('insert into ai_xp (user_id, result, xp, created_at) values (?, ?, ?, ?)', (uid, result, gained, int(time.time())))
+                sync_achievements(uid)
             self.send_json(200, {**rank_of(uid), 'gained': gained, **self.ai_today(uid)})
 
     def settle_pair(self, a, b=None):  # resultado das partidas da conversa (ou de todas do jogador, sem b): vira mensagem no chat
@@ -1113,6 +1467,10 @@ class Handler(BaseHTTPRequestHandler):
                            (c['id'], c['from_id'], c['to_id'], victory.get('winner') if winner else None, god(c['deck']), god(c['deck_b'] or '{}'),
                             rounds if isinstance(rounds, int) else None, now, cosmo.deck_hash(c['deck']), json.loads(c['deck_b'] or '{}').get('hash')))
                 cosmo.record_online_duel(c['from_id'], c['to_id'], winner)  # torneio digital em andamento: resultado sai do duelo
+                if winner:
+                    pay_duel_win(winner, c['id'])
+                for player in (c['from_id'], c['to_id']):
+                    sync_achievements(player)
             db.execute("insert into messages (from_id, to_id, body, created_at, kind, ref, seen_at) values (?, ?, ?, ?, 'result', ?, ?)",
                        (c['from_id'], c['to_id'], text, now, c['id'], None))
 
@@ -1199,13 +1557,52 @@ class Handler(BaseHTTPRequestHandler):
                 raise ApiError(400, 'You have no boosters to open.')
             add_item(uid, BOOSTER, -n)
             packs = [open_pack(uid) for _ in range(n)]
+            bump(uid, 'boosters_opened', n)  # conta desde o Achievements V1.0; antes disso o servidor não guardava
+            sync_achievements(uid)
             state = economy_of(uid)
         self.send_json(200, {'cards': [c for p in packs for c in p], 'packs': packs, **state})
+
+    def wildcard_redeem(self):
+        """Cria uma cópia da carta escolhida: usa a wildcard da raridade ou, sem ela, paga CRAFT_COINS. Não passa de 3 cópias."""
+        uid = self.require_user()['id']
+        body = self.read_json()
+        cid, pay = str(body.get('card', '')), body.get('pay')  # pay: 'wildcard', 'coins' ou vazio (wildcard antes, se houver)
+        if cid not in RARITY:
+            raise ApiError(400, 'This card is not in the booster pool.')
+        item = WILDCARD[RARITY[cid]]
+        with lock:
+            welcome(uid)
+            row = db.execute('select qty from collection where user_id = ? and card_id = ?', (uid, cid)).fetchone()
+            if row and row[0] >= COPY_LIMIT:
+                raise ApiError(400, f'You already have {COPY_LIMIT} copies of this card.')
+            if pay != 'coins' and item_count(uid, item) > 0:
+                add_item(uid, item, -1)
+            elif pay == 'wildcard':
+                raise ApiError(400, f'You have no {RARITY[cid]} wildcard.')
+            elif coins_of(uid) >= CRAFT_COINS[RARITY[cid]]:
+                add_coins(uid, -CRAFT_COINS[RARITY[cid]], f'craft:{cid}')
+            else:
+                raise ApiError(400, 'Not enough Cosmo Coins.')
+            gain_card(uid, cid)
+            state = economy_of(uid)
+        self.send_json(200, {'card': cid, **state})
 
     # ---------- painel do sistema (/admin/, aberto pelo Star Hill) ----------
     def admin(self, method, path):
         self.require_admin()
         now = int(time.time())
+        if method == 'POST' and path == '/api/admin/season-awards':  # premiação certificada de temporada encerrada
+            with lock:
+                awards, created = certify_season(self.read_json().get('season'), now)
+            return self.send_json(201 if created else 200, {'awards': awards, 'created': created})
+        if method == 'GET' and path == '/api/admin/achievements':  # analytics só com desbloqueios reais
+            with lock:
+                players = db.execute('select count(*) from users where suspended_at is null').fetchone()[0]
+                counts = dict(db.execute('select ach_id, count(*) from achievement_unlocks group by ach_id').fetchall())
+                equipped = dict(db.execute('select title_equipped, count(*) from users where title_equipped is not null group by title_equipped').fetchall())
+            return self.send_json(200, {'players': players, 'catalog_version': ach_catalog().get('version', 0),
+                                        'achievements': [{'id': a['id'], 'title': a['title'], 'rarity': a['rarity'], 'tracking': ach_core.tracking(a['metric']),
+                                                          'unlocked': counts.get(a['id'], 0), 'equipped': equipped.get(a['id'], 0)} for a in ach_catalog()['achievements']]})
         if method == 'GET' and path == '/api/admin/overview':
             return self.admin_overview(now)
         m = re.fullmatch(r'/api/admin/requests/(\d+)/(approve|decline)', path)
@@ -1256,8 +1653,11 @@ class Handler(BaseHTTPRequestHandler):
                     add_coins(user['id'], coins, f'admin:{reason}')
                 if boosters:
                     add_item(user['id'], BOOSTER, max(boosters, -item_count(user['id'], BOOSTER)))
+                for rarity, qty in (body.get('wildcards') or {}).items():  # {"Legendary": 1}: dar ou tirar wildcards
+                    if rarity in WILDCARD and int(qty):
+                        add_item(user['id'], WILDCARD[rarity], max(int(qty), -item_count(user['id'], WILDCARD[rarity])))
                 state = economy_of(user['id'])
-            return self.send_json(200, {k: state[k] for k in ('coins', 'boosters', 'full_access')})
+            return self.send_json(200, {k: state[k] for k in ('coins', 'boosters', 'full_access', 'wildcards')})
         m = re.fullmatch(r'/api/admin/reports/(\d+)/resolve', path)
         if m and method == 'POST':
             with lock:

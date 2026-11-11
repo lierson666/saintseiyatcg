@@ -2,13 +2,14 @@
   "title": "",
   "subtitle": "The Blade Beyond Reason",
   "flavour": "\"His sword moves faster than thought, and his rage faster still.\"",
+  "bonusPower": "",
+  "bonusResistance": "",
   "art": {
-    "src": "art/ares-v6-308-ref.jpg",
-    "w": 1488.0,
-    "x": 0.0,
-    "y": -442.5,
-    "zoom": 1,
-    "baseW": 1488.0,
-    "provisoria": true
+    "src": "art/ares-v6-308.png",
+    "w": 2744.4375,
+    "x": -674.9667144495418,
+    "y": -1349.0451923663063,
+    "zoom": 1.75,
+    "baseW": 1568.25
   }
 }

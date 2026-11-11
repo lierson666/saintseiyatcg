@@ -1,14 +1,16 @@
 {
   "title": "",
-  "subtitle": "",
+  "subtitle": "The Moon Shows the Way",
   "flavour": "",
+  "bonusPower": "",
+  "bonusResistance": "",
   "art": {
     "src": "art/artemis-v6-519-ref.jpg",
-    "w": 1488.0,
-    "x": 0.0,
+    "w": 1488,
+    "x": 0,
     "y": -70.5,
     "zoom": 1,
-    "baseW": 1488.0,
+    "baseW": 1488,
     "provisoria": true
   }
 }

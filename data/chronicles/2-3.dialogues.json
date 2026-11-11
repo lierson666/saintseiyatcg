@@ -1,0 +1,53 @@
+{
+ "nota": "Falas da missão 2.3 (rascunho da Saga 01, revisado em 11/11/2026). Máximo de duas frases por fala.",
+ "lines": {
+  "SCENE_1": {
+   "pt": "Tóquio, Japão. Chega a luta mais esperada da Guerra Galáctica.",
+   "en": "Tokyo, Japan. The most awaited bout of the Galaxian Wars has arrived."
+  },
+  "SCENE_2": {
+   "pt": "Dizem que o Escudo do Dragão nunca foi quebrado.",
+   "en": "They say the Dragon Shield has never been broken."
+  },
+  "SHUNREI_1": {
+   "pt": "Shiryu, volte para mim. Daqui de Rozan, eu vou rezar por você.",
+   "en": "Shiryu, come back to me. From Rozan, I'll pray for you."
+  },
+  "SHIRYU_1": {
+   "pt": "Meu escudo é o mais resistente que existe.",
+   "en": "My shield is the toughest there is."
+  },
+  "SEIYA_1": {
+   "pt": "Então vou bater até ele ceder.",
+   "en": "Then I'll keep hitting until it gives."
+  },
+  "PREP_1": {
+   "pt": "Nenhuma defesa é perfeita, Seiya. Ataque sem parar e procure a abertura.",
+   "en": "No defense is perfect, Seiya. Keep attacking and look for the opening."
+  },
+  "HINT_SHIELD": {
+   "pt": "Shiryu está em campo. Desgaste o escudo com vários golpes.",
+   "en": "Shiryu is on the field. Wear down the shield with many strikes."
+  },
+  "HINT_DRAGON": {
+   "pt": "Não desanime, Seiya. Junte seu Cosmo e golpeie de novo.",
+   "en": "Don't lose heart, Seiya. Gather your Cosmo and strike again."
+  },
+  "WIN_1": {
+   "pt": "O escudo racha. Shiryu cai, e os dois saem da arena como amigos.",
+   "en": "The shield cracks. Shiryu falls, and the two leave the arena as friends."
+  },
+  "WIN_2": {
+   "pt": "Você tem um Cosmo raro, Seiya. Um dia lutaremos lado a lado.",
+   "en": "Your Cosmo is rare, Seiya. One day we'll fight side by side."
+  },
+  "WIN_3": {
+   "pt": "Pode contar com isso, Shiryu.",
+   "en": "You can count on it, Shiryu."
+  },
+  "LOSE_1": {
+   "pt": "Seus golpes são fortes, mas ainda não bastam.",
+   "en": "Your blows are strong, but not yet enough."
+  }
+ }
+}

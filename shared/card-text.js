@@ -27,7 +27,9 @@ const atReplace=(_,n,word)=>{const k=AT_SYMBOL[word.toUpperCase()];return n&&'CB
 const AT_COST=atWords(Object.keys(AT_SYMBOL).filter(w=>!'AH'.includes(AT_SYMBOL[w]))),AT_ALL=atWords(Object.keys(AT_SYMBOL));
 // O dado guarda custo como {N}{C}; @ATK e @HP ficam como estão porque engine e IA leem o número e o atributo.
 export const costSymbols=t=>String(t).replace(AT_COST,atReplace);
-export const statSymbols=t=>String(t).replace(AT_ALL,atReplace);
+// Texto PT que escreve "+1 de Poder" / "+1 de PV" (tradução antiga, autor 07/11/2026): vira "+1 @ATQ" para puxar o símbolo.
+const DE_STAT=/([+-]\d+)\s+de\s+@?(Poder|ATQ|PV)(?!\p{L})/giu;
+export const statSymbols=t=>String(t).replace(DE_STAT,(_,n,w)=>`${n} @${/pv/i.test(w)?'PV':'ATQ'}`).replace(AT_ALL,atReplace);
 // Linha "Hidden Cosmo {5}" é a própria keyword, com ou sem @.
 export const keywordLine=t=>String(t).replace(/^(Hidden Cosmo|Cosmo Oculto)(?=\s*\{)/i,'@$1');
 const STAT_SYMBOL_RE=/(?<![\w])[+-]\d+\s*\{[AH]\}(?:\s*\/\s*[+-]\d+\s*\{[AH]\})?/;

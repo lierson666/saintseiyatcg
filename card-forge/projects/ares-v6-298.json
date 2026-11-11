@@ -2,13 +2,14 @@
   "title": "",
   "subtitle": "The First Move of Victory",
   "flavour": "\"A single precise strike is worth a thousand reckless charges.\"",
+  "bonusPower": "",
+  "bonusResistance": "",
   "art": {
-    "src": "art/ares-v6-298-ref.jpg",
-    "w": 1488.0,
-    "x": 0.0,
-    "y": -70.5,
-    "zoom": 1,
-    "baseW": 1488.0,
-    "provisoria": true
+    "src": "art/ares-v6-298.png",
+    "w": 2101.455,
+    "x": -508.65055045871554,
+    "y": -466.0402921814044,
+    "zoom": 1.3399999999999999,
+    "baseW": 1568.25
   }
 }

@@ -2,13 +2,14 @@
   "title": "",
   "subtitle": "The Impenetrable Wall of the Pacific",
   "flavour": "",
+  "bonusPower": "",
+  "bonusResistance": "",
   "art": {
-    "src": "art/poseidon-v6-095-ref.jpg",
-    "w": 1488.0,
-    "x": 0.0,
-    "y": -370.73,
-    "zoom": 1,
-    "baseW": 1488.0,
-    "provisoria": true
+    "src": "art/poseidon-v6-095.png",
+    "w": 2979.675,
+    "x": -939.0081820901478,
+    "y": -284.15939013167406,
+    "zoom": 1.9000000000000001,
+    "baseW": 1568.25
   }
 }

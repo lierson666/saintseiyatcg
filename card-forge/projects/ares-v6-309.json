@@ -1,14 +1,15 @@
 {
   "title": "",
-  "subtitle": "The Unbroken Spear",
+  "subtitle": "The Unbroken Shield",
   "flavour": "\"They guard the god of war not because he needs protection, but because he demands absolute loyalty.\"",
+  "bonusPower": "",
+  "bonusResistance": "",
   "art": {
-    "src": "art/ares-v6-309-ref.jpg",
-    "w": 1672.8,
-    "x": -92.4,
-    "y": 0.0,
-    "zoom": 1,
-    "baseW": 1672.8,
-    "provisoria": true
+    "src": "art/ares-v6-309.png",
+    "w": 1897.5825,
+    "x": -204.95122706422023,
+    "y": -289.01990978543546,
+    "zoom": 1.21,
+    "baseW": 1568.25
   }
 }

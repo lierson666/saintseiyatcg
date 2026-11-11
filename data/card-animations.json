@@ -39,6 +39,14 @@
     "golpe": "lightning",
     "linhas": []
   },
+  "athena-v6-009": {
+    "golpe": "vx-07b0b663f7fa",
+    "impacto": "vx-923ff3c2d9c8",
+    "impacto_deus": "vx-923ff3c2d9c8",
+    "linhas": [
+      "vx-a59e00994c1d"
+    ]
+  },
   "athena-v6-013": {
     "golpe": "dark",
     "linhas": []
@@ -65,51 +73,72 @@
   },
   "efeitos": {
     "vx-9aaecec14b11": {
+      "ancora": "ambos",
+      "cor": null,
       "ligado": true,
       "tamanho": 1,
-      "velocidade": 1,
-      "cor": null,
-      "ancora": "ambos"
+      "velocidade": 1
     }
+  },
+  "faccao-ares": {
+    "golpe": "blood",
+    "linhas": []
+  },
+  "faccao-artemis": {
+    "golpe": "vx-a0f5f35a60db",
+    "linhas": []
+  },
+  "faccao-hades": {
+    "golpe": "vx-0826b75ed129",
+    "linhas": [],
+    "habilidade": "vx-0826b75ed129"
+  },
+  "faccao-neutral": {
+    "golpe": "impact",
+    "linhas": []
+  },
+  "faccao-poseidon": {
+    "golpe": "vx-8df70ddafe14",
+    "linhas": []
   },
   "hades-v6-189": {
     "golpe": "vx-0826b75ed129",
     "linhas": []
   },
   "hades-v6-203": {
-    "golpe": "poison",
+    "golpe": "vx-0826b75ed129",
     "linhas": []
   },
   "hades-v6-204": {
-    "golpe": "poison",
+    "golpe": "vx-0826b75ed129",
     "linhas": []
   },
   "hades-v6-205": {
-    "golpe": "poison",
+    "golpe": "vx-0826b75ed129",
     "linhas": []
   },
   "hades-v6-215": {
-    "golpe": "poison",
+    "golpe": "vx-0826b75ed129",
     "linhas": []
   },
   "hades-v6-216": {
-    "golpe": "poison",
+    "golpe": "vx-0826b75ed129",
     "linhas": []
   },
   "hades-v6-251": {
-    "golpe": "vx-a5c63aec0793",
+    "golpe": "vx-0826b75ed129",
     "linhas": []
   },
   "hades-v6-252": {
-    "golpe": "poison",
+    "golpe": "vx-0826b75ed129",
     "linhas": []
   },
   "hades-v6-253": {
-    "golpe": "vx-fda36e0db211",
+    "golpe": "vx-0826b75ed129",
     "linhas": []
   },
   "hades-v6-254": {
-    "golpe": "ice",
+    "golpe": "vx-0826b75ed129",
     "linhas": []
   },
   "neutral-v6-453": {

@@ -1,0 +1,30 @@
+/* Placa de título (ACHIEVEMENTS FORGE V1.0). Cores por raridade vêm de shared/title-plate.js (variáveis --tp-*). */
+.tp { display: inline-flex; align-items: center; gap: .5em; padding: .32em .9em; border: 1px solid var(--tp-edge); border-radius: 6px;
+  background: linear-gradient(100deg, var(--tp-fill), #05070d 50%, var(--tp-fill)); color: var(--tp-ink);
+  font-family: Cinzel, Georgia, serif; font-weight: 600; letter-spacing: .06em; line-height: 1.2; white-space: nowrap; position: relative; overflow: hidden; vertical-align: middle; }
+.tp i { font-style: normal; color: var(--tp-fx); font-size: .8em; }
+.tp b { font-weight: 600; }
+.tp--sm { font-size: .72rem; padding: .18em .6em; }
+.tp--md { font-size: .9rem; }
+.tp--lg { font-size: 1.5rem; padding: .45em 1.3em; }
+.tp[data-effect="glow"] { box-shadow: 0 0 10px -2px var(--tp-fx); }
+.tp[data-effect="energy-pulse"] { animation: tp-pulse 2.4s ease-in-out infinite; }
+.tp[data-effect="cosmic-aura"] { box-shadow: 0 0 14px -3px var(--tp-fx), inset 0 0 12px -6px var(--tp-fx); }
+.tp[data-effect="divine-light"], .tp[data-effect="holo-foil"], .tp[data-effect="starfield"] { box-shadow: 0 0 16px -4px var(--tp-fx); }
+.tp[data-effect="divine-light"]::after, .tp[data-effect="holo-foil"]::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(110deg, transparent 35%, color-mix(in srgb, var(--tp-fx) 45%, transparent) 50%, transparent 65%);
+  background-size: 250% 100%; animation: tp-sweep 3.2s linear infinite; }
+.tp[data-effect="starfield"]::after { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .7;
+  background-image: radial-gradient(1px 1px at 12% 30%, #fff, transparent), radial-gradient(1px 1px at 38% 70%, #fff, transparent),
+    radial-gradient(1px 1px at 63% 25%, #fff, transparent), radial-gradient(1px 1px at 86% 62%, #fff, transparent);
+  animation: tp-twinkle 2.8s ease-in-out infinite alternate; }
+@keyframes tp-pulse { 50% { box-shadow: 0 0 16px -2px var(--tp-fx); } }
+@keyframes tp-sweep { from { background-position: 150% 0; } to { background-position: -100% 0; } }
+@keyframes tp-twinkle { to { opacity: .25; } }
+.tp--still, .tp--still::after { animation: none !important; }
+@media (prefers-reduced-motion: reduce) { .tp, .tp::after { animation: none !important; } }
+/* Arte pronta (shared/title-art/): mesma altura de cada tamanho da placa desenhada. */
+.tp-art { display: inline-block; vertical-align: middle; width: auto; object-fit: contain; }
+.tp-art--sm { height: 26px; }
+.tp-art--md { height: 44px; }
+.tp-art--lg { height: 110px; max-width: 100%; }

@@ -2,13 +2,14 @@
   "title": "",
   "subtitle": "The Hunger for Battle",
   "flavour": "\"For a Berserker, a short life is a small price for one glorious battle.\"",
+  "bonusPower": "",
+  "bonusResistance": "",
   "art": {
-    "src": "art/ares-v6-295-ref.jpg",
-    "w": 1488.0,
-    "x": 0.0,
-    "y": -69.49,
-    "zoom": 1,
-    "baseW": 1488.0,
-    "provisoria": true
+    "src": "art/ares-v6-295.png",
+    "w": 1505.52,
+    "x": -9.154610091743166,
+    "y": -34.495806851429734,
+    "zoom": 0.96,
+    "baseW": 1568.25
   }
 }

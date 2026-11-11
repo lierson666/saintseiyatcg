@@ -1,0 +1,312 @@
+{
+ "nota": "Missão 4.2 do Cosmo Chronicles (CONTEXT/cosmo-chronicles-saga-01.md, 11/11/2026). Regras normais; só vencer. Cavaleiros Negros com Athena só mecânica (decisão do autor, 11/11/2026). Simulação (rival IA normal, 200 partidas por linha, 0 erros): jogador vence 63,0% (IA easy) e 69,0% (IA normal); mediana de 17–18 rodadas.",
+ "id": "4-2",
+ "saga": "saga-01",
+ "chapter": 4,
+ "order": 2,
+ "title": {
+  "pt": "Dragão Negro",
+  "en": "Black Dragon"
+ },
+ "description": {
+  "pt": "Shiryu encontra quem imita a sua técnica, longe de Rozan.",
+  "en": "Shiryu meets the one who copies his technique, far from Rozan."
+ },
+ "level": {
+  "pt": "Intermediário",
+  "en": "Intermediate"
+ },
+ "duration": {
+  "pt": "10–15 minutos",
+  "en": "10–15 minutes"
+ },
+ "characters": {
+  "shiryu": {
+   "card": "athena-v6-003",
+   "name": {
+    "pt": "Shiryu de Dragão",
+    "en": "Dragon Shiryu"
+   }
+  },
+  "bdragon": {
+   "card": "neutral-v6-452",
+   "name": {
+    "pt": "Dragão Negro",
+    "en": "Black Dragon"
+   }
+  },
+  "shunrei": {
+   "card": "athena-v6-037",
+   "name": {
+    "pt": "Shunrei, em Rozan",
+    "en": "Shunrei, in Rozan"
+   }
+  },
+  "narrator": {
+   "name": {
+    "pt": "Narração",
+    "en": "Narration"
+   }
+  }
+ },
+ "requires": [
+  "4-1"
+ ],
+ "next": "4-3",
+ "player": {
+  "character": "shiryu",
+  "deck": "chronicle-4-2-shiryu"
+ },
+ "rival": {
+  "character": "bdragon",
+  "deck": "chronicle-4-2-bdragon",
+  "ai": "normal",
+  "mechanical_god": "god-athena"
+ },
+ "arena": "olympus",
+ "music": null,
+ "victory": {
+  "type": "engine",
+  "winner": "player"
+ },
+ "defeat": {
+  "draws_count_as": "defeat",
+  "retry": true
+ },
+ "reward": {
+  "enabled": true,
+  "coins": 250,
+  "boosters": 1,
+  "boss": false
+ },
+ "scenes": {
+  "intro": [
+   {
+    "art": "neutral-v6-452",
+    "who": "narrator",
+    "line": "SCENE_1"
+   },
+   {
+    "art": "neutral-v6-452",
+    "who": "bdragon",
+    "line": "RIVAL_1"
+   },
+   {
+    "art": "athena-v6-003",
+    "who": "shiryu",
+    "line": "HERO_1"
+   }
+  ],
+  "prep": {
+   "who": "shunrei",
+   "line": "PREP_1"
+  },
+  "win": [
+   {
+    "art": "athena-v6-004",
+    "who": "narrator",
+    "line": "WIN_1"
+   },
+   {
+    "art": "neutral-v6-452",
+    "who": "bdragon",
+    "line": "WIN_2"
+   },
+   {
+    "art": "athena-v6-003",
+    "who": "shiryu",
+    "line": "WIN_3"
+   }
+  ],
+  "lose": [
+   {
+    "art": "neutral-v6-452",
+    "who": "bdragon",
+    "line": "LOSE_1"
+   }
+  ]
+ },
+ "hints": [
+  {
+   "id": "HINT_KEY",
+   "when": [
+    {
+     "event": "card_played",
+     "player": "B",
+     "card": "neutral-v6-452"
+    }
+   ]
+  },
+  {
+   "id": "HINT_HOLD",
+   "when": [
+    {
+     "stall": 2
+    },
+    {
+     "event": "soul_lost",
+     "player": "A",
+     "atMost": {
+      "soul": 8
+     }
+    }
+   ]
+  }
+ ],
+ "decks": [
+  {
+   "id": "chronicle-4-2-shiryu",
+   "god": "god-athena",
+   "domain_id": "athena-v6-062",
+   "main_deck": [
+    {
+     "card_id": "athena-v6-003",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-004",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-045",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-059",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-053",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-054",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-052",
+     "quantity": 2
+    },
+    {
+     "card_id": "athena-v6-061",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-040",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-043",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-041",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-490",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-494",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-491",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-497",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-489",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-457",
+     "quantity": 3
+    }
+   ],
+   "nome": "Shiryu · Chronicles 4.2",
+   "emprestado": true
+  },
+  {
+   "id": "chronicle-4-2-bdragon",
+   "god": "god-athena",
+   "domain_id": "athena-v6-062",
+   "main_deck": [
+    {
+     "card_id": "athena-v6-004",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-045",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-059",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-053",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-054",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-052",
+     "quantity": 2
+    },
+    {
+     "card_id": "athena-v6-061",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-040",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-043",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-041",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-490",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-494",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-491",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-497",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-489",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-457",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-452",
+     "quantity": 3
+    }
+   ],
+   "nome": "Black Dragon · Chronicles 4.2",
+   "emprestado": true
+  }
+ ]
+}

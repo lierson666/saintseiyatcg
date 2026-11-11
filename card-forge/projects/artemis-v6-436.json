@@ -2,21 +2,14 @@
   "title": "",
   "subtitle": "Armor of Divine Accuracy",
   "flavour": "\"Olympus does not miss. It only waits.\"",
+  "bonusPower": "+2",
+  "bonusResistance": "+1",
   "art": {
-    "src": "art/artemis-v6-436-ref.jpg",
-    "w": 1488.0,
-    "x": 0.0,
-    "y": -276.72,
-    "zoom": 1,
-    "baseW": 1488.0,
-    "provisoria": true,
-    "nota_provisoria": "Arte provisória da carta anterior; não representa o novo personagem. Substituir pela arte aprovada (docs/artemis-v2-art-direction.md)."
-  },
-  "identidade": {
-    "versao": "artemis-v2.0",
-    "nome_anterior": "SILVER ARROW ARMOR",
-    "continuidade": "Tenkai-hen Josō Overture (2004)",
-    "perfil_arte": "celestial_glory",
-    "arte_representa_personagem": false
+    "src": "art/artemis-v6-436.png",
+    "w": 1834.8525,
+    "x": -170.65470068807326,
+    "y": -8.998467419131714,
+    "zoom": 1.17,
+    "baseW": 1568.25
   }
 }

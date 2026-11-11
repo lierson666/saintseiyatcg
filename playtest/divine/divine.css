@@ -1,7 +1,7 @@
 /* Divine Arena · camada HTML sobre o WebGL. Hierarquia: comum < Saint < divino < Ultimate (AAA_VISUAL_DIRECTION.md). */
 :root {
   --ink: #f4efe2; --muted: #b8b1c9; --gold: #e8c46a; --gold-hi: #ffe4a0; --panel: rgba(12, 12, 28, .72); --line: rgba(232, 196, 106, .32);
-  --base: #ffd36e; --latent: #b58cff; --red: #ff7a6a; --shield: #8fd8ff; --armor: #d8e4ff;
+  --base: #5aaaff; --latent: #40e0d0; /* Base sempre azul, Latent turquesa (autor, 07/11/2026) */ --red: #ff7a6a; --shield: #8fd8ff; --armor: #d8e4ff;
   --card-w: clamp(78px, 7.4vw, 118px); --card-h: calc(var(--card-w) * 1.4);
   --ease: cubic-bezier(.2, .8, .2, 1);
   color-scheme: dark;
@@ -61,8 +61,8 @@ kbd { font: 11px/1 ui-monospace, monospace; opacity: .7; border: 1px solid curre
 .bank__row b { margin-left: 4px; font-size: 12px; }
 .bank__row em { color: var(--muted); }
 .orb { width: 14px; height: 14px; border-radius: 50%; display: inline-block; transition: transform .25s var(--ease), opacity .25s; }
-.orb--base.ready { background: radial-gradient(circle at 35% 30%, #fff6d0, var(--base) 45%, #9a6a12); box-shadow: 0 0 10px var(--base); }
-.orb--latent.ready { background: radial-gradient(circle at 35% 30%, #f3e8ff, var(--latent) 45%, #4a2a8a); box-shadow: 0 0 10px var(--latent); }
+.orb--base.ready { background: radial-gradient(circle at 35% 30%, #e0f0ff, var(--base) 45%, #12348f); box-shadow: 0 0 10px var(--base); }
+.orb--latent.ready { background: radial-gradient(circle at 35% 30%, #e0fffb, var(--latent) 45%, #0b5a55); box-shadow: 0 0 10px var(--latent); }
 .orb.spent, .orb.empty { background: rgba(255, 255, 255, .08); border: 1px solid rgba(255, 255, 255, .22); }
 .orb.spending { animation: spend .5s var(--ease) forwards; }
 .orb.preview { animation: orbpreview .8s ease-in-out infinite; }
@@ -96,8 +96,8 @@ kbd { font: 11px/1 ui-monospace, monospace; opacity: .7; border: 1px solid curre
 .dcard__glyph { position: absolute; top: 28%; left: 0; right: 0; text-align: center; font-size: calc(var(--card-w) * .32); opacity: .25; letter-spacing: .05em; }
 .dcard__art[style] .dcard__glyph { display: none; }
 .dcard__cost { position: absolute; top: 4px; left: 4px; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font-size: 12px; color: #1a1205; }
-.dcard__cost.base { background: radial-gradient(circle at 35% 30%, #fff6d0, var(--base) 50%, #9a6a12); }
-.dcard__cost.latent { background: radial-gradient(circle at 35% 30%, #f3e8ff, var(--latent) 50%, #4a2a8a); color: #fff; }
+.dcard__cost.base { background: radial-gradient(circle at 35% 30%, #e0f0ff, var(--base) 50%, #12348f); color: #fff; }
+.dcard__cost.latent { background: radial-gradient(circle at 35% 30%, #e0fffb, var(--latent) 50%, #0b5a55); color: #fff; }
 .dcard__plate { position: absolute; left: 0; right: 0; bottom: 0; padding: 14px 5px 4px; background: linear-gradient(transparent, rgba(5, 4, 12, .92) 38%); display: grid; line-height: 1.1; }
 .dcard__plate strong { font-size: clamp(9px, .8vw, 12px); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .dcard__plate small { font: 9px/1.1 "Jost", system-ui, sans-serif; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -248,6 +248,8 @@ kbd { font: 11px/1 ui-monospace, monospace; opacity: .7; border: 1px solid curre
 
 .inspector { position: fixed; z-index: 80; left: 14px; top: 50%; transform: translateY(-50%); display: none; gap: 12px; padding: 12px; width: min(560px, 92vw); border: 1px solid var(--line); border-radius: 12px; background: rgba(8, 8, 20, .95); pointer-events: none; }
 .inspector.show { display: flex; }
+.inspector.is-card-only { width: auto; padding: 0; border: 0; background: none; }
+.inspector.is-card-only .inspector__text { display: none; }
 .inspector__text { display: grid; align-content: start; gap: 4px; font: 13px/1.4 "Jost", system-ui, sans-serif; }
 .inspector__text strong { font: 18px/1.2 "Cinzel", Georgia, serif; color: var(--gold-hi); }
 .inspector__text small { color: var(--muted); }

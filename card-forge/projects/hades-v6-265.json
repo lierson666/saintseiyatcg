@@ -2,13 +2,14 @@
   "title": "",
   "subtitle": "The Purest Soul Becomes the Vessel",
   "flavour": "",
+  "bonusPower": "",
+  "bonusResistance": "",
   "art": {
-    "src": "art/hades-v6-265-ref.jpg",
-    "w": 1488.0,
-    "x": 0.0,
-    "y": -413.18,
+    "src": "art/hades-v6-265.png",
+    "w": 1568.25,
+    "x": -40.125,
+    "y": 0,
     "zoom": 1,
-    "baseW": 1488.0,
-    "provisoria": true
+    "baseW": 1568.25
   }
 }

@@ -6,6 +6,7 @@
 //   GET  /arena/matches/:id/stream      SSE com a visão do jogador logado
 //   POST /arena/matches/:id/action      {action}   ·   POST /arena/matches/:id/answer {answer}   ·   POST /arena/matches/:id/concede
 //   GET  /arena/matches/:id/result      interno: vencedor (o sanctuary-api escreve no chat)
+//   POST /arena/matches/:id/chat        {text} conversa e reações da partida (autor, 07/11/2026): repassa aos dois e guarda na partida
 import http from 'node:http';
 import {readFileSync, statSync} from 'node:fs';
 import {loadCanon} from '../shared/canon-cards.js';
@@ -58,7 +59,7 @@ function broadcast(rec) {
 
 async function handle(req, res) {
   const url = new URL(req.url, 'http://arena');
-  const m = url.pathname.match(/^\/arena\/matches(?:\/([\w-]{8,20})(?:\/(stream|action|answer|concede|result|activity))?)?\/?$/);
+  const m = url.pathname.match(/^\/arena\/matches(?:\/([\w-]{8,20})(?:\/(stream|action|answer|concede|result|activity|chat))?)?\/?$/);
   if (!m) return send(res, 404, {error: 'Not found.'});
   const [, id, verb] = m;
 
@@ -84,6 +85,7 @@ async function handle(req, res) {
     streams.get(rec.id).add(sub);
     arena.heartbeat(rec, key);
     res.write(`event: view\ndata: ${JSON.stringify(arena.view(rec, key))}\n\n`);
+    if (rec.chat?.length) res.write(`event: chat\ndata: ${JSON.stringify({history: rec.chat})}\n\n`); // quem reconecta recebe a conversa
     const beat = setInterval(() => { arena.heartbeat(rec, key); res.write(': ping\n\n'); }, 15000);
     req.on('close', () => { clearInterval(beat); streams.get(rec.id)?.delete(sub); });
     return;
@@ -95,6 +97,19 @@ async function handle(req, res) {
     const ref = v => (typeof v === 'string' && /^[\w:#.-]{1,80}$/.test(v) ? v : null);
     const sig = {hand: Number.isInteger(data?.hand) && data.hand >= 0 && data.hand < 60 ? data.hand : null, aim: ref(data?.aim), focus: ref(data?.focus), src: ref(data?.src)};
     for (const sub of streams.get(rec.id) || []) if (sub.key !== key) sub.res.write(`event: activity\ndata: ${JSON.stringify(sig)}\n\n`);
+    return send(res, 200, {});
+  }
+  if (verb === 'chat') { // texto curto, sem engine; 1 mensagem a cada 0,7 s por jogador; as últimas 200 ficam na partida
+    const text = String(data?.text ?? '').replace(/[\u0000-\u001f\u007f]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 200);
+    if (!text) return send(res, 400, {error: 'Empty message.'});
+    const now = Date.now();
+    rec.chatAt ||= {};
+    if (now - (rec.chatAt[key] || 0) < 700) return send(res, 429, {error: 'Too fast.'});
+    rec.chatAt[key] = now;
+    const msg = {from: key, text, at: now};
+    (rec.chat ||= []).push(msg);
+    if (rec.chat.length > 200) rec.chat.shift();
+    for (const sub of streams.get(rec.id) || []) sub.res.write(`event: chat\ndata: ${JSON.stringify(msg)}\n\n`);
     return send(res, 200, {});
   }
   try {

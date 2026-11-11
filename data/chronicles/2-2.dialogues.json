@@ -1,0 +1,49 @@
+{
+ "nota": "Falas da missão 2.2 (rascunho da Saga 01, revisado em 11/11/2026). Máximo de duas frases por fala.",
+ "lines": {
+  "SCENE_1": {
+   "pt": "Tóquio, Japão. Começa a segunda luta da Guerra Galáctica.",
+   "en": "Tokyo, Japan. The second bout of the Galaxian Wars begins."
+  },
+  "SCENE_2": {
+   "pt": "Hyoga chega calado. Para ele, o torneio é só o começo de outra missão.",
+   "en": "Hyoga arrives in silence. For him, the tournament is only the start of another mission."
+  },
+  "ICHI_1": {
+   "pt": "Minhas garras têm veneno.",
+   "en": "My claws carry venom."
+  },
+  "HYOGA_1": {
+   "pt": "Nada chega perto o bastante para morder.",
+   "en": "Nothing gets close enough to bite."
+  },
+  "PREP_1": {
+   "pt": "Não espere o golpe do inimigo, Hyoga. Congele-o antes que ele ataque.",
+   "en": "Don't wait for the enemy's blow, Hyoga. Freeze him before he attacks."
+  },
+  "HINT_FREEZE": {
+   "pt": "Um inimigo novo em campo. Derrube-o antes que ele ataque.",
+   "en": "A new enemy on the field. Bring it down before it attacks."
+  },
+  "HINT_ICHI": {
+   "pt": "Ichi enche o campo de aliados. Gaste seu Cosmo e não deixe ele crescer.",
+   "en": "Ichi fills the field with allies. Spend your Cosmo and don't let him grow."
+  },
+  "WIN_1": {
+   "pt": "A arena fica em silêncio diante do frio de Cisne.",
+   "en": "The arena falls silent before the Swan's cold."
+  },
+  "WIN_2": {
+   "pt": "Ainda não acabou. Minha missão aqui é outra.",
+   "en": "It's not over. My mission here is something else."
+  },
+  "OBJECTIVE_1": {
+   "pt": "Você venceu, mas deixou todo inimigo atacar primeiro. Congele antes, Hyoga.",
+   "en": "You won, but you let every enemy strike first. Freeze them sooner, Hyoga."
+  },
+  "LOSE_1": {
+   "pt": "Até o gelo derrete, Cisne.",
+   "en": "Even ice melts, Swan."
+  }
+ }
+}

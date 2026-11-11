@@ -10,7 +10,7 @@ Object.assign(self.ssI18nPT.strings, {
 
   // Home
   'Saint Seiya TCG — Coming Soon': 'Saint Seiya TCG — Em breve', 'love': 'amor', 'Coming soon': 'Em breve', 'The Holy War approaches': 'A Guerra Santa se aproxima',
-  'Burn your': 'Queime seu', 'The gods are gathering their armies. Leave your name and be the first to know': 'Os deuses estão reunindo seus exércitos. Deixe seu nome e seja o primeiro a saber',
+  'Burn your': 'Queime seu', 'Awaken your': 'Desperte seu','The gods are gathering their armies. Leave your name and be the first to know': 'Os deuses estão reunindo seus exércitos. Deixe seu nome e seja o primeiro a saber',
   'when the gates of the Sanctuary open.': 'quando os portões do Santuário se abrirem.', 'Be the first to know': 'Seja o primeiro a saber', 'Join the Holy War': 'Entre na Guerra Santa',
   'Name': 'Nome', 'Leave empty': 'Deixe vazio',
   'I agree to receive Saint Seiya TCG news by email. I can unsubscribe at any time. See our': 'Aceito receber novidades do Saint Seiya TCG por e-mail. Posso cancelar quando quiser. Veja nossa página de',

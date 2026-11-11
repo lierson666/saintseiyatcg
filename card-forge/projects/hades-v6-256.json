@@ -2,13 +2,14 @@
   "title": "",
   "subtitle": "The Dead Return as Enemies",
   "flavour": "",
+  "bonusPower": "",
+  "bonusResistance": "",
   "art": {
-    "src": "art/hades-v6-256-ref.jpg",
-    "w": 1488.0,
-    "x": 0.0,
-    "y": -442.5,
+    "src": "art/hades-v6-256.png",
+    "w": 1568.25,
+    "x": -23.25275229357794,
+    "y": 64.15413686605979,
     "zoom": 1,
-    "baseW": 1488.0,
-    "provisoria": true
+    "baseW": 1568.25
   }
 }

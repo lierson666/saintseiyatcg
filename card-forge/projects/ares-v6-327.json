@@ -2,13 +2,14 @@
   "title": "",
   "subtitle": "Death from Above",
   "flavour": "\"The sky darkened, not with clouds, but with the weapons of war.\"",
+  "bonusPower": "",
+  "bonusResistance": "",
   "art": {
-    "src": "art/ares-v6-327-ref.jpg",
-    "w": 1488.0,
-    "x": 0.0,
-    "y": -276.72,
+    "src": "art/ares-v6-327.png",
+    "w": 1568.25,
+    "x": -7.660321100917599,
+    "y": -87.02232505689199,
     "zoom": 1,
-    "baseW": 1488.0,
-    "provisoria": true
+    "baseW": 1568.25
   }
 }

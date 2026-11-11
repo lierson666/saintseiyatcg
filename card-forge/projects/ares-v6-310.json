@@ -2,13 +2,14 @@
   "title": "",
   "subtitle": "Bound to the Battlefield",
   "flavour": "\"My life was given to Ares long before I drew my first breath.\"",
+  "bonusPower": "",
+  "bonusResistance": "",
   "art": {
-    "src": "art/ares-v6-310-ref.jpg",
-    "w": 1672.8,
-    "x": -92.4,
-    "y": 0.0,
+    "src": "art/ares-v6-310.png",
+    "w": 1568.25,
+    "x": -40.125,
+    "y": 0,
     "zoom": 1,
-    "baseW": 1672.8,
-    "provisoria": true
+    "baseW": 1568.25
   }
 }

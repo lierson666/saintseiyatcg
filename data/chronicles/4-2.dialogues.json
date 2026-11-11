@@ -1,0 +1,45 @@
+{
+ "nota": "Falas da missão 4.2 (rascunho da Saga 01, 11/11/2026). Máximo de duas frases por fala.",
+ "lines": {
+  "SCENE_1": {
+   "pt": "Os Cavaleiros Negros se espalham com as partes da armadura. Num vale de pedra, um dragão escuro espera Shiryu.",
+   "en": "The Black Saints scatter with the Cloth pieces. In a stone valley, a dark dragon awaits Shiryu."
+  },
+  "RIVAL_1": {
+   "pt": "Dois dragões não dividem o mesmo céu.",
+   "en": "Two dragons do not share the same sky."
+  },
+  "HERO_1": {
+   "pt": "Então o meu vai subir.",
+   "en": "Then mine will rise."
+  },
+  "PREP_1": {
+   "pt": "Ele copia a sua técnica, Shiryu. Mas o seu escudo protege alguém, e o dele não.",
+   "en": "He copies your technique, Shiryu. But your shield protects someone, and his does not."
+  },
+  "HINT_KEY": {
+   "pt": "O Dragão Negro entrou. Não deixe o reflexo crescer.",
+   "en": "Black Dragon has entered. Do not let the reflection grow."
+  },
+  "HINT_HOLD": {
+   "pt": "Calma, Shiryu. O dragão de Rozan sobe devagar, mas sobe.",
+   "en": "Calm, Shiryu. The dragon of Rozan rises slowly, but it rises."
+  },
+  "WIN_1": {
+   "pt": "O Dragão de Shiryu sobe mais alto. O Dragão Negro cai entre as pedras.",
+   "en": "Shiryu's Dragon rises higher. Black Dragon falls among the stones."
+  },
+  "WIN_2": {
+   "pt": "O seu céu... era maior que o meu.",
+   "en": "Your sky... was bigger than mine."
+  },
+  "WIN_3": {
+   "pt": "Mais uma parte da armadura volta para Athena.",
+   "en": "One more piece of the Cloth returns to Athena."
+  },
+  "LOSE_1": {
+   "pt": "Só cabe um dragão neste céu.",
+   "en": "Only one dragon fits in this sky."
+  }
+ }
+}

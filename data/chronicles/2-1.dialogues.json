@@ -1,0 +1,53 @@
+{
+ "nota": "Falas da missão 2.1 (rascunho da Saga 01, revisado em 11/11/2026). Máximo de duas frases por fala.",
+ "lines": {
+  "SCENE_1": {
+   "pt": "Tóquio, Japão. A Guerra Galáctica vai começar.",
+   "en": "Tokyo, Japan. The Galaxian Wars are about to begin."
+  },
+  "SCENE_2": {
+   "pt": "No alto da arena, a Armadura de Ouro de Sagitário espera pelo vencedor.",
+   "en": "Above the arena, the Gold Cloth of Sagittarius awaits the winner."
+  },
+  "SAORI_1": {
+   "pt": "Cavaleiros, lutem com honra. A Armadura de Ouro irá para o mais forte.",
+   "en": "Saints, fight with honor. The Gold Cloth will go to the strongest."
+  },
+  "GEKI_1": {
+   "pt": "Meus braços já esmagaram ursos.",
+   "en": "These arms have crushed bears."
+  },
+  "SEIYA_1": {
+   "pt": "Então hoje você conhece outra coisa.",
+   "en": "Then today you'll meet something new."
+  },
+  "PREP_1": {
+   "pt": "Lembre, Seiya: primeiro entre em campo, depois vista a sua armadura. Ela só protege quem já está lutando.",
+   "en": "Remember, Seiya: step onto the field first, then put on your Cloth. It only protects someone already fighting."
+  },
+  "HINT_CLOTH": {
+   "pt": "Você está em campo, Seiya. Agora vista a Armadura de Pégaso.",
+   "en": "You're on the field, Seiya. Now put on the Pegasus Cloth."
+  },
+  "HINT_GEKI": {
+   "pt": "Geki aguenta muito. Junte Cosmo e golpeie com força quando puder.",
+   "en": "Geki can take a lot. Build your Cosmo and strike hard when you can."
+  },
+  "WIN_1": {
+   "pt": "A arena explode em aplausos. Seiya avança na Guerra Galáctica.",
+   "en": "The arena roars. Seiya advances in the Galaxian Wars."
+  },
+  "WIN_2": {
+   "pt": "Essa armadura não é só proteção. É a minha promessa.",
+   "en": "This Cloth isn't just protection. It's my promise."
+  },
+  "OBJECTIVE_1": {
+   "pt": "Você venceu, mas sem a sua armadura. Vista-a e lute de novo.",
+   "en": "You won, but without your Cloth. Put it on and fight again."
+  },
+  "LOSE_1": {
+   "pt": "Volte para o Santuário, garoto. Aqui é lugar de Cavaleiro.",
+   "en": "Go back to the Sanctuary, boy. This place is for Saints."
+  }
+ }
+}

@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Arena Forge · Saint Seiya TCG</title>
+<style>
+:root{color-scheme:dark;--gold:#d6b574;--line:#4d4662;--panel:#111629;--bg:#080b17;--txt:#f2eddf}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font:14px system-ui,-apple-system,sans-serif}
+header{height:58px;display:flex;align-items:center;gap:14px;padding:0 18px;border-bottom:1px solid var(--line);background:#101426}
+h1{font:small-caps 24px Georgia,serif;letter-spacing:1px;color:var(--gold);margin:0}header small{color:#aaa;font-size:11px}
+a{color:var(--gold)}button,select,input,textarea{font:inherit;color:var(--txt);background:#1a2238;border:1px solid var(--line);border-radius:7px;padding:9px;min-width:0}
+button{cursor:pointer}button:hover{border-color:var(--gold)}button.primary{background:linear-gradient(125deg,#8a672b,#d4b675);color:#10121b;font-weight:700;border:0}button:disabled{opacity:.5;cursor:not-allowed}
+main{display:grid;grid-template-columns:minmax(270px,320px) minmax(400px,1fr) minmax(260px,310px);height:calc(100vh - 58px);min-height:600px}
+aside{background:var(--panel);padding:16px;overflow:auto;border-right:1px solid var(--line)}aside.right{border-left:1px solid var(--line);border-right:0}
+section{margin:0 0 22px}h2{color:var(--gold);font:18px Georgia,serif;margin:0 0 12px}label{display:grid;gap:5px;color:#c8c8d5;margin-bottom:10px;font-size:12px}input,select,textarea{width:100%;font-size:13px}textarea{resize:vertical}.cols{display:grid;grid-template-columns:1fr 1fr;gap:8px}.cols3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}.cols3 input{padding:6px}.buttons{display:flex;gap:6px;flex-wrap:wrap}.buttons button{flex:1}
+#view{position:relative;min-width:0;background:#050710;overflow:hidden}canvas{display:block;width:100%;height:100%}
+#view .hint{position:absolute;left:15px;top:14px;color:#c9cde1;background:#0b1027bd;padding:10px;border:1px solid #5f5479;border-radius:8px;max-width:260px;font-size:12px;pointer-events:none}
+#view .bottom{position:absolute;bottom:12px;left:12px;right:12px;display:flex;justify-content:space-between;gap:10px;pointer-events:none}
+.pill{background:#080d20cd;color:var(--gold);border:1px solid #6a5a36;border-radius:99px;padding:7px 11px;font-size:11px}
+#objects{list-style:none;padding:0;display:grid;gap:5px}#objects button{display:flex;align-items:center;justify-content:space-between;width:100%;text-align:left}#objects button.active{border-color:var(--gold);background:#423924}
+#prompt{height:210px;font-size:11px;line-height:1.5}#status{margin-left:auto;font-size:12px;color:#b4b9c9}
+.help{color:#9fa8bc;font-size:12px;line-height:1.55}.notice{padding:9px;border:1px solid #655b44;border-radius:6px;color:#f1d7a1;font-size:12px}
+@media(max-width:1050px){main{grid-template-columns:260px minmax(320px,1fr)}aside.right{grid-column:1/-1;border-top:1px solid var(--line);display:grid;grid-template-columns:1fr 1fr;gap:20px}main{height:auto}#view{height:620px}}@media(max-width:680px){main{display:flex;flex-direction:column}#view{height:380px;order:-1}aside.right{display:block}}
+</style>
+</head>
+<body>
+<header><h1>ARENA FORGE</h1><small>SCENE BUILDER · V0.1</small><a href="../card-forge/index.html">Card Forge</a><a href="../playtest/divine/">Arena</a><span id="status">Projeto local · não publicado</span></header>
+<main>
+<aside>
+<section><h2>Prompt Studio</h2>
+<label>Nome da arena<input id="name" value="Palácio de Poseidon — Fortaleza Submarina"></label>
+<label>Facção<select id="faction"><option value="poseidon">Poseidon</option><option value="athena">Athena</option><option value="hades">Hades</option><option value="ares">Ares</option><option value="artemis">Artemis</option><option value="olympus">Olympus</option></select></label>
+<label>Direção de arte<textarea id="description" rows="4">Palácio canônico de mármore branco; escadaria central; salão do trono com tridente dourado; Grande Pilar Principal atrás do templo; oceano suspenso como céu líquido.</textarea></label>
+<label>Atmosfera<select id="atmosphere"><option value="submerso">Oceano suspenso / luz aquática</option><option value="mistico">Místico / Cosmo</option><option value="sombrio">Sombrio / névoa</option><option value="vulcanico">Vulcânico / brasas</option><option value="lunar">Lunar / noturno</option></select></label>
+<label>Intensidade da atmosfera <output id="fogValue">18%</output><input id="fog" type="range" min="0" max="100" value="18"></label>
+<div class="buttons"><button id="generate" class="primary">Criar prompt + preset</button><button id="copyPrompt">Copiar prompt</button></div>
+</section>
+<section><h2>Fortaleza Submarina</h2><p class="notice">Palácio canônico de Poseidon, arquitetura branca, escadaria central, tridente dourado e Grande Pilar Principal ao fundo. O cenário é uma construção 3D procedural, separada dos props do editor.</p><div class="buttons"><button id="canonicalOn" class="primary">Restaurar palácio</button><button id="canonicalOff">Ocultar palácio</button></div></section>
+<section><h2>Biblioteca 3D</h2><div class="buttons"><button data-add="column">+ Coluna</button><button data-add="statue">+ Estátua</button><button data-add="rock">+ Rocha</button><button data-add="altar">+ Altar</button><button data-add="obelisk">+ Obelisco</button><button data-add="orb">+ Orbe</button></div><p class="help">Objetos procedurais editáveis. Modelos GLB externos serão uma etapa posterior.</p></section>
+<section><h2>Projetos</h2><div class="buttons"><button id="save">Salvar no navegador</button><button id="load">Carregar</button><button id="export">Exportar JSON</button><button id="import">Importar JSON</button></div><input type="file" id="file" accept=".json,application/json" hidden><p class="help">Sem publicação automática no jogo oficial.</p></section>
+</aside>
+<div id="view"><div class="hint"><b>CAMERA LOCK ATIVO</b><div>A mesma perspectiva da arena competitiva. Clique em um objeto na lista para editar sua transformação.</div></div><div class="bottom"><span class="pill" id="count">0 objetos</span><span class="pill">Battlefield protegido · raio 16</span></div></div>
+<aside class="right">
+<section><h2>Scene Outliner</h2><ul id="objects"></ul><p class="help">Selecione um objeto para editar. Objetos preservam coordenadas em metros da cena.</p></section>
+<section><h2>Inspector 3D</h2><div id="inspector"><p class="help">Selecione um objeto no Scene Outliner.</p></div></section>
+<section><h2>Prompt exportável</h2><textarea id="prompt" readonly spellcheck="false"></textarea><p class="notice">Este editor gera cena Three.js procedural + especificação JSON. Não converte prompts em malhas complexas automaticamente.</p></section>
+</aside>
+</main>
+<script type="module" src="./forge.js"></script>
+</body></html>

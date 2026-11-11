@@ -2,13 +2,14 @@
   "title": "",
   "subtitle": "The Flame That Guides the Blade",
   "flavour": "\"We do not strike first. We strike where the enemy is weakest.\"",
+  "bonusPower": "",
+  "bonusResistance": "",
   "art": {
-    "src": "art/ares-v6-292-ref.jpg",
-    "w": 1672.8,
-    "x": -92.4,
-    "y": 0.0,
-    "zoom": 1,
-    "baseW": 1672.8,
-    "provisoria": true
+    "src": "art/ares-v6-292.png",
+    "w": 2007.3600000000001,
+    "x": -316.0343083288367,
+    "y": -554.7081404421356,
+    "zoom": 1.28,
+    "baseW": 1568.25
   }
 }

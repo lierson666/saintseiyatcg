@@ -30,6 +30,7 @@ O menu **Visualizar** oferece os módulos por `⌘1` a `⌘8`. **Editar** encami
 - **Editor de telas:** abertura, menu, preparação, decks, coleção, opções, mulligan, carta ampliada, pausa, resultado, ajuda, privacidade, mão, zonas e emotes.
 - **Interações e animações:** eventos de interface, declaração de ações, início de resolução, efeitos e gatilhos. Configuração geral, por carta de origem ou por par origem → alvo.
 - **Cosméticos:** escala inicial de HUD/cartas, token de vantagem, verso e preferência de efeitos.
+- **Nexus · blog (11/11/2026):** escrever, editar, publicar e despublicar os posts do Cosmo Hub, com prévia do banner da home. Segurança e testes em [star-hill-nexus.md](star-hill-nexus.md).
 - **Livro de regras:** revisão do texto oficial com motivo, histórico e changelog. Salvar texto não reprograma automaticamente o motor; mudanças mecânicas precisam de implementação e validação próprias.
 
 ## Sistema · jogadores (29/10/2026)

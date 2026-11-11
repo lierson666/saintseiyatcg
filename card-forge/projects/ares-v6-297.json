@@ -2,13 +2,14 @@
   "title": "",
   "subtitle": "The Flame That Judges All",
   "flavour": "\"Mercy is a weakness the crimson flame cannot afford.\"",
+  "bonusPower": "",
+  "bonusResistance": "",
   "art": {
-    "src": "art/ares-v6-297-ref.jpg",
-    "w": 1488.0,
-    "x": 0.0,
-    "y": -276.92,
+    "src": "art/ares-v6-297.png",
+    "w": 1568.25,
+    "x": -40.125,
+    "y": 0,
     "zoom": 1,
-    "baseW": 1488.0,
-    "provisoria": true
+    "baseW": 1568.25
   }
 }

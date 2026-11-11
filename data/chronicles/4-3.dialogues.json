@@ -1,0 +1,45 @@
+{
+ "nota": "Falas da missão 4.3 (rascunho da Saga 01, 11/11/2026). Máximo de duas frases por fala.",
+ "lines": {
+  "SCENE_1": {
+   "pt": "O caminho até Ikki passa por uma corrente escura. Shun não pode recuar agora.",
+   "en": "The way to Ikki runs through a dark chain. Shun cannot turn back now."
+  },
+  "RIVAL_1": {
+   "pt": "Sua bondade vai te enforcar.",
+   "en": "Your kindness will strangle you."
+  },
+  "HERO_1": {
+   "pt": "Ela vai me levar até o Ikki.",
+   "en": "It will lead me to Ikki."
+  },
+  "PREP_1": {
+   "pt": "Ele é mais forte que os outros, Shun. Desta vez, ataque primeiro.",
+   "en": "He is stronger than the others, Shun. This time, strike first."
+  },
+  "HINT_KEY": {
+   "pt": "A Andrômeda Negra entrou. Sua corrente também sabe atacar.",
+   "en": "Black Andromeda has entered. Your chain can attack too."
+  },
+  "HINT_HOLD": {
+   "pt": "Não desista, Shun. O Ikki está logo ali.",
+   "en": "Do not give up, Shun. Ikki is right there."
+  },
+  "WIN_1": {
+   "pt": "A corrente de Shun encontra o caminho. A Andrômeda Negra cai.",
+   "en": "Shun's chain finds the way. Black Andromeda falls."
+  },
+  "WIN_2": {
+   "pt": "Bondade... e ainda assim você venceu.",
+   "en": "Kindness... and still you won."
+  },
+  "WIN_3": {
+   "pt": "Espere por mim, irmão.",
+   "en": "Wait for me, brother."
+  },
+  "LOSE_1": {
+   "pt": "Eu avisei. A bondade enforca.",
+   "en": "I warned you. Kindness strangles."
+  }
+ }
+}

@@ -2,13 +2,14 @@
   "title": "",
   "subtitle": "The Rhythm of Carnage",
   "flavour": "\"Each beat is another heartbeat stolen from the enemy.\"",
+  "bonusPower": "",
+  "bonusResistance": "",
   "art": {
-    "src": "art/ares-v6-306-ref.jpg",
-    "w": 1488.0,
-    "x": 0.0,
-    "y": -20.97,
-    "zoom": 1,
-    "baseW": 1488.0,
-    "provisoria": true
+    "src": "art/ares-v6-306.png",
+    "w": 2587.6124999999997,
+    "x": -549.8062499999999,
+    "y": -679.575,
+    "zoom": 1.65,
+    "baseW": 1568.25
   }
 }

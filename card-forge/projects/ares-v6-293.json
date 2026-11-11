@@ -2,13 +2,14 @@
   "title": "",
   "subtitle": "A Life Meant to Be Spent",
   "flavour": "\"Lord Lior promised us glory. He never promised survival.\"",
+  "bonusPower": "",
+  "bonusResistance": "",
   "art": {
-    "src": "art/ares-v6-293-ref.jpg",
-    "w": 1488.0,
-    "x": 0.0,
-    "y": -276.72,
-    "zoom": 1,
-    "baseW": 1488.0,
-    "provisoria": true
+    "src": "art/ares-v6-293.png",
+    "w": 1928.9475,
+    "x": -259.91973072443795,
+    "y": -359.04910983127206,
+    "zoom": 1.23,
+    "baseW": 1568.25
   }
 }

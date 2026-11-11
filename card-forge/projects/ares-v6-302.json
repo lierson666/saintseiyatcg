@@ -2,13 +2,14 @@
   "title": "",
   "subtitle": "Born for the Slaughter",
   "flavour": "\"Victory is measured by the enemies left standing. I intend to leave none.\"",
+  "bonusPower": "",
+  "bonusResistance": "",
   "art": {
-    "src": "art/ares-v6-302-ref.jpg",
-    "w": 1488.0,
-    "x": 0.0,
-    "y": -276.72,
-    "zoom": 1,
-    "baseW": 1488.0,
-    "provisoria": true
+    "src": "art/ares-v6-302.png",
+    "w": 2195.5499999999997,
+    "x": -397.6620412844036,
+    "y": -816.9646954242523,
+    "zoom": 1.4,
+    "baseW": 1568.25
   }
 }

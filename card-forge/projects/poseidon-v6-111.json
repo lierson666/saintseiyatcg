@@ -2,13 +2,14 @@
   "title": "",
   "subtitle": "The Tide Strikes Without Warning",
   "flavour": "",
+  "bonusPower": "",
+  "bonusResistance": "",
   "art": {
-    "src": "art/poseidon-v6-111-ref.jpg",
-    "w": 1488.0,
-    "x": 0.0,
-    "y": -167.54,
-    "zoom": 1,
-    "baseW": 1488.0,
-    "provisoria": true
+    "src": "art/poseidon-v6-111.png",
+    "w": 1803.4875,
+    "x": -205.16095183486232,
+    "y": -267.193482810468,
+    "zoom": 1.15,
+    "baseW": 1568.25
   }
 }

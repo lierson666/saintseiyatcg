@@ -4,6 +4,13 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-11-10 — §55 — Partida guiada do jogador novo
+
+- **Antes:** toda partida começava com cara ou coroa, mulligan e relógio.
+- **Depois:** só a partida de ensino do jogador novo não tem moeda, mulligan nem relógio; ele começa, com mão e compras combinadas. As demais regras não mudam.
+- **Motivo:** autor, 10/11/2026: primeira partida guiada para quem nunca jogou card game.
+- **Pendências:** nenhuma de regra. Código em `playtest/divine/guided.js`; a arte da Marin chibi substitui a provisória quando o autor enviar.
+
 ## 2026-11-09 — Cap. XI (tabela de parâmetros) e §65 — Compras por turno
 
 - **Antes:** as duas tabelas diziam 2 compras por turno, contra §7 e §55 (1 compra, autor, 01/11/2026).

@@ -2,13 +2,14 @@
   "title": "",
   "subtitle": "The Whisper Before the Scream",
   "flavour": "\"Fear is the wound that never heals.\"",
+  "bonusPower": "",
+  "bonusResistance": "",
   "art": {
-    "src": "art/ares-v6-294-ref.jpg",
-    "w": 1488.0,
-    "x": 0.0,
-    "y": -70.5,
+    "src": "art/ares-v6-294.png",
+    "w": 1568.25,
+    "x": -40.125,
+    "y": 0,
     "zoom": 1,
-    "baseW": 1488.0,
-    "provisoria": true
+    "baseW": 1568.25
   }
 }

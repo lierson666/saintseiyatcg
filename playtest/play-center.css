@@ -1,0 +1,33 @@
+/* Play Center V1.0 (autor, 11/11/2026): cinco modos + Central Competitiva. Só tokens do KV (shared/kv.css). */
+.pc { flex: 1 0 auto; display: grid; gap: 16px; grid-template-columns: repeat(2, minmax(0, 1fr)) minmax(260px, .8fr);
+  grid-template-areas: "story story side" "ranked friendly side" "ai academy side"; grid-auto-rows: minmax(150px, 1fr); }
+.pc-card--story { grid-area: story; min-height: 240px; }
+.pc-card--ranked { grid-area: ranked; } .pc-card--friendly { grid-area: friendly; }
+.pc-card--ai { grid-area: ai; } .pc-card--academy { grid-area: academy; }
+.pc-card.is-active { border-color: var(--kv-gold); box-shadow: 0 0 0 1px var(--kv-gold) inset; }
+.pc-card__kicker { color: var(--kv-gold-2); font-size: 11px; letter-spacing: .32em; }
+.pc-card--hero strong { font-size: clamp(26px, 2.6vw, 38px); }
+.pc-side { grid-area: side; display: flex; flex-direction: column; gap: 12px; padding: 20px; min-width: 0; }
+.pc-side h4 { margin: 8px 0 0; }
+.pc-side__note { margin: 0; color: var(--kv-muted); font-size: 14px; }
+.pc-side .kv-ghost { align-self: flex-start; display: inline-flex; align-items: center; text-decoration: none; }
+.pc-board { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; counter-reset: pc; }
+.pc-board li { counter-increment: pc; display: flex; gap: 10px; align-items: baseline; padding: 6px 0; border-bottom: 1px solid var(--kv-line); }
+.pc-board li::before { content: counter(pc, decimal-leading-zero); color: var(--kv-gold); font: 600 12px var(--kv-title); }
+.pc-board li b { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 500; }
+.pc-board li span { color: var(--kv-muted); font-size: 13px; }
+.pc-bar__text { display: grid; gap: 2px; margin-right: auto; min-width: 0; }
+.pc-bar__text small { color: var(--kv-gold-2); font: 600 11px var(--kv-title); letter-spacing: .32em; text-transform: uppercase; }
+.pc-bar__text strong { font-weight: 400; }
+@media (max-width: 760px) {
+  .pc { grid-template-columns: 1fr; grid-template-areas: none; grid-auto-rows: auto; }
+  .pc > * { grid-area: auto; }
+  .pc-card { min-height: 132px; }
+  .pc-card--story { min-height: 200px; }
+}
+/* Cabe na tela 16:9 sem cortar a última linha: as linhas dividem a altura disponível. */
+@media (min-width: 761px) {
+  .pc { min-height: 0; flex: 1 1 0; grid-auto-rows: auto; grid-template-rows: minmax(0, 1.35fr) minmax(0, 1fr) minmax(0, 1fr); }
+  .pc-card, .pc-card--story { min-height: 0; }
+  .pc-side { overflow-y: auto; overflow-x: hidden; }
+}

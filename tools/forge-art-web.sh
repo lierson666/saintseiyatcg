@@ -1,6 +1,6 @@
 #!/bin/sh
 # Gera o material leve do Card Forge para o Olympus Arena em card-forge/art-web/ (fora do git):
-#   <id>.jpg    arte de fundo em 640 px (JPEG q82)
+#   <id>.jpg    arte de fundo em até 2048 px (JPEG q85); tools/light-assets.py tira dela os tamanhos do jogo
 #   cards.json  metadados das cartas do Forge (data/cards.json + subtítulo/flavour do projeto), desenhadas ao vivo por shared/live-card.js
 # Uso: tools/forge-art-web.sh [checkout com o Card Forge]  (padrão: este checkout)
 # Rode de novo quando uma arte ou carta mudar no Forge; as artes só são refeitas se estiverem desatualizadas.
@@ -11,11 +11,12 @@ mkdir -p "$DEST"
 for f in "$ROOT"/card-forge/art/*.png "$ROOT"/card-forge/art/*.jpg; do
   [ -e "$f" ] || continue
   out="$DEST/$(basename "${f%.*}").jpg"
-  [ "$out" -nt "$f" ] && continue
-  # rosto do God no HUD vai com zoom alto: sai maior para não borrar
-  case "$f" in *-hud.*) size=2048 ;; *) size=640 ;; esac
+  [ -z "${FORCE:-}" ] && [ "$out" -nt "$f" ] && continue # FORCE=1 refaz todas
+  # sem ampliar: o sips -Z aumentaria arte pequena
+  size=$(sips -g pixelWidth -g pixelHeight "$f" | awk '/pixel/ {if ($2 > m) m = $2} END {print (m < 2048 ? m : 2048)}')
   sips -Z "$size" -s format jpeg -s formatOptions 85 "$f" --out "$out" >/dev/null
 done
+python3 "$(dirname "$0")/light-assets.py" # o jogo lê webp/touch/thumb/zoom; sem isto segue mostrando a arte antiga
 python3 - "$ROOT" "$DEST" <<'EOF'
 import json, sys, pathlib, subprocess
 root, dest = pathlib.Path(sys.argv[1]), pathlib.Path(sys.argv[2])

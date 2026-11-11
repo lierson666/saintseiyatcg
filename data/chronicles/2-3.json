@@ -1,0 +1,337 @@
+{
+ "nota": "Missão 2.3 do Cosmo Chronicles, segundo chefe (CONTEXT/cosmo-chronicles-saga-01.md, 11/11/2026). Regras normais; decks emprestados; Shunrei só em cena. Simulação (rival normal, 400 partidas por linha, 0 erros): jogador vence 50,8% (IA easy) e 63% (IA normal); mediana de 20 rodadas.",
+ "id": "2-3",
+ "saga": "saga-01",
+ "chapter": 2,
+ "order": 3,
+ "title": {
+  "pt": "Pégaso contra Dragão",
+  "en": "Pegasus against Dragon"
+ },
+ "description": {
+  "pt": "Tóquio, Japão. A luta mais esperada da Guerra Galáctica: Seiya contra Shiryu e o Escudo do Dragão, que nunca foi quebrado.",
+  "en": "Tokyo, Japan. The most awaited bout of the Galaxian Wars: Seiya against Shiryu and the Dragon Shield, which has never been broken."
+ },
+ "level": {
+  "pt": "Intermediário",
+  "en": "Intermediate"
+ },
+ "duration": {
+  "pt": "10–15 minutos",
+  "en": "10–15 minutes"
+ },
+ "characters": {
+  "seiya": {
+   "card": "athena-v6-001",
+   "name": {
+    "pt": "Seiya de Pégaso",
+    "en": "Pegasus Seiya"
+   }
+  },
+  "shiryu": {
+   "card": "athena-v6-003",
+   "name": {
+    "pt": "Shiryu de Dragão",
+    "en": "Dragon Shiryu"
+   }
+  },
+  "shunrei": {
+   "card": "athena-v6-037",
+   "name": {
+    "pt": "Shunrei, em Rozan",
+    "en": "Shunrei, at Rozan"
+   }
+  },
+  "marin": {
+   "card": "athena-v6-021",
+   "chibi": true,
+   "name": {
+    "pt": "Marin, na lembrança de Seiya",
+    "en": "Marin, in Seiya's memory"
+   }
+  },
+  "narrator": {
+   "name": {
+    "pt": "Narração",
+    "en": "Narration"
+   }
+  }
+ },
+ "requires": [
+  "2-2"
+ ],
+ "next": "2-4",
+ "player": {
+  "character": "seiya",
+  "deck": "chronicle-2-3-seiya"
+ },
+ "rival": {
+  "character": "shiryu",
+  "deck": "chronicle-2-3-shiryu",
+  "ai": "normal",
+  "mechanical_god": "god-athena"
+ },
+ "arena": "olympus",
+ "music": null,
+ "victory": {
+  "type": "engine",
+  "winner": "player"
+ },
+ "defeat": {
+  "draws_count_as": "defeat",
+  "retry": true
+ },
+ "reward": {
+  "enabled": true,
+  "coins": 250,
+  "boosters": 3,
+  "boss": true
+ },
+ "scenes": {
+  "intro": [
+   {
+    "art": "athena-v6-062",
+    "who": "narrator",
+    "line": "SCENE_1"
+   },
+   {
+    "art": "athena-v6-045",
+    "who": "narrator",
+    "line": "SCENE_2"
+   },
+   {
+    "art": "athena-v6-037",
+    "who": "shunrei",
+    "line": "SHUNREI_1"
+   },
+   {
+    "art": "athena-v6-003",
+    "who": "shiryu",
+    "line": "SHIRYU_1"
+   },
+   {
+    "art": "athena-v6-001",
+    "who": "seiya",
+    "line": "SEIYA_1"
+   }
+  ],
+  "prep": {
+   "who": "marin",
+   "line": "PREP_1",
+   "pose": "explain"
+  },
+  "win": [
+   {
+    "art": "athena-v6-004",
+    "who": "narrator",
+    "line": "WIN_1"
+   },
+   {
+    "art": "athena-v6-003",
+    "who": "shiryu",
+    "line": "WIN_2"
+   },
+   {
+    "art": "athena-v6-002",
+    "who": "seiya",
+    "line": "WIN_3"
+   }
+  ],
+  "lose": [
+   {
+    "art": "athena-v6-003",
+    "who": "shiryu",
+    "line": "LOSE_1"
+   }
+  ]
+ },
+ "hints": [
+  {
+   "id": "HINT_SHIELD",
+   "pose": "point",
+   "when": [
+    {
+     "event": "card_played",
+     "player": "B",
+     "card": "athena-v6-003"
+    }
+   ]
+  },
+  {
+   "id": "HINT_DRAGON",
+   "pose": "tip",
+   "when": [
+    {
+     "stall": 2
+    },
+    {
+     "event": "soul_lost",
+     "player": "A",
+     "atMost": {
+      "soul": 8
+     }
+    }
+   ]
+  }
+ ],
+ "decks": [
+  {
+   "id": "chronicle-2-3-seiya",
+   "god": "god-athena",
+   "domain_id": "athena-v6-062",
+   "main_deck": [
+    {
+     "card_id": "athena-v6-001",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-002",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-060",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-053",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-054",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-052",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-061",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-040",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-043",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-041",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-457",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-490",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-494",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-491",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-497",
+     "quantity": 2
+    },
+    {
+     "card_id": "neutral-v6-489",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-462",
+     "quantity": 3
+    }
+   ],
+   "nome": "Seiya · Chronicles 2.3",
+   "emprestado": true
+  },
+  {
+   "id": "chronicle-2-3-shiryu",
+   "god": "god-athena",
+   "domain_id": "athena-v6-062",
+   "main_deck": [
+    {
+     "card_id": "athena-v6-003",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-004",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-045",
+     "quantity": 1
+    },
+    {
+     "card_id": "athena-v6-059",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-058",
+     "quantity": 1
+    },
+    {
+     "card_id": "athena-v6-040",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-034",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-457",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-041",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-043",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-044",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-491",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-494",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-497",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-458",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-053",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-051",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-478",
+     "quantity": 3
+    }
+   ],
+   "nome": "Shiryu · Chronicles 2.3",
+   "emprestado": true
+  }
+ ]
+}

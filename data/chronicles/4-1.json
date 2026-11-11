@@ -1,0 +1,316 @@
+{
+ "nota": "Missão 4.1 do Cosmo Chronicles (CONTEXT/cosmo-chronicles-saga-01.md, 11/11/2026). Regras normais; só vencer. Cavaleiros Negros neutros com Athena só mecânica (decisão do autor, 11/11/2026). Domínio Galaxian Wars Arena dos dois lados até o autor definir o da Ilha da Rainha da Morte. Simulação (rival normal, 400 partidas por linha, 0 erros): jogador vence 56,8% (IA easy) e 64,3% (IA normal); mediana de 16 rodadas.",
+ "id": "4-1",
+ "saga": "saga-01",
+ "chapter": 4,
+ "order": 1,
+ "title": {
+  "pt": "Cisne Negro",
+  "en": "Black Swan"
+ },
+ "description": {
+  "pt": "Os Cavaleiros Negros se espalham com as partes da armadura. Um reflexo escuro de Hyoga o espera.",
+  "en": "The Black Saints scatter with the Cloth pieces. A dark reflection of Hyoga awaits him."
+ },
+ "level": {
+  "pt": "Intermediário",
+  "en": "Intermediate"
+ },
+ "duration": {
+  "pt": "10–15 minutos",
+  "en": "10–15 minutes"
+ },
+ "characters": {
+  "hyoga": {
+   "card": "athena-v6-005",
+   "name": {
+    "pt": "Hyoga de Cisne",
+    "en": "Cygnus Hyoga"
+   }
+  },
+  "blackswan": {
+   "card": "neutral-v6-453",
+   "name": {
+    "pt": "Cisne Negro",
+    "en": "Black Swan"
+   }
+  },
+  "crystal": {
+   "card": "neutral-v6-481",
+   "name": {
+    "pt": "Cavaleiro de Cristal, na lembrança de Hyoga",
+    "en": "Crystal Saint, in Hyoga's memory"
+   }
+  },
+  "narrator": {
+   "name": {
+    "pt": "Narração",
+    "en": "Narration"
+   }
+  }
+ },
+ "requires": [
+  "3-2"
+ ],
+ "next": "4-2",
+ "player": {
+  "character": "hyoga",
+  "deck": "chronicle-4-1-hyoga"
+ },
+ "rival": {
+  "character": "blackswan",
+  "deck": "chronicle-4-1-black-swan",
+  "ai": "normal",
+  "mechanical_god": "god-athena"
+ },
+ "arena": "olympus",
+ "music": null,
+ "victory": {
+  "type": "engine",
+  "winner": "player"
+ },
+ "defeat": {
+  "draws_count_as": "defeat",
+  "retry": true
+ },
+ "reward": {
+  "enabled": true,
+  "coins": 250,
+  "boosters": 1,
+  "boss": false
+ },
+ "scenes": {
+  "intro": [
+   {
+    "art": "neutral-v6-453",
+    "who": "narrator",
+    "line": "SCENE_1"
+   },
+   {
+    "art": "neutral-v6-453",
+    "who": "blackswan",
+    "line": "BLACKSWAN_1"
+   },
+   {
+    "art": "athena-v6-005",
+    "who": "hyoga",
+    "line": "HYOGA_1"
+   }
+  ],
+  "prep": {
+   "who": "crystal",
+   "line": "PREP_1"
+  },
+  "win": [
+   {
+    "art": "athena-v6-006",
+    "who": "narrator",
+    "line": "WIN_1"
+   },
+   {
+    "art": "neutral-v6-453",
+    "who": "blackswan",
+    "line": "WIN_2"
+   },
+   {
+    "art": "athena-v6-005",
+    "who": "hyoga",
+    "line": "WIN_3"
+   }
+  ],
+  "lose": [
+   {
+    "art": "neutral-v6-453",
+    "who": "blackswan",
+    "line": "LOSE_1"
+   }
+  ]
+ },
+ "hints": [
+  {
+   "id": "HINT_SWAN",
+   "when": [
+    {
+     "event": "card_played",
+     "player": "B",
+     "card": "neutral-v6-453"
+    }
+   ]
+  },
+  {
+   "id": "HINT_HOLD",
+   "when": [
+    {
+     "stall": 2
+    },
+    {
+     "event": "soul_lost",
+     "player": "A",
+     "atMost": {
+      "soul": 8
+     }
+    }
+   ]
+  }
+ ],
+ "decks": [
+  {
+   "id": "chronicle-4-1-hyoga",
+   "god": "god-athena",
+   "domain_id": "athena-v6-062",
+   "main_deck": [
+    {
+     "card_id": "athena-v6-005",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-006",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-078",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-481",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-053",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-054",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-052",
+     "quantity": 2
+    },
+    {
+     "card_id": "athena-v6-061",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-040",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-043",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-041",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-490",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-494",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-491",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-497",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-489",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-457",
+     "quantity": 3
+    }
+   ],
+   "nome": "Hyoga · Chronicles 4.1",
+   "emprestado": true
+  },
+  {
+   "id": "chronicle-4-1-black-swan",
+   "god": "god-athena",
+   "domain_id": "athena-v6-062",
+   "main_deck": [
+    {
+     "card_id": "neutral-v6-453",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-456",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-492",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-498",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-458",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-600",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-601",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-604",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-602",
+     "quantity": 1
+    },
+    {
+     "card_id": "neutral-v6-490",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-497",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-491",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-457",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-478",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-494",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-477",
+     "quantity": 2
+    },
+    {
+     "card_id": "neutral-v6-495",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-480",
+     "quantity": 2
+    }
+   ],
+   "nome": "Cisne Negro · Chronicles 4.1",
+   "emprestado": true
+  }
+ ]
+}

@@ -2,13 +2,14 @@
   "title": "",
   "subtitle": "Even Broken Armor Remembers the Sea",
   "flavour": "",
+  "bonusPower": "+1",
+  "bonusResistance": "+2",
   "art": {
-    "src": "art/poseidon-v6-122-ref.jpg",
-    "w": 1488.0,
-    "x": 0.0,
-    "y": -71.51,
+    "src": "art/poseidon-v6-122.png",
+    "w": 1568.25,
+    "x": -40.125,
+    "y": 0,
     "zoom": 1,
-    "baseW": 1488.0,
-    "provisoria": true
+    "baseW": 1568.25
   }
 }

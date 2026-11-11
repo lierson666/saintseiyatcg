@@ -1,0 +1,42 @@
+/* Descubra seu Cosmo (playtest/discover-cosmo.js). KV oficial. */
+.lb-body--discover { overflow-y: auto; }
+.dc { display: grid; gap: 16px; width: min(1040px, 100%); margin: 0 auto; padding: 20px max(20px, env(safe-area-inset-right)) calc(24px + env(safe-area-inset-bottom)) max(20px, env(safe-area-inset-left)); color: var(--kv-ink); font-family: Jost, sans-serif; }
+.dc-head h1 { margin: 0; font: italic 400 36px/1.1 "Cormorant Garamond", serif; letter-spacing: -.03em; }
+.dc-head p { margin: 4px 0 0; color: var(--kv-muted); font-size: 16px; }
+.dc-marin { display: flex; align-items: center; gap: 12px; }
+.dc-marin img { flex: none; width: 76px; height: 104px; object-fit: contain; }
+.dc-marin p { margin: 0; padding: 12px 16px; border: 1px solid var(--kv-line); border-radius: var(--kv-radius); background: var(--kv-glass); backdrop-filter: blur(10px); font-size: 17px; line-height: 1.4; }
+.dc-gods { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+.dc-god { position: relative; display: grid; justify-items: center; gap: 4px; min-height: 44px; padding: 8px 4px; border: 1px solid var(--kv-line); border-radius: var(--kv-radius); background: var(--kv-glass); color: var(--kv-ink); cursor: pointer; }
+.dc-god img { width: 64px; height: 64px; border-radius: 50%; object-fit: cover; object-position: top; }
+.dc-god b { font: 600 13px/1.2 Cinzel, serif; }
+.dc-god small { color: var(--kv-gold-2); font-size: 12px; }
+.dc-god.is-on { border-color: var(--kv-gold); }
+.dc-god:focus-visible, .dc-list button:focus-visible { outline: 2px solid var(--kv-gold-2); outline-offset: 2px; }
+.dc-panel { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 20px; padding: 16px; border: 1px solid var(--kv-line); border-radius: var(--kv-radius); background: var(--kv-glass); backdrop-filter: blur(10px); }
+.dc-star { display: grid; gap: 8px; justify-items: center; align-content: start; }
+.dc-star .lb-card { width: 200px; }
+.dc-info h2 { margin: 0; font: 700 24px/1.2 Cinzel, serif; }
+.dc-info h3 { margin: 14px 0 2px; }
+.dc-info p { margin: 0; font-size: 16px; line-height: 1.45; }
+.dc-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px !important; }
+.dc-tags span { padding: 2px 12px; border: 1px solid var(--kv-line); border-radius: var(--kv-pill); color: var(--kv-gold-2); font-size: 14px; }
+.dc-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.dc-actions button, .dc-home { min-height: 44px; }
+.dc-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 2px 12px; margin: 14px 0 0; padding: 0; list-style: none; }
+.dc-list button { width: 100%; min-height: 44px; padding: 0 4px; border: 0; border-bottom: 1px solid var(--kv-line); background: none; color: var(--kv-ink); font: 400 15px Jost, sans-serif; text-align: left; cursor: pointer; }
+.dc-list b { color: var(--kv-gold-2); font-weight: 500; }
+.dc-hint { margin: 0; color: var(--kv-muted); font-size: 16px; text-align: center; }
+.dc-home { justify-self: center; padding: 0 22px; }
+@media (max-width: 640px) {
+  .dc { padding-top: 12px; }
+  .dc-head h1 { font-size: 30px; }
+  .dc-marin img { width: 60px; height: 84px; }
+  .dc-marin p { font-size: 16px; }
+  .dc-gods { gap: 4px; }
+  .dc-god { padding: 6px 2px; }
+  .dc-god img { width: 44px; height: 44px; }
+  .dc-god b { font-size: 10px; letter-spacing: 0; }
+  .dc-panel { grid-template-columns: minmax(0, 1fr); }
+  .dc-actions button { flex: 1 1 100%; }
+}

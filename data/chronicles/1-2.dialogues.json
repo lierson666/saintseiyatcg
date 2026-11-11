@@ -1,0 +1,37 @@
+{
+ "nota": "Falas da missão 1.2, roteiro V1.0 do autor (11/11/2026). Máximo de duas frases por fala.",
+ "lines": {
+  "SCENE_1": {
+   "pt": "Santuário de Athena, Grécia. Seis anos de treinamento terminam hoje.",
+   "en": "Athena's Sanctuary, Greece. Six years of training end today."
+  },
+  "MARIN_1": {
+   "pt": "Seiya, chegou o momento de mostrar tudo o que aprendeu. A Armadura de Pégaso será entregue ao vencedor.",
+   "en": "Seiya, the time has come to show everything you've learned. The Pegasus Cloth goes to the winner."
+  },
+  "CASSIOS_1": {
+   "pt": "Você nunca conseguiu me derrotar, Seiya. Hoje não será diferente.",
+   "en": "You've never beaten me, Seiya. Today won't be any different."
+  },
+  "PREP_1": {
+   "pt": "Cassios é forte, mas força não é tudo. Use seu Cosmo com inteligência e encontre o momento certo de atacar.",
+   "en": "Cassios is strong, but strength isn't everything. Use your Cosmo wisely and find the right moment to strike."
+  },
+  "HINT_BASES": {
+   "pt": "Observe suas Bases antes de jogar outra carta. Você precisa administrar seu Cosmo para continuar atacando.",
+   "en": "Check your Bases before playing another card. You need to manage your Cosmo to keep attacking."
+  },
+  "WIN_1": {
+   "pt": "Você conseguiu, Seiya! Seu Cosmo despertou e a Armadura de Pégaso agora é sua.",
+   "en": "You did it, Seiya! Your Cosmo has awakened, and the Pegasus Cloth is yours."
+  },
+  "WIN_2": {
+   "pt": "Eu consegui, Marin! Agora preciso voltar ao Japão e encontrar minha irmã.",
+   "en": "I did it, Marin! Now I have to go back to Japan and find my sister."
+  },
+  "LOSE_1": {
+   "pt": "Cassios venceu desta vez. Levante, Seiya, e tente outra vez.",
+   "en": "Cassios won this time. Get up, Seiya, and try again."
+  }
+ }
+}

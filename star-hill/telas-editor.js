@@ -1,5 +1,5 @@
-// STAR HILL · Telas e som (autor, 30/10/2026): edita data/olympus-telas.json, que o jogo lê em playtest/telas.js.
-// Home (carrossel e blocos), fundos, cores, textos, animações (ligada e velocidade) e áudio (músicas e sons por evento).
+// STAR HILL · HUD Forge e Sound Forge (autor, 11/11/2026; antes "Telas e som", 30/10/2026): editam data/olympus-telas.json, que o jogo lê em playtest/telas.js.
+// HUD Forge: home (banner reserva e botão Play), fundos, cores, textos, duelo (animação e som por evento). Sound Forge: músicas, sons dos menus, facções e vozes.
 import {openSoundBrowser, soundUrl} from '/shared/sound-browser.js?v=12';
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
 const ANIMS = {compra: 'Compra de carta', conjurar: 'Conjurar carta e Base', cosmo: 'Cosmo pago e Latent', gatilho: 'Gatilhos e habilidades',
@@ -26,15 +26,19 @@ const MOMENTOS = [['cast', 'Ao conjurar', 'A carta foi jogada'], ['entrada', 'En
   ['carga', 'Barulho: carga do golpe', 'Cosmo sobe antes do impacto'], ['impacto', 'Barulho: impacto em Devotee', 'Strike acertou um Devotee'], ['impacto_deus', 'Barulho: impacto no Deus', 'Strike acertou o Deus'],
   ['poder_divino', 'Barulho: Poder Divino', 'God usou o Poder Divino'], ['poder_dominio', 'Barulho: poder do Domain', 'Domain usou o poder'], ['awaken', 'Barulho: Awaken', 'God despertou'], ['morte_deus', 'Barulho: explosão ao morrer', 'O Deus caiu']];
 let cardVoices = {}, faccao = 'Athena';
-const SECOES = [['home', 'Home'], ['fundos', 'Fundos'], ['cores', 'Cores'], ['textos', 'Textos'], ['duelo', 'Duelo'], ['musicas', 'Músicas'], ['sons', 'Sons dos menus'], ['vozes', 'Vozes']];
-const SOUNDS = {ultimate: 'Ultimate', clique: 'Clique nos menus', play: 'Botão Play', voltar: 'Voltar', turno: 'Início de turno', compra: 'Compra de carta', conjurar: 'Conjurar carta', equipar_armadura: 'Equipar armadura', equipar_arma: 'Equipar arma',
+// Duas áreas do menu (autor, 11/11/2026): HUD Forge (telas) e Sound Forge (músicas e sons). O mesmo JSON; cada área só mexe na sua parte.
+const SECOES = {
+  hud: [['home', 'Home'], ['fundos', 'Fundos'], ['cores', 'Cores'], ['textos', 'Textos'], ['duelo', 'Duelo'], ['previa', 'Prévia']],
+  som: [['musicas', 'Músicas'], ['sons', 'Sons dos menus'], ['faccoes', 'Sons por facção'], ['vozes', 'Vozes']],
+};
+let area = 'hud', previa = null;
+const SOUNDS = {ultimate: 'Ultimate', clique: 'Clique nos menus', play: 'Botão Play', turno: 'Início de turno', compra: 'Compra de carta', conjurar: 'Conjurar carta', equipar_armadura: 'Equipar armadura', equipar_arma: 'Equipar arma',
   cosmo: 'Cosmo pago', hover: 'Passar o mouse', hover_mao: 'Carta na mão', hover_base: 'Base de Cosmo', passar_turno: 'Passar o turno', receber_turno: 'Receber o turno', declarar_ataque: 'Declarar ataque', carga: 'Carga do golpe', impacto: 'Impacto em Devotee', impacto_deus: 'Impacto no Deus', dano_deus: 'Dano no Soul', poder_divino: 'Poder Divino', poder_dominio: 'Poder do Domain', awaken: 'Awaken', morte_deus: 'Explosão do Deus', gatilho: 'Gatilho', ataque: 'Ataque', dano: 'Dano', morte: 'Carta derrotada', vitoria: 'Vitória', derrota: 'Derrota'};
 // Cores com o valor padrão do CSS (shared/kv.css e playtest/divine/divine.css).
 const COLORS = {
   lobby: {'--kv-bg': '#05060c', '--kv-ink': '#f5f1e6', '--kv-muted': '#a8a397', '--kv-gold': '#e6c36a', '--kv-gold-2': '#ffe7a3', '--kv-ember': '#ff8a2b', '--kv-error': '#ff9a87'},
   duelo: {'--ink': '#f4efe2', '--muted': '#b8b1c9', '--gold': '#e8c46a', '--gold-hi': '#ffe4a0', '--base': '#ffd36e', '--latent': '#b58cff', '--red': '#ff7a6a', '--shield': '#8fd8ff', '--armor': '#d8e4ff'},
 };
-const DESTINOS = {decks: 'Tela Decks', play: 'Abrir o Play', profile: 'Tela Profile', options: 'Tela Options'};
 
 let doc = null, revisao = null, dirty = false, arts = [], uploads = [], audios = [], pairs = [], root = null, hooks = null;
 
@@ -84,23 +88,30 @@ const moveBtns = (list, i, n) => `<div class="tl-row-actions"><button type="butt
   <button type="button" data-tl="del" data-list="${list}" data-i="${i}" aria-label="Remover">Remover</button></div>`;
 
 function page() {
-  const h = doc.home;
   return `<div class="tl-bar panel"><span id="tl-status" class="tag"></span>
       <div class="actions"><button class="primary" data-tl="save">Salvar</button><a href="../playtest/" target="_blank" rel="noopener">Abrir jogo ↗</a>
       <button data-action="publish-site" title="Envia cartas, artes, telas e sons ao saintseiyatcg.com.">Publicar no site</button></div>
-      <nav class="tl-nav" aria-label="Seções">${SECOES.filter(([id]) => id !== 'vozes' || audios.some(a => a.origem?.startsWith('ps3-voz-'))).map(([id, l]) => `<button type="button" data-tl="jump" data-to="tl-${id}">${l}</button>`).join('')}</nav></div>
-    <section class="panel tl" id="tl-home"><h2>Home · carrossel</h2><p class="hint">Cada slide: imagem de fundo e textos. A ordem aqui é a ordem no jogo.</p>
+      <nav class="tl-nav" aria-label="Seções">${SECOES[area].filter(([id]) => id !== 'vozes' || audios.some(a => a.origem?.startsWith('ps3-voz-'))).map(([id, l]) => `<button type="button" data-tl="jump" data-to="tl-${id}">${l}</button>`).join('')}</nav></div>
+    ${area === 'som' ? somPage() : hudPage()}`;
+}
+
+// Como a home do lobby é montada hoje (playtest/lobby.js, 11/11/2026). Só o que está aqui sai do JSON; o resto é fixo no código.
+function hudPage() {
+  const h = doc.home;
+  return `<section class="panel tl" id="tl-home"><h2>Home · o que o jogo mostra hoje</h2>
+      <ul class="tl-uso">
+        <li><b>Banner do topo</b> — as 5 matérias mais novas do blog do Cosmo Hub, no idioma do jogador. <span class="tag">automático</span></li>
+        <li><b>Banner reserva</b> — os slides abaixo. Só aparecem quando o Cosmo Hub não tem matéria ou não responde. <span class="tag">editável</span></li>
+        <li><b>Menu</b> — 4 botões fixos: Story mode, Ranked match, Friendly match e Tutorial. <span class="tag">fixo no código</span></li>
+        <li><b>Botão Play</b> — abre a aba JOGAR. Só o texto dele vem daqui. <span class="tag">editável</span></li>
+      </ul>
+      <h3>Banner reserva · slides</h3><p class="hint">Cada slide: imagem de fundo e textos. A ordem aqui é a ordem no jogo.</p>
       ${h.slides.map((s, i) => `<div class="tl-card">${imagePicker(`home.slides.${i}.imagem`)}
         <div class="tl-grid">${field(`home.slides.${i}.carimbo`, 'Selo')}${field(`home.slides.${i}.linha1`, 'Linha 1')}${field(`home.slides.${i}.linha2`, 'Linha 2 (grande)')}${field(`home.slides.${i}.texto`, 'Texto')}</div>
         ${moveBtns('home.slides', i, h.slides.length)}</div>`).join('')}
-      <button data-tl="add-slide" ${h.slides.length >= 12 ? 'disabled' : ''}>+ Slide</button></section>
-    <section class="panel tl"><h2>Home · blocos ao lado</h2>
-      ${h.blocos.map((b, i) => `<div class="tl-card">${imagePicker(`home.blocos.${i}.imagem`)}
-        <div class="tl-grid">${field(`home.blocos.${i}.rotulo`, 'Rótulo')}${field(`home.blocos.${i}.titulo`, 'Título')}
-        <label class="tl-field"><span>Ao clicar</span><select data-path="home.blocos.${i}.destino">${Object.entries(DESTINOS).map(([k, l]) => `<option value="${k}" ${b.destino === k ? 'selected' : ''}>${l}</option>`).join('')}</select></label></div>
-        ${moveBtns('home.blocos', i, h.blocos.length)}</div>`).join('')}
-      <button data-tl="add-bloco" ${h.blocos.length >= 6 ? 'disabled' : ''}>+ Bloco</button>
-      <div class="tl-grid">${field('home.botao_play', 'Texto do botão Play', 30)}</div></section>
+      <button data-tl="add-slide" ${h.slides.length >= 12 ? 'disabled' : ''}>+ Slide</button>
+      <div class="tl-grid">${field('home.botao_play', 'Texto do botão Play', 30)}</div>
+</section>
     <section class="panel tl" id="tl-fundos"><h2>Fundos</h2>
       <h3>Menus (Home, Decks, Profile, Options)</h3>${imagePicker('fundos.lobby', true)}
       <h3>Duelo</h3><p class="hint">Fica por cima do cenário 3D, atrás das cartas.</p>${imagePicker('fundos.duelo', true)}
@@ -113,13 +124,18 @@ function page() {
       ${pairs.map(([a, b], i) => `<div class="tl-text"><input data-text-from="${i}" value="${esc(a)}" placeholder="Texto original" maxlength="300"><span aria-hidden="true">→</span>
         <input data-text-to="${i}" value="${esc(b)}" placeholder="Texto novo" maxlength="300"><button type="button" data-tl="text-del" data-i="${i}">Remover</button></div>`).join('')}
       <button data-tl="text-add">+ Texto</button></section>
-    ${duelo()}
-    <section class="panel tl" id="tl-musicas"><h2>Músicas</h2>
+    ${duelo()}`;
+}
+
+function somPage() {
+  return `<section class="panel tl" id="tl-musicas"><h2>Músicas</h2>
       <h3>Menus</h3>${audioPicker('audio.menu')}<h3>Abertura da batalha</h3>${audioPicker('audio.inicio_batalha')}
       <h3>Playlist da batalha</h3><p class="hint">Tocam em ordem aleatória depois da abertura.</p><div class="tl-playlist">
       ${audios.filter(a => a.grupo === 'musica').map(a => `<label><input type="checkbox" data-playlist="${esc(a.arquivo)}" ${doc.audio.playlist.includes(a.arquivo) ? 'checked' : ''}> ${esc(a.nome)}</label>`).join('')}</div></section>
     <section class="panel tl" id="tl-sons"><h2>Sons dos menus e do fim da partida</h2>
-      ${Object.entries(SOUNDS).filter(([k]) => !DUELO.some(g => g.linhas.some(l => l.som === k))).map(([k, l]) => `<div class="tl-sound"><span>${l}</span>${soundChooser(`audio.efeitos.${k}`)}</div>`).join('')}</section>
+      ${Object.entries(SOUNDS).filter(([k]) => !DUELO.some(g => g.linhas.some(l => l.som === k))).map(([k, l]) => `<div class="tl-sound"><span>${l}</span>${soundChooser(`audio.efeitos.${k}`)}</div>`).join('')}
+      <p class="hint">Os sons dos eventos do duelo ficam no <a href="#hud">HUD Forge → Duelo</a>, ao lado da animação de cada evento.</p></section>
+    ${faccoes()}
     ${vozes()}`;
 }
 
@@ -135,8 +151,7 @@ function duelo() {
   return `<section class="panel tl" id="tl-duelo"><div class="tl-head"><h2>Animações e sons do duelo</h2><span class="tag">${comSom} de ${todas.length} com som</span></div>
     <p class="hint">Para escolher o efeito e o som juntos e ver na mesa: Animações → Momentos do jogo.</p>
     <div class="tl-anim tl-anim--head" aria-hidden="true"><span>Evento</span><span>Som</span><span>Velocidade</span></div>
-    ${DUELO.map(g => `<h3>${g.titulo}</h3>${g.linhas.map(linha).join('')}`).join('')}</section>
-    ${faccoes()}`;
+    ${DUELO.map(g => `<h3>${g.titulo}</h3>${g.linhas.map(linha).join('')}`).join('')}</section>`;
 }
 function faccoes() {
   const v = cardVoices[`faccao-${faccao.toLowerCase()}`] || {};
@@ -215,10 +230,18 @@ function draw() {
   scrollTo(0, y);
 }
 
-export function mountTelas(el, {api, notice, publishSite}) {
-  root = el; hooks = {api, notice, publishSite};
+// A prévia fica fora do `root`: o editor redesenha a cada clique e isso recarregaria o jogo.
+export function mountTelas(el, {api, notice, publishSite, area: qual = 'hud'}) {
+  area = qual;
+  el.innerHTML = `<div></div>${area === 'hud' ? `<section class="panel tl" id="tl-previa"><div class="tl-head"><h2>Prévia da home</h2><button type="button" id="tl-previa-reload">Atualizar prévia</button></div>
+    <p class="hint">O jogo real com o que está salvo. Neste servidor local não há blog, então aparece o banner reserva. Salvar atualiza a prévia.</p>
+    <iframe class="tl-previa" title="Prévia da home do jogo" src="../playtest/?previa=${Date.now()}"></iframe></section>` : ''}`;
+  root = el.firstElementChild; hooks = {api, notice, publishSite};
+  previa = el.querySelector('.tl-previa');
+  el.querySelector('#tl-previa-reload')?.addEventListener('click', reloadPreview);
   draw();
 }
+function reloadPreview() { if (previa?.isConnected) previa.src = `../playtest/?previa=${Date.now()}`; }
 
 async function upload(file, path) {
   const r = await fetch('/api/star-hill/upload', {method: 'POST', headers: {'X-File-Name': encodeURIComponent(file.name), 'X-Game-Source': 'telas'}, body: file});
@@ -273,7 +296,6 @@ document.addEventListener('click', async e => {
   if (act === 'up' || act === 'down') { const j = act === 'up' ? i - 1 : i + 1; [list[i], list[j]] = [list[j], list[i]]; dirty = true; }
   if (act === 'del') { if (b.dataset.list === 'home.slides' && list.length === 1) return hooks.notice('O carrossel precisa de pelo menos 1 slide.'); list.splice(i, 1); dirty = true; }
   if (act === 'add-slide') { doc.home.slides.push({imagem: arts[0]?.value || 'card:god-athena', carimbo: '', linha1: '', linha2: 'New slide', texto: ''}); dirty = true; }
-  if (act === 'add-bloco') { doc.home.blocos.push({imagem: arts[0]?.value || 'card:god-athena', rotulo: '', titulo: 'New', destino: 'decks'}); dirty = true; }
   if (act === 'color-reset') { delete doc.cores[b.dataset.color][b.dataset.var]; dirty = true; }
   if (act === 'text-add') { pairs.push(['', '']); dirty = true; }
   if (act === 'text-del') { pairs.splice(i, 1); dirty = true; }
@@ -286,7 +308,7 @@ document.addEventListener('click', async e => {
   if (act === 'faccao-ouvir') { player?.pause(); player = new Audio(soundUrl(b.dataset.id)); player.play().catch(() => {}); return; }
   if (act === 'clear-sound') set(b.dataset.path, null);
   if (act === 'save') {
-    try { await saveDoc(); hooks.notice('Salvo. Recarregue o jogo para ver; use Publicar no site para levar ao jogo online.', true); }
+    try { await saveDoc(); reloadPreview(); hooks.notice('Salvo. Recarregue o jogo para ver; use Publicar no site para levar ao jogo online.', true); }
     catch (err) { hooks.notice(err.message); }
   }
   draw();

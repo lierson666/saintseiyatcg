@@ -1,0 +1,49 @@
+{
+ "nota": "Falas da missão 2.4 (rascunho da Saga 01, revisado em 11/11/2026). Máximo de duas frases por fala.",
+ "lines": {
+  "SCENE_1": {
+   "pt": "Tóquio, Japão. A última luta da Guerra Galáctica vai começar.",
+   "en": "Tokyo, Japan. The last bout of the Galaxian Wars is about to begin."
+  },
+  "SCENE_2": {
+   "pt": "Shun não quer ferir ninguém. Jabu acha que isso é fraqueza.",
+   "en": "Shun doesn't want to hurt anyone. Jabu thinks that's weakness."
+  },
+  "JABU_1": {
+   "pt": "Você treme antes de lutar.",
+   "en": "You tremble before a fight."
+  },
+  "SHUN_1": {
+   "pt": "Eu só queria que você desistisse.",
+   "en": "I only wished you would give up."
+  },
+  "PREP_1": {
+   "pt": "Jabu ataca rápido, Shun. Proteja-se e não deixe que te derrubem.",
+   "en": "Jabu strikes fast, Shun. Guard yourself and don't let them take you down."
+  },
+  "HINT_SHUN": {
+   "pt": "Shun está em campo. Mantenha-o a salvo para cumprir o desafio.",
+   "en": "Shun is on the field. Keep him safe to meet the challenge."
+  },
+  "HINT_JABU": {
+   "pt": "Aguente firme, Shun. A corrente defende e ataca.",
+   "en": "Hold on, Shun. The chain defends and strikes."
+  },
+  "WIN_1": {
+   "pt": "A corrente se fecha. Jabu não consegue mais se levantar.",
+   "en": "The chain closes. Jabu can no longer get up."
+  },
+  "WIN_2": {
+   "pt": "Então isso não era medo. Era bondade.",
+   "en": "So it wasn't fear. It was kindness."
+  },
+  "WIN_3": {
+   "pt": "De repente as luzes caem. Uma voz vem das chamas.",
+   "en": "Suddenly the lights go out. A voice comes from the flames."
+  },
+  "LOSE_1": {
+   "pt": "Viu? Bondade não vence luta.",
+   "en": "See? Kindness doesn't win fights."
+  }
+ }
+}

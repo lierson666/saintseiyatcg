@@ -335,6 +335,24 @@ def unpublish_content(h, cid):
     h.send_json(200, {'status': 'draft'})
 
 
+def delete_content(h, cid):
+    """Apaga o post de vez (autor, 11/11/2026): conteúdo, revisões e a conversa do artigo. O audit guarda título e slug."""
+    user = require_role(h, 'publisher')
+    with lock:
+        row = get_content_row(int(cid))
+        if row['kind'] in ('ruling', 'balance') and not is_dev(h, user):
+            raise ApiError(403, 'Only developers delete official rulings and balance entries.')
+        target = f'content:{row["slug"]}'
+        ids = 'select id from comments where target = ?'
+        conn.execute(f'delete from comment_votes where comment_id in ({ids})', (target,))
+        conn.execute(f'delete from comment_reports where comment_id in ({ids})', (target,))
+        conn.execute('delete from comments where target = ?', (target,))
+        conn.execute('delete from content_revisions where content_id = ?', (row['id'],))
+        conn.execute('delete from content where id = ?', (row['id'],))
+        audit(user['id'], 'content.delete', f'content:{row["id"]}', slug=row['slug'], title=row['title'], status=row['status'])
+    h.send_json(200, {'ok': True})
+
+
 def list_content(h):
     q = h.query()
     user = h.current_user()
@@ -350,7 +368,8 @@ def list_content(h):
             values = q[key].split(',')[:8]
             sql += f' and {key} in ({",".join("?" * len(values))})'
             args.extend(values)
-    rows = conn.execute(sql + ' order by featured desc, coalesce(publish_at, updated_at) desc limit 50', args).fetchall()
+    limit = 1000 if staff else 50  # a equipe vê todos os posts (Nexus do STAR HILL); o público, os 50 mais recentes
+    rows = conn.execute(sql + f' order by featured desc, coalesce(publish_at, updated_at) desc limit {limit}', args).fetchall()
     names = public_names(r['author_id'] for r in rows)
     h.send_json(200, {'items': [content_row(r, names) for r in rows]})
 
@@ -1323,7 +1342,7 @@ def _routes():
         ('GET', 'health', health), ('GET', 'me', me), ('GET', 'home', home_feed), ('GET', 'meta', meta_hub), ('GET', 'collection', my_collection),
         ('GET', 'console', console), ('GET', 'audit', audit_log), ('POST', 'roles', grant_role), ('DELETE', r'roles/([A-Za-z0-9_]{3,20})/([a-z]+)', revoke_role),
         ('GET', 'content', list_content), ('POST', 'content', create_content), ('GET', r'content/([a-z0-9-]+)', read_content),
-        ('PATCH', r'content/(\d+)', update_content), ('POST', r'content/(\d+)/publish', publish_content), ('POST', r'content/(\d+)/unpublish', unpublish_content),
+        ('PATCH', r'content/(\d+)', update_content), ('DELETE', r'content/(\d+)', delete_content), ('POST', r'content/(\d+)/publish', publish_content), ('POST', r'content/(\d+)/unpublish', unpublish_content),
         ('GET', 'decks', list_decks), ('POST', 'decks', share_deck), ('GET', r'decks/([\w-]+)', read_deck), ('PATCH', r'decks/([\w-]+)', patch_deck),
         ('POST', r'decks/([\w-]+)/rate', rate_deck), ('POST', r'decks/([\w-]+)/favorite', favorite_deck), ('POST', r'decks/([\w-]+)/fork', fork_deck),
         ('GET', 'comments', list_comments), ('POST', 'comments', add_comment), ('POST', r'comments/(\d+)/vote', vote_comment), ('POST', r'comments/(\d+)/report', report_comment),

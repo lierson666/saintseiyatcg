@@ -5,12 +5,11 @@
   "bonusPower": "",
   "bonusResistance": "",
   "art": {
-    "src": "art/hades-v6-251-ref.jpg",
-    "w": 1488.0,
-    "x": 0.0,
-    "y": -275.71,
-    "zoom": 1,
-    "baseW": 1488.0,
-    "provisoria": true
+    "src": "art/hades-v6-251.png",
+    "w": 2336.6925,
+    "x": -481.69269495412846,
+    "y": 102.95804270968802,
+    "zoom": 1.49,
+    "baseW": 1568.25
   }
 }

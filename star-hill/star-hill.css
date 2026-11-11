@@ -98,6 +98,9 @@ small.publish-result{color:#8fe3a8;font-weight:600}
 .tl-speed input{flex:1;min-width:0;accent-color:var(--gold)}
 .tl-speed--none{font-size:.8rem}
 .tl-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+/* HUD Forge (11/11/2026): uso real da home e prévia do jogo */
+.tl-uso{margin:0 0 8px;padding-left:18px;display:grid;gap:6px;color:var(--muted)}.tl-uso b{color:var(--ink)}.tl-uso .tag{margin-left:6px;font-size:11px}
+.tl-previa{display:block;width:100%;aspect-ratio:16/10;border:1px solid var(--line);border-radius:8px;background:#05060c}
 .tl-nav{flex-basis:100%;display:flex;flex-wrap:wrap;gap:6px}
 .tl-nav button{min-height:30px;padding:3px 10px;font-size:.82rem}
 .panel.tl{scroll-margin-top:150px}

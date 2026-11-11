@@ -2,7 +2,7 @@
 // dramatiza em sequência. Nunca decide resultado: os números exibidos vêm dos próprios eventos.
 // `ui` é o adaptador do DOM (posições e textos); `fx` é a camada WebGL (pode faltar: tudo vira só DOM).
 import {wait} from './scene.js?v=20261031-pool1';
-import {strikeSound, chargeSound} from '../audio.js?v=20261106-menu1';
+import {strikeSound, chargeSound} from '../audio.js?v=20261107-player3';
 import {anim, ANIM_OF, sound} from '../telas.js?v=20261107-deus1';
 import {ELEMENT_COLOR} from './pixel-vfx.js?v=20261104-anim4';
 import {tunedFx} from './particle-tune.js';
@@ -78,7 +78,7 @@ export function createDirector({ui, getFx, settings}) {
   let cause = null;
   const EXIT = {
     athena: {color: '#ffe9a8', pixel: 'light', star: '#fff3c4', grav: -90},
-    hades: {color: '#9a6bff', pixel: 'dark', star: '#6a3acc', grav: 120},
+    hades: {color: '#9a6bff', pixel: 'vx-0826b75ed129', star: '#6a3acc', grav: 120},
     artemis: {color: '#cfe9ff', pixel: 'sparkle', star: '#e6fff3', grav: -60},
     ares: {color: '#ff7a3a', pixel: 'fire', star: '#ffb070', grav: -140},
     poseidon: {color: '#7fd0ff', pixel: 'bubbles', star: '#bfe9ff', grav: 260},
@@ -195,25 +195,29 @@ export function createDirector({ui, getFx, settings}) {
       await ui.banner(ui.isViewer(e.player) ? 'Your round' : `${ui.seatName(e.player)}'s round`, e.player, t(900)); },
     async draw(e) { if (!settings.skipDraws && !e.opening) await ui.flyCard(e.uid, ui.deckRect(e.player), ui.handRect(e.player), t(220), !ui.isViewer(e.player)); },
     async mulligan() {},
+    // Base nova (autor, 07/11/2026): a carta vira luz onde caiu e uma estrela de Cosmo voa direto para a vaga dela no campo.
+    // Nada passa pelo box do Cosmo Base: o número só aumenta.
     async base_placed(e) {
-      const at = ui.center(ui.bankRect(e.player, 'base'));
-      await ui.flyCard(e.uid, ui.rect(e.uid) || ui.handRect(e.player), ui.bankRect(e.player, 'base'), t(260), false);
-      fx()?.burst(at.x, at.y, {color: '#ffd36e', count: 30, speed: 200});
+      const f = fx(), src = ui.rect(e.uid) || ui.handRect(e.player), a = ui.center(src);
+      if (f && !skipping && a) f.charge(a.x, a.y, {color: '#bfe6ff', count: 40, radius: 70});
+      await ui.dissolveCard?.(e.uid, src, t(320), !ui.isViewer(e.player));
+      const b = ui.center(ui.newBaseRect(e.player)); // a vaga ainda não existe: o render vem depois da animação
+      if (f && !skipping && a && b) {
+        f.projectile(a, b, {color: '#9fd8ff', size: 22, trail: 5, arc: 80, duration: .42});
+        await pause(420);
+        f.burst(b.x, b.y, {color: '#ffe9a8', count: 34, speed: 220});
+        f.shockwave(b.x, b.y, {color: '#bfe6ff', size: 120, duration: .4});
+      }
       ui.bankPulse?.(e.player);
     },
-    // Cosmo como pool (autor, 28/10/2026): a energia sai das Bases prontas (ou do Latent), junta-se no orbe de Cosmo
-    // do jogador e só depois corre até a carta conjurada em card_played.
+    // Cosmo gasto (autor, 07/11/2026): sem trilha até o box do Cosmo Base nem até a carta; as Bases usadas só faíscam no lugar.
     async cosmo_spent(e) {
-      const poolAt = ui.center(ui.bankRect(e.player, 'base'));
       const from = (e.unit === 'base' ? (e.uids ? ui.baseRects(e.uids) : ui.readyBaseRects(e.player, e.amount)) : [ui.bankRect(e.player, 'latent')]).map(ui.center);
       ui.spendOrbs(e.player, e.unit, e.amount);
-      pool[e.player] = (pool[e.player] || 0) + e.amount;
       const f = fx();
-      if (!f || skipping || !poolAt) return pause(160);
-      from.filter(Boolean).forEach((p, i) => setTimeout(() => f.beam(p, poolAt, {color: '#7fc8ff', width: 12, duration: .34}), t(i * 70)));
-      await pause(320 + from.length * 40);
-      f.charge(poolAt.x, poolAt.y, {color: '#9fd8ff', count: 16 * e.amount, radius: 55});
-      await pause(160);
+      if (!f || skipping) return pause(120);
+      from.filter(Boolean).forEach(p => f.burst(p.x, p.y, {color: '#9fd8ff', count: 14, speed: 140, life: .45}));
+      await pause(180);
     },
     async latent_gained(e) {
       const at = ui.center(ui.bankRect(e.player, 'latent'));
@@ -224,13 +228,6 @@ export function createDirector({ui, getFx, settings}) {
     async card_played(e) {
       moment(e.from === 'tartarus' ? 'retorno' : e.from ? 'entrada' : 'cast', e.uid, ui.rect(e.uid));
       ui.speak?.(e.from === 'tartarus' ? 'retorno' : e.from ? 'entrada' : 'cast', e.uid); // som próprio da carta (autor, 02/11/2026); `from`: posta em campo sem conjurar
-      const f = fx(), poolAt = ui.center(ui.bankRect(e.player, 'base')), src = ui.center(ui.rect(e.uid) || ui.handRect(e.player));
-      if (pool[e.player] && f && !skipping && poolAt && src) { // o pool encontra a carta e a energia a vira para o campo
-        f.beam(poolAt, src, {color: '#a8e4ff', width: 14 + 4 * Math.min(pool[e.player], 6), duration: .38});
-        await pause(300);
-        f.burst(src.x, src.y, {color: '#bfe6ff', count: 28, speed: 220});
-      }
-      pool[e.player] = 0;
       // Cast estilo Arena (autor, 31/10/2026): a carta vai só para a pilha (app.js drawZoom); a chegada ao campo é na
       // resolução (app.js flyResolved), nunca ao mesmo tempo.
       ui.log(e);
@@ -464,7 +461,7 @@ export function createDirector({ui, getFx, settings}) {
       }
       ui.log(e);
       await pause(360);
-    }, async resolve(e) { cause = {ref: e.uid}; if (e.ability) ui.speak?.('linha', e.uid, e.ability); /* a fala sai quando resolve, não quando vai à pilha (autor, 02/11/2026) */ abilityVfx(e); ui.pulse(e.uid, 'trigger-pop'); await pause(300); }, async end_phase(e) { ui.log(e); },
+    }, async resolve(e) { cause = {ref: e.uid}; if (e.ability) ui.speak?.('linha', e.uid, e.ability); /* a fala sai quando resolve, não quando vai à pilha (autor, 02/11/2026) */ abilityVfx(e); ui.pulse(e.uid, 'trigger-pop'); await pause(300); ui.onResolved?.(e, !queue.slice(queue.indexOf(e) + 1).some(x => x.type === 'resolve')); }, async end_phase(e) { ui.log(e); },
   };
 
   return {

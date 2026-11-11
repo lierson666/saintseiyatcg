@@ -17,9 +17,9 @@ const {cartas} = read('../data/cards.json');
 const byId = id => cartas.find(c => c.id === id);
 const ANGELS = ['artemis-v6-431', 'artemis-v6-433', 'artemis-v6-435'], GLORIES = ['artemis-v6-432', 'artemis-v6-434', 'artemis-v6-436'];
 
-test('catálogo: 610 cartas (81 novas em 08/11/2026), ids únicos, 431–436 nas mesmas posições e nenhum id perdido', () => {
-  assert.equal(cartas.length, 610);
-  assert.equal(new Set(cartas.map(c => c.id)).size, 610);
+test('catálogo: 611 cartas (81 novas em 08/11/2026; Hayate neutral-v6-606 em 11/11/2026), ids únicos, 431–436 nas mesmas posições e nenhum id perdido', () => {
+  assert.equal(cartas.length, 611);
+  assert.equal(new Set(cartas.map(c => c.id)).size, 611);
   const before = JSON.parse(execFileSync('git', ['show', '61db6e8:data/cards.json'], {cwd: new URL('..', import.meta.url), maxBuffer: 64 << 20})).cartas;
   assert.deepEqual(cartas.slice(0, before.length).map(c => c.id), before.map(c => c.id)); // as novas entram no fim
   assert.equal(cartas.filter(c => c.faccao === 'Artemis').length, 111);

@@ -623,6 +623,8 @@ Revisado em 31/10/2026 (ALPHA-P01, P02, P03 e P06, aprovadas em 28/10/2026; limi
 
 **Por quê:** a compra de 2 manteve quem começa vencendo 74–78% em IA × IA; a compra de 1 reduz para 65% e corta as vitórias por deck vazio. O risco conhecido é a mão acabar em decks agressivos, como no playtest real que levou à compra de 2: a resposta prevista são cartas de compra em Ares e Athena, não mais compra para todos (autor, 01/11/2026). O limite de 7 continua.
 
+**Partida guiada do jogador novo (autor, 10/11/2026):** só nessa partida de ensino não há cara ou coroa, nem mulligan, nem relógio; o jogador novo começa, com mão e compras combinadas. Todas as demais regras valem.
+
 ### 56. Timing, respostas e resolução
 
 - Fora de uma janela, só o jogador ativo joga cartas, ativa habilidades e declara Strike, sempre com a pilha vazia. O jogador não ativo só age respondendo nas janelas.

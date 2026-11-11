@@ -1,10 +1,10 @@
 // Telas, sons, músicas e animações editados no Star Hill (data/olympus-telas.json). O lobby e o duelo leem daqui;
 // sem o arquivo valem os padrões abaixo. Imagem: "card:<id>" usa a arte atual da carta no Card Forge; senão é um caminho do projeto.
-import {configureAudio, playFxFile, playVoice} from './audio.js?v=20261106-menu1';
+import {configureAudio, playFxFile, playVoice} from './audio.js?v=20261107-player3';
 
 const ROOT = new URL('../', import.meta.url);
 export const ANIM_GROUPS = ['compra', 'conjurar', 'cosmo', 'gatilho', 'ataque', 'dano', 'morte', 'turno', 'ultimate'];
-export const SOUND_EVENTS = ['ultimate', 'clique', 'play', 'voltar', 'turno', 'compra', 'conjurar', 'equipar_armadura', 'equipar_arma', 'cosmo', 'gatilho', 'ataque', 'dano', 'morte', 'vitoria', 'derrota', 'hover', 'hover_mao', 'hover_base', 'passar_turno', 'receber_turno', 'declarar_ataque', 'carga', 'impacto', 'impacto_deus', 'dano_deus', 'poder_divino', 'poder_dominio', 'awaken', 'morte_deus'];
+export const SOUND_EVENTS = ['ultimate', 'clique', 'play', 'turno', 'compra', 'conjurar', 'equipar_armadura', 'equipar_arma', 'cosmo', 'gatilho', 'ataque', 'dano', 'morte', 'vitoria', 'derrota', 'hover', 'hover_mao', 'hover_base', 'passar_turno', 'receber_turno', 'declarar_ataque', 'carga', 'impacto', 'impacto_deus', 'dano_deus', 'poder_divino', 'poder_dominio', 'awaken', 'morte_deus'];
 // Evento da engine → grupo de animação (director.js).
 export const ANIM_OF = {draw: 'compra', fatigue: 'compra', base_placed: 'conjurar', card_played: 'conjurar', equipped: 'conjurar', cosmo_spent: 'cosmo',
   latent_gained: 'cosmo', spell_resolved: 'gatilho', ability: 'gatilho', divine_power: 'gatilho', domain_power: 'gatilho', strike_declared: 'ataque',

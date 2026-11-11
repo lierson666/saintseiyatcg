@@ -1,0 +1,57 @@
+{
+ "nota": "Falas da missão 4.5 (rascunho da Saga 01, 11/11/2026). Máximo de duas frases por fala.",
+ "lines": {
+  "SCENE_1": {
+   "pt": "As partes da armadura voltam a se juntar. Diante de todos, a Fênix acorda.",
+   "en": "The Cloth pieces come together again. Before everyone, the Phoenix awakens."
+  },
+  "RIVAL_1": {
+   "pt": "Ódio é a única coisa que me manteve vivo.",
+   "en": "Hatred is the only thing that kept me alive."
+  },
+  "HERO_1": {
+   "pt": "Eu não vim te derrotar, irmão. Vim te buscar.",
+   "en": "I did not come to defeat you, brother. I came to bring you back."
+  },
+  "PREP_1": {
+   "pt": "Ikki volta das cinzas, Seiya. Lute com os quatro, não sozinho.",
+   "en": "Ikki rises from the ashes, Seiya. Fight with all four, not alone."
+  },
+  "HINT_KEY": {
+   "pt": "A Fênix entrou. Ela volta das cinzas: guarde força para depois.",
+   "en": "The Phoenix has entered. It rises from the ashes: save strength for later."
+  },
+  "HINT_HOLD": {
+   "pt": "Juntos, Seiya. Nenhum Bronze vence a Fênix sozinho.",
+   "en": "Together, Seiya. No Bronze beats the Phoenix alone."
+  },
+  "WIN_1": {
+   "pt": "A Fênix cai. A Armadura de Sagitário brilha sobre os quatro.",
+   "en": "The Phoenix falls. The Sagittarius Cloth shines over the four."
+  },
+  "WIN_2": {
+   "pt": "Vocês lutam por algo que eu esqueci.",
+   "en": "You fight for something I forgot."
+  },
+  "WIN_3": {
+   "pt": "A armadura de ouro volta para Athena. A primeira saga termina.",
+   "en": "The gold Cloth returns to Athena. The first saga ends."
+  },
+  "WINS_1": {
+   "pt": "A Fênix cai. Shun chega até o irmão antes de todos.",
+   "en": "The Phoenix falls. Shun reaches his brother before anyone."
+  },
+  "WINS_2": {
+   "pt": "Shun... você veio mesmo me buscar.",
+   "en": "Shun... you really came for me."
+  },
+  "WINS_3": {
+   "pt": "Sempre, irmão. A armadura de ouro volta para Athena.",
+   "en": "Always, brother. The gold Cloth returns to Athena."
+  },
+  "LOSE_1": {
+   "pt": "Volte quando souber odiar.",
+   "en": "Come back when you know how to hate."
+  }
+ }
+}

@@ -151,7 +151,7 @@ function paint() {
         <label>Tela <select data-af5-view>${Object.entries(VIEWS).map(([k, [l]]) => `<option value="${k}" ${k === view ? 'selected' : ''}>${l}</option>`).join('')}</select></label>
         <label>Gráficos <select data-af5-quality>${['phone', 'low', 'medium', 'high', 'ultra'].map(x => `<option ${x === quality ? 'selected' : ''} value="${x}">${x === 'phone' ? 'celular' : x}</option>`).join('')}</select></label>
         <label><input type="checkbox" data-af5-still ${still ? 'checked' : ''}> Reduzir movimento</label>
-        <button class="secondary" data-af5="hit">Testar golpe</button><small class="hint" id="af5-stats"></small>
+        <button class="secondary" data-af5="hit">Testar golpe</button><button class="primary" data-af5="play-dev">Testar no jogo 3D</button><small class="hint" id="af5-stats"></small>
       </div></div>
     <div class="af5-side panel">${side()}</div>`;
   mountScene();
@@ -256,6 +256,11 @@ async function onClick(e) {
   if (b.dataset.af5Tab) { tab = b.dataset.af5Tab; return refresh(); }
   const act = b.dataset.af5, a = cur();
   try {
+    if (act === 'play-dev') {
+      if (a?.faccao !== 'Poseidon') { ctx.notice('O preview 3D arquitetônico está disponível para Poseidon nesta etapa.'); return; }
+      window.open('/playtest/divine/?arena=poseidon&arenaPreview=poseidon-palace&ai=none', '_blank', 'noopener');
+      return;
+    }
     if (act === 'hit' && scene) {
       const c = document.querySelector('#arena-forge .af5-frame').getBoundingClientRect(), x = c.width / 2, y = c.height / 2, t = THEMES[EDIT] || {};
       scene.fx.charge(x, y, {color: t.dust}); setTimeout(() => { scene.fx.burst(x, y, {color: t.light}); scene.fx.shockwave(x, y); scene.fx.shake(6); }, 450);

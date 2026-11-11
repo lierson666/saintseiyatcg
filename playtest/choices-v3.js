@@ -3,12 +3,9 @@
 // Escolhas de cada carta, em ordem. pick: conjunto de candidatos; multi: até N; optional: pode pular.
 export const SAINT = {key: 'target', pick: 'saint', label: 'Choose a friendly Saint'};
 export const STEPS = {
-  '052': [{key: 'targets', pick: 'bronze', multi: 2, optional: true, label: 'Choose up to two friendly Bronze Saints'}],
-  '053': [SAINT], '054': [SAINT], '058': [SAINT], '076': [SAINT], '077': [SAINT],
+  '053': [SAINT], '054': [SAINT], '077': [SAINT],
   '059': [SAINT, {key: 'prepare', confirm: 'Also Prepare that Saint (needs Shunrei)?'}],
   '060': [{key: 'target', pick: 'bronze', label: 'Choose a friendly Bronze Saint'}],
-  '061': [{key: 'mode', options: {atk: '+2 ATK to a friendly Saint', god: 'Prevent the next 3 Strike damage to your God'}},
-    {...SAINT, when: c => c.mode === 'atk'}],
   '081': [{key: 'mode', options: {atk: '+2/+2 to a friendly Bronze Saint', god: 'Prevent the next 5 Strike damage to your God', both: 'Both (needs Pegasus Seiya)'}},
     {key: 'target', pick: 'bronze', label: 'Choose a friendly Bronze Saint', when: c => c.mode !== 'god'}],
   '082': [{key: 'target', pick: 'enemy', label: 'Choose an enemy Devotee'}],

@@ -3,14 +3,13 @@
   "subtitle": "The Song of Eternal Sorrow",
   "flavour": "",
   "bonusPower": "+1",
-  "bonusResistance": "",
+  "bonusResistance": "+4",
   "art": {
-    "src": "art/poseidon-v6-094-ref.jpg",
-    "w": 1488.0,
-    "x": 0.0,
-    "y": -85.66,
-    "zoom": 1,
-    "baseW": 1488.0,
-    "provisoria": true
+    "src": "art/poseidon-v6-094.png",
+    "w": 2117.1375000000003,
+    "x": -427.35258027522957,
+    "y": -314.3255303153452,
+    "zoom": 1.35,
+    "baseW": 1568.25
   }
 }

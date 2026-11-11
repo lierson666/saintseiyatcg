@@ -2,13 +2,14 @@
   "title": "",
   "subtitle": "The Divine Flame of Obliteration",
   "flavour": "\"Enyo is not merely the spear of war. She is the destruction that follows it.\"",
+  "bonusPower": "+3",
+  "bonusResistance": "",
   "art": {
-    "src": "art/ares-v6-289-ref.jpg",
-    "w": 1488.0,
-    "x": 0.0,
-    "y": -275.71,
+    "src": "art/ares-v6-289.png",
+    "w": 1568.25,
+    "x": -55.51479357798166,
+    "y": 148.59542628413533,
     "zoom": 1,
-    "baseW": 1488.0,
-    "provisoria": true
+    "baseW": 1568.25
   }
 }

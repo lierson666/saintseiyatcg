@@ -2,13 +2,14 @@
   "title": "",
   "subtitle": "No Magic Shall Disturb the Sacred Temple",
   "flavour": "",
+  "bonusPower": "",
+  "bonusResistance": "",
   "art": {
-    "src": "art/poseidon-v6-119-ref.jpg",
-    "w": 1488.0,
-    "x": 0.0,
-    "y": -276.72,
-    "zoom": 1,
-    "baseW": 1488.0,
-    "provisoria": true
+    "src": "art/poseidon-v6-119.png",
+    "w": 1709.3925000000002,
+    "x": -123.36643348623858,
+    "y": -144.4942350048765,
+    "zoom": 1.09,
+    "baseW": 1568.25
   }
 }

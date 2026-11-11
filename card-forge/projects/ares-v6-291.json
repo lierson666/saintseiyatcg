@@ -2,13 +2,14 @@
   "title": "",
   "subtitle": "Born in Promethean Flames",
   "flavour": "\"The crimson fire of Ares leaves nothing but ashes.\"",
+  "bonusPower": "",
+  "bonusResistance": "",
   "art": {
-    "src": "art/ares-v6-291-ref.jpg",
-    "w": 1568.78,
-    "x": -40.39,
-    "y": 0.0,
-    "zoom": 1,
-    "baseW": 1568.78,
-    "provisoria": true
+    "src": "art/ares-v6-291.png",
+    "w": 1709.3925000000002,
+    "x": -110.69625000000008,
+    "y": -94.09500000000025,
+    "zoom": 1.09,
+    "baseW": 1568.25
   }
 }

@@ -1,0 +1,87 @@
+/* Marin, guia da partida do jogador novo (guided.js). O balão não bloqueia a mesa: só os botões recebem clique. */
+.gd { position: fixed; z-index: 900; left: 50%; top: 24%; transform: translateX(-50%); width: min(620px, calc(100vw - 24px)); display: flex; align-items: flex-end; gap: 12px; pointer-events: none; }
+.gd__marin { flex: none; width: 128px; height: 220px; object-fit: contain; object-position: center bottom; }
+.gd__bubble { flex: 1; display: grid; gap: 10px; padding: 14px 18px; border: 1px solid var(--kv-gold); border-radius: var(--kv-radius); background: #10111cf2; }
+.gd__text { margin: 0; font: 400 18px/1.35 var(--kv-sans); color: var(--kv-ink); }
+.gd__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; justify-content: flex-end; }
+.gd__actions button { pointer-events: auto; }
+.gd__actions .kv-button { min-height: 44px; }
+.gd__skip { min-height: 44px; padding: 0 8px; border: 0; background: none; color: var(--kv-muted); font: 400 14px var(--kv-sans); text-decoration: underline; cursor: pointer; }
+.gd.is-nudge .gd__bubble { animation: gd-nudge .32s ease; }
+@keyframes gd-nudge { 25% { transform: translateX(-7px); } 75% { transform: translateX(7px); } }
+.gd-ring { position: fixed; z-index: 9000; border: 3px solid var(--kv-gold-2); border-radius: 12px; box-shadow: 0 0 22px var(--kv-gold); pointer-events: none; animation: gd-pulse 1.1s ease-in-out infinite; }
+.gd-ring[hidden] { display: none; }
+/* Sem relógio nesta partida (guia §55): o mostrador sairia parado na tela */
+.is-guided .command__clock, .is-guided .zclock, .is-guided [data-clock] { visibility: hidden; }
+@keyframes gd-pulse { 50% { box-shadow: 0 0 6px var(--kv-gold); opacity: .55; } }
+@media (prefers-reduced-motion: reduce) { .gd-ring, .gd.is-nudge .gd__bubble { animation: none; } }
+@media (max-width: 760px) {
+  .gd { top: calc(16% + env(safe-area-inset-top, 0px)); gap: 8px; }
+  .gd__marin { width: 78px; height: 134px; }
+  .gd__bubble { padding: 10px 12px; } .gd__text { font-size: 16px; }
+}
+/* Tutorial 001 */
+.gd { z-index: 1200; }
+.gd-ring { z-index: 1150; }
+.gd-ring.is-spot { box-shadow: 0 0 0 200vmax #05060c99, 0 0 22px var(--kv-gold); animation: none; }
+.gd-ring.is-glow { border: 0; border-radius: 0; box-shadow: none; background: #05060c99; animation: none; -webkit-mask: var(--holes); -webkit-mask-composite: source-in; mask: var(--holes); mask-composite: intersect; }
+.gd-glow { position: fixed; inset: 0; z-index: 1150; pointer-events: none; mix-blend-mode: screen; animation: gd-glow 1.6s ease-in-out infinite; }
+.gd-ring[hidden] + .gd-glow, .gd-ring:not(.is-glow) + .gd-glow { display: none; }
+@keyframes gd-glow { 0%, 100% { opacity: .75; } 50% { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .gd-glow { animation: none; } }
+.gd[hidden], .gd-help[hidden] { display: none; }
+.gd__side { flex: none; display: grid; justify-items: center; }
+.gd__bubble { position: relative; align-self: flex-start; }
+.gd__actions:empty { display: none; }
+.gd__skip--side { display: none; }
+.gd__goals { margin: 0; padding: 0; list-style: none; display: grid; gap: 4px; font: 400 16px/1.3 var(--kv-sans); color: var(--kv-muted); }
+.gd__goals:empty { display: none; }
+.gd__goals .is-done { color: var(--kv-gold-2); }
+.gd-help { position: fixed; z-index: 1190; right: max(10px, env(safe-area-inset-right, 0px)); top: 44%; width: 48px; height: 48px; padding: 0; overflow: hidden; border: 1px solid var(--kv-gold); border-radius: 50%; background: var(--kv-bg); cursor: pointer; }
+.gd-help img { width: 100%; object-fit: cover; object-position: top; transform: scale(1.8) translateY(14%); }
+.gd--end { top: 20%; z-index: 1400; }
+/* Fim do tutorial: quem recomeça é a Marin; Nova partida abriria outra mesa com ela ainda na tela */
+body:has(.gd--end) [data-new] { display: none; }
+/* O painel de fase só aparece quando a luta fica por conta do jogador */
+.is-guided:not(.gd-phase-on) .ctrl { visibility: hidden; }
+/* A própria Marin diz o que fazer com os gatilhos: o aviso repetido ficaria embaixo dela */
+.is-guided:not(.gd-phase-on) .trigger-panel__box { visibility: hidden; }
+.is-guided:not(.gd-phase-on) .trigger-panel__actions { visibility: visible; }
+/* Carta aberta no celular: Marin encolhe para não cobrir o que está explicando */
+body:has(#bigcard .dcard--big) .gd { width: min(400px, calc(100vw - 24px)); }
+body:has(#bigcard .dcard--big) .gd__marin { width: 84px; height: 144px; }
+.gd-cin { position: fixed; inset: 0; z-index: 1300; display: flex; align-items: flex-end; justify-content: center; gap: 12px; padding: 24px max(16px, env(safe-area-inset-right, 0px)) calc(28px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); background: var(--kv-bg); }
+.gd-cin__art { position: absolute; inset: 0; background: linear-gradient(180deg, #05060c30, #05060cf0), url('./assets/tutorial-poseidon-bg.webp') 62% 12% / cover; animation: gd-cin 20s linear forwards; }
+@keyframes gd-cin { to { transform: scale(1.14); } }
+.gd-cin__marin { position: relative; height: min(52vh, 420px); }
+.gd-cin__bubble { position: relative; display: grid; gap: 12px; max-width: 560px; margin-bottom: 24px; padding: 16px 20px; border: 1px solid var(--kv-gold); border-radius: var(--kv-radius); background: #10111cf2; }
+.gd-cin__bubble p { margin: 0; font: 400 19px/1.35 var(--kv-sans); color: var(--kv-ink); }
+@media (prefers-reduced-motion: reduce) { .gd-cin__art { animation: none; } }
+@media (max-width: 760px) { .gd-cin { flex-direction: column; align-items: center; } .gd-cin__marin { height: 36vh; } .gd-cin__bubble { margin: 0; } .gd__goals { font-size: 14px; } .gd-help { top: 40%; } }
+/* Desktop: lugar marcado pelo autor (10/11), no vão da coluna esquerda; a fala termina antes das cartas em campo */
+@media (min-width: 761px) {
+  .gd, body:has(#bigcard .dcard--big) .gd { left: 4px; top: 33%; width: 320px; height: 34%; gap: 8px; align-items: center; transform: none; }
+  .gd__marin, body:has(#bigcard .dcard--big) .gd__marin { width: 104px; height: 162px; }
+  .gd__side { align-self: flex-end; }
+  .gd__skip--side { display: block; min-height: 24px; padding: 0 4px; font-size: 12px; }
+  .gd--free-skip .gd__skip--side, body:has(.trigger-panel) .gd__skip--side { visibility: hidden; }
+  .gd__bubble { align-self: center; gap: 8px; padding: 10px 12px; }
+  .gd__bubble::before { content: ''; position: absolute; left: -7px; top: 50%; width: 12px; height: 12px; margin-top: -6px; background: #10111c; border-left: 1px solid var(--kv-gold); border-bottom: 1px solid var(--kv-gold); transform: rotate(45deg); }
+  .gd__text { font-size: 14px; line-height: 1.35; }
+  .gd__goals { font-size: 13px; }
+  .gd__actions .kv-button { min-height: 34px; padding: 0 14px; font-size: 12px; }
+  .gd-phase-on .gd { left: 166px; }
+  .gd-help { left: 268px; right: auto; top: auto; bottom: 14px; }
+  .gd.gd--help { width: 520px; height: auto; }
+  .gd.gd--end { left: 50%; top: 20%; width: min(620px, calc(100vw - 24px)); height: auto; transform: translateX(-50%); }
+  .gd--end .gd__text { font-size: 18px; }
+}
+/* Celular: Poseidon à direita, para a Marin não cobrir o rosto dele */
+@media (max-width: 600px) { .gd-cin__art { background-position: 0 0, 50% 12%; } }
+/* Cosmo Chronicles: dica da Marin na partida. Some sozinha, não bloqueia a mesa (só o OK recebe toque). */
+.gd--chronicle { z-index: 1100; }
+.gd--chronicle .gd__actions { justify-content: flex-end; }
+@media (max-width: 760px) { .gd--chronicle { top: auto; bottom: calc(150px + env(safe-area-inset-bottom, 0px)); width: min(440px, calc(100vw - 24px)); } .gd--chronicle .gd__marin { width: 60px; height: 104px; } }
+
+.gd--chronicle.gd--card .gd__marin { width: 96px; height: 134px; object-fit: cover; object-position: center 18%; border: 1px solid var(--kv-gold); border-radius: 12px; }
+@media (max-width: 760px) { .gd--chronicle.gd--card .gd__marin { width: 60px; height: 84px; } }

@@ -9,19 +9,25 @@ import {renderLiveCard, renderCardText, fullSizePieces} from '../shared/live-car
 import {startCardFx} from '../shared/vfx/card-mount.js?v=20261104-vfx1';
 import {printedEquipmentBonuses, signedBonus} from '../shared/card-visual-values.js';
 import {displayCard, typeWord} from '../shared/card-i18n.js?v=20261031-kw1';
-import {unlock, playMusic, setVolume, volume} from './audio.js?v=20261106-menu1';
+import {KEYWORDS} from '../shared/card-model.js';
+import {unlock, playMusic, setVolume, volume} from './audio.js?v=20261107-player3';
 import {loadMyDecks, saveMyDecks, findDeck, syncDecks, onDeckStatus, deckCovers, setDeckCover, adoptAccountDeck, setDeckUser} from './deck-store.js?v=20261109-hub2';
+import {decklistIndex, deckToText, textToDeck} from '../shared/decklist-text.js?v=20261108-1';
 import {mountKV} from '../shared/kv-sky.js?v=20261104-pub1';
 import {animFile} from '../shared/anim-data.js?v=1';
 import {countryOptions, countryName} from '../shared/countries.js?v=20261031-i18n1';
 import {startPresence} from '../shared/presence.js?v=20261029-1';
 import {mountSocial} from './social.js?v=20261101-notch1';
 import {telas, imageUrl, sound, applyColors, applyTexts} from './telas.js?v=20261107-deus1';
-import {loadEconomy, ownedLimit, missingCards, coinBadge, storeScreen, collectionScreen, openBooster, buyBooster, buyCosmetic} from './economy.js?v=20261106-reveal2';
-import {lightArt} from '../shared/light-art.js';
+import {loadEconomy, ownedLimit, missingCards, coinBadge, storeScreen, collectionScreen, openBooster, buyBooster, buyCosmetic, redeemWildcard} from './economy.js?v=20261111-craft2';
+import {lightArt, upgradeArt} from '../shared/light-art.js?v=20261102-art1';
 import {faceStyle, useGodPortraits} from './avatar-face.js?v=20261031-3';
 import {progressTrack} from './home-features.js?v=20261031-face3';
+import {tutorialDone, GUIDED_URL} from './first-run.js?v=20261110-dc1';
+import {GODS, readDiscover, saveDiscover, discoverScreen} from './discover-cosmo.js?v=20261110-dc1';
+import {guideStart, openGuide} from './home-guide.js?v=20261111-menu4';
 import {loadRank, rankBadge, rankName, rankSummary, openRankPanel, playerName} from './rank.js?v=20261031-face3';
+import {titlePlate} from '../shared/title-plate.js?v=20261111-ach2';
 
 const root = document.getElementById('lobby');
 const ART = '../card-forge/art-web/';
@@ -37,7 +43,7 @@ const cap = f => f[0].toUpperCase() + f.slice(1);
 let cards, index, forge, presets = [], gods = [];
 const ui = {screen: 'home', play: false, mode: 'ai', deckA: null, deckB: null, first: 'random', big: null, notice: null, picker: null, builder: null};
 try { Object.assign(ui, JSON.parse(localStorage.getItem('sstcg.lobby.v1')) || {}, {screen: 'home', play: false, big: null, builder: null}); } catch { /* sem preferências salvas */ }
-const remember = () => { try { localStorage.setItem('sstcg.lobby.v1', JSON.stringify({mode: ui.mode, deckA: ui.deckA, deckB: ui.deckB, first: ui.first, cardSize: ui.cardSize, poolView: ui.poolView, rivalRandom: ui.rivalRandom})); } catch { /* idem */ } };
+const remember = () => { try { localStorage.setItem('sstcg.lobby.v1', JSON.stringify({mode: ui.mode, deckA: ui.deckA, deckB: ui.deckB, first: ui.first, playMode: ui.playMode, cardSize: ui.cardSize, poolView: ui.poolView, rivalRandom: ui.rivalRandom})); } catch { /* idem */ } };
 
 // ---------- Cartas ----------
 const faction = card => (forge.get(card.id)?.faccao || card.id.replace(/^god-/, '').split('-')[0]).toLowerCase();
@@ -66,6 +72,9 @@ const deckFactions = d => new Set([faction(cards.get(deckGod(d))), d.domain_id &
 const factionOf = id => cards.get(id) && faction(cards.get(id));
 const deckErrors = d => [...validateDeck(d, index), ...colorErrors({...d, god: deckGod(d)}, factionOf)];
 const deckValid = d => !deckErrors(d).length;
+// Decklist em texto (shared/decklist-text.js): nome que o jogador vê; na importação valem EN, PT e o nome do canon.
+const listName = id => displayCard(forge.get(id))?.nome_exibicao_en || cards.get(id)?.name || id;
+const listIndex = () => decklistIndex([...cards.values()].map(c => ({id: c.id, kind: c.kind, names: [forge.get(c.id)?.nome_exibicao_en, forge.get(c.id)?.nome_exibicao_pt, c.name]})));
 const thumbOf = d => d.thumb || deckCovers()[d.id] || null; // deck do jogador: no deck; Starter: neste aparelho
 function deckCover(d) {
   if (thumbOf(d) && artOf(thumbOf(d))) return artOf(thumbOf(d)); // capa escolhida pelo jogador
@@ -93,7 +102,7 @@ function deckButton(d, act) {
     data-act="${act}" data-deck="${esc(d.id)}">
     <span class="lb-deck__art" style="${art ? `background-image:url('${art}')` : ''}"></span>
     <span class="lb-deck__name"><strong>${esc(d.alpha_nome || d.nome)}</strong>
-      <small>${esc(cards.get(deckGod(d))?.name || '')} · ${ok ? `${deckSize(d)} cards` : `Incomplete · ${deckSize(d)}/${DECK_SIZE}`}${d.preset ? ' · Starter' : ''}</small></span>
+      <small>${esc(cards.get(deckGod(d))?.name || '')} · ${ok ? `${deckSize(d)} cards` : `Incomplete · ${deckSize(d)}/${DECK_SIZE}`}${deckKind(d) === 'starter' ? ' · Starter' : ''}</small></span>
   </button>`;
 }
 
@@ -102,14 +111,14 @@ function topBar() {
   const tab = (s, label) => `<button class="lb-tab ${ui.screen === s ? 'is-active' : ''}" data-act="go" data-screen="${s}">${label}</button>`;
   return `<header class="lb-top">
     <img class="lb-top__logo" src="../LOGO/logo-web.webp" alt="Saint Seiya TCG">
-    <nav class="lb-tabs">${tab('home', 'Home')}${tab('decks', 'Decks')}${tab('collection', 'Collection')}${tab('store', 'Store')}${tab('profile', 'Profile')}${tab('options', 'Options')}</nav>
+    <nav class="lb-tabs"><button class="lb-tab lb-tab--play ${ui.play ? 'is-active' : ''}" data-act="play">Play</button>${tab('home', 'Home')}${tab('decks', 'Decks')}${tab('collection', 'Collection')}${tab('store', 'Store')}${tab('profile', 'Profile')}${tab('options', 'Options')}</nav>
     <button class="lb-gear ${ui.screen === 'options' ? 'is-active' : ''}" data-act="go" data-screen="options" aria-label="Options">⚙&#xFE0E;</button>
-    <a class="lb-tab" href="./platform/" target="_top" style="text-decoration:none;white-space:nowrap">Cosmo Hub</a>
+    <a class="lb-tab" href="/cosmohub/" target="_top" style="text-decoration:none;white-space:nowrap">Cosmo Hub</a>
     <span class="lb-top__tag">Alpha 0.1 · Engine 3.0</span>
     ${ui.user?.complete ? `<button class="lb-socialbtn" data-act="friends" aria-label="Friends">Friends ${socialBadge()}</button>` : ''}
     ${ui.econ ? coinBadge(ui.econ) : ''}
     ${ui.rank ? rankBadge(ui.rank) : ''}
-    ${ui.user ? `<span class="lb-user"><i class="kv-dot" aria-hidden="true"></i>${ui.user.complete ? `<button class="kv-ghost" data-act="my-profile" aria-label="My player profile">${playerName(ui.user.username)}</button>` : esc(ui.user.name)}<button class="kv-ghost" data-act="signout">Sign out</button></span>` : ''}
+    ${ui.user ? `<span class="lb-user"><i class="kv-dot" aria-hidden="true"></i>${ui.user.complete ? `<button class="kv-ghost" data-act="my-profile" aria-label="My player profile">${playerName(ui.user.username)}</button>${plateOf(ui.user.title, {size: 'sm'})}` : esc(ui.user.name)}<button class="kv-ghost" data-act="signout">Sign out</button></span>` : ''}
   </header>`;
 }
 
@@ -128,26 +137,62 @@ function startSocial() {
   }});
 }
 
-// Carrossel e blocos da home: editados no Star Hill (data/olympus-telas.json, playtest/telas.js).
-const HOME = telas.home || {slides: [{imagem: 'card:god-athena', carimbo: 'Cosmo System', linha1: 'Let your', linha2: 'Cosmo burn', texto: 'Build a deck around your God and take it to the arena.'}],
-  blocos: [], botao_play: 'Play'};
+// Carrossel da home: editado no Star Hill (data/olympus-telas.json, playtest/telas.js).
+const HOME = telas.home || {slides: [{imagem: 'card:god-athena', carimbo: 'Cosmo System', linha1: 'Let your', linha2: 'Cosmo burn', texto: 'Build a deck around your God and take it to the arena.'}], botao_play: 'Play'};
 const SLIDES = HOME.slides;
 const img = v => imageUrl(v, artOf);
+// Banner principal: as últimas matérias do blog do Cosmo Hub, buscadas a cada visita (autor, 11/11/2026). Sem matéria ou sem API, ficam os slides do Star Hill.
+let news = [];
+const NEWS_GODS = ['god-athena', 'god-poseidon', 'god-hades', 'god-ares', 'god-artemis'];
+const newsCover = a => { const id = a.meta?.cover || a.meta?.card_refs?.[0]; return id && artOf(id) ? id : NEWS_GODS[[...String(a.slug || '')].reduce((n, ch) => n + ch.charCodeAt(0), 0) % NEWS_GODS.length]; };
+const newsText = (t, n = 150) => { t = String(t || '').replace(/[#*_>`[\]]/g, '').replace(/\s+/g, ' ').trim(); return t.length > n ? `${t.slice(0, n).replace(/\s\S*$/, '')}…` : t; };
+function loadNews() {
+  return fetch('/api/platform/content?kind=news,guide,lesson', {credentials: 'same-origin'}).then(r => r.ok ? r.json() : {}).then(({items = []}) => {
+    const lang = window.ssI18n?.lang === 'pt' ? 'pt' : 'en', mine = items.filter(a => a.lang === lang);
+    // O autor escolhe no Nexus do STAR HILL o que vai à home (placement 'home', até 5 por idioma); sem escolha no idioma, as 5 mais recentes.
+    const pool = mine.length ? mine : items, home = pool.filter(a => a.placement === 'home');
+    news = (home.length ? home : pool).sort((a, b) => (b.publish_at || 0) - (a.publish_at || 0)).slice(0, 5)
+      .map(a => ({imagem: `card:${newsCover(a)}`, carimbo: a.category || a.kind, titulo: a.title, texto: newsText(a.body), href: `/cosmohub/#/article/${encodeURIComponent(a.slug)}`}));
+    if (news.length && ui.screen === 'home') { ui.slide = 0; render(); }
+  }).catch(e => console.warn('Cosmo Hub news', e));
+}
+// Guia da Marin: abre sozinho só para conta nova, e retoma se a apresentação foi interrompida.
+const who = () => ui.user?.username || ui.user?.name || 'guest';
+function maybeGuide() {
+  if (EMBED || ui.screen !== 'home') return;
+  const step = guideStart(who(), {signedIn: !!ui.user, isNew: ui.rank?.xp === 0 && !loadMyDecks().length});
+  if (step !== null) return openGuide(who(), step);
+  if (tutorialDone() && !readDiscover(who(), ui.user).seen) openDiscover();
+}
+function openDiscover() {
+  saveDiscover(who(), ui.user, {seen: true});
+  ui.dcGod = null; ui.dcCards = false; ui.play = false; ui.screen = 'discover';
+  render();
+}
+const starterOf = god => presets.find(d => d.god === `god-${god}` && deckKind({...d, preset: true}) === 'starter');
+const discover = () => discoverScreen({god: ui.dcGod, showCards: ui.dcCards, starterOf, artOf, face, name: id => cards.get(id)?.name || id, tried: readDiscover(who(), ui.user).tried || []});
 
+// Home clássica (autor, 10/11/2026), com os cinco acessos no lugar dos blocos; o guia da Marin (home-guide.js) aponta para eles.
 function home() {
   const deck = findDeck(ui.deckA, presets);
-  const n = SLIDES.length, i = ((ui.slide || 0) % n + n) % n, slide = SLIDES[i];
+  const slides = news.length ? news : SLIDES;
+  const n = slides.length, i = ((ui.slide || 0) % n + n) % n, slide = slides[i];
+  const tile = (guide, attrs, art, label, title) => `<button class="lb-news__tile" data-guide="${guide}" ${attrs} style="--tile:url('${artOf(art) || ''}')"><small>${label}</small><strong>${title}</strong></button>`; // duas linhas: rótulo + título (autor, 11/11/2026)
   return `<section class="lb-home">
     <div class="lb-hero kv-card" style="--hero:url('${img(slide.imagem)}')">
       <div class="lb-hero__copy"><p class="kv-stamp kv-stamp--gold">${esc(slide.carimbo)}</p>
-        <h1><span class="kv-lyric">${esc(slide.linha1)}</span><span class="kv-cosmo">${esc(slide.linha2)}</span></h1>
-        <span>${esc(slide.texto)}</span></div>
+        ${slide.href ? `<h1 class="lb-hero__title"><span class="kv-lyric">${esc(slide.titulo)}</span></h1>` : `<h1><span class="kv-lyric">${esc(slide.linha1)}</span><span class="kv-cosmo">${esc(slide.linha2)}</span></h1>`}
+        <span>${esc(slide.texto)}</span>
+        ${slide.href ? `<a class="kv-ghost lb-hero__read" href="${esc(slide.href)}" target="_top">Read on the Cosmo Hub</a>` : ''}</div>
       <button class="lb-hero__arrow is-prev" data-act="slide" data-step="-1" aria-label="Previous">‹</button>
       <button class="lb-hero__arrow is-next" data-act="slide" data-step="1" aria-label="Next">›</button>
-      <div class="lb-hero__dots">${SLIDES.map((_, j) => `<i class="${j === i ? 'is-on' : ''}"></i>`).join('')}</div>
+      <div class="lb-hero__dots">${slides.map((_, j) => `<i class="${j === i ? 'is-on' : ''}"></i>`).join('')}</div>
     </div>
-    <div class="lb-news">
-      ${HOME.blocos.map(b => `<button class="lb-news__tile" ${b.destino === 'play' ? 'data-act="play"' : `data-act="go" data-screen="${esc(b.destino)}"`} style="--tile:url('${img(b.imagem)}')"><small>${esc(b.rotulo)}</small><strong>${esc(b.titulo)}</strong></button>`).join('')}
+    <div class="lb-news lb-news--menu">
+      ${tile('story', 'data-act="story"', 'athena-v6-001', 'Story mode', 'Continue story')}
+      ${tile('ranked', ui.rank ? 'data-act="rank"' : 'data-act="play-mode" data-mode="online"', 'god-ares', 'Compete', 'Ranked match')}
+      ${tile('casual', 'data-act="play" data-pc="friendly"', 'god-hades', 'Duel', 'Friendly match')}
+      ${tile('tutorial', 'data-act="tutorial"', 'god-artemis', 'New here?', 'Tutorial')}
     </div>
     <div class="lb-dock" ${ui.play ? 'hidden' : ''}>
       ${deck ? `<button class="lb-dock__deck" data-act="play"><span style="background-image:url('${deckCover(deck) || ''}')"></span><strong>${esc(deck.alpha_nome || deck.nome)}</strong></button>` : ''}
@@ -155,39 +200,77 @@ function home() {
     </div>
     ${progressTrack({user: ui.user, econ: ui.econ, rank: ui.rank})}
     ${ui.play ? playPanel() : ''}
+    ${ui.aiChoice ? aiChoicePanel() : ''}
   </section>`;
 }
 
-const deckKind = d => !d.preset ? 'mine' : d.arquetipo ? 'competitive' : 'starter';
+const deckKind = d => !d.preset ? 'mine' : /^starter-/.test(d.id) ? 'starter' : 'competitive'; // Starters: só os 5 da coleção inicial, um por Deus (autor, 10/11/2026)
 const KIND_LABEL = {mine: 'My decks', starter: 'Starters', competitive: 'Competitive'};
 // Jogar em dois passos (autor, 01/11/2026): primeiro os caminhos (Amigos, Ranqueada, IA, História) e o confronto;
 // a grade de decks, em tela cheia como no MTG Arena, só abre ao trocar de deck. Contra a IA o rival é sorteado, a não ser que o jogador o escolha.
+// Jogue contra IA (Cosmo Chronicles V0.1, autor 11/11/2026): modo história ou treino livre.
+const CHRONICLES_URL = '/playtest/chronicles/';
+function aiChoicePanel() {
+  return `<section class="ds ds--hub ds--choice" role="dialog" aria-modal="true" aria-label="Play against the AI"><header class="ds-head"><h2 tabindex="-1">Play against the AI</h2><button class="lb-x" data-act="close-ai-choice" aria-label="Close">×</button></header>
+    <div class="ds-body"><nav class="ds-paths" aria-label="Mode">
+      <button class="ds-path" data-act="story" style="--art:url('${artOf('athena-v6-001') || ''}')"><strong>Cosmo Chronicles</strong><small>Story mode</small></button>
+      <button class="ds-path" data-act="play-mode" data-mode="ai" style="--art:url('${artOf('god-hades') || ''}')"><strong>Free practice</strong><small>Classic match against the AI</small></button>
+    </nav></div></section>`;
+}
 function playPanel() {
   const opening = ui.playOpening; ui.playOpening = false; // anima só ao abrir, não a cada clique
   return `<section class="ds ${ui.deckStep ? '' : 'ds--hub'} ${opening ? 'is-opening' : ''}" role="dialog" aria-modal="true" aria-label="Play">${ui.deckStep ? deckStep() : playHub()}</section>`;
 }
 const onlineCount = () => !ui.user?.complete ? 'Sign in to play online.' : ui.online ? `${ui.online} online` : 'None online';
+// Play Center V1.0 (autor, 11/11/2026): cinco modos e a Central Competitiva ao lado; a barra de baixo muda com o modo.
+// Só dados reais: rank e TOP 20 Kamui vêm de /api/rank; Ranqueada sem fila fica "Soon", com o painel de ranking aberto.
+const PC_MODES = ['story', 'ranked', 'friendly', 'ai', 'academy'];
+const pcMode = () => PC_MODES.includes(ui.playMode) ? ui.playMode : ui.mode === 'ai' ? 'ai' : 'friendly';
 function playHub() {
-  const path = (m, label, text, god, extra = '') => `<button class="ds-path ${ui.mode === m ? 'is-active' : ''}" data-act="mode" data-mode="${m}" aria-pressed="${ui.mode === m}" style="--art:url('${artOf(god) || ''}')"><strong>${label}</strong><small>${text}</small>${extra}</button>`;
-  const soon = (label, text, god) => `<button class="ds-path is-soon" aria-disabled="true" style="--art:url('${artOf(god) || ''}')"><span class="ds-path__soon kv-stamp">Soon</span><strong>${label}</strong><small>${text}</small></button>`;
+  const sel = pcMode();
+  const card = (m, cls, kicker, title, text, god, extra = '') => `<button class="ds-path pc-card pc-card--${m} ${cls} ${sel === m ? 'is-active' : ''}" data-act="pc-mode" data-pc="${m}" aria-pressed="${sel === m}" style="--art:url('${artOf(god) || ''}')">
+    ${extra}<small class="kv-stamp pc-card__kicker">${kicker}</small><strong>${title}</strong><small>${text}</small></button>`;
   return `<header class="ds-head"><h2 tabindex="-1">Play</h2><button class="lb-x" data-act="close-play" aria-label="Close">×</button></header>
-    <div class="ds-body">
-      <nav class="ds-paths" aria-label="Mode">
-        ${path('online', 'Friends online', 'Challenge a friend to a duel', 'god-artemis', `<span class="ds-path__count">${onlineCount()}</span>`)}
-        ${soon('Ladder', 'Ranked matches', 'god-ares')}
-        ${path('ai', 'Battle vs AI', 'Choose your deck and the difficulty', 'god-hades')}
-        ${soon('Story', "The anime's story, single player", 'god-athena')}
-      </nav>
-      <button class="ds-local ${ui.mode === 'local' ? 'is-active' : ''}" data-act="mode" data-mode="local" aria-pressed="${ui.mode === 'local'}"><strong>Local battle</strong><small>Two players on this device</small></button>
-    </div>
-    ${ui.mode === 'online' ? `<footer class="ds-bar ds-bar--online"><div class="ds-matchup">${slotChip('a')}</div>${friendsBar()}</footer>` : matchBar()}`;
+    <div class="ds-body"><div class="pc" role="group" aria-label="Game modes">
+      ${card('story', 'pc-card--hero', 'Story', 'Cosmo Chronicles', 'Campaign, sagas and narrative duels. Pick up where you left off.', 'athena-v6-001')}
+      ${competitiveCenter()}
+      ${card('ranked', '', 'Competition', 'Ranked', 'Leagues, divisions and the season ladder.', 'god-ares', '<span class="ds-path__soon kv-stamp">Soon</span>')}
+      ${card('friendly', '', 'Social', 'Friendly', 'Challenge a friend online or play on this device.', 'god-artemis', `<span class="ds-path__count">${onlineCount()}</span>`)}
+      ${card('ai', '', 'Training', 'Against the AI', 'Choose your deck, the rival and the difficulty.', 'god-hades')}
+      ${card('academy', '', 'Learning', "Marin's Academy", tutorialDone() ? 'Tutorial completed. Replay it any time.' : 'Learn to fight, step by step.', 'athena-v6-021')}
+    </div></div>
+    ${pcBar(sel)}`;
 }
-function matchBar() {
+// Central Competitiva: o que o servidor devolve hoje (rank, temporada, melhor da temporada, TOP 20 Kamui). Sem posição global: não existe endpoint.
+function competitiveCenter() {
+  const r = ui.rank;
+  const body = !ui.user ? '<p class="kv-status">Sign in to see your league.</p><a class="kv-ghost" href="/login/?v=3&next=/playtest/" target="_top">Sign in</a>'
+    : !r ? '<p class="kv-status">Ranking unavailable right now. The other modes still work.</p>'
+    : `${rankSummary(r)}
+      <p class="kv-stamp">Season ${esc(r.season)}${r.season_ends ? ` · ends ${new Date(r.season_ends * 1000).toLocaleDateString(undefined, {day: 'numeric', month: 'short'})}` : ''}</p>
+      ${r.best ? `<p class="pc-side__note">Best this season · ${esc(rankName(r.best))}</p>` : ''}
+      <h4 class="kv-stamp kv-stamp--gold">Kamui · Top 20</h4>
+      ${r.kamui?.length ? `<ol class="pc-board">${r.kamui.slice(0, 5).map(k => `<li><b>${playerName(k.username)}</b><span>${k.points} pts</span></li>`).join('')}</ol>` : '<p class="pc-side__note">No one has reached Kamui yet.</p>'}
+      <button class="kv-ghost" data-act="rank">See ranking</button>`;
+  return `<aside class="pc-side kv-card" aria-label="Competitive center"><p class="kv-stamp kv-stamp--gold">Competitive center</p>${body}</aside>`;
+}
+function pcBar(sel) {
+  const bar = (inner, cls = '') => `<footer class="ds-bar pc-bar ${cls}">${inner}</footer>`;
+  if (sel === 'story') return bar('<div class="pc-bar__text"><small>Story mode</small><strong>Cosmo Chronicles</strong></div><button class="lb-play ds-play" data-act="story">Continue story</button>');
+  if (sel === 'ranked') return bar('<div class="pc-bar__text"><small>Ranked queue</small><strong>Coming soon. Online duels move your rank today.</strong></div><button class="lb-play ds-play" data-act="rank">See ranking</button>');
+  if (sel === 'academy') return bar(`<div class="pc-bar__text"><small>Marin's Academy</small><strong>${tutorialDone() ? 'Tutorial 001 · completed' : 'Tutorial 001'}</strong></div><button class="lb-chip" data-act="replay-guide">Replay the introduction</button><button class="lb-play ds-play" data-act="tutorial">${tutorialDone() ? 'Replay lesson' : 'Start lesson'}</button>`);
+  if (sel === 'friendly') {
+    const where = `<div class="lb-first" role="group" aria-label="Where to play">${[['online', 'Friends online'], ['local', 'Same device']].map(([v, l]) => `<button class="lb-chip ${ui.mode === v ? 'is-on' : ''}" data-act="mode" data-mode="${v}" aria-pressed="${ui.mode === v}">${l}</button>`).join('')}</div>`;
+    return ui.mode === 'local' ? matchBar(where) : `<footer class="ds-bar ds-bar--online">${where}<div class="ds-matchup">${slotChip('a')}</div>${friendsBar()}</footer>`;
+  }
+  return matchBar();
+}
+function matchBar(lead = '') {
   const first = [['random', 'Random'], ['A', ui.mode === 'ai' ? 'You' : 'Player A'], ['B', ui.mode === 'ai' ? 'AI' : 'Player B']];
   const randomRival = ui.mode === 'ai' && ui.rivalRandom !== false;
   const valid = id => { const d = findDeck(id, presets); return d && deckValid(d); };
   const missing = !valid(ui.deckA) ? 'a' : !randomRival && !valid(ui.deckB) ? 'b' : null; // sem deck, o botão leva direto à escolha
-  return `<footer class="ds-bar">
+  return `<footer class="ds-bar">${lead}
       <div class="ds-matchup">${slotChip('a')}<span class="ds-vs" aria-hidden="true">VS</span>${randomRival
         ? `<button class="ds-slot ds-slot--random" data-act="choose-rival"><span class="ds-slot__art" aria-hidden="true">?</span><span><small>AI rival</small><strong>Random deck</strong><em>Choose rival</em></span></button>`
         : `${slotChip('b')}${ui.mode === 'ai' ? '<button class="lb-chip" data-act="random-rival">Random</button>' : ''}`}</div>
@@ -211,9 +294,18 @@ function deckStep() {
     <div class="ds-tools">
       <div class="lb-chips">${chip('all', 'All Gods', 'All')}${FACTIONS.map(f => chip(f, cap(f), `<img src="${symbol(f)}" alt="">`)).join('')}</div>
       <input class="ds-search" type="search" placeholder="Search decks" value="${esc(ui.deckQ || '')}" data-act="deck-search" aria-label="Search decks">
+      <button class="lb-chip ${ui.importOpen ? 'is-on' : ''}" data-act="import-open" aria-expanded="${!!ui.importOpen}">Import list</button>
     </div>
-    <div class="ds-grid">${groups.length ? groups.map(([k, l]) => `<h3>${KIND_LABEL[k]} <span>${l.length}</span></h3>
+    <div class="ds-grid">${ui.importOpen ? importPanel() : ''}${groups.length ? groups.map(([k, l]) => `<h3>${KIND_LABEL[k]} <span>${l.length}</span></h3>
       <div class="ds-row">${l.map(d => deckTile(d, act, d.id === current)).join('')}</div>`).join('') : '<p class="lb-empty">No deck matches these filters.</p>'}</div>`;
+}
+// Colar uma decklist (copiada no deckbuilder, AetherHub-style): vira um deck do jogador e já fica escolhido.
+function importPanel() {
+  const errs = ui.importErrors || [];
+  return `<div class="ds-import"><label for="ds-import-text">Paste a deck list. One card per line; names in English or Portuguese, with or without the id.</label>
+    <textarea id="ds-import-text" rows="8" data-act="import-text" spellcheck="false" placeholder="Name: My deck&#10;God&#10;1 Athena (god-athena)&#10;Domain&#10;1 Jamir Tower (athena-v6-063)&#10;Deck&#10;3 Gemini Saga (athena-v6-013)">${esc(ui.importText || '')}</textarea>
+    ${errs.length ? `<ul class="ds-import__errors" role="alert">${errs.map(e => `<li>${e.line ? `<b>Line ${e.line}</b> ` : ''}<span ${e.line ? 'translate="no"' : ''}>${esc(e.text)}</span>${e.reason ? ` <em>${esc(e.reason)}</em>` : ''}</li>`).join('')}</ul>` : ''}
+    <div class="ds-import__actions"><button class="lb-ghost" data-act="import-open">Cancel</button><button class="lb-play lb-play--small" data-act="import-list">Import</button></div></div>`;
 }
 // Online contra amigo (autor, 01/11/2026): o desafio é o mesmo do chat (/api/challenges); aceito, a partida abre sozinha.
 function friendsBar() {
@@ -279,7 +371,8 @@ function options() {
     ${chk('reduceMotion', 'Reduce motion')}${chk('reduceFlashes', 'Reduce flashes')}
     <label class="lb-set"><span>Screen shake</span><input type="range" min="0" max="1.5" step=".25" value="${m.shake}" data-act="match-set" data-key="shake"></label>
     ${installBox()}
-    <div class="lb-phone-only"><h2 class="lb-options__h">Account</h2><div class="lb-phone-links"><a class="kv-ghost" href="./platform/" target="_top">Cosmo Hub</a>${ui.user ? '<button class="kv-ghost" data-act="signout">Sign out</button>' : ''}</div></div></section>`;
+    <div><h2 class="lb-options__h">Help</h2><div class="hg-help"><button class="kv-ghost" data-act="replay-guide">Replay the introduction</button><button class="kv-ghost" data-act="dc-open">Discover your Cosmo</button><a class="kv-ghost" href="/how-to-play/" target="_top">How to play</a></div></div>
+    <div class="lb-phone-only"><h2 class="lb-options__h">Account</h2><div class="lb-phone-links"><a class="kv-ghost" href="/cosmohub/" target="_top">Cosmo Hub</a>${ui.user ? '<button class="kv-ghost" data-act="signout">Sign out</button>' : ''}</div></div></section>`;
 }
 document.addEventListener('fullscreenchange', () => { if (ui.screen === 'options') render(); });
 
@@ -309,21 +402,53 @@ async function openProfile(username) {
   dlg.addEventListener('click', e => { if (e.target === dlg || e.target.closest('[data-pclose]')) dlg.close(); });
   try {
     const p = await api(`/api/profile/${encodeURIComponent(username)}`), s = p.stats;
+    titleWords(p.achievements);
     const god = id => esc(cards.get(id)?.name || (id || '').replace(/^god-/, '') || '—');
     dlg.innerHTML = `<header class="lb-pmodal__head"><span class="lb-avatar" style="background-image:url('${artOf(p.avatar_card || 'god-athena') || ''}');${faceStyle(p.avatar_card || 'god-athena')}"></span>
-        <div><p class="kv-stamp kv-stamp--gold">${esc(countryName(p.country))} · Joined ${when(p.joined)}</p><h2>${playerName(p.username)}</h2></div>
+        <div><p class="kv-stamp kv-stamp--gold">${esc(countryName(p.country))} · Joined ${when(p.joined)}</p><h2>${playerName(p.username)}</h2>${plateOf(p.title)}</div>
         <button class="kv-ghost" data-pclose autofocus>Close</button></header>
       <dl class="lb-pstats"><div><dt class="kv-stamp">Played</dt><dd>${s.played}</dd></div><div><dt class="kv-stamp">Wins</dt><dd>${s.wins}</dd></div>
         <div><dt class="kv-stamp">Losses</dt><dd>${s.losses}</dd></div><div><dt class="kv-stamp">Win rate</dt><dd>${s.winrate}%</dd></div></dl>
       ${p.rank ? rankSummary(p.rank) : ''}
       ${p.achievements ? `<h3 class="kv-stamp">Achievements · ${p.achievements.filter(a => a.done).length}/${p.achievements.length}</h3>
-        <ul class="lb-achievements">${p.achievements.map(a => `<li class="${a.done ? 'is-done' : ''}"><b>${esc(a.name)}</b><small>${esc(a.description)}</small></li>`).join('')}</ul>` : ''}
+        <ul class="lb-achievements">${p.achievements.map(achItem).join('')}</ul>` : ''}
       <h3 class="kv-stamp">Recent duels</h3>
       ${p.recent.length ? `<ol class="lb-precent">${p.recent.map(r => `<li class="is-${r.result}"><b>${RESULT[r.result]}</b> vs ${esc(r.opponent)}<small>${god(r.god)} · ${when(r.date)}</small></li>`).join('')}</ol>` : '<p class="kv-status">No online duels yet.</p>'}`;
     dlg.querySelector('[data-pclose]').focus();
   } catch (e) {
     dlg.innerHTML = `<p class="kv-status err" role="status">${esc(e.message)}</p><button class="kv-ghost" data-pclose>Close</button>`;
   }
+}
+
+// ---------- Títulos (ACHIEVEMENTS FORGE V1.0): o servidor decide o que foi conquistado; aqui só se mostra e se escolhe ----------
+if (!document.querySelector('link[href*="title-plate.css"]')) document.head.append(Object.assign(document.createElement('link'), {rel: 'stylesheet', href: '../shared/title-plate.css?v=20261111-ach2'}));
+const knownTitles = new Set(); // nome e condição em PT vêm do catálogo (name_pt, description_pt); cada um entra no dicionário uma vez
+function titleWords(list) {
+  const fresh = (list || []).filter(a => a?.name_pt && !knownTitles.has(a.name));
+  if (!fresh.length) return;
+  fresh.forEach(a => knownTitles.add(a.name));
+  window.ssI18n?.add?.(Object.fromEntries(fresh.flatMap(a => [[a.name, a.name_pt], ...(a.description ? [[a.description, a.description_pt]] : [])])));
+}
+const plateOf = (t, o) => { if (t) titleWords([t]); return titlePlate(t, o); };
+const achItem = a => `<li class="${a.done ? 'is-done' : ''} is-${a.rarity.toLowerCase()}"><b>${esc(a.name)}</b><small>${esc(a.description)}</small>
+  <small class="kv-stamp">${a.done ? (a.unlocked_at ? `Earned ${when(a.unlocked_at)}` : 'Earned') : a.pending ? 'Coming soon' : 'value' in a ? `${Math.min(a.value, a.target)} / ${a.target}` : a.rarity}</small></li>`;
+async function loadTitles() {
+  if (ui.achLoading || !ui.user?.complete) return;
+  ui.achLoading = true;
+  try { ui.ach = await api('/api/achievements'); titleWords(ui.ach.achievements); } catch { ui.ach = {achievements: [], error: true}; }
+  ui.achLoading = false;
+  if (ui.screen === 'profile') render();
+}
+function titlesCard() {
+  if (!ui.ach) { loadTitles(); return '<section class="kv-card lb-form lb-titles"><h2>Titles</h2><p class="kv-status" role="status">Loading…</p></section>'; }
+  const all = ui.ach.achievements, got = all.filter(a => a.done), on = ui.user.title?.id || null;
+  return `<section class="kv-card lb-form lb-titles"><h2>Titles · ${got.length}/${all.length}</h2>
+    ${got.length ? `<div class="lb-titles__pick" role="radiogroup" aria-label="Equipped title">
+      <button type="button" role="radio" class="kv-ghost ${on ? '' : 'is-on'}" aria-checked="${!on}" data-act="equip-title" data-id="">No title</button>
+      ${got.map(a => `<button type="button" role="radio" class="lb-titles__opt ${a.id === on ? 'is-on' : ''}" aria-checked="${a.id === on}" data-act="equip-title" data-id="${esc(a.id)}">${titlePlate({id: a.id, name: a.name, rarity: a.rarity, effect: a.effect})}</button>`).join('')}</div>`
+      : '<p class="kv-status">Win duels and climb the ranks to earn titles.</p>'}
+    <details><summary>All achievements</summary><ul class="lb-achievements">${all.map(achItem).join('')}</ul></details>
+    ${ui.titleMsg ? `<p class="kv-status err" role="status">${esc(ui.titleMsg)}</p>` : ''}</section>`;
 }
 
 // ---------- Perfil (docs/contas-amigos-chat.md, etapa 1) ----------
@@ -359,6 +484,7 @@ function profileScreen() {
         <button class="kv-button">Save</button>${msg('me')}
       </form>
       <div class="lb-profile__side">
+        ${titlesCard()}
         <form class="kv-card lb-form" data-form="password">
           <h2>Password</h2>
           <label class="kv-field"><span class="kv-stamp">Current password</span><input class="kv-input" name="current" type="password" required autocomplete="current-password"></label>
@@ -395,6 +521,8 @@ async function submitProfile(form) {
 const HUB = new URLSearchParams(location.search), EMBED = HUB.get('embed') === '1' && parent !== window;
 let embedOpen = false, embedSaved = false;
 if (EMBED) document.documentElement.classList.add('lb-embed');
+// Volta da batalha do Cosmo Chronicles (?story=m/1-2/result): abre o modo história no ponto certo, com o menu.
+if (/^[\w/-]{1,40}$/.test(HUB.get('story') || '')) { ui.screen = 'story'; ui.storySrc = `${CHRONICLES_URL}?embed=1#${HUB.get('story')}`; history.replaceState(null, '', location.pathname); }
 async function embedOpenFromHub() {
   const want = HUB.get('builder');
   if (!EMBED || embedOpen || !want) return;
@@ -423,19 +551,42 @@ function openBuilder(deck) {
   if (deck?.preset) { base.id = null; base.nome = `${deck.alpha_nome || deck.nome} (copy)`; delete base.preset; }
   base.god ||= 'god-athena';
   // show: facções visíveis na coleção (símbolos dos Gods, várias ao mesmo tempo); começa nas cores do deck.
-  ui.builder = {deck: base, q: '', cost: [], kind: [], subtype: [], dirty: false, show: [...deckFactions(base)]};
+  ui.builder = {deck: base, q: '', cost: [], kind: [], subtype: [], rarity: [], keyword: [], dirty: false, show: [...deckFactions(base)]};
   ui.screen = 'builder';
 }
 const count = (b, id) => b.deck.main_deck.find(e => e.card_id === id)?.quantity || 0;
 function pool(b) {
   const factions = new Set(b.show.length ? b.show : PICKS);
-  const q = b.q.trim().toLowerCase();
+  const q = plain(b.q.trim());
   // A coleção mostra os Gods marcados; a identidade do deck (God + Domain + neutras) é validada em deckErrors.
   return [...cards.values()].filter(c => c.kind !== 'God' && factions.has(faction(c))
     && (!b.kind.length || b.kind.includes(kindOf(c)))
     && (!b.subtype?.length || b.subtype.some(v => (v === ARMOR_FAMILY ? belongsToEquipmentGroup(forge.get(c.id) || c, v) : hasSubtype(forge.get(c.id) || c, v))))
     && (!b.cost.length || b.cost.some(v => (v === '7+' ? (c.cost?.amount ?? 0) >= 7 : c.cost?.amount === Number(v))))
-    && (!q || `${c.name} ${c.text}`.toLowerCase().includes(q))).sort(sortCards);
+    && (!b.rarity?.length || b.rarity.includes(rarityOf(c)))
+    && (!b.keyword?.length || b.keyword.some(k => keywordsOf(c).includes(k)))
+    && (!q || q.split(/\s+/).every(w => searchText(c).includes(w)))).sort(sortCards);
+}
+// Busca sem acento e nos dois idiomas: nome e texto em inglês e em português, como o jogador vê a carta.
+const plain = s => String(s ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+const searchCache = new Map();
+function searchText(c) {
+  if (!searchCache.has(c.id)) {
+    const f = forge.get(c.id) || {};
+    searchCache.set(c.id, plain([c.name, c.text, f.nome_exibicao_pt, f.nome_exibicao_en, ...(f.habilidades_pt || []), ...(f.habilidades_en || []), ...keywordsOf(c).flatMap(k => [k, window.ssI18n?.t?.(k)])].join(' ')));
+  }
+  return searchCache.get(c.id);
+}
+const RARITIES = ['Common', 'Uncommon', 'Legendary', 'Divine'];
+const rarityOf = c => forge.get(c.id)?.raridade || c.rarity;
+// Keyword da lista oficial (shared/card-model.js): a do campo da carta ou a palavra escrita no texto, com maiúscula.
+const keywordCache = new Map();
+function keywordsOf(c) {
+  if (!keywordCache.has(c.id)) {
+    const f = forge.get(c.id) || {}, text = [c.text, ...(f.habilidades_en || [])].join('\n');
+    keywordCache.set(c.id, KEYWORDS.filter(k => (f.keywords_en || []).includes(k) || new RegExp(`\\b${k}\\b`).test(text)));
+  }
+  return keywordCache.get(c.id);
 }
 function errorText(e) {
   const name = id => esc(cards.get(id)?.name || id);
@@ -445,7 +596,7 @@ function errorText(e) {
 const SUBTYPE_FILTERS = [{value: ARMOR_FAMILY, label: 'Any armor'}, ...EQUIPMENT_SUBTYPES.filter(t => t.status === 'approved').map(t => ({value: t.name, label: t.name}))];
 const CARD_SIZES = {S: 130, M: 180, L: 250, XL: 330};
 // Barra de filtros do pool (editor de decks e Coleção): busca e dropdowns de várias escolhas (autor, 02/11/2026).
-const filterState = () => (ui.screen === 'collection' ? (ui.colPool ||= {q: '', cost: [], kind: [], subtype: [], show: []}) : ui.builder);
+const filterState = () => (ui.screen === 'collection' ? (ui.colPool ||= {q: '', cost: [], kind: [], subtype: [], rarity: [], keyword: [], show: []}) : ui.builder);
 function filterDrop(key, label, options, picked) {
   const open = ui.filterOpen === key, names = options.filter(o => picked.includes(o.value)).map(o => o.label);
   return `<div class="lb-drop ${open ? 'is-open' : ''}"><button class="lb-drop__btn ${picked.length ? 'is-on' : ''}" data-act="filter-open" data-key="${key}" aria-expanded="${open}" aria-haspopup="true">
@@ -458,7 +609,7 @@ function filterBar(b) {
   const size = ui.cardSize || 'M', sizes = Object.keys(CARD_SIZES), view = ui.screen === 'builder' ? ui.poolView || 'card' : 'card';
   const gods = PICKS.map(f => ({value: f, label: cards.get(`god-${f}`)?.name || 'Neutral', icon: f === 'neutral' ? '<span class="lb-godpick__neutral" aria-hidden="true"></span>' : `<img src="${symbol(f)}" alt="">`}));
   return `<div class="lb-filters"><input type="search" placeholder="Search name or text" value="${esc(b.q)}" data-act="search" aria-label="Search cards">
-        <div class="lb-drops">${filterDrop('cost', 'Cost', COSTS.map(v => ({value: v, label: v})), b.cost)}${filterDrop('kind', 'Type', KINDS.map(v => ({value: v, label: v})), b.kind)}${filterDrop('subtype', 'Equipment', SUBTYPE_FILTERS, b.subtype || [])}${filterDrop('show', 'God', gods, b.show)}</div>
+        <div class="lb-drops">${filterDrop('cost', 'Cost', COSTS.map(v => ({value: v, label: v})), b.cost)}${filterDrop('kind', 'Type', KINDS.map(v => ({value: v, label: v})), b.kind)}${filterDrop('subtype', 'Equipment', SUBTYPE_FILTERS, b.subtype || [])}${filterDrop('rarity', 'Rarity', RARITIES.map(v => ({value: v, label: v})), b.rarity || [])}${filterDrop('keyword', 'Keyword', KEYWORDS.map(v => ({value: v, label: v})), b.keyword || [])}${filterDrop('show', 'God', gods, b.show)}</div>
         <div class="lb-viewbar">${ui.screen === 'builder' ? `<div class="lb-seg" role="group" aria-label="View">${POOL_VIEWS.map(([v, label]) => `<button class="${view === v ? 'is-active' : ''}" data-act="pool-view" data-view="${v}" aria-pressed="${view === v}">${label}</button>`).join('')}</div>` : ''}
           ${view === 'list' ? '' : `<div class="lb-zoom" role="group" aria-label="Card size"><button data-act="card-zoom" data-dir="-1" ${size === sizes[0] ? 'disabled' : ''} aria-label="Smaller cards">−</button><b>${size}</b><button data-act="card-zoom" data-dir="1" ${size === sizes.at(-1) ? 'disabled' : ''} aria-label="Bigger cards">+</button></div>`}</div></div>`;
 }
@@ -532,7 +683,7 @@ function builder() {
   const domain = d.domain_id && cards.get(d.domain_id);
   const curveHtml = `<div class="lb-curve" aria-label="Cost curve">${curve.map((n, i) => `<span style="--h:${n / peak}"><i>${n || ''}</i><b>${i === 6 ? '7+' : i + 1}</b></span>`).join('')}</div>`;
   // Duas cópias: no fim da lista no desktop; no celular, barra fixa nas duas abas (autor, 02/11/2026).
-  const actions_ = `<div class="lb-list__actions">${d.id ? '<button class="lb-ghost" data-act="delete-deck">Delete</button>' : ''}
+  const actions_ = `<div class="lb-list__actions"><button class="lb-ghost" data-act="copy-list" title="Copy this deck as text to paste in the game">Copy list</button>${d.id ? '<button class="lb-ghost" data-act="delete-deck">Delete</button>' : ''}
         <button class="lb-ghost" data-act="go" data-screen="decks">Cancel</button><button class="lb-play lb-play--small" data-act="save-deck">Done</button></div>`;
   // No celular a coleção e a lista do deck viram duas abas (Cards | Deck); no desktop ficam lado a lado.
   return `<section class="lb-builder is-${b.view || 'pool'}">
@@ -556,6 +707,7 @@ function builder() {
       <div class="lb-picks">${[['god', 'God', d.god], ['domain', 'Domain', d.domain_id], ['thumb', 'Cover', d.thumb || d.god]].map(([k, label, id]) =>
         `<button class="lb-pick" data-act="open-picker" data-pick="${k}" aria-label="Choose ${label}">${id && cards.get(id) ? face(id, 'lb-card--mini') : '<span class="lb-pick__empty">+</span>'}<small>${label}</small></button>`).join('')}</div>
       <label class="lb-set lb-deck-arena"><span>Arena</span><select class="kv-input" data-act="deck-arena" aria-label="Arena for this deck"><option value="">Same as Options</option>${arenaList.map(([k, n]) => `<option value="${esc(k)}" ${d.arena === k ? 'selected' : ''}>${esc(n)}</option>`).join('')}</select></label>
+      <label class="lb-set lb-deck-arena" title="Public decks show up in the Cosmo Hub, with comments and win rate"><span>Public on Cosmo Hub</span><input type="checkbox" data-act="deck-public" ${d.public ? 'checked' : ''} ${ui.user ? '' : 'disabled'}></label>
       <div class="lb-list__count ${size === DECK_SIZE ? 'is-full' : size > DECK_SIZE ? 'is-over' : ''}"><strong>${size}</strong> / ${DECK_SIZE}</div>
       ${cosmoLine(list, size)}
       ${curveHtml}
@@ -571,6 +723,15 @@ function builder() {
 // Carta grande (botão direito): a carta e, ao lado, o texto canônico do D268 em tamanho de leitura.
 // Linhas de cabeçalho viram fichas (custo, tipo, ATK/HP...); o resto são habilidades, com o nome em destaque.
 const HEADER = /^(\d{3} — |Rarity:|Type:|Casting Cost:|ATK:|HP:|Cosmoble:|Auto-Equip|Equip \{|SOUL \d|God — )/;
+// Coleção: criar a carta com o Curinga da raridade ou com Cosmo Coins (docs/economia.md, 11/11/2026); o servidor confere tudo.
+function craftChoices(id, c) {
+  const e = ui.econ, price = e?.prices?.craft?.[c.rarity];
+  if (ui.screen !== 'collection' || !e || e.full_access || !price || ['God', 'Domain'].includes(c.kind)) return '';
+  const have = e.collection[id] || 0, wild = e.wildcards?.[c.rarity] || 0, full = have >= COPY_LIMIT, attrs = `data-act="craft" data-id="${esc(id)}" data-rarity="${esc(c.rarity)}"`;
+  return `<div class="lb-info__craft"><span>In collection <b>${have}</b> / ${COPY_LIMIT}</span>
+    <button class="lb-play lb-play--small" ${attrs} data-pay="wildcard" ${full || !wild ? 'disabled' : ''}><span>Use Wildcard</span> <b>(${wild})</b></button>
+    <button class="lb-ghost" ${attrs} data-pay="coins" data-price="${price}" ${full || e.coins < price ? 'disabled' : ''} aria-label="Craft for ${price.toLocaleString('en')} Cosmo Coins"><span>Craft</span> <i class="ec-coin" aria-hidden="true"></i><b>${price.toLocaleString('en')}</b></button></div>`;
+}
 function cardInfo(id) {
   const c = cards.get(id), f = displayCard(id.startsWith('god-') ? godForge(id) : forge.get(id));
   const lines = c.text.split('\n').map(l => l.trim()).filter(Boolean);
@@ -595,7 +756,7 @@ function cardInfo(id) {
       ${chip('Resonance', auto)}${chip('Equip', equip ? (c.armor || auto ? equip[1] : `${equip[1]} · ${equip[2]}`) : null)}</div>
     ${c.keywords.length ? `<div class="lb-kws">${c.keywords.map(k => `<span>${esc(k)}</span>`).join('')}</div>` : ''}
     <div class="lb-info__rules">${f ? renderCardText(f) : `${c.armor && c.equipped?.keywords?.length ? `<p>Equipped Devotee has ${esc(c.equipped.keywords.join(' and '))}.</p>` : ''}${rules}`}</div>
-    ${f?.flavour_en ? `<p class="lb-info__flavour">${esc(f.flavour_en)}</p>` : ''}
+    ${f?.flavour_en ? `<p class="lb-info__flavour">${esc(f.flavour_en)}</p>` : ''}${craftChoices(id, c)}
     ${n == null ? '' : `<div class="lb-info__deck"><span>In deck <b>${n}</b> / ${COPY_LIMIT}</span>
       <button class="lb-ghost" data-act="remove" data-id="${id}" ${n ? '' : 'disabled'} aria-label="Remove one">−</button>
       <button class="lb-play lb-play--small" data-act="add" data-id="${id}" ${n >= COPY_LIMIT ? 'disabled' : ''}>Add</button></div>`}
@@ -621,7 +782,7 @@ function picker() {
 // Aviso modal (carta fora da identidade de cor do deck).
 function notice() {
   return ui.notice ? `<div class="lb-notice" role="alertdialog" aria-modal="true" aria-labelledby="lb-notice-t"><div class="lb-notice__box">
-    <h3 id="lb-notice-t">${esc(ui.notice.title)}</h3><p>${esc(ui.notice.text)}</p>
+    <h3 id="lb-notice-t">${esc(ui.notice.title)}</h3><p ${ui.notice.pre ? 'class="lb-notice__pre" translate="no"' : ''}>${esc(ui.notice.text)}</p>
     <button class="lb-play lb-play--small" data-act="close-notice" autofocus>OK</button></div></div>` : '';
 }
 // Cosmo na cor do Deus atrás da carta do zoom (autor, 31/10/2026).
@@ -639,9 +800,33 @@ function bigCard() {
 
 // Redesenha tudo; guarda a rolagem das colunas para o clique não voltar a lista ao topo.
 const SCROLLERS = ['.lb-body', '.lb-grid', '.lb-list', '.lb-panel'];
+// Atualiza `el` para ficar igual a `to` mexendo só no que mudou, para não recarregar as artes (autor, 06/11/2026: a tela subia
+// e descia a cada carta adicionada ou tirada do deck). `__html`: o HTML de quando a carta da grade foi desenhada, para comparar rápido.
+const same = (o, n, html) => (o.__html ?? o.outerHTML) === html;
+// O texto na tela já pode estar traduzido (shared/i18n.js traduz depois): igual à tradução do novo também conta como igual.
+const sameText = (cur, en) => cur === en || cur === window.ssI18n?.t(en);
+function morphKids(el, to, depth) {
+  const a = [...el.childNodes], b = [...to.childNodes];
+  if (depth > 14) return el.replaceChildren(...b);
+  b.forEach((n, i) => {
+    const o = a[i];
+    if (!o) return el.append(n);
+    if (o.nodeType !== n.nodeType || o.nodeName !== n.nodeName) return o.replaceWith(n);
+    if (n.nodeType !== 1) { if (!sameText(o.nodeValue, n.nodeValue)) o.nodeValue = n.nodeValue; return; }
+    if (!same(o, n, n.outerHTML)) morph(o, n, depth + 1);
+  });
+  a.slice(b.length).forEach(o => o.remove());
+}
+function morph(el, to, depth = 0) {
+  for (const {name} of [...el.attributes]) if (!to.hasAttribute(name)) el.removeAttribute(name);
+  for (const {name, value} of [...to.attributes]) if (!sameText(el.getAttribute(name), value)) el.setAttribute(name, value);
+  delete el.__html;
+  morphKids(el, to, depth);
+}
 function render() {
   const keep = SCROLLERS.map(sel => root.querySelector(sel)?.scrollTop || 0), screen = root.dataset.screen;
-  const body = {home, decks: decksScreen, profile: profileScreen, options, builder,
+  const body = {home, decks: decksScreen, profile: profileScreen, options, builder, discover,
+    story: () => `<section class="lb-story"><iframe class="lb-story__frame" src="${esc(ui.storySrc || `${CHRONICLES_URL}?embed=1`)}" title="Cosmo Chronicles"></iframe></section>`, // modo história dentro do lobby: o menu fica sempre visível (autor, 11/11/2026)
     collection: () => collectionScreen(ui.econ, pool(filterState()), face, ui.colFilter, {bar: filterBar(filterState()), slot: CARD_SIZES[ui.cardSize] || CARD_SIZES.M}),
     store: () => storeScreen(ui.econ, (id, size) => artOf(id, size), ui.user, {tab: ui.storeTab, group: ui.storeGroup, pick: ui.cosPick})}[ui.screen]();
   const html = `${topBar()}<div class="lb-body lb-body--${ui.screen}">${body}</div>${bigCard()}${picker()}${notice()}`;
@@ -668,29 +853,6 @@ function setCount(id, delta) {
   }
   // Guia §63: até SPLASH_LIMIT cartas da facção de um Domain de outra cor; neutras não contam.
   const deck = {...ui.builder.deck, god: deckGod(ui.builder.deck)};
-// Atualiza `el` para ficar igual a `to` mexendo só no que mudou, para não recarregar as artes (autor, 06/11/2026: a tela subia
-// e descia a cada carta adicionada ou tirada do deck). `__html`: o HTML de quando a carta da grade foi desenhada, para comparar rápido.
-const same = (o, n, html) => (o.__html ?? o.outerHTML) === html;
-// O texto na tela já pode estar traduzido (shared/i18n.js traduz depois): igual à tradução do novo também conta como igual.
-const sameText = (cur, en) => cur === en || cur === window.ssI18n?.t(en);
-function morphKids(el, to, depth) {
-  const a = [...el.childNodes], b = [...to.childNodes];
-  if (depth > 14) return el.replaceChildren(...b);
-  b.forEach((n, i) => {
-    const o = a[i];
-    if (!o) return el.append(n);
-    if (o.nodeType !== n.nodeType || o.nodeName !== n.nodeName) return o.replaceWith(n);
-    if (n.nodeType !== 1) { if (!sameText(o.nodeValue, n.nodeValue)) o.nodeValue = n.nodeValue; return; }
-    if (!same(o, n, n.outerHTML)) morph(o, n, depth + 1);
-  });
-  a.slice(b.length).forEach(o => o.remove());
-}
-function morph(el, to, depth = 0) {
-  for (const {name} of [...el.attributes]) if (!to.hasAttribute(name)) el.removeAttribute(name);
-  for (const {name, value} of [...to.attributes]) if (!sameText(el.getAttribute(name), value)) el.setAttribute(name, value);
-  delete el.__html;
-  morphKids(el, to, depth);
-}
   if (delta > 0 && card && ![factionOf(deck.god), 'neutral'].includes(faction(card)) && splashCount(deck, factionOf) >= SPLASH_LIMIT) {
     ui.big = null;
     ui.notice = {title: 'Splash limit reached', text: `This deck already has ${SPLASH_LIMIT} cards from its Domain's faction. Cards from your God's faction and neutral cards have no limit.`};
@@ -716,9 +878,9 @@ function saveDeck() {
   if (!ui.deckA) ui.deckA = d.id;
   remember();
 }
-function startMatch() {
-  if (ui.mode === 'ai' && ui.rivalRandom !== false) actions['random-b']();
-  const a = findDeck(ui.deckA, presets), b = findDeck(ui.deckB, presets);
+function startMatch({rival, level} = {}) {
+  if (!rival && ui.mode === 'ai' && ui.rivalRandom !== false) actions['random-b']();
+  const a = findDeck(ui.deckA, presets), b = findDeck(rival || ui.deckB, presets);
   // Contra a IA o deck precisa estar na coleção; hot-seat (mesma tela) usa todas as cartas, para teste.
   const missing = ui.mode === 'ai' ? missingCards(ui.econ, a, id => cards.get(id)?.kind) : [];
   if (missing.length) {
@@ -727,26 +889,48 @@ function startMatch() {
   }
   const q = new URLSearchParams({deckA: a.id, deckB: b.id, ai: ui.mode === 'ai' ? 'B' : 'none', godB: deckGod(b).replace(/^god-/, '')});
   if (ui.first !== 'random') q.set('first', ui.first);
+  if (level) q.set('level', level);
   location.href = `./divine/?${q}`;
 }
 
 const actions = {
   go: t => { ui.screen = t.dataset.screen; ui.play = false; },
   install: async () => { if (!installPrompt) return; installPrompt.prompt(); await installPrompt.userChoice.catch(() => null); installPrompt = null; render(); },
-  play: () => { ui.screen = 'home'; ui.playOpening = !ui.play; ui.play = true; ui.slot = 'a'; ui.deckStep = false; ui.challengeSent = null; },
+  tutorial: () => { location.href = GUIDED_URL; },
+  story: () => { ui.screen = 'story'; ui.play = false; ui.storySrc = `${CHRONICLES_URL}?embed=1`; },
+  slide: t => { ui.slide = (ui.slide || 0) + Number(t.dataset.step); },
+  'play-mode': t => { ui.aiChoice = false; ui.mode = t.dataset.mode; ui.playMode = ui.mode === 'ai' ? 'ai' : 'friendly'; remember(); actions.play(); },
+  'ai-choice': () => { ui.aiChoice = true; },
+  'close-ai-choice': () => { ui.aiChoice = false; },
+  'dc-open': () => openDiscover(),
+  'dc-god': t => { ui.dcGod = t.dataset.god; ui.dcCards = false; saveDiscover(who(), ui.user, {last: ui.dcGod}); },
+  'dc-cards': () => { ui.dcCards = !ui.dcCards; },
+  'dc-home': () => { ui.screen = 'home'; },
+  'dc-train': () => {
+    const god = ui.dcGod, at = GODS.findIndex(g => g.god === god), rival = starterOf(GODS[(at + 1) % GODS.length].god), tried = readDiscover(who(), ui.user).tried || [];
+    saveDiscover(who(), ui.user, {tried: [...new Set([...tried, god])]});
+    ui.mode = 'ai'; ui.deckA = starterOf(god).id; ui.deckB = rival.id; remember();
+    startMatch({rival: rival.id, level: 'easy'});
+  },
+  'replay-guide': () => { ui.screen = 'home'; ui.play = false; setTimeout(() => openGuide(who(), 0)); },
+  play: t => { if (PC_MODES.includes(t?.dataset?.pc)) actions['pc-mode'](t); ui.screen = 'home'; ui.playOpening = !ui.play; ui.play = true; ui.slot = 'a'; ui.deckStep = false; ui.challengeSent = null; },
   'close-play': () => { ui.play = false; },
+  'equip-title': async t => {
+    try { const r = await api('/api/me/title', 'POST', {id: t.dataset.id || null}); ui.user = {...ui.user, title: r.title}; ui.titleMsg = ''; } catch (e) { ui.titleMsg = e.message; }
+    render();
+  },
   avatar: async t => { try { ui.user = await api('/api/me', 'PATCH', {avatar_card: t.dataset.id}); } catch (e) { ui.profileMsg = {me: {text: e.message, kind: 'err'}}; } render(); },
   friends: () => social?.toggle(),
   'my-profile': () => openProfile(ui.user.username),
   rank: t => openRankPanel(ui.rank, t),
   'copy-code': async () => { await navigator.clipboard?.writeText(ui.user.friend_code).catch(() => {}); ui.copied = true; setTimeout(() => { ui.copied = false; render(); }, 1500); },
-  slide: t => { ui.slide = (ui.slide || 0) + Number(t.dataset.step); },
   signout: async () => {
     if (!confirm('Sign out of your account?')) return;
     await fetch('/api/auth/logout', {method: 'POST', credentials: 'same-origin'}).catch(() => {});
     location.replace('/login/?v=3');
   },
   mode: t => { ui.mode = t.dataset.mode; ui.slot = 'a'; ui.challengeSent = null; remember(); },
+  'pc-mode': t => { const m = t.dataset.pc; ui.playMode = m; if (m === 'ai') ui.mode = 'ai'; if (m === 'friendly' && ui.mode !== 'local') ui.mode = 'online'; ui.slot = 'a'; ui.challengeSent = null; remember(); },
   'deck-back': () => { ui.deckStep = false; },
   // Deck incompleto não entra; escolhido o deck, volta aos caminhos.
   // Contra a IA o rival é sorteado; no Local, sem deck B ainda, o passo continua para o B.
@@ -758,7 +942,7 @@ const actions = {
   'deck-filter': t => { ui[t.dataset.key] = t.dataset.value; },
   'first-pick': t => { ui.first = t.dataset.value; remember(); },
   'random-b': () => { const ok = allDecks().filter(d => deckValid(d) && d.id !== ui.deckA); if (ok.length) ui.deckB = ok[Math.floor(Math.random() * ok.length)].id; remember(); },
-  start: startMatch,
+  start: () => startMatch(),
   challenge: async t => {
     const d = findDeck(ui.deckA, presets);
     if (!d || !deckValid(d) || !social) return;
@@ -767,12 +951,36 @@ const actions = {
     render();
   },
   'collection-filter': t => { ui.colFilter = t.dataset.value; render(); },
+  // Wildcard (ou coins, sem wildcard) vira cópia da carta escolhida; o servidor confere raridade, saldo e o limite de 3 cópias.
+  craft: async t => {
+    const name = cards.get(t.dataset.id)?.name || t.dataset.id;
+    if (!confirm(t.dataset.price ? `Spend ${Number(t.dataset.price).toLocaleString('en')} Cosmo Coins to craft ${name}?` : `Use 1 ${t.dataset.rarity} Wildcard to get ${name}?`)) return;
+    try { ui.econ = await redeemWildcard(t.dataset.id, t.dataset.pay || (t.dataset.price ? 'coins' : 'wildcard')); } catch (e) { ui.notice = {title: 'Collection', text: e.message}; }
+    render();
+  },
   'buy-booster': async t => { try { ui.econ = await buyBooster(+t.dataset.qty || 1); } catch (e) { ui.notice = {title: 'Store', text: e.message}; } render(); },
   'open-booster': t => openBooster(face, r => { ui.econ = r; render(); }, ui.econ?.boosters, +t.dataset.count || 1),
   'new-deck': () => openBuilder(null),
+  'copy-list': () => {
+    const text = deckToText(ui.builder.deck, listName);
+    navigator.clipboard.writeText(text).then(() => { ui.notice = {title: 'Deck list', text: 'Copied. Paste it in Play › Choose your deck › Import list.'}; render(); },
+      () => { ui.notice = {title: 'Deck list', text, pre: true}; render(); }); // sem permissão de área de transferência: mostra a lista para copiar à mão
+  },
+  'import-open': () => { ui.importOpen = !ui.importOpen; ui.importErrors = null; },
+  'import-list': () => {
+    const {deck, errors} = textToDeck(ui.importText, listIndex());
+    if (!deck.main_deck.length) { ui.importErrors = errors.length ? errors : [{text: 'No cards found in this list.'}]; return; }
+    const d = {id: `my-${Date.now().toString(36)}`, nome: deck.nome || 'Imported deck', god: deck.god || 'god-athena', domain_id: deck.domain_id, main_deck: deck.main_deck};
+    saveMyDecks([...loadMyDecks(), d]);
+    const problems = deckErrors(d).map(e => ({text: errorText(e)}));
+    ui.importErrors = [...errors, ...problems];
+    if (deckValid(d)) { if ((ui.slot || 'a') === 'a') ui.deckA = d.id; else ui.deckB = d.id; remember(); }
+    if (!ui.importErrors.length) { ui.importOpen = false; ui.importText = ''; ui.deckStep = false; }
+    else ui.importErrors.unshift({text: `Saved as "${d.nome}" in your decks${deckValid(d) ? ' and picked' : ' — fix it in Decks before playing'}.`});
+  },
   'edit-deck': t => openBuilder(allDecks().find(d => d.id === t.dataset.deck)),
   'filter-open': t => { ui.filterOpen = ui.filterOpen === t.dataset.key ? null : t.dataset.key; },
-  'filter-toggle': t => { const b = filterState(), k = t.dataset.key, v = t.dataset.value; b[k] = b[k].includes(v) ? b[k].filter(x => x !== v) : [...b[k], v]; },
+  'filter-toggle': t => { const b = filterState(), k = t.dataset.key, v = t.dataset.value; const on = b[k] || []; b[k] = on.includes(v) ? on.filter(x => x !== v) : [...on, v]; },
   'filter-clear': t => { filterState()[t.dataset.key] = []; },
   'pool-view': t => { ui.poolView = t.dataset.view; remember(); },
   'card-zoom': t => { const s = Object.keys(CARD_SIZES), i = s.indexOf(ui.cardSize || 'M') + Number(t.dataset.dir); ui.cardSize = s[Math.max(0, Math.min(s.length - 1, i))]; remember(); },
@@ -896,6 +1104,7 @@ root.addEventListener('change', e => {
   const t = e.target, act = t.dataset.act;
   if (act === 'first') { ui.first = t.value; remember(); }
   else if (act === 'rename') { ui.builder.deck.nome = t.value.trim() || 'New deck'; ui.builder.dirty = true; }
+  else if (act === 'deck-public') { ui.builder.deck.public = t.checked; ui.builder.dirty = true; } // salvar publica no Cosmo Hub (sanctuary-api cosmo.sync_public)
   else if (act === 'deck-arena') { if (t.value) ui.builder.deck.arena = t.value; else delete ui.builder.deck.arena; ui.builder.dirty = true; } // cosmético, só neste deck
   else return;
   render();
@@ -908,6 +1117,7 @@ root.addEventListener('input', e => {
   if (t.dataset.act === 'match-set' && /^card(Text|Size)$/.test(t.dataset.key)) window.ssStage?.a11y(); // acessibilidade das cartas
   if (t.dataset.act === 'match-set' && t.dataset.key === 'lang') { window.ssI18n?.set(t.value); render(); } // idioma PT-BR/EN (shared/i18n.js)
   if (t.dataset.act === 'fullscreen') toggleFullscreen();
+  if (t.dataset.act === 'import-text') ui.importText = t.value;
   if (t.dataset.act === 'deck-search') {
     ui.deckQ = t.value; const q = t.value.toLowerCase();
     root.querySelectorAll('.ds-deck').forEach(el => { el.hidden = !el.dataset.name.includes(q); });
@@ -923,7 +1133,7 @@ root.addEventListener('input', e => {
 });
 addEventListener('keydown', e => { if (e.key === 'Escape' && ui.filterOpen) { ui.filterOpen = null; render(); return; }
   if (e.key === 'Escape' && ui.play && ui.deckStep && !ui.big && !ui.notice && !ui.picker && !ui.cosPick) { ui.deckStep = false; render(); refocusPlay(); return; }
-  if (e.key === 'Escape' && (ui.big || ui.play || ui.notice || ui.picker || ui.cosPick)) { ui.big = null; ui.play = false; ui.notice = null; ui.picker = null; ui.cosPick = null; render(); } });
+  if (e.key === 'Escape' && (ui.big || ui.play || ui.aiChoice || ui.notice || ui.picker || ui.cosPick)) { ui.big = null; ui.play = false; ui.aiChoice = false; ui.notice = null; ui.picker = null; ui.cosPick = null; render(); } });
 // Áudio só começa após o primeiro gesto do jogador (política dos navegadores).
 addEventListener('pointerdown', () => { unlock(); playMusic('menu'); }, {once: true});
 // iPhone: fechar o teclado pode deixar a página deslocada, com o conteúdo sob o notch e sem a barra de cima.
@@ -931,8 +1141,8 @@ addEventListener('focusout', () => { if (scrollY) scrollTo(0, 0); });
 
 async function init() {
   const get = u => fetch(u).then(r => { if (!r.ok) throw Error(`Missing ${u}`); return r.json(); });
-  const [canon, deckData, art, previewDecks, compDecks, ultraDecks, hiperDecks] = await Promise.all([get('../data/canon/d268.json'), get('../data/alpha-0.1/decks-proposta-d171.json'),
-    get(`${ART}cards.json`).catch(() => ({cartas: []})), get('../data/alpha-0.1/decks-preview.json').catch(() => ({decks: []})), get('../data/alpha-0.1/decks-competitivos.json').catch(() => ({decks: []})), get('../data/alpha-0.1/decks-ultra.json').catch(() => ({decks: []})), get('../data/alpha-0.1/decks-hiper.json').catch(() => ({decks: []}))]);
+  const [canon, deckData, art, compDecks, ultraDecks, hiperDecks] = await Promise.all([get('../data/canon/d268.json'), get('../data/alpha-0.1/decks-starters.json'),
+    get(`${ART}cards.json`).catch(() => ({cartas: []})), get('../data/alpha-0.1/decks-competitivos.json').catch(() => ({decks: []})), get('../data/alpha-0.1/decks-ultra.json').catch(() => ({decks: []})), get('../data/alpha-0.1/decks-hiper.json').catch(() => ({decks: []}))]);
   cards = loadCanon(canon); index = canonIndex(canon);
   fetch('../data/arenas-published.json', {cache: 'no-cache'}).then(r => (r.ok ? r.json() : null)).then(m => {
     arenaList = (m?.arenas || []).flatMap(a => a.variantes.map(v => [v.id === 'standard' ? a.id : `${a.id}~${v.id}`, v.id === 'standard' ? a.nome : `${a.nome} — ${v.nome}`]));
@@ -942,14 +1152,15 @@ async function init() {
   fetch(`../${animFile('data/vfx-studio.json')}`, {cache: 'no-cache'}).then(r => (r.ok ? r.json() : null)).then(studio => { if (studio) startCardFx({quality: matchMedia('(pointer: coarse)').matches ? 'medium' : 'high', data: studio, card: id => forge.get(id), context: el => (el.closest('.lb-big') ? 'inspecao' : el.closest('.lb-card') ? 'colecao' : null)}); }).catch(() => {});
   useGodPortraits(art.cartas);
   addPreviewCards(cards, index, art.cartas);
-  presets = [...deckData.decks, ...previewDecks.decks, ...compDecks.decks, ...ultraDecks.decks, ...hiperDecks.decks];
+  presets = [...deckData.decks, ...compDecks.decks, ...ultraDecks.decks, ...hiperDecks.decks]; // os decks antigos de Athena e Poseidon seguem só para o Tutorial 001
   gods = canon.gods.map(g => cards.get(g.id.toLowerCase()));
   if (!findDeck(ui.deckA, presets)) ui.deckA = presets[0]?.id;
   if (!findDeck(ui.deckB, presets)) ui.deckB = presets[1]?.id || presets[0]?.id;
   render();
   embedOpenFromHub(); // Cosmo Hub: abre o construtor (deck novo ou da conta)
+  loadNews();
   // Conta do sanctuary-api (login no /login/). Sem API (dev local), o lobby segue sem o nome no topo.
-  fetch('/api/me', {credentials: 'same-origin'}).then(r => r.ok ? r.json() : null).then(u => { if (u) { ui.user = u; if (!u.complete) ui.screen = 'profile'; render(); startSocial(); loadRank().then(r => { ui.rank = r; if (r && ui.screen !== 'builder') render(); }); loadEconomy().then(e => { ui.econ = e; if (e && ui.screen !== 'builder') render(); }); if (u.username && !EMBED) syncDecks(u.username, () => { if (ui.screen !== 'builder') render(); }); } }).catch(() => {});
+  fetch('/api/me', {credentials: 'same-origin'}).then(r => r.ok ? r.json() : null).then(u => { if (u) { ui.user = u; if (!u.complete) ui.screen = 'profile'; render(); startSocial(); loadRank().catch(() => null).then(r => { ui.rank = r; if (r && ui.screen !== 'builder') render(); maybeGuide(); }); loadEconomy().then(e => { ui.econ = e; if (e && ui.screen !== 'builder') render(); }); if (u.username && !EMBED) syncDecks(u.username, () => { if (ui.screen !== 'builder') render(); }); } else { render(); maybeGuide(); } }).catch(() => { render(); });
 }
 // Aviso discreto do salvamento dos decks (conta ou só este aparelho); não bloqueia nada.
 let deckNote = null, deckNoteTimer = 0;

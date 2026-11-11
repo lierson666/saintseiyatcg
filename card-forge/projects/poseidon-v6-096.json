@@ -3,14 +3,13 @@
   "subtitle": "The Unbreakable Wall of the Pacific",
   "flavour": "",
   "bonusPower": "+1",
-  "bonusResistance": "",
+  "bonusResistance": "+5",
   "art": {
-    "src": "art/poseidon-v6-096-ref.jpg",
-    "w": 1488.0,
-    "x": 0.0,
-    "y": -510.23,
+    "src": "art/poseidon-v6-096.png",
+    "w": 1568.25,
+    "x": -40.125,
+    "y": 0,
     "zoom": 1,
-    "baseW": 1488.0,
-    "provisoria": true
+    "baseW": 1568.25
   }
 }

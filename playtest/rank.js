@@ -1,6 +1,6 @@
 // Ranking e XP do Olympus Arena (docs/ranking-xp.md, aprovado em 31/10/2026). O sanctuary-api calcula rank e XP;
 // aqui só se desenha: selo na barra do lobby, painel de rank e o resumo animado no fim da partida.
-import {lightArt} from '../shared/light-art.js';
+import {lightArt} from '../shared/light-art.js?v=20261102-art1';
 import {faceStyle} from './avatar-face.js?v=20261031-3';
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
 const ROMAN = ['', 'I', 'II', 'III', 'IV'];
@@ -89,12 +89,14 @@ export async function rankAfterMatch({victory, me, online}) {
 }
 
 function showResult(before, after, online) {
+  const coins = online ? Math.max(0, (after.duel_coins_today || 0) - (before.duel_coins_today || 0)) : 0;
   const gained = after.xp - before.xp, up = order(after) > order(before), down = order(after) < order(before);
   const box = document.createElement('aside');
   box.className = 'rk-result';
   box.setAttribute('role', 'status');
   box.innerHTML = `${online ? `<div class="rk-result__rank">${emblem(before)}<div><b>${esc(rankName(before))}</b>${pips(before)}</div></div>` : ''}
     <div class="rk-result__xp"><b>+${gained} XP</b><span class="rk-result__lv">Level ${before.level}</span>${xpBar(before)}</div>
+    ${coins ? `<p class="rk-result__coins">+${coins} Cosmo Coins</p>` : ''}
     <button class="rk-result__x" aria-label="Close">×</button>`;
   document.body.append(box);
   box.querySelector('.rk-result__x').onclick = () => box.remove();
@@ -111,14 +113,14 @@ function showResult(before, after, online) {
 
 // Placas da mesa (pedido do autor, 31/10/2026): canto direito, adversário em cima, eu embaixo; nome + selo do rank.
 // players: {A: username, B: username} no online; contra a IA só o meu lado tem conta.
-export async function mountNameplates({online, players, you}) {
+export async function mountNameplates({online, players, you, foe: story = null}) { // story: rival de missão do Cosmo Chronicles {name, avatar}
   if (document.querySelector('.rk-plate')) return;
   const [me, mine] = await Promise.all([call('/api/me').catch(() => null), call('/api/rank').catch(() => cached())]);
   const foeName = online ? players?.[Object.keys(players).find(k => k !== you)] : null;
   const foe = foeName ? await call(`/api/profile/${encodeURIComponent(foeName)}`).catch(() => null) : null;
   const plate = (side, name, r, avatar) => `<aside class="rk-plate rk-plate--${side}" aria-label="${side === 'me' ? 'You' : 'Opponent'}: ${esc(name)}${r ? `, ${esc(rankName(r))}` : ''}">
     ${avatar ? `<i class="rk-plate__avatar" style="background-image:url('${avatarUrl(avatar)}');${faceStyle(avatar)}" aria-hidden="true"></i>` : ''}${r ? emblem(r) : ''}<span><b>${playerName(name)}</b>${r ? `<small>${esc(rankName(r))} · Lv ${r.level}</small>` : ''}</span></aside>`;
-  document.body.insertAdjacentHTML('beforeend', plate('foe', foe?.username || foeName || 'AI Opponent', foe?.rank, foe?.avatar_card || (foeName && 'god-athena'))
+  document.body.insertAdjacentHTML('beforeend', plate('foe', story?.name || foe?.username || foeName || 'AI Opponent', foe?.rank, story?.avatar || foe?.avatar_card || (foeName && 'god-athena'))
     + (me ? plate('me', me.username, mine, me.avatar_card || 'god-athena') : ''));
   // Placa do oponente ao lado do God dele, como no Arena; a sua fica no bloco do canto direito, acima do botão de ação.
   // O HUD do God é redesenhado a cada render, então a posição é conferida de tempos em tempos.

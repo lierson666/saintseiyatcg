@@ -1,7 +1,7 @@
 // Rosto do avatar (autor, 31/10/2026: "os avatares não estão focando nos rostos"): por personagem, zoom e posição
 // do fundo para o rosto ficar no centro do círculo. Valores tirados da arte de cada carta (card-forge/art-web).
 // [zoom em % da largura, posição x %, posição y %]; personagem novo sem entrada usa o recorte padrão.
-import {lightArt} from '../shared/light-art.js';
+import {lightArt} from '../shared/light-art.js?v=20261102-art1';
 
 const FACE = {
   'god-athena': [450, 54, 34], 'god-poseidon': [300, 50, 21], 'god-hades': [320, 53, 15], 'god-ares': [300, 52, 13], 'god-artemis': [300, 55, 13],

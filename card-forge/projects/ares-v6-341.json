@@ -2,13 +2,14 @@
   "title": "",
   "subtitle": "The Unyielding Flame",
   "flavour": "\"The warriors of Ethon do not retreat. They turn the ground beneath their enemies into ashes.\"",
+  "bonusPower": "",
+  "bonusResistance": "",
   "art": {
-    "src": "art/ares-v6-341-ref.jpg",
-    "w": 1488.0,
-    "x": 0.0,
-    "y": -281.1,
+    "src": "art/ares-v6-341.png",
+    "w": 1568.25,
+    "x": -40.125,
+    "y": 0,
     "zoom": 1,
-    "baseW": 1488.0,
-    "provisoria": true
+    "baseW": 1568.25
   }
 }

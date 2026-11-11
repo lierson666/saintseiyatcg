@@ -2,13 +2,15 @@
   "title": "",
   "subtitle": "Leave Nothing Standing",
   "flavour": "\"The flames of Ares recognize no boundary between victory and destruction.\"",
+  "bonusPower": "",
+  "bonusResistance": "",
   "art": {
     "src": "art/ares-v6-328-ref.jpg",
-    "w": 1488.0,
-    "x": 0.0,
+    "w": 1488,
+    "x": 0,
     "y": -270.42,
     "zoom": 1,
-    "baseW": 1488.0,
+    "baseW": 1488,
     "provisoria": true
   }
 }

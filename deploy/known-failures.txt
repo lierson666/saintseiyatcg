@@ -1,6 +1,9 @@
+tools/test-armor-forge.mjs
 tools/test-card-presentation.mjs
 tools/test-divine-director.mjs
 tools/test-layout-studio.mjs
+tools/test-momentos-model.mjs
+tools/test-pixel-vfx.mjs
 tools/test-presentation.mjs
 tools/test-rules-v2.mjs
 tools/test-rules-v21.mjs

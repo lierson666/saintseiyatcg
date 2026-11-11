@@ -280,7 +280,7 @@
     "ultimate": "ATG/5054"
   },
   "faccao-hades": {
-    "awaken": null,
+    "awaken": "SNS/0332",
     "carga": "SNS/0243",
     "cast": null,
     "declarar": null,
@@ -292,15 +292,30 @@
     "linhas": [],
     "morte": null,
     "morte_deus": "SNS/0210",
-    "poder_divino": "SNS/0172",
+    "poder_divino": "SNS/0245",
+    "poder_dominio": null,
+    "retorno": null,
+    "strike": "HDS/5022",
+    "ultimate": "HDS/5054"
+  },
+  "faccao-neutral": {
+    "awaken": null,
+    "carga": null,
+    "cast": null,
+    "declarar": null,
+    "entrada": null,
+    "golpe": null,
+    "habilidade": null,
+    "impacto": null,
+    "impacto_deus": null,
+    "linhas": [],
+    "morte": null,
+    "morte_deus": "SNS/0210",
+    "poder_divino": null,
     "poder_dominio": null,
     "retorno": null,
     "strike": null,
     "ultimate": null
-  },
-  "faccao-neutral": {
-    "linhas": [],
-    "morte_deus": "SNS/0210"
   },
   "faccao-poseidon": {
     "awaken": null,
@@ -319,7 +334,7 @@
     "poder_dominio": null,
     "retorno": null,
     "strike": null,
-    "ultimate": null
+    "ultimate": "PSD/5119"
   },
   "poseidon-001": {
     "cast": null,

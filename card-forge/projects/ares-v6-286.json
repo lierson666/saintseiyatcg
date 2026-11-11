@@ -2,13 +2,14 @@
   "title": "",
   "subtitle": "The Hunter's Cruel Embrace",
   "flavour": "\"A single wound is all the hunter needs.\"",
+  "bonusPower": "+2",
+  "bonusResistance": "+0",
   "art": {
-    "src": "art/ares-v6-286-ref.jpg",
-    "w": 1488.0,
-    "x": 0.0,
-    "y": -276.72,
+    "src": "art/ares-v6-286.png",
+    "w": 1568.25,
+    "x": 208.03142201834874,
+    "y": 288.7998313556567,
     "zoom": 1,
-    "baseW": 1488.0,
-    "provisoria": true
+    "baseW": 1568.25
   }
 }

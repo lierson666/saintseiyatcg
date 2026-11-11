@@ -835,3 +835,27 @@ body { font: 300 15px/1.45 var(--kv-sans); }
 .lb-embed .lb-top, .lb-embed .lb-deckstatus { display: none; }
 .lb-embed .lb-list__actions { bottom: env(safe-area-inset-bottom); }
 .lb-embed .lb-builder > .lb-list__actions { bottom: env(safe-area-inset-bottom); }
+
+/* Modo história dentro do lobby: o Cosmo Chronicles roda num quadro abaixo do menu, que fica sempre visível (autor, 11/11/2026). */
+.lb-body.lb-body--story { overflow: hidden; padding: 0; display: flex; }
+.lb-story { flex: 1; min-height: 0; display: flex; }
+.lb-story__frame { flex: 1; width: 100%; min-height: 0; border: 0; background: transparent; }
+/* Rótulo dos botões da home em uma linha só; no celular o espaçamento aperta para caber "Modo história". */
+.lb-news__tile small { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+@media (max-width: 520px) { .lb-news__tile small { letter-spacing: .22em; } }
+
+/* Títulos (ACHIEVEMENTS FORGE V1.0): escolha do título equipado no perfil; a placa vem de shared/title-plate.css. */
+.lb-user .tp, .lb-user .tp-art { margin-left: 6px; }
+@media (max-width: 1599px) { .lb-user .tp, .lb-user .tp-art { display: none; } } /* barra cheia abaixo de 1600px: o título fica no perfil e no modal do jogador */
+.lb-pmodal__head .tp, .lb-pmodal__head .tp-art { margin-top: 4px; display: block; }
+.lb-titles__pick { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0; }
+.lb-titles__opt { background: none; border: 2px solid transparent; border-radius: 9px; padding: 2px; cursor: pointer; }
+.lb-titles__opt.is-on, .lb-titles__pick .kv-ghost.is-on { border-color: var(--kv-gold, #e9c45c); }
+.lb-titles details summary { cursor: pointer; margin-top: 8px; }
+
+/* Coleção: criar com Curinga ou Cosmo Coins no painel da carta (lobby.js craftChoices). */
+.lb-info__craft { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding-top: 12px; border-top: 1px solid var(--kv-line, #ffffff22); }
+.lb-info__craft > span { flex: 1 1 100%; color: var(--kv-muted, #b9b3c7); font-size: 13px; }
+.lb-info__craft button { display: inline-flex; align-items: center; gap: 6px; }
+.lb-info__craft .ec-coin { width: 14px; height: 14px; }
+.lb-info__craft button:disabled { opacity: .5; cursor: not-allowed; }

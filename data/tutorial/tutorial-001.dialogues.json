@@ -1,0 +1,390 @@
+{
+ "CIN_1": {
+  "en": "So you're Athena's new Saint? I am Marin. From now on, I'm your teacher.",
+  "pt": "Então você é o novo Cavaleiro de Athena? Eu sou Marin. E, a partir de agora, vou ser sua mestra."
+ },
+ "CIN_2": {
+  "en": "On the other side stands Poseidon, god of the seas. Don't expect him to show mercy. But don't worry... I'll teach you everything you need to know.",
+  "pt": "Do outro lado está Poseidon, o deus dos mares. Não espere que ele tenha piedade. Mas não se preocupe... vou ensinar tudo o que você precisa saber."
+ },
+ "CIN_3": {
+  "en": "First lesson: a Saint never wins by strength alone. You must understand your Cosmo.",
+  "pt": "Primeira lição: um Cavaleiro nunca vence apenas pela força. Ele precisa compreender seu Cosmo."
+ },
+ "ARENA": {
+  "en": "That is Poseidon. Bring his Soul down to zero and you win.",
+  "pt": "Aquele é Poseidon. Zere a Alma dele e você vence."
+ },
+ "MY_GOD": {
+  "en": "This is Athena. If her Soul reaches zero, you lose.",
+  "pt": "Esta é Athena. Se a Alma dela zerar, você perde."
+ },
+ "CARD_OPEN": {
+  "en": "Before you fight, know what you hold. Tap this card and choose Info.",
+  "pt": "Antes de lutar, saiba o que tem nas mãos. Toque nesta carta e escolha Info."
+ },
+ "CARD_NAME": {
+  "en": "This is your warrior's name.",
+  "pt": "Este é o nome do seu guerreiro."
+ },
+ "CARD_FACTION": {
+  "en": "The faction shows which god this card serves. Our strength comes from Athena.",
+  "pt": "A facção mostra a qual deus esta carta pertence. Nossa força vem de Athena."
+ },
+ "CARD_COST": {
+  "en": "To put this card in play, you pay this cost in Cosmo.",
+  "pt": "Para colocar esta carta em jogo, você paga este custo em Cosmo."
+ },
+ "CARD_TYPE": {
+  "en": "This is a Devotee. Devotees fight for you.",
+  "pt": "Este é um Devoto. São os combatentes que lutam por você."
+ },
+ "CARD_ABILITIES": {
+  "en": "Here are its abilities. Some cards do far more than attack.",
+  "pt": "Aqui estão as habilidades. Algumas cartas fazem muito mais do que atacar."
+ },
+ "CARD_ATK": {
+  "en": "This is ATK: the damage it deals.",
+  "pt": "Este é o ATQ: o dano que ela causa."
+ },
+ "CARD_HP": {
+  "en": "These are its Hit Points, or HP: how much damage it can take. At zero, it dies.",
+  "pt": "Estes são os Pontos de Vida, o PV: quanto dano ela aguenta. Quando chegam a zero, ela morre."
+ },
+ "RES_BASE": {
+  "en": "Cosmo Bases pay for your plays. Each one pays 1, once per round.",
+  "pt": "As Cosmo Bases pagam suas jogadas. Cada uma paga 1, uma vez por rodada."
+ },
+ "RES_LATENT": {
+  "en": "Latent Cosmo is your reserve, up to 3. It is the only Cosmo that pays during the rival's round.",
+  "pt": "Cosmo Latente é sua reserva, até 3. É o único Cosmo que paga na rodada do rival."
+ },
+ "BASE_1": {
+  "en": "Your Cosmo comes from your cards. Tap this one and choose Cosmo Base.",
+  "pt": "Seu Cosmo vem das suas cartas. Toque nesta e escolha Cosmo Base."
+ },
+ "END_1": {
+  "en": "One Base per round, and you have no 1-cost Devotee yet. End your round: the unused Base becomes Latent.",
+  "pt": "Uma Base por rodada, e você ainda não tem Devoto de custo 1. Encerre a rodada: a Base não usada vira Latente."
+ },
+ "RIVAL_1": {
+  "en": "Now it's Poseidon's round, and he pays Cosmo for his warriors too. Knowing the enemy's cards matters as much as knowing yours.",
+  "pt": "Agora é a vez de Poseidon, e ele também utiliza Cosmo para colocar seus guerreiros em campo. Conhecer as cartas do adversário é tão importante quanto conhecer as suas."
+ },
+ "ROUND_2": {
+  "en": "A new round: your Bases are ready, you drew a card, and here is the Latent you saved.",
+  "pt": "Nova rodada: suas Bases estão prontas, você comprou uma carta, e aqui está o Latente que guardou."
+ },
+ "BASE_2": {
+  "en": "One more Base. Now you have 2 Cosmo.",
+  "pt": "Mais uma Base. Agora você tem 2 de Cosmo."
+ },
+ "DEVOTEE": {
+  "en": "Bring your first Devotee to the field. Tap Cassios and choose Play.",
+  "pt": "Traga seu primeiro Devoto ao campo. Toque em Cássios e escolha Jogar."
+ },
+ "NOT_READY": {
+  "en": "You paid its cost. A new Devotee arrives Unprepared: it can Strike from your next round.",
+  "pt": "Você pagou o custo. Um Devoto novo chega Despreparado: ele golpeia a partir da sua próxima rodada."
+ },
+ "END_2": {
+  "en": "Nothing else to do. End your round.",
+  "pt": "Nada mais a fazer. Encerre a rodada."
+ },
+ "RIVAL_2": {
+  "en": "Poseidon is storing Cosmo. Keep an eye on what he saves.",
+  "pt": "Poseidon está guardando Cosmo. Fique de olho no que ele poupa."
+ },
+ "BASE_3": {
+  "en": "Start with your Base. Make it a habit.",
+  "pt": "Comece pela Base. Faça disso um hábito."
+ },
+ "COMPARE": {
+  "en": "Compare before you attack. Cassios has 2 ATK and 3 HP; the Spearman has 2 ATK and 1 HP.",
+  "pt": "Compare antes de atacar. Cássios tem 2 de ATQ e 3 de PV; o Lanceiro tem 2 de ATQ e 1 de PV."
+ },
+ "STRIKE_1": {
+  "en": "A careless attack can cost you a warrior, but this one is safe. Tap Cassios, choose Strike, then the Spearman.",
+  "pt": "Um ataque precipitado pode custar um guerreiro, mas este é seguro. Toque em Cássios, escolha Golpear e depois o Lanceiro."
+ },
+ "RESULT": {
+  "en": "Both deal damage at once, and the Spearman fell to the Tartarus. The damage on Cassios stays.",
+  "pt": "Os dois causam dano ao mesmo tempo, e o Lanceiro caiu no Tártaro. O dano em Cássios continua nele."
+ },
+ "SEIYA": {
+  "en": "Now call Seiya. He costs all 3 of your Cosmo.",
+  "pt": "Agora chame Seiya. Ele custa todos os seus 3 de Cosmo."
+ },
+ "END_3": {
+  "en": "End your round. Don't get excited: the battle has only begun.",
+  "pt": "Encerre a rodada. Não se empolgue: a batalha está só começando."
+ },
+ "RIVAL_3": {
+  "en": "Watch what he brings to protect himself.",
+  "pt": "Observe o que ele traz para se proteger."
+ },
+ "GUARDIAN": {
+  "en": "See that warrior protecting Poseidon? While his Guardian stands, your Strikes must target him.",
+  "pt": "Está vendo aquele guerreiro protegendo Poseidon? Enquanto esse Guardião estiver em campo, seus Golpes precisam mirar nele."
+ },
+ "BASE_4": {
+  "en": "Your Base first. You will want Cosmo for what comes next.",
+  "pt": "Primeiro a Base. Você vai querer Cosmo para o que vem agora."
+ },
+ "TECHNIQUE": {
+  "en": "Techniques are your Cosmo made real, played only in your round. Use this one on Seiya.",
+  "pt": "Técnicas são seu Cosmo em ação, jogadas só na sua rodada. Use esta em Seiya."
+ },
+ "GUARD_STRIKE": {
+  "en": "Now he hits harder. Tap Seiya, choose Strike, then the Guardian.",
+  "pt": "Agora ele bate mais forte. Toque em Seiya, escolha Golpear e depois o Guardião."
+ },
+ "END_4": {
+  "en": "You kept 2 Cosmo unspent on purpose. End your round and they become Latent, because you will need them.",
+  "pt": "Você não gastou 2 de Cosmo de propósito. Encerre a rodada e eles viram Latente, porque você vai precisar."
+ },
+ "RIVAL_4": {
+  "en": "Poseidon is bringing a real threat. Stay sharp.",
+  "pt": "Poseidon está trazendo uma ameaça de verdade. Fique atento."
+ },
+ "BASE_5": {
+  "en": "Base first. Then you will dress your Saint.",
+  "pt": "Primeiro a Base. Depois você veste seu Cavaleiro."
+ },
+ "EQUIP": {
+  "en": "A Saint of Athena must know his Cloth, and with Resonance Seiya wears his own for free. Tap it and choose Play.",
+  "pt": "Um Cavaleiro de Athena precisa conhecer sua Armadura, e com Ressonância Seiya veste a dele sem custo extra. Toque nela e escolha Jogar."
+ },
+ "JABU": {
+  "en": "Good. Call Jabu with what is left.",
+  "pt": "Bom. Chame Jabu com o que sobrou."
+ },
+ "END_5": {
+  "en": "End your round. And keep your Latent ready.",
+  "pt": "Encerre a rodada. E mantenha seu Latente pronto."
+ },
+ "TRICK_WAIT": {
+  "en": "Careful. Not every fight is decided when the attack begins.",
+  "pt": "Cuidado. Nem todo combate é decidido quando o ataque começa."
+ },
+ "TRICK": {
+  "en": "He is about to destroy Jabu. Answer now: play this Moment on Jabu, paid with your Latent.",
+  "pt": "Ele vai destruir Jabu. Responda agora: jogue este Momento em Jabu, pagando com seu Latente."
+ },
+ "TRICK_DONE": {
+  "en": "That is a response. Everything waits on the stack, and the last card in resolves first.",
+  "pt": "Isso é uma resposta. Tudo espera na pilha, e a última carta a entrar resolve primeiro."
+ },
+ "RIVAL_5": {
+  "en": "Well answered. He didn't expect that.",
+  "pt": "Bem respondido. Ele não esperava por isso."
+ },
+ "MOMENT": {
+  "en": "Moments work in your round or as a response, unlike Techniques. This one creates 2 Soldiers: play it now.",
+  "pt": "Momentos valem na sua rodada ou como resposta, diferente das Técnicas. Este cria 2 Soldados: jogue agora."
+ },
+ "KEY_PIERCE": {
+  "en": "Pierce: when it starts a Strike against a Devotee, the extra damage reaches the enemy God's Soul.",
+  "pt": "Perfurar: quando inicia um Golpe contra um Devoto, o dano que sobra alcança a Alma do Deus inimigo."
+ },
+ "KEY_LONG": {
+  "en": "Long Range: when it starts a Strike, it hits first. If it destroys the target, there is no strike back.",
+  "pt": "Longo Alcance: quando inicia um Golpe, bate primeiro. Se destruir o alvo, não leva o revide."
+ },
+ "DIVINE_STRIKE": {
+  "en": "Poseidon has no Guardian now. Tap Seiya, choose Strike, then Poseidon.",
+  "pt": "Poseidon está sem Guardião agora. Toque em Seiya, escolha Golpear e depois Poseidon."
+ },
+ "DIVINE_SEEN": {
+  "en": "Water Prison: Poseidon paid 2 Latent and Sealed Seiya. Gods have powers of their own, so learn to read them.",
+  "pt": "Prisão de Água: Poseidon pagou 2 de Latente e Selou Seiya. Os deuses têm poderes próprios, então aprenda a reconhecê-los."
+ },
+ "EXAM_1": {
+  "en": "You know the basics. Now I want to see how you fight without my instructions.",
+  "pt": "Você já conhece os fundamentos. Agora quero ver como luta sem minhas instruções."
+ },
+ "EXAM_2": {
+  "en": "I won't tell you which card to play. Watch the field, think through the options and make your decision.",
+  "pt": "Não vou indicar qual carta jogar. Observe o campo, pense nas possibilidades e tome sua decisão."
+ },
+ "EXAM_GOALS": {
+  "en": "Marin's trial:",
+  "pt": "Prova de Marin:"
+ },
+ "GOAL_COSMO": {
+  "en": "Use your Cosmo",
+  "pt": "Use seu Cosmo"
+ },
+ "GOAL_CLASH": {
+  "en": "Resolve a Strike or a spell",
+  "pt": "Resolva um Golpe ou uma magia"
+ },
+ "GOAL_ROUND": {
+  "en": "Finish a round on your own",
+  "pt": "Complete uma rodada sozinho"
+ },
+ "BYE_1": {
+  "en": "Well done. I have nothing more to teach you in this battle.",
+  "pt": "Muito bem. Não tenho mais nada para ensinar nesta batalha."
+ },
+ "BYE_2": {
+  "en": "Remember: a Saint of Athena never gives up, even against a god!",
+  "pt": "Lembre-se: um Cavaleiro de Athena nunca desiste, mesmo diante de um deus!"
+ },
+ "BYE_3": {
+  "en": "Now go. Show Poseidon how far your Cosmo can reach!",
+  "pt": "Agora vá. Mostre a Poseidon até onde seu Cosmo pode chegar!"
+ },
+ "NO_COSMO": {
+  "en": "Not enough Cosmo for that card. Check its cost and your resources.",
+  "pt": "Ainda não tem Cosmo suficiente para essa carta. Observe o custo e seus recursos."
+ },
+ "BAD_TARGET": {
+  "en": "You can't choose that target now. See what is protecting it.",
+  "pt": "Esse alvo não pode ser escolhido agora. Veja o que está protegendo."
+ },
+ "NOT_NOW": {
+  "en": "Not yet. Follow the highlight.",
+  "pt": "Ainda não. Siga o destaque."
+ },
+ "GOOD_PLAY": {
+  "en": "Excellent! You're starting to think like a true Saint.",
+  "pt": "Excelente! Você está começando a pensar como um verdadeiro Cavaleiro."
+ },
+ "FELL": {
+  "en": "Not every Saint stays standing. Learn from it and go on.",
+  "pt": "Nem todo Cavaleiro permanece de pé. Aprenda com a batalha e continue."
+ },
+ "LOW_SOUL": {
+  "en": "Watch your Soul! You can't ignore your enemy's strength.",
+  "pt": "Atenção à sua Alma! Você não pode ignorar a força do adversário."
+ },
+ "HINT": {
+  "en": "Look at your cards and find a play that strengthens your position.",
+  "pt": "Observe as cartas disponíveis e procure uma jogada que fortaleça sua posição."
+ },
+ "WIN": {
+  "en": "You did it! Your Cosmo answered your will. Athena would be proud.",
+  "pt": "Você conseguiu! Seu Cosmo respondeu à sua determinação. Athena estaria orgulhosa."
+ },
+ "LOSE": {
+  "en": "You fought to the end. One defeat doesn't end a Saint's path. Shall we try again?",
+  "pt": "Você lutou até o fim. Uma derrota não encerra o caminho de um Cavaleiro. Vamos tentar novamente?"
+ },
+ "UNFINISHED": {
+  "en": "The battle ended before your training did. Let's finish the lessons.",
+  "pt": "A batalha acabou antes do treinamento. Vamos terminar as aulas."
+ },
+ "G_GUARDIAN": {
+  "en": "Guardian: while in play, enemy Strikes must target a Guardian.",
+  "pt": "Guardião: enquanto estiver em campo, os Golpes inimigos precisam mirar um Guardião."
+ },
+ "G_NIMBLE": {
+  "en": "Nimble: only Nimble Devotees can Strike it. It ignores Guardians without Nimble.",
+  "pt": "Ágil: só Devotos Ágeis podem golpeá-lo. Ele ignora Guardiões sem Ágil."
+ },
+ "G_IMPULSE": {
+  "en": "Impulse: it can Strike in the round it enters play.",
+  "pt": "Impulso: pode Golpear na rodada em que entra."
+ },
+ "G_HIDDEN": {
+  "en": "Hidden Cosmo: while it is a Base, you can cast it from there by paying its Hidden cost.",
+  "pt": "Cosmo Oculto: enquanto for Base, você pode conjurá-la de lá pagando o custo Oculto."
+ },
+ "G_TRAINING": {
+  "en": "Training: each counter gives +1 ATK and +1 HP while it stays in play.",
+  "pt": "Treinamento: cada marcador dá +1 de ATQ e +1 de PV enquanto ficar em campo."
+ },
+ "G_SEAL": {
+  "en": "Seal: the Devotee is Unprepared. Each start of its round removes a counter instead of Preparing it.",
+  "pt": "Selo: o Devoto fica Despreparado. Cada início de rodada dele tira um marcador em vez de prepará-lo."
+ },
+ "UI_NEXT": {
+  "en": "Next",
+  "pt": "Próximo"
+ },
+ "UI_SKIP": {
+  "en": "Skip tutorial",
+  "pt": "Pular tutorial"
+ },
+ "UI_REPEAT": {
+  "en": "Repeat",
+  "pt": "Repetir"
+ },
+ "UI_SKIP_INTRO": {
+  "en": "Skip",
+  "pt": "Pular"
+ },
+ "UI_RESUME": {
+  "en": "Resume lessons",
+  "pt": "Retomar as aulas"
+ },
+ "UI_CLOSE": {
+  "en": "Close",
+  "pt": "Fechar"
+ },
+ "UI_HELP": {
+  "en": "Ask Marin for help",
+  "pt": "Pedir ajuda à Marin"
+ },
+ "UI_GLOSSARY": {
+  "en": "Keywords",
+  "pt": "Palavras-chave"
+ },
+ "BYE_CLOCK": {
+  "en": "From here on, the round clock counts.",
+  "pt": "Daqui em diante, o relógio da rodada passa a valer."
+ },
+ "ORDER": {
+  "en": "Two effects triggered at once. Choose which resolves first, then confirm.",
+  "pt": "Dois efeitos dispararam ao mesmo tempo. Escolha qual resolve primeiro e confirme."
+ },
+ "RESOLVE": {
+  "en": "Nothing to answer with? Press the button and let it resolve.",
+  "pt": "Sem nada para responder? Aperte o botão e deixe resolver."
+ },
+ "PHASE_BOX": {
+  "en": "From now on you get this panel: whose round it is, the phase and who has priority. Check it whenever you are unsure.",
+  "pt": "A partir de agora você tem este painel: de quem é a rodada, a fase e quem tem prioridade. Consulte sempre que tiver dúvida."
+ },
+ "UI_RETRY": {
+  "en": "Try again",
+  "pt": "Tentar de novo"
+ },
+ "DOMAIN_SEEN": {
+  "en": "See Seiya's +1 ATK? That was your Domain: Tournament Spirit works with any God.",
+  "pt": "Viu o +1 de ATQ em Seiya? Foi seu Domínio: o Espírito do Torneio vale com qualquer Deus."
+ },
+ "DOMAIN_WHAT": {
+  "en": "Your Domain starts in play and can't be attacked. Tap it anytime to read its powers.",
+  "pt": "Seu Domínio já começa em jogo e não pode ser atacado. Toque nele quando quiser para ler seus poderes."
+ },
+ "RESONANCE": {
+  "en": "Resonance is its strong power, and it only works if God and Domain share a faction. Yours gives a Bronze Saint +2 ATK and +2 HP for 2 Cosmo.",
+  "pt": "A Ressonância é o poder forte, e só funciona se Deus e Domínio forem da mesma facção. A sua dá +2 ATQ e +2 PV a um Cavaleiro de Bronze por 2 de Cosmo."
+ },
+ "GOD_POWER": {
+  "en": "Athena acted too: Cosmo of Hope gave you 1 Latent because Seiya survived the Strike. A Divine Power triggers by itself.",
+  "pt": "Athena também agiu: Cosmo da Esperança te deu 1 de Latente porque Seiya sobreviveu ao Golpe. Poder Divino dispara sozinho."
+ },
+ "GOD_COMMAND": {
+  "en": "A Divine Command is different: you activate it in your round. Athena's Healing Light removes 1 damage from an ally for 1 Cosmo.",
+  "pt": "Comando Divino é diferente: você ativa na sua rodada. A Luz Curadora de Athena tira 1 de dano de um aliado por 1 de Cosmo."
+ },
+ "AWAKEN": {
+  "en": "When Athena reaches 5 Soul, she Awakens. Her Devotees get +1 ATK and +1 HP.",
+  "pt": "Quando a Alma de Athena chega a 5, ela Desperta. Seus Devotos ganham +1 ATQ e +1 PV."
+ },
+ "ULTIMATE": {
+  "en": "Each God also has an Ultimate, its final blow. Athena's costs 10 Base Cosmo and three of your Saints.",
+  "pt": "Cada Deus também tem um Supremo, seu golpe final. O de Athena custa 10 de Cosmo Base e três dos seus Cavaleiros."
+ },
+ "DECK_RULE_1": {
+  "en": "After this battle, build your deck: 1 God, 1 Domain and 50 cards, up to 3 copies of each. The cards come from your God's faction and neutrals.",
+  "pt": "Depois desta batalha, monte seu deck: 1 Deus, 1 Domínio e 50 cartas, até 3 cópias de cada. As cartas vêm da facção do Deus e das neutras."
+ },
+ "DECK_RULE_2": {
+  "en": "You can pick a Domain from another faction. It unlocks up to 15 cards of that faction, but you lose its Resonance.",
+  "pt": "Você pode escolher um Domínio de outra facção. Ele libera até 15 cartas dessa facção, mas você perde a Ressonância."
+ }
+}

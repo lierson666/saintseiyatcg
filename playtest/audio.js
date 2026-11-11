@@ -108,11 +108,11 @@ export function unlock() {
     if (wantedTheme) playMusic(wantedTheme);
   }
   if (ctx.state !== "running") ctx.resume();
-  if (music?.audio?.paused) music.audio.play().catch(() => {});
+  if (music?.audio?.paused && !music.userPaused) music.audio.play().catch(() => {});
 }
 // No celular o pointerdown não conta como gesto: repete a cada toque até o áudio destravar de fato.
 if (typeof window !== "undefined") for (const event of ["pointerup", "touchend", "click", "keydown"]) {
-  window.addEventListener(event, () => { if (ctx && (ctx.state !== "running" || music?.audio?.paused)) unlock(); }, true);
+  window.addEventListener(event, () => { if (ctx && (ctx.state !== "running" || (music?.audio?.paused && !music.userPaused))) unlock(); }, true);
 }
 
 export function setVolume(kind, value) {
@@ -322,19 +322,15 @@ export function playMusic(name, { restart = false } = {}) {
   }
   if (TRACKS[name]) {
     const audio = new Audio(TRACKS[name]);
-    const state = { name, audio, queue: [] };
+    const state = { name, audio, queue: [], history: [] };
     audio.loop = !BATTLE_PLAYLIST.length; // menu e batalha: a faixa de abertura é sempre a mesma, depois a playlist sorteada (autor, 06/11/2026)
     audio.volume = volume.music;
     ctx.createMediaElementSource(audio).connect(duckBus);
-    audio.addEventListener('ended', () => {
-      if (music !== state) return;
-      if (!state.queue.length) state.queue = shuffledBattleTracks(audio.src);
-      if (!state.queue.length) return;
-      audio.src = state.queue.shift();
-      audio.play().catch(() => {});
-    });
+    audio.addEventListener('ended', () => { if (music === state) musicControl.next(); });
+    for (const event of ['play', 'pause']) audio.addEventListener(event, emitMusic);
     music = state;
     audio.play().catch(() => {});
+    emitMusic();
     return;
   }
   const theme = THEMES[name];
@@ -353,3 +349,38 @@ export function playMusic(name, { restart = false } = {}) {
   }, 250);
   music = state;
 }
+
+// Player da partida (autor, 07/11/2026): anterior, pausa, próxima e sortear; avisa a tela pelo evento 'ss-music'.
+const emitMusic = () => dispatchEvent(new CustomEvent('ss-music'));
+const trackTitle = src => decodeURIComponent(src.split('/').pop()).replace(/\.[a-z0-9]+$/i, '').replace(/[_-]+/g, ' ');
+function goTrack(src, remember = true) {
+  if (remember) music.history.push(music.audio.src);
+  music.userPaused = false;
+  music.audio.src = src;
+  music.audio.play().catch(() => {});
+  emitMusic();
+}
+export const musicControl = {
+  info: () => music?.audio ? { title: trackTitle(music.audio.src), paused: music.audio.paused, progress: music.audio.duration ? music.audio.currentTime / music.audio.duration : 0 } : null,
+  toggle() {
+    if (!music?.audio) return;
+    music.userPaused = !music.audio.paused;
+    if (music.userPaused) music.audio.pause(); else music.audio.play().catch(() => {});
+  },
+  next() {
+    if (!music?.audio) return;
+    if (!music.queue.length) music.queue = shuffledBattleTracks(music.audio.src);
+    if (music.queue.length) goTrack(music.queue.shift());
+  },
+  prev() {
+    if (!music?.audio) return;
+    if (music.audio.currentTime > 4 || !music.history.length) { music.audio.currentTime = 0; return; }
+    music.queue.unshift(music.audio.src);
+    goTrack(music.history.pop(), false);
+  },
+  shuffle() {
+    if (!music?.audio) return;
+    music.queue = shuffledBattleTracks(music.audio.src);
+    this.next();
+  }
+};

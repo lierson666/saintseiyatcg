@@ -1,0 +1,348 @@
+{
+ "nota": "Missão 4.5 do Cosmo Chronicles (CONTEXT/cosmo-chronicles-saga-01.md, 11/11/2026). Regras normais; só vencer. Cavaleiros Negros com Athena só mecânica (decisão do autor, 11/11/2026). Simulação (rival IA hard, 180 partidas por linha, 0 erros): jogador vence 40,6% (IA easy) e 50,0% (IA normal); mediana de 16 rodadas. The Return of the Phoenix com 1 cópia (3 cópias deixavam o Ikki mais fraco). A cena de vitória muda se Shun estiver em campo (scenes.win_with).",
+ "id": "4-5",
+ "saga": "saga-01",
+ "chapter": 4,
+ "order": 5,
+ "title": {
+  "pt": "A Fênix",
+  "en": "The Phoenix"
+ },
+ "description": {
+  "pt": "Ikki enfrenta todos. A Armadura de Sagitário reaparece.",
+  "en": "Ikki faces them all. The Sagittarius Cloth appears again."
+ },
+ "level": {
+  "pt": "Desafiador",
+  "en": "Challenging"
+ },
+ "duration": {
+  "pt": "15–20 minutos",
+  "en": "15–20 minutes"
+ },
+ "characters": {
+  "seiya": {
+   "card": "athena-v6-001",
+   "name": {
+    "pt": "Seiya de Pégaso",
+    "en": "Pegasus Seiya"
+   }
+  },
+  "shun": {
+   "card": "athena-v6-007",
+   "name": {
+    "pt": "Shun de Andrômeda",
+    "en": "Andromeda Shun"
+   }
+  },
+  "ikki": {
+   "card": "athena-v6-009",
+   "name": {
+    "pt": "Ikki de Fênix",
+    "en": "Phoenix Ikki"
+   }
+  },
+  "marin": {
+   "card": "athena-v6-021",
+   "name": {
+    "pt": "Marin, na lembrança de Seiya",
+    "en": "Marin, in Seiya's memory"
+   }
+  },
+  "narrator": {
+   "name": {
+    "pt": "Narração",
+    "en": "Narration"
+   }
+  }
+ },
+ "requires": [
+  "4-4"
+ ],
+ "next": null,
+ "player": {
+  "character": "seiya",
+  "deck": "chronicle-4-5-seiya"
+ },
+ "rival": {
+  "character": "ikki",
+  "deck": "chronicle-4-5-ikki",
+  "ai": "hard",
+  "mechanical_god": "god-athena"
+ },
+ "arena": "olympus",
+ "music": null,
+ "victory": {
+  "type": "engine",
+  "winner": "player"
+ },
+ "defeat": {
+  "draws_count_as": "defeat",
+  "retry": true
+ },
+ "reward": {
+  "enabled": true,
+  "coins": 250,
+  "boosters": 3,
+  "boss": true
+ },
+ "scenes": {
+  "intro": [
+   {
+    "art": "athena-v6-009",
+    "who": "narrator",
+    "line": "SCENE_1"
+   },
+   {
+    "art": "athena-v6-009",
+    "who": "ikki",
+    "line": "RIVAL_1"
+   },
+   {
+    "art": "athena-v6-007",
+    "who": "shun",
+    "line": "HERO_1"
+   }
+  ],
+  "prep": {
+   "who": "marin",
+   "line": "PREP_1",
+   "pose": "explain"
+  },
+  "win": [
+   {
+    "art": "athena-v6-080",
+    "who": "narrator",
+    "line": "WIN_1"
+   },
+   {
+    "art": "athena-v6-009",
+    "who": "ikki",
+    "line": "WIN_2"
+   },
+   {
+    "art": "athena-v6-001",
+    "who": "seiya",
+    "line": "WIN_3"
+   }
+  ],
+  "lose": [
+   {
+    "art": "athena-v6-009",
+    "who": "ikki",
+    "line": "LOSE_1"
+   }
+  ],
+  "win_with": {
+   "card": "athena-v6-007",
+   "scenes": [
+    {
+     "art": "athena-v6-007",
+     "who": "narrator",
+     "line": "WINS_1"
+    },
+    {
+     "art": "athena-v6-009",
+     "who": "ikki",
+     "line": "WINS_2"
+    },
+    {
+     "art": "athena-v6-007",
+     "who": "shun",
+     "line": "WINS_3"
+    }
+   ]
+  }
+ },
+ "hints": [
+  {
+   "id": "HINT_KEY",
+   "when": [
+    {
+     "event": "card_played",
+     "player": "B",
+     "card": "athena-v6-009"
+    }
+   ]
+  },
+  {
+   "id": "HINT_HOLD",
+   "when": [
+    {
+     "stall": 2
+    },
+    {
+     "event": "soul_lost",
+     "player": "A",
+     "atMost": {
+      "soul": 8
+     }
+    }
+   ]
+  }
+ ],
+ "decks": [
+  {
+   "id": "chronicle-4-5-seiya",
+   "god": "god-athena",
+   "domain_id": "athena-v6-062",
+   "main_deck": [
+    {
+     "card_id": "athena-v6-001",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-002",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-003",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-005",
+     "quantity": 2
+    },
+    {
+     "card_id": "athena-v6-007",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-008",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-053",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-054",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-052",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-061",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-040",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-043",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-041",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-457",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-494",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-491",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-489",
+     "quantity": 3
+    }
+   ],
+   "nome": "Bronze · Chronicles 4.5",
+   "emprestado": true
+  },
+  {
+   "id": "chronicle-4-5-ikki",
+   "god": "god-athena",
+   "domain_id": "athena-v6-062",
+   "main_deck": [
+    {
+     "card_id": "athena-v6-053",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-054",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-052",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-061",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-040",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-043",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-041",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-494",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-491",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-489",
+     "quantity": 2
+    },
+    {
+     "card_id": "athena-v6-009",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-010",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-080",
+     "quantity": 1
+    },
+    {
+     "card_id": "neutral-v6-455",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-451",
+     "quantity": 2
+    },
+    {
+     "card_id": "neutral-v6-452",
+     "quantity": 2
+    },
+    {
+     "card_id": "neutral-v6-453",
+     "quantity": 2
+    },
+    {
+     "card_id": "neutral-v6-454",
+     "quantity": 2
+    },
+    {
+     "card_id": "neutral-v6-462",
+     "quantity": 3
+    }
+   ],
+   "nome": "Phoenix Ikki · Chronicles 4.5",
+   "emprestado": true
+  }
+ ]
+}

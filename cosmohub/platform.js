@@ -1,6 +1,7 @@
 // Cosmo Hub (docs/platform-4.0.md). Cartas e regras vêm só do registro canônico; permissão é sempre decidida pelo servidor.
 import {renderLiveCard} from '/shared/live-card.js';
 import {mountKV} from '/shared/kv-sky.js';
+import {titlePlate} from '/shared/title-plate.js?v=20261111-ach2';
 import {decklistIndex, deckToText, textToDeck} from '/shared/decklist-text.js?v=20261108-1';
 import {readFilters, filtersQuery, filterCatalog, filterCollection, describe, sortCards} from './codex-filter.js?v=20261109-cx1';
 
@@ -304,9 +305,12 @@ async function playerPage(username) {
   const result = {win: ['Win', 'is-win'], loss: ['Loss', 'is-loss'], draw: ['Draw', 'is-draw']};
   const side = g => g ? `${godSymbol(g)}${esc(godName(g))}` : '<span class="hub-muted">—</span>';
   const ach = [...p.achievements].sort((a, b) => Number(b.done) - Number(a.done));
+  // Títulos (Achievements Forge V1.0): nome e condição em PT vêm do catálogo; a placa é a mesma do jogo.
+  if (!document.querySelector('link[href*="title-plate.css"]')) document.head.append(Object.assign(document.createElement('link'), {rel: 'stylesheet', href: '/shared/title-plate.css?v=20261111-ach2'}));
+  window.ssI18n?.add?.(Object.fromEntries(ach.flatMap(a => a.name_pt ? [[a.name, a.name_pt], [a.description, a.description_pt]] : [])));
   return `<section class="pf-hero"${banner}>
       <div class="pf-id"><span class="pf-avatar" role="img" aria-label="${esc(p.username)}" style="${avatarStyle(p.avatar_card || p.favorite_god || 'god-athena')}"></span>
-        <div><h1 class="pf-name">${esc(p.username)}</h1><p class="pf-meta">Joined ${when(p.joined)}${fav ? `<span class="pf-dot" aria-hidden="true">·</span><span>Favorite God</span> <span class="hub-godname">${godSymbol(fav)}${esc(godName(fav))}</span>` : ''}</p></div></div>
+        <div><h1 class="pf-name">${esc(p.username)}</h1>${titlePlate(p.title)}<p class="pf-meta">Joined ${when(p.joined)}${fav ? `<span class="pf-dot" aria-hidden="true">·</span><span>Favorite God</span> <span class="hub-godname">${godSymbol(fav)}${esc(godName(fav))}</span>` : ''}</p></div></div>
       <div class="pf-rank">${rankEmblem(r)}<div><b>${esc(rankName(r))}</b><small>${r.tier === 'Kamui' ? `${r.points || 0} pts · ` : ''}Level ${esc(r.level ?? 1)}${r.title ? ` · ${esc(r.title)}` : ''}</small>${pips}</div></div>
     </section>
     <div class="pf-stats">${stat('Win rate', st.played ? `${st.winrate}%` : '—', st.played ? `<span class="pf-bar" aria-hidden="true"><i style="width:${st.winrate}%"></i></span>` : '')}${stat('Online duels', st.played || 0)}${stat('Wins', st.wins || 0)}${stat('Losses', st.losses || 0)}${stat('Achievements', `${done}/${total}`, `<span class="pf-bar" aria-hidden="true"><i style="width:${total ? 100 * done / total : 0}%"></i></span>`)}</div>

@@ -1,0 +1,339 @@
+{
+ "nota": "Missão 2.2 do Cosmo Chronicles (CONTEXT/cosmo-chronicles-saga-01.md, 11/11/2026). Regras normais; decks emprestados. Simulação (rival normal, 200 partidas por linha, 0 erros): jogador vence 65,5% (IA easy) e 73,5% (IA normal); objetivo cumprido em 49,5% e 62%.",
+ "id": "2-2",
+ "saga": "saga-01",
+ "chapter": 2,
+ "order": 2,
+ "title": {
+  "pt": "O frio de Cisne",
+  "en": "The Cold of the Swan"
+ },
+ "description": {
+  "pt": "Tóquio, Japão. Na segunda luta da Guerra Galáctica, Hyoga enfrenta Ichi de Hidra, mas sua cabeça está em outra missão.",
+  "en": "Tokyo, Japan. In the second bout of the Galaxian Wars, Hyoga faces Hydra Ichi, but his mind is on another mission."
+ },
+ "objective": {
+  "pt": "Vença destruindo ao menos um Devoto inimigo antes de ele atacar.",
+  "en": "Win after defeating at least one enemy Devotee before it attacks."
+ },
+ "level": {
+  "pt": "Intermediário",
+  "en": "Intermediate"
+ },
+ "duration": {
+  "pt": "8–12 minutos",
+  "en": "8–12 minutes"
+ },
+ "characters": {
+  "hyoga": {
+   "card": "athena-v6-005",
+   "name": {
+    "pt": "Hyoga de Cisne",
+    "en": "Cygnus Hyoga"
+   }
+  },
+  "ichi": {
+   "card": "athena-v6-030",
+   "name": {
+    "pt": "Ichi de Hidra",
+    "en": "Hydra Ichi"
+   }
+  },
+  "crystal": {
+   "card": "neutral-v6-481",
+   "name": {
+    "pt": "Cavaleiro de Cristal, na lembrança de Hyoga",
+    "en": "The Crystal Saint, in Hyoga's memory"
+   }
+  },
+  "narrator": {
+   "name": {
+    "pt": "Narração",
+    "en": "Narration"
+   }
+  }
+ },
+ "requires": [
+  "2-1"
+ ],
+ "next": "2-3",
+ "player": {
+  "character": "hyoga",
+  "deck": "chronicle-2-2-hyoga"
+ },
+ "rival": {
+  "character": "ichi",
+  "deck": "chronicle-2-2-ichi",
+  "ai": "normal",
+  "mechanical_god": "god-athena"
+ },
+ "arena": "olympus",
+ "music": null,
+ "victory": {
+  "type": "engine",
+  "winner": "player",
+  "requires": [
+   {
+    "event": "destroyed",
+    "owner": "B",
+    "none_before": {
+     "event": "strike_declared",
+     "key": "attacker"
+    }
+   }
+  ]
+ },
+ "defeat": {
+  "draws_count_as": "defeat",
+  "retry": true
+ },
+ "reward": {
+  "enabled": true,
+  "coins": 250,
+  "boosters": 1,
+  "boss": false
+ },
+ "scenes": {
+  "intro": [
+   {
+    "art": "athena-v6-062",
+    "who": "narrator",
+    "line": "SCENE_1"
+   },
+   {
+    "art": "athena-v6-005",
+    "who": "narrator",
+    "line": "SCENE_2"
+   },
+   {
+    "art": "athena-v6-030",
+    "who": "ichi",
+    "line": "ICHI_1"
+   },
+   {
+    "art": "athena-v6-005",
+    "who": "hyoga",
+    "line": "HYOGA_1"
+   }
+  ],
+  "prep": {
+   "who": "crystal",
+   "line": "PREP_1"
+  },
+  "win": [
+   {
+    "art": "athena-v6-062",
+    "who": "narrator",
+    "line": "WIN_1"
+   },
+   {
+    "art": "athena-v6-006",
+    "who": "hyoga",
+    "line": "WIN_2"
+   }
+  ],
+  "objective": [
+   {
+    "art": "neutral-v6-481",
+    "who": "crystal",
+    "line": "OBJECTIVE_1"
+   }
+  ],
+  "lose": [
+   {
+    "art": "athena-v6-030",
+    "who": "ichi",
+    "line": "LOSE_1"
+   }
+  ]
+ },
+ "hints": [
+  {
+   "id": "HINT_FREEZE",
+   "who": "crystal",
+   "when": [
+    {
+     "event": "card_played",
+     "player": "B",
+     "kind": "Devotee"
+    }
+   ]
+  },
+  {
+   "id": "HINT_ICHI",
+   "who": "crystal",
+   "when": [
+    {
+     "stall": 2
+    },
+    {
+     "event": "soul_lost",
+     "player": "A",
+     "atMost": {
+      "soul": 8
+     }
+    }
+   ]
+  }
+ ],
+ "decks": [
+  {
+   "id": "chronicle-2-2-hyoga",
+   "god": "god-athena",
+   "domain_id": "athena-v6-062",
+   "main_deck": [
+    {
+     "card_id": "athena-v6-005",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-006",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-078",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-481",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-053",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-054",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-052",
+     "quantity": 2
+    },
+    {
+     "card_id": "athena-v6-061",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-040",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-043",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-041",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-490",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-494",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-491",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-497",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-489",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-462",
+     "quantity": 3
+    }
+   ],
+   "nome": "Hyoga · Chronicles 2.2",
+   "emprestado": true
+  },
+  {
+   "id": "chronicle-2-2-ichi",
+   "god": "god-athena",
+   "domain_id": "athena-v6-062",
+   "main_deck": [
+    {
+     "card_id": "athena-v6-030",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-458",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-457",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-040",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-034",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-468",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-043",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-041",
+     "quantity": 2
+    },
+    {
+     "card_id": "athena-v6-052",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-054",
+     "quantity": 1
+    },
+    {
+     "card_id": "neutral-v6-497",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-494",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-491",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-478",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-044",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-051",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-466",
+     "quantity": 2
+    },
+    {
+     "card_id": "athena-v6-035",
+     "quantity": 3
+    }
+   ],
+   "nome": "Ichi · Chronicles 2.2",
+   "emprestado": true
+  }
+ ]
+}

@@ -52,6 +52,27 @@ export const ANGLES = [
   pair('Three-quarter front view', 'três quartos de frente'), pair('Profile view', 'de perfil'), pair('Rear three-quarter view', 'três quartos de costas'),
   pair('Slight low angle', 'levemente de baixo'), pair('Slight high angle', 'levemente de cima'), pair("Worm's-eye view from ground level", 'do chão, olhando para cima'),
   pair('Telephoto side view, flat perspective', 'lateral com teleobjetiva, perspectiva plana'), pair('Tilted high angle', 'de cima e inclinada'),
+  // Mais pontos de vista no nível dos olhos, de cima e de costas (autor, 06/11/2026): a maioria era de baixo para cima.
+  pair('Straight-on frontal view', 'de frente, simétrico'),
+  pair('Shoulder-level shot', 'na altura dos ombros'),
+  pair('Head-on charge view', 'avançando de frente'),
+  pair('Opponent\'s point of view', 'visão do oponente'),
+  pair('Canted eye-level angle', 'nível dos olhos e inclinada'),
+  pair('Level wide shot from afar', 'plano geral distante e nivelado'),
+  pair('Ground-level side view', 'rente ao chão, de lado'),
+  pair('Side view from slightly above', 'de lado, levemente de cima'),
+  pair('High-angle three-quarter view', 'três quartos, de cima'),
+  pair('Overhead three-quarter view', 'quase aérea, em três quartos'),
+  pair('Extreme high-angle shot', 'muito do alto, figura pequena'),
+  pair('Aerial view from afar', 'aérea, de longe'),
+  pair('Full rear view', 'de costas'),
+  pair('Rear high-angle view', 'de costas e de cima'),
+  pair('Behind the figure, facing the enemy', 'atrás da figura, de frente para o inimigo'),
+  pair('Elevated isometric view', 'elevada, estilo isométrico'),
+  pair('Framed through foreground debris', 'enquadrada por destroços'),
+  pair('Reflection view', 'pelo reflexo'),
+  pair('Looking down from a ledge', 'de um ponto alto, olhando para baixo'),
+  pair('Eye-level close view', 'close no nível dos olhos'),
 ];
 export const MOTIONS = [
   ['', 'Nenhum'], ['Motion frozen at the decisive instant', 'Congelado no instante decisivo'], ['Hair and cloth reacting to the energy', 'Cabelos e tecidos reagindo à energia'], ['Debris thrown outward by the force', 'Detritos projetados pela força'],
@@ -300,7 +321,7 @@ const NEGATIVE_FIGURE = 'extra fingers, missing fingers, fused fingers, extra li
 const NEGATIVE_ALWAYS = 'inaccurate armor, inconsistent lighting, unreadable silhouette, excessive visual clutter, text, typography, card borders, watermarks, logos, UI elements, low resolution';
 const EPIC_BY_RARITY = {Common: '2', Uncommon: '3', Legendary: '4', Divine: '5'};
 // O gerador de imagem tende ao herói visto de baixo (autor, 02/11/2026: pode sair, só não sempre): o ponto de vista escolhido vem descrito em termos físicos, sem proibir nenhum.
-const START_ANGLES = ['Eye-level shot', 'Low-angle shot', 'High-angle shot', 'Dutch angle', 'Over-the-shoulder shot', 'Three-quarter front view', 'Profile view', 'Rear three-quarter view', 'Slight low angle', 'Slight high angle', 'Telephoto side view, flat perspective'];
+const START_ANGLES = ['Eye-level shot', 'Low-angle shot', 'High-angle shot', 'Dutch angle', 'Over-the-shoulder shot', 'Three-quarter front view', 'Profile view', 'Rear three-quarter view', 'Slight low angle', 'Slight high angle', 'Telephoto side view, flat perspective', 'Straight-on frontal view', 'Shoulder-level shot', 'Head-on charge view', 'Opponent\'s point of view', 'Canted eye-level angle', 'Level wide shot from afar', 'Ground-level side view', 'Side view from slightly above', 'High-angle three-quarter view', 'Overhead three-quarter view', 'Extreme high-angle shot', 'Aerial view from afar', 'Full rear view', 'Rear high-angle view', 'Behind the figure, facing the enemy', 'Elevated isometric view', 'Looking down from a ledge', 'Eye-level close view'];
 const ANGLE_VIEW = {
   'Eye-level shot': 'camera at the height of the eyes, level horizon behind the head, head and feet in natural proportion, the underside of the chin not visible',
   'Low-angle shot': 'camera below the waist looking up',
@@ -317,6 +338,26 @@ const ANGLE_VIEW = {
   "Worm's-eye view from ground level": 'camera on the ground looking straight up',
   'Telephoto side view, flat perspective': 'distant camera at chest height with a long lens, level, flat perspective, no foreshortening',
   'Tilted high angle': 'camera above the head looking down with the horizon tilted, the ground fills the background',
+  'Straight-on frontal view': 'camera at chest height, level, facing the figure head-on, symmetrical framing, horizon at chest height',
+  'Shoulder-level shot': 'camera at shoulder height, level, the eyes slightly above the frame center, no sky above the head',
+  'Head-on charge view': 'camera at eye level, level, the figure rushing straight toward the camera, the body leaning forward',
+  'Opponent\'s point of view': 'camera at the eye height of a standing opponent, level, the figure facing the viewer as if about to strike',
+  'Canted eye-level angle': 'camera at eye level with the horizon tilted about 15 degrees, not looking up or down',
+  'Level wide shot from afar': 'distant camera at chest height, level, the whole figure small in a wide landscape, horizon at mid-frame',
+  'Ground-level side view': 'camera resting on the ground but pointed horizontally, the figure seen from the side, feet and ground in the foreground, not looking up',
+  'Side view from slightly above': 'camera slightly above head height, to the side of the figure, looking slightly down, more ground than sky',
+  'High-angle three-quarter view': 'camera above the head and to one side, looking down at about 30 degrees, the body turned 45 degrees, the ground fills the background',
+  'Overhead three-quarter view': 'camera high above and to one side, looking down at about 60 degrees, the top of the head and shoulders and the ground around the figure visible',
+  'Extreme high-angle shot': 'camera far above the head looking steeply down, the figure small against the ground, no sky',
+  'Aerial view from afar': 'distant camera high in the air looking down at the battlefield, the figure small in the scene, the ground fills the frame',
+  'Full rear view': 'camera at chest height, level, directly behind the figure, the back fully visible, the face hidden or barely seen',
+  'Rear high-angle view': 'camera above and behind the figure looking down, the back and shoulders visible, the ground and the opponent\'s side ahead',
+  'Behind the figure, facing the enemy': 'camera at head height behind the figure, level, the figure\'s back in the foreground and the enemy or battlefield ahead',
+  'Elevated isometric view': 'camera raised at about 35 degrees, looking down diagonally, minimal perspective distortion, the floor plane clearly visible',
+  'Framed through foreground debris': 'camera at chest height, level, the figure seen through a gap of broken stone or debris in the foreground',
+  'Reflection view': 'camera at chest height, level, the figure seen together with its reflection on water or a polished floor',
+  'Looking down from a ledge': 'camera on a ledge or cliff well above the figure, looking down, the figure below with the ground around it',
+  'Eye-level close view': 'camera close to the face at eye level, level, straight horizon, the underside of the chin not visible',
 };
 const START_SHOTS = ['Medium Shot (MS)', 'Medium Full Shot (MFS)', 'Three-Quarter Shot', 'Full Body Shot (FBS)', 'Bust Shot', 'Waist-Up Portrait, centered', 'Cowboy Shot', 'Profile Medium Shot', 'Off-Center Medium Shot, figure on one third of the frame', 'Diagonal Full Body, figure along the diagonal of the frame', 'Long Shot (LS)'];
 const pickBy = (seed, list) => list[[...seed].reduce((n, c) => (n * 31 + c.charCodeAt(0)) >>> 0, 0) % list.length]; // mesma carta, mesmo início
@@ -688,6 +729,7 @@ export function buildImagePrompt(f, p) {
   const showTechnique = p.technique && !(c.nature === 'scene' && p.technique === f.name) && c.nature !== 'domain' && c.nature !== 'equipment';
   const body = [
     `Vertical 3:4 high-resolution illustration for ${generic ? 'a mythological anime trading card, in a world of sacred armors and Greek gods' : 'a Saint Seiya trading card'}. Illustration only: no card frame, no text, no names, no logos, no numbers, no stats, no interface symbols, no watermarks.`,
+    `VISIBLE ART WINDOW — MANDATORY RULE OF TENTHS: divide the original 3:4 image into ten equal horizontal bands counted FROM BOTTOM TO TOP. The card displays ONLY bands 4–8 inclusive: bottom-relative 30%–80%, equivalent to 20%–70% measured from the top. The primary character face, object detail, decisive action, gesture, and all indispensable visual information MUST be inside this visible strip, with strongest focal point near band 7 (70% up from bottom, 30% down from top). Bands 1–3 and 9–10 are for scenery/bleed only. Treat 7/10 as the exact primary focal anchor and bands 4–8 as the safe story zone. This rule overrides camera/pose/zoom when those conflict. Never rely on the full image being visible on the card.`,
     focal,
     `CARD: ${f.name}${f.subtitle ? ` — "${f.subtitle}"` : ''} (${f.typeLine || f.kind}, ${f.rarity || 'Common'}).`,
     `CARD TYPE DIRECTION: ${direction}`,

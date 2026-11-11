@@ -1,4 +1,4 @@
-import {mountArtPrompt} from './art-prompt.js?v=20261104-rosto1';
+import {mountArtPrompt} from './art-prompt.js?v=20261106-angulos1';
 import {cardsToXlsx} from './cards-xlsx.js?v=20261102-momento1';
 import {AUDIT_STATUS,auditOf,mountCardFinder,reviewQueue} from './card-finder.js?v=20261102-momento1';
 import {mountRulesRows} from './rules-rows.js?v=20261107-deus1';

@@ -2,13 +2,14 @@
   "title": "",
   "subtitle": "The Living Wall of the Ocean",
   "flavour": "",
+  "bonusPower": "",
+  "bonusResistance": "",
   "art": {
-    "src": "art/poseidon-v6-110-ref.jpg",
-    "w": 1742.89,
-    "x": -127.45,
-    "y": 0.0,
+    "src": "art/poseidon-v6-110.png",
+    "w": 1568.25,
+    "x": -40.125,
+    "y": 0,
     "zoom": 1,
-    "baseW": 1742.89,
-    "provisoria": true
+    "baseW": 1568.25
   }
 }

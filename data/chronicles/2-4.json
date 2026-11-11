@@ -1,0 +1,330 @@
+{
+ "nota": "Missão 2.4 do Cosmo Chronicles (CONTEXT/cosmo-chronicles-saga-01.md, 11/11/2026). Regras normais; decks emprestados. Vencer conclui; não perder Shun é desafio extra que não muda resultado (o selo Andrômeda fica desligado). A chegada de Ikki acontece só na cena final. Simulação (rival normal, 400 partidas por linha, 0 erros): jogador vence 60,8% (IA easy) e 66,3% (IA normal); mediana de 17 rodadas. Na simulação Shun nunca foi destruído, então o desafio é fácil contra a IA.",
+ "id": "2-4",
+ "saga": "saga-01",
+ "chapter": 2,
+ "order": 4,
+ "title": {
+  "pt": "A corrente de Andrômeda",
+  "en": "The Andromeda Chain"
+ },
+ "description": {
+  "pt": "Tóquio, Japão. Última luta da Guerra Galáctica: Shun não quer ferir ninguém, e Jabu confunde isso com fraqueza.",
+  "en": "Tokyo, Japan. The last bout of the Galaxian Wars: Shun doesn't want to hurt anyone, and Jabu mistakes that for weakness."
+ },
+ "level": {
+  "pt": "Intermediário",
+  "en": "Intermediate"
+ },
+ "duration": {
+  "pt": "10–15 minutos",
+  "en": "10–15 minutes"
+ },
+ "challenge": {
+  "pt": "Vencer sem perder Shun no campo.",
+  "en": "Win without losing Shun on the field."
+ },
+ "characters": {
+  "shun": {
+   "card": "athena-v6-007",
+   "name": {
+    "pt": "Shun de Andrômeda",
+    "en": "Andromeda Shun"
+   }
+  },
+  "jabu": {
+   "card": "athena-v6-028",
+   "name": {
+    "pt": "Jabu de Unicórnio",
+    "en": "Unicorn Jabu"
+   }
+  },
+  "seiya": {
+   "card": "athena-v6-001",
+   "name": {
+    "pt": "Seiya, na arquibancada",
+    "en": "Seiya, in the stands"
+   }
+  },
+  "narrator": {
+   "name": {
+    "pt": "Narração",
+    "en": "Narration"
+   }
+  }
+ },
+ "requires": [
+  "2-3"
+ ],
+ "next": "3-1",
+ "player": {
+  "character": "shun",
+  "deck": "chronicle-2-4-shun"
+ },
+ "rival": {
+  "character": "jabu",
+  "deck": "chronicle-2-4-jabu",
+  "ai": "normal",
+  "mechanical_god": "god-athena"
+ },
+ "arena": "olympus",
+ "music": null,
+ "victory": {
+  "type": "engine",
+  "winner": "player",
+  "bonus": {
+   "none": [
+    {
+     "event": "destroyed",
+     "owner": "A",
+     "card": "athena-v6-007"
+    }
+   ]
+  }
+ },
+ "defeat": {
+  "draws_count_as": "defeat",
+  "retry": true
+ },
+ "reward": {
+  "enabled": true,
+  "coins": 250,
+  "boosters": 1,
+  "boss": false
+ },
+ "scenes": {
+  "intro": [
+   {
+    "art": "athena-v6-062",
+    "who": "narrator",
+    "line": "SCENE_1"
+   },
+   {
+    "art": "athena-v6-046",
+    "who": "narrator",
+    "line": "SCENE_2"
+   },
+   {
+    "art": "athena-v6-028",
+    "who": "jabu",
+    "line": "JABU_1"
+   },
+   {
+    "art": "athena-v6-007",
+    "who": "shun",
+    "line": "SHUN_1"
+   }
+  ],
+  "prep": {
+   "who": "seiya",
+   "line": "PREP_1"
+  },
+  "win": [
+   {
+    "art": "athena-v6-046",
+    "who": "narrator",
+    "line": "WIN_1"
+   },
+   {
+    "art": "athena-v6-028",
+    "who": "jabu",
+    "line": "WIN_2"
+   },
+   {
+    "art": "athena-v6-080",
+    "who": "narrator",
+    "line": "WIN_3"
+   }
+  ],
+  "lose": [
+   {
+    "art": "athena-v6-028",
+    "who": "jabu",
+    "line": "LOSE_1"
+   }
+  ]
+ },
+ "hints": [
+  {
+   "id": "HINT_SHUN",
+   "when": [
+    {
+     "event": "card_played",
+     "player": "A",
+     "card": "athena-v6-007"
+    }
+   ]
+  },
+  {
+   "id": "HINT_JABU",
+   "when": [
+    {
+     "stall": 2
+    },
+    {
+     "event": "soul_lost",
+     "player": "A",
+     "atMost": {
+      "soul": 8
+     }
+    }
+   ]
+  }
+ ],
+ "decks": [
+  {
+   "id": "chronicle-2-4-shun",
+   "god": "god-athena",
+   "domain_id": "athena-v6-062",
+   "main_deck": [
+    {
+     "card_id": "athena-v6-007",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-008",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-046",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-053",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-054",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-052",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-061",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-040",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-043",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-041",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-457",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-490",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-494",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-491",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-497",
+     "quantity": 2
+    },
+    {
+     "card_id": "neutral-v6-489",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-462",
+     "quantity": 3
+    }
+   ],
+   "nome": "Shun · Chronicles 2.4",
+   "emprestado": true
+  },
+  {
+   "id": "chronicle-2-4-jabu",
+   "god": "god-athena",
+   "domain_id": "athena-v6-062",
+   "main_deck": [
+    {
+     "card_id": "athena-v6-028",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-053",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-054",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-052",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-061",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-040",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-043",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-041",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-457",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-490",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-494",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-491",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-497",
+     "quantity": 2
+    },
+    {
+     "card_id": "neutral-v6-458",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-051",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-478",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-034",
+     "quantity": 3
+    }
+   ],
+   "nome": "Jabu · Chronicles 2.4",
+   "emprestado": true
+  }
+ ]
+}

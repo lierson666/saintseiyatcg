@@ -2,13 +2,14 @@
   "title": "",
   "subtitle": "The Constrictor's Embrace",
   "flavour": "\"The serpent does not rush its prey. It simply ensures there is no escape.\"",
+  "bonusPower": "+2",
+  "bonusResistance": "+0",
   "art": {
-    "src": "art/ares-v6-280-ref.jpg",
-    "w": 1488.0,
-    "x": 0.0,
-    "y": -195.82,
-    "zoom": 1,
-    "baseW": 1488.0,
-    "provisoria": true
+    "src": "art/ares-v6-280.png",
+    "w": 2854.215,
+    "x": -682.5955733944955,
+    "y": -560.8945202779582,
+    "zoom": 1.82,
+    "baseW": 1568.25
   }
 }

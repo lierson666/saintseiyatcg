@@ -117,7 +117,7 @@ test('pose e ângulo iniciais variam por carta', () => {
 test('listas de pose, plano e ângulo são grandes e sem repetir', () => {
   assert.ok(POSES.length >= 40);
   assert.equal(new Set(POSES.map(([en]) => en)).size, POSES.length);
-  for (const [list, size] of [[SHOTS, 24], [ANGLES, 15]]) {
+  for (const [list, size] of [[SHOTS, 24], [ANGLES, 35]]) {
     assert.ok(list.length >= size);
     assert.equal(new Set(list.map(([en]) => en)).size, list.length);
   }

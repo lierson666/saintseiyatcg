@@ -5,12 +5,11 @@
   "bonusPower": "",
   "bonusResistance": "",
   "art": {
-    "src": "art/poseidon-v6-099-ref.jpg",
-    "w": 1488.0,
-    "x": 0.0,
-    "y": -5.8,
-    "zoom": 1,
-    "baseW": 1488.0,
-    "provisoria": true
+    "src": "art/poseidon-v6-099.png",
+    "w": 2352.375,
+    "x": -520.4095183486239,
+    "y": -241.45960155234138,
+    "zoom": 1.5,
+    "baseW": 1568.25
   }
 }

@@ -53,6 +53,8 @@
 .kv-ghost { min-height: 44px; padding: 0 22px; border: 1px solid var(--kv-line); border-radius: var(--kv-pill); background: #f5f1e60d; color: var(--kv-ink);
   font: 600 12px var(--kv-title); letter-spacing: .28em; text-transform: uppercase; transition: border-color .2s, background .2s; }
 .kv-ghost:hover { border-color: #e6c36a88; background: #e6c36a14; }
+/* Link com cara de botão: texto centrado e sem sublinhado (autor, 11/11/2026). */
+a.kv-button, a.kv-ghost { display: inline-flex; align-items: center; justify-content: center; text-align: center; text-decoration: none; box-sizing: border-box; }
 .kv-status { min-height: 1.5em; margin: 0; font: 400 14px var(--kv-sans); }
 .kv-status.ok { color: var(--kv-gold-2); } .kv-status.err { color: var(--kv-error); }
 :focus-visible { outline: 2px solid var(--kv-gold-2); outline-offset: 3px; }

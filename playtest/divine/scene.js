@@ -621,7 +621,7 @@ export async function createScene(host, {quality = 'high', theme = 'athena', red
     get cinematicPlaying() { return !!cine && !cine.static; },
     intro(opts) { return this.cinematic(undefined, opts); }, skipIntro() { this.skipCinematic(); }, get introPlaying() { return !!cine && !cine.static; },
     // Camera Composition Template: câmera competitiva (somente leitura) e o mundo carregado.
-    composition() { return {camera: {fov: camera.fov, position: camHome.toArray(), lookAt: look.toArray(), aspect: +camera.aspect.toFixed(4)}, mundo: !!devEnvironment,
+    composition() { return {camera: {fov: camera.fov, position: camHome.toArray(), lookAt: look.toArray(), aspect: +camera.aspect.toFixed(4)}, mundo: !!devEnvironment, guardianV13: devEnvironment?.group?.userData?.guardianV13 ?? null,
       grupos: devEnvironment ? Object.keys(devEnvironment.groups).length : 0}; },
     get environment() { return devEnvironment; },
     stats: () => ({fps: Math.round(fps), rafRate: Math.round(rafRate), pixelRatio: renderer.getPixelRatio(), level: Object.keys(QUALITY).find(k => QUALITY[k] === q), calls: renderer.info.render.calls, particles: P.n, alive, geometries: renderer.info.memory.geometries, textures: renderer.info.memory.textures}),

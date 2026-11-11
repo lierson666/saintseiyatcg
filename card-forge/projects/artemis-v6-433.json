@@ -2,21 +2,14 @@
   "title": "",
   "subtitle": "The Angel Who Defied the Sun",
   "flavour": "\"He fell from the heavens once. He chose to rise again.\"",
+  "bonusPower": "",
+  "bonusResistance": "",
   "art": {
-    "src": "art/artemis-v6-433-ref.jpg",
-    "w": 1488.0,
-    "x": 0.0,
-    "y": -277.73,
-    "zoom": 1,
-    "baseW": 1488.0,
-    "provisoria": true,
-    "nota_provisoria": "Arte provisória da carta anterior; não representa o novo personagem. Substituir pela arte aprovada (docs/artemis-v2-art-direction.md)."
-  },
-  "identidade": {
-    "versao": "artemis-v2.0",
-    "nome_anterior": "PRIMAL FOREST CHAMPION",
-    "continuidade": "Tenkai-hen Josō Overture (2004)",
-    "perfil_arte": "celestial_angel",
-    "arte_representa_personagem": false
+    "src": "art/artemis-v6-433.png",
+    "w": 1960.3125,
+    "x": -183.60911697247707,
+    "y": -299.5488357444739,
+    "zoom": 1.25,
+    "baseW": 1568.25
   }
 }

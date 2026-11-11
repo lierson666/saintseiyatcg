@@ -130,3 +130,5 @@ body:has(.ds) .lb-top, .lb-home:has(> .ds) > :not(.ds) { visibility: hidden; }
 .ds-import__errors { margin: 0; padding-left: 18px; color: #ffb4a8; }
 .ds-import__actions { display: flex; gap: 10px; justify-content: flex-end; }
 .lb-notice__box p.lb-notice__pre { max-height: 50vh; overflow: auto; white-space: pre-wrap; text-align: left; font: 12px/1.5 ui-monospace, Menlo, monospace; user-select: text; }
+/* Jogue contra IA: só dois caminhos (Cosmo Chronicles e Treino livre), lado a lado */
+.ds--choice .ds-paths { grid-template-columns: repeat(2, minmax(0, 1fr)); }

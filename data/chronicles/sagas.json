@@ -1,0 +1,333 @@
+{
+  "nota": "Coluna vertebral do Cosmo Chronicles (autor, 11/11/2026): todas as sagas, na ordem do anime clássico. Só a Saga 01 é jogável; as outras ficam Em breve até o roteiro de cada uma ser aprovado. Missões ficam no arquivo da própria saga (saga-01.json).",
+  "sagas": [
+    {
+      "id": "saga-01",
+      "n": 1,
+      "title": {
+        "pt": "O Cavaleiro de Pégaso",
+        "en": "The Pegasus Saint"
+      },
+      "status": "ready",
+      "art": "athena-v6-001",
+      "chapters": [
+        {
+          "n": 1,
+          "title": {
+            "pt": "O Cavaleiro de Pégaso",
+            "en": "The Pegasus Saint"
+          }
+        },
+        {
+          "n": 2,
+          "title": {
+            "pt": "A Guerra Galáctica",
+            "en": "The Galaxian Wars"
+          }
+        },
+        {
+          "n": 3,
+          "title": {
+            "pt": "O Retorno da Fênix",
+            "en": "The Return of the Phoenix"
+          }
+        },
+        {
+          "n": 4,
+          "title": {
+            "pt": "A Batalha contra os Cavaleiros Negros",
+            "en": "The Battle against the Black Saints"
+          }
+        }
+      ]
+    },
+    {
+      "id": "saga-02",
+      "n": 2,
+      "title": {
+        "pt": "Os Cavaleiros de Prata",
+        "en": "The Silver Saints"
+      },
+      "status": "soon",
+      "art": "athena-v6-024",
+      "chapters": [
+        {
+          "n": 1,
+          "title": {
+            "pt": "Os assassinos do Santuário",
+            "en": "The Sanctuary's Assassins"
+          },
+          "art": "athena-v6-520"
+        },
+        {
+          "n": 2,
+          "title": {
+            "pt": "O escudo da Medusa",
+            "en": "The Medusa Shield"
+          },
+          "art": "athena-v6-024"
+        },
+        {
+          "n": 3,
+          "title": {
+            "pt": "Shaina e Aiolia",
+            "en": "Shaina and Aiolia"
+          },
+          "art": "athena-v6-022"
+        },
+        {
+          "n": 4,
+          "title": {
+            "pt": "O chamado de Athena",
+            "en": "Athena's Call"
+          },
+          "art": "athena-v6-061"
+        }
+      ]
+    },
+    {
+      "id": "saga-03",
+      "n": 3,
+      "title": {
+        "pt": "As Doze Casas",
+        "en": "The Twelve Temples"
+      },
+      "status": "soon",
+      "art": "athena-v6-065",
+      "chapters": [
+        {
+          "n": 1,
+          "title": {
+            "pt": "De Áries a Gêmeos",
+            "en": "From Aries to Gemini"
+          },
+          "art": "athena-v6-012"
+        },
+        {
+          "n": 2,
+          "title": {
+            "pt": "De Câncer a Virgem",
+            "en": "From Cancer to Virgo"
+          },
+          "art": "athena-v6-016"
+        },
+        {
+          "n": 3,
+          "title": {
+            "pt": "De Libra a Capricórnio",
+            "en": "From Libra to Capricorn"
+          },
+          "art": "athena-v6-048"
+        },
+        {
+          "n": 4,
+          "title": {
+            "pt": "De Aquário ao Grande Mestre",
+            "en": "From Aquarius to the Pope"
+          },
+          "art": "athena-v6-017"
+        }
+      ]
+    },
+    {
+      "id": "saga-04",
+      "n": 4,
+      "title": {
+        "pt": "Asgard",
+        "en": "Asgard"
+      },
+      "status": "soon",
+      "art": null,
+      "chapters": [
+        {
+          "n": 1,
+          "title": {
+            "pt": "Hilda de Polaris",
+            "en": "Hilda of Polaris"
+          }
+        },
+        {
+          "n": 2,
+          "title": {
+            "pt": "Os Guerreiros Deuses",
+            "en": "The God Warriors"
+          }
+        },
+        {
+          "n": 3,
+          "title": {
+            "pt": "As Safiras de Odin",
+            "en": "Odin's Sapphires"
+          }
+        },
+        {
+          "n": 4,
+          "title": {
+            "pt": "A Armadura de Odin",
+            "en": "Odin's Robe"
+          }
+        }
+      ]
+    },
+    {
+      "id": "saga-05",
+      "n": 5,
+      "title": {
+        "pt": "Poseidon",
+        "en": "Poseidon"
+      },
+      "status": "soon",
+      "art": "poseidon-001",
+      "chapters": [
+        {
+          "n": 1,
+          "title": {
+            "pt": "O despertar de Poseidon",
+            "en": "Poseidon's Awakening"
+          },
+          "art": "poseidon-v6-101"
+        },
+        {
+          "n": 2,
+          "title": {
+            "pt": "Os Generais Marinas",
+            "en": "The Mariner Generals"
+          },
+          "art": "poseidon-v6-091"
+        },
+        {
+          "n": 3,
+          "title": {
+            "pt": "Os Sete Pilares",
+            "en": "The Seven Pillars"
+          },
+          "art": "poseidon-v6-143"
+        },
+        {
+          "n": 4,
+          "title": {
+            "pt": "O Pilar Principal",
+            "en": "The Main Pillar"
+          },
+          "art": "poseidon-v6-142"
+        }
+      ]
+    },
+    {
+      "id": "saga-06",
+      "n": 6,
+      "title": {
+        "pt": "Hades — Santuário",
+        "en": "Hades — Sanctuary"
+      },
+      "status": "soon",
+      "art": "hades-v6-197",
+      "chapters": [
+        {
+          "n": 1,
+          "title": {
+            "pt": "A noite dos Espectros",
+            "en": "The Night of the Specters"
+          },
+          "art": "hades-v6-197"
+        },
+        {
+          "n": 2,
+          "title": {
+            "pt": "Os Cavaleiros que voltaram",
+            "en": "The Saints Who Returned"
+          },
+          "art": "hades-v6-255"
+        },
+        {
+          "n": 3,
+          "title": {
+            "pt": "A Exclamação de Athena",
+            "en": "Athena Exclamation"
+          },
+          "art": "athena-v6-090"
+        },
+        {
+          "n": 4,
+          "title": {
+            "pt": "O sacrifício de Athena",
+            "en": "Athena's Sacrifice"
+          },
+          "art": "athena-001"
+        }
+      ]
+    },
+    {
+      "id": "saga-07",
+      "n": 7,
+      "title": {
+        "pt": "Hades — Inferno",
+        "en": "Hades — Underworld"
+      },
+      "status": "soon",
+      "art": "hades-v6-181",
+      "chapters": [
+        {
+          "n": 1,
+          "title": {
+            "pt": "As prisões do Inferno",
+            "en": "The Prisons of the Underworld"
+          },
+          "art": "hades-v6-521"
+        },
+        {
+          "n": 2,
+          "title": {
+            "pt": "Os Três Juízes",
+            "en": "The Three Judges"
+          },
+          "art": "hades-v6-181"
+        },
+        {
+          "n": 3,
+          "title": {
+            "pt": "O Muro das Lamentações",
+            "en": "The Wailing Wall"
+          },
+          "art": "athena-v6-089"
+        }
+      ]
+    },
+    {
+      "id": "saga-08",
+      "n": 8,
+      "title": {
+        "pt": "Hades — Elísios",
+        "en": "Hades — Elysion"
+      },
+      "status": "soon",
+      "art": "hades-v6-522",
+      "chapters": [
+        {
+          "n": 1,
+          "title": {
+            "pt": "Hypnos e Thanatos",
+            "en": "Hypnos and Thanatos"
+          },
+          "art": "hades-v6-191"
+        },
+        {
+          "n": 2,
+          "title": {
+            "pt": "O corpo de Hades",
+            "en": "The Body of Hades"
+          },
+          "art": "hades-001"
+        },
+        {
+          "n": 3,
+          "title": {
+            "pt": "A Guerra Santa",
+            "en": "The Holy War"
+          },
+          "art": "athena-v6-019"
+        }
+      ]
+    }
+  ]
+}

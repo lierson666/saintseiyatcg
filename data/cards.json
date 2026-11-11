@@ -4,7 +4,7 @@
   "versao_catalogo": "athena-vanilla-v6",
   "idioma_codigo": "pt-BR",
   "idioma_jogo": "en",
-  "total_cartas": 610,
+  "total_cartas": 611,
   "notas_pt": [
     "Catálogo substitutivo: 90 cartas Athena Vanilla V6 + cinco Gods base, sem as cartas antigas.",
     "026 Kiki segue pendente; Resonances em 014,016,018 pendentes.",
@@ -5507,12 +5507,12 @@
       "id_fonte": "POSEIDON-V6-124",
       "conjunto": "poseidon-vanilla-v6",
       "numero_carta": 124,
-      "nome_exibicao_en": "CORAL BARRIER",
+      "nome_exibicao_en": "CORAL CROWN",
       "tagline_en": "The Reef Protects Its Own",
       "nome_interno_pt": "",
       "faccao": "Poseidon",
       "tipo": "Equipment",
-      "subtipos": ["Artifact"],
+      "subtipos": ["Relic", "Artifact"],
       "raridade": "Common",
       "status": "design-ready",
       "cosmoble": true,
@@ -5542,7 +5542,7 @@
       "equipar_custo_outros": 2,
       "equipar_custo_ressonante": null,
       "equipar_auto": false,
-      "nome_exibicao_pt": "BARREIRA DE CORAL",
+      "nome_exibicao_pt": "COROA DE CORAL",
       "subtitulo_pt": "O Recife Protege os Seus",
       "habilidades_pt": [
         "O Devoto equipado recebe +0 @ATQ / +1 @PV.",
@@ -10975,7 +10975,7 @@
       "nome_interno_pt": "",
       "faccao": "Hades",
       "tipo": "Devotee",
-      "subtipos": ["Gold Saint"],
+      "subtipos": ["Renegade Gold Saint"],
       "raridade": "Uncommon",
       "status": "design-ready",
       "cosmoble": true,
@@ -11011,12 +11011,12 @@
       "id_fonte": "HADES-V6-252",
       "conjunto": "hades-vanilla-v6",
       "numero_carta": 252,
-      "nome_exibicao_en": "PISCES APHRODITE, THE RESURRECTED SAINT",
+      "nome_exibicao_en": "PISCES APHRODITE",
       "tagline_en": "The Beauty of Eternal Death",
       "nome_interno_pt": "",
       "faccao": "Hades",
       "tipo": "Devotee",
-      "subtipos": ["Gold Saint"],
+      "subtipos": ["Renegade Gold Saint"],
       "raridade": "Uncommon",
       "status": "design-ready",
       "cosmoble": true,
@@ -11038,7 +11038,7 @@
       "habilidade_awaken_en": "",
       "ultimate_en": "",
       "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026.",
-      "nome_exibicao_pt": "AFRODITE DE PEIXES, O CAVALEIRO RESSUSCITADO",
+      "nome_exibicao_pt": "AFRODITE DE PEIXES",
       "subtitulo_pt": "A Beleza da Morte Eterna",
       "habilidades_pt": [
         "Rosa Sangrenta — Sempre que um oponente compra uma carta, exceto a primeira que ele compra em cada rodada dele, o Deus desse jogador perde {1}{S}."
@@ -11050,12 +11050,12 @@
       "id_fonte": "HADES-V6-253",
       "conjunto": "hades-vanilla-v6",
       "numero_carta": 253,
-      "nome_exibicao_en": "CAPRICORN SHURA, THE RESURRECTED SAINT",
+      "nome_exibicao_en": "CAPRICORN SHURA",
       "tagline_en": "The Blade Returned From Death",
       "nome_interno_pt": "",
       "faccao": "Hades",
       "tipo": "Devotee",
-      "subtipos": ["Gold Saint"],
+      "subtipos": ["Renegade Gold Saint"],
       "raridade": "Uncommon",
       "status": "design-ready",
       "cosmoble": false,
@@ -11070,19 +11070,21 @@
       "resistance": 4,
       "damage_cloth": null,
       "equipar_custo": null,
-      "keywords_en": [],
+      "keywords_en": ["Pierce"],
       "habilidades_en": [
+        "@PIERCE",
         "Excalibur — When Capricorn Shura enters the Battlefield, you may pay {3}{S}. If you do, defeat target enemy Devotee with 3 @HP or less.",
         "Blade of Sacrifice — Whenever Capricorn Shura defeats an enemy Devotee in combat, you may sacrifice another friendly Devotee. If you do, draw 2 cards."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
       "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção).",
-      "nome_exibicao_pt": "SHURA DE CAPRICÓRNIO, O CAVALEIRO RESSUSCITADO",
+      "nome_exibicao_pt": "SHURA DE CAPRICÓRNIO",
       "subtitulo_pt": "A Lâmina que Voltou da Morte",
       "habilidades_pt": [
+        "@PERFURAR",
         "Excalibur — Quando Shura de Capricórnio entra no Campo de Batalha, você pode pagar {3}{S}. Se fizer isso, derrote o Devoto inimigo alvo com 3 @PV ou menos.",
-        "Lâmina do Sacrifício — Sempre que Shura de Capricórnio derrota um Devoto inimigo com um Golpe, você pode sacrificar outro Devoto aliado. Se fizer isso, compre 2 cartas."
+        "Lâmina do Sacrifício — Sempre que Shura de Capricórnio derrota um Devoto inimigo em combate, você pode sacrificar outro Devoto aliado. Se fizer isso, compre 2 cartas."
       ],
       "tagline_pt": "A Lâmina que Voltou da Morte"
     },
@@ -11132,7 +11134,7 @@
       "id_fonte": "HADES-V6-255",
       "conjunto": "hades-vanilla-v6",
       "numero_carta": 255,
-      "nome_exibicao_en": "GEMINI SAGA, THE RESURRECTED SAINT",
+      "nome_exibicao_en": "GEMINI SAGA",
       "tagline_en": "The Fallen Emperor Returns",
       "nome_interno_pt": "",
       "faccao": "Hades",
@@ -11160,11 +11162,11 @@
       "habilidade_awaken_en": "",
       "ultimate_en": "",
       "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção).",
-      "nome_exibicao_pt": "SAGA DE GÊMEOS, O CAVALEIRO RESSUSCITADO",
+      "nome_exibicao_pt": "SAGA DE GÊMEOS",
       "subtitulo_pt": "O Imperador Caído Retorna",
       "habilidades_pt": [
         "Outra Dimensão — Quando Saga de Gêmeos entra no Campo de Batalha, você pode pagar {3}{S}. Se fizer isso, envie o Devoto inimigo alvo para o Vazio até Saga de Gêmeos sair do Campo de Batalha.",
-        "Explosão Galáctica — Uma vez por rodada, sempre que outro Devoto aliado é derrotado, o Deus inimigo alvo perde {2}{S}."
+        "Explosão Galáctica — Uma vez por rodada, sempre que outro Devoto aliado for derrotado, o Deus inimigo alvo perde {2}{S}."
       ],
       "tagline_pt": "O Imperador Caído Retorna"
     },
@@ -12371,7 +12373,7 @@
       "id_fonte": "ARES-V6-283",
       "conjunto": "ares-vanilla-v6",
       "numero_carta": 283,
-      "nome_exibicao_en": "ALCEU OF LAMASSU",
+      "nome_exibicao_en": "ANZU ALCEU",
       "tagline_en": "The Winged Ravager",
       "nome_interno_pt": "",
       "faccao": "Ares",
@@ -12399,21 +12401,21 @@
       "habilidade_awaken_en": "",
       "ultimate_en": "",
       "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Ares → Sligh (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-ares-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção).",
-      "nome_exibicao_pt": "ALCEU DE LAMASSU",
-      "subtitulo_pt": "O Devastador Alado",
+      "nome_exibicao_pt": "ANZU ALCEU",
+      "subtitulo_pt": "A Devastadora Alada",
       "habilidades_pt": [
         "Ventos Devastadores — Quando Alceu entra no Campo de Batalha, cause 1 de dano a até dois Devotos inimigos alvo.",
-        "Ataque Nascido da Tempestade — Sempre que Alceu declara um Golpe, ele recebe +1 @ATQ até o fim da sua rodada para cada outro Berserker aliado que foi derrotado nesta rodada, até +3 @ATQ."
+        "Assalto Nascido da Tempestade — Sempre que Alceu declara um Golpe, ele recebe +1 @ATQ até o fim da sua rodada para cada outro Berserker aliado que tenha sido derrotado nesta rodada, até +3 @ATQ."
       ],
       "flavour_pt": "\"A tempestade não escolhe suas vítimas. Eu também não.\"",
-      "tagline_pt": "O Devastador Alado"
+      "tagline_pt": "A Devastadora Alada"
     },
     {
       "id": "ares-v6-284",
       "id_fonte": "ARES-V6-284",
       "conjunto": "ares-vanilla-v6",
       "numero_carta": 284,
-      "nome_exibicao_en": "ALCEU'S WARPLATE",
+      "nome_exibicao_en": "ANZU'S WARPLATE",
       "tagline_en": "Wings of the Ruined Sky",
       "nome_interno_pt": "",
       "faccao": "Ares",
@@ -12435,27 +12437,27 @@
       "keywords_en": [],
       "habilidades_en": [
         "Gale Assault — Whenever equipped Devotee declares a Strike, deal 1 damage to target enemy Devotee.",
-        "Resonance — Alceu of Lamassu: Whenever another friendly Berserker is defeated, equipped Devotee gains +1 @ATK until the end of your round."
+        "Resonance — Anzu Alceu: Whenever another friendly Berserker is defeated, equipped Devotee gains +1 @ATK until the end of your round."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
       "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Sem custo de Equip no original: tratado como Equipment global.",
       "categoria_equipamento": "Armor",
       "slot_equipamento": null,
-      "auto_equip_en": ["Alceu of Lamassu"],
-      "donos": ["alceu-of-lamassu"],
+      "auto_equip_en": ["Anzu Alceu"],
+      "donos": ["anzu-alceu"],
       "equipar_custo_outros": 3,
       "bonus_poder": 1,
       "bonus_vida": 1,
-      "nome_exibicao_pt": "PLACA DE GUERRA DE ALCEU",
-      "subtitulo_pt": "Asas do Céu em Ruínas",
+      "nome_exibicao_pt": "ARIONTE DE ANFISBENA",
+      "subtitulo_pt": "O Caçador Implacável",
       "habilidades_pt": [
-        "Ataque da Ventania — Sempre que o Devoto equipado declara um Golpe, cause 1 de dano ao Devoto inimigo alvo.",
-        "Ressonância — Alceu de Lamassu: Sempre que outro Berserker aliado é derrotado, o Devoto equipado recebe +1 @ATQ até o fim da sua rodada."
+        "Impulso",
+        "Chegada do Predador — Quando Arionte entra no Campo de Batalha, cause 1 de dano a um Devoto inimigo alvo que já sofreu dano nesta rodada.",
+        "Perseguição Implacável — Sempre que Arionte derrota um Devoto inimigo durante o combate, Prepare Arionte. (Com marcador de @Selo, tire um em vez disso.) Esta habilidade é ativada apenas uma vez por rodada."
       ],
-      "flavour_pt": "\"Os próprios céus tremem diante das asas do desastre.\"",
-      "tagline_pt": "Asas do Céu em Ruínas",
-      "auto_equip_pt": ["Alceu de Lamassu"],
+      "flavour_pt": "\"Quando a caçada começa, não resta mais para onde fugir.\"",
+      "tagline_pt": "O Caçador Implacável",
       "patente_armadura": "Elite"
     },
     {
@@ -12463,7 +12465,7 @@
       "id_fonte": "ARES-V6-285",
       "conjunto": "ares-vanilla-v6",
       "numero_carta": 285,
-      "nome_exibicao_en": "ARIONTE OF ANFISTA",
+      "nome_exibicao_en": "ANFISTA ARIONTE",
       "tagline_en": "The Relentless Hunter",
       "nome_interno_pt": "",
       "faccao": "Ares",
@@ -12496,10 +12498,10 @@
       "subtitulo_pt": "O Caçador Implacável",
       "habilidades_pt": [
         "Impulso",
-        "Chegada do Predador — Quando Arionte entra no Campo de Batalha, cause 1 de dano ao Devoto inimigo alvo que já sofreu dano nesta rodada.",
-        "Perseguição Implacável — Sempre que Arionte derrota um Devoto inimigo em combate, Prepare Arionte. (Com marcador de @Selo, tire um em vez disso.) Esta habilidade só dispara uma vez por rodada."
+        "Chegada do Predador — Quando Arionte entra no Campo de Batalha, cause 1 de dano a um Devoto inimigo alvo que já sofreu dano nesta rodada.",
+        "Perseguição Implacável — Sempre que Arionte derrota um Devoto inimigo em combate, Prepare Arionte. (Com marcador de @Selo, tire um em vez disso.) Esta habilidade só ativa uma vez por rodada."
       ],
-      "flavour_pt": "\"Quando a caçada começa, não há mais para onde fugir.\"",
+      "flavour_pt": "\"Quando a caçada começa, não resta mais lugar para fugir.\"",
       "tagline_pt": "O Caçador Implacável"
     },
     {
@@ -12529,15 +12531,15 @@
       "keywords_en": [],
       "habilidades_en": [
         "Blood Pursuit — Equipped Devotee gains +2 @ATK while striking a damaged enemy Devotee.",
-        "Resonance — Arionte of Anfista: Whenever Arionte defeats an enemy Devotee during combat, you may pay {1}{S}. If you do, deal 1 damage to the opposing God."
+        "Resonance — Anfista Arionte: Whenever Arionte defeats an enemy Devotee during combat, you may pay {1}{S}. If you do, deal 1 damage to the opposing God."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
       "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Sem custo de Equip no original: tratado como Equipment global.",
       "categoria_equipamento": "Armor",
       "slot_equipamento": null,
-      "auto_equip_en": ["Arionte of Anfista"],
-      "donos": ["arionte-of-anfista"],
+      "auto_equip_en": ["Anfista Arionte"],
+      "donos": ["anfista-arionte"],
       "equipar_custo_outros": 3,
       "bonus_poder": 2,
       "bonus_vida": 0,
@@ -12668,7 +12670,7 @@
       "vida": null,
       "resistance": null,
       "damage_cloth": null,
-      "equipar_custo": null,
+      "equipar_custo": 4,
       "keywords_en": [],
       "habilidades_en": [
         "Equipped Devotee gets +3 @ATK.",
@@ -12777,7 +12779,10 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026.",
+      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Ares → Sligh (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-ares-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção).",
+      "slot_equipamento": null,
+      "equipar_custo_outros": null,
+      "equipar_custo_ressonante": null,
       "nome_exibicao_pt": "BERSERKER DA LEGIÃO DO FOGO VERMELHO",
       "subtitulo_pt": "Nascido nas Chamas de Prometeu",
       "habilidades_pt": [
@@ -13518,13 +13523,13 @@
       "ultimate_en": "",
       "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção).",
       "nome_exibicao_pt": "GUARDA REAL DE ARES",
-      "subtitulo_pt": "A Lança Inquebrável",
+      "subtitulo_pt": "O Escudo Inquebrável",
       "habilidades_pt": [
-        "Proteção do Deus da Guerra — Sempre que outro Berserker aliado sofre dano, você pode causar 1 de dano ao Devoto inimigo alvo.",
-        "Disciplina Implacável — A Guarda Real de Ares recebe +1 @ATQ para cada outro Berserker aliado que declarou um Golpe nesta rodada, até +3 @ATQ."
+        "Proteção do Deus da Guerra — Sempre que outro Berserker aliado sofrer dano, você pode causar 1 de dano ao Devoto inimigo alvo.",
+        "Disciplina Implacável — Guarda Real de Ares recebe +1 @ATQ para cada outro Berserker aliado que declarou um Golpe nesta rodada, até +3 @ATQ."
       ],
-      "flavour_pt": "\"Eles guardam o deus da guerra não porque ele precise de proteção, mas porque exige lealdade absoluta.\"",
-      "tagline_pt": "A Lança Inquebrável"
+      "flavour_pt": "\"Eles guardam o deus da guerra não porque ele precise de proteção, mas porque ele exige lealdade absoluta.\"",
+      "tagline_pt": "O Escudo Inquebrável"
     },
     {
       "id": "ares-v6-310",
@@ -13761,7 +13766,7 @@
       "vida": null,
       "resistance": null,
       "damage_cloth": null,
-      "equipar_custo": null,
+      "equipar_custo": 1,
       "keywords_en": [],
       "habilidades_en": [
         "Equipped Devotee gets +1 @ATK.",
@@ -14337,7 +14342,7 @@
       "status": "design-ready",
       "cosmoble": true,
       "caminho_imagem": null,
-      "custo": 2,
+      "custo": 3,
       "unidade_custo": "base_cosmo",
       "soul": null,
       "attack": null,
@@ -25932,6 +25937,47 @@
         "Revele as 7 cartas do topo do seu deck. Ponha no Campo de Batalha todas as cartas de Devoto e Equipamento com custo 7 ou menos reveladas assim. Ponha o resto no seu Tártaro."
       ],
       "tagline_pt": "A Floresta Inteira Responde"
+    },
+    {
+      "id": "neutral-v6-606",
+      "id_fonte": "NEUTRAL-V6-606",
+      "conjunto": "neutral-vanilla-v6",
+      "numero_carta": 606,
+      "nome_exibicao_en": "HAYATE, THE GOLDEN TRACKER",
+      "tagline_en": "The Scent of Gold",
+      "nome_interno_pt": "",
+      "faccao": "Neutral",
+      "tipo": "Devotee",
+      "subtipos": ["Dog"],
+      "raridade": "Common",
+      "status": "design-ready",
+      "cosmoble": true,
+      "caminho_imagem": null,
+      "custo": 1,
+      "unidade_custo": "base_cosmo",
+      "soul": null,
+      "attack": null,
+      "awaken": null,
+      "power": 1,
+      "vida": 1,
+      "resistance": 1,
+      "damage_cloth": null,
+      "equipar_custo": null,
+      "keywords_en": [],
+      "habilidades_en": [
+        "{5}{C}, {T}: Search your deck for a Gold Cloth Equipment card, reveal it and put it into your hand. Then shuffle your deck."
+      ],
+      "habilidade_awaken_en": "",
+      "ultimate_en": "",
+      "flavour_en": "\"No Gold Cloth escapes his nose.\"",
+      "notas_pt": "Texto do autor, 11/11/2026.",
+      "nome_exibicao_pt": "HAYATE, O RASTREADOR DOURADO",
+      "subtitulo_pt": "O Faro do Ouro",
+      "habilidades_pt": [
+        "{5}{C}, {T}: Procure no seu deck uma carta de Equipamento — Armadura de Ouro, revele-a, coloque-a em sua mão e embaralhe seu deck."
+      ],
+      "flavour_pt": "\"Nenhuma Armadura de Ouro escapa ao seu faro.\"",
+      "tagline_pt": "O Faro do Ouro"
     }
   ]
 }

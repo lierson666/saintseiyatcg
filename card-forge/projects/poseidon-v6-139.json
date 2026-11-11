@@ -3,6 +3,14 @@
   "subtitle": "The Ocean Knows What You Will Draw",
   "flavour": "",
   "art": {
+    "src": "art/poseidon-v6-139.png",
+    "w": 1568.25,
+    "x": -40.125,
+    "y": 0.0,
+    "zoom": 1,
+    "baseW": 1568.25
+  },
+  "art_previous_reference": {
     "src": "art/poseidon-v6-139-ref.jpg",
     "w": 1488.0,
     "x": 0.0,

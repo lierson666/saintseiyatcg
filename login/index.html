@@ -90,10 +90,14 @@
           <p class="hint" id="user-hint">3 to 20 letters, numbers or _. This is how friends find you.</p>
           <label class="kv-field"><span class="kv-stamp">Email</span><input class="kv-input" type="email" name="email" autocomplete="email" required maxlength="190"></label>
           <label class="kv-field"><span class="kv-stamp">Country</span><select class="kv-input" name="country" autocomplete="country" required></select></label>
+          <p class="hint"><strong>Exclusivo para maiores de 18 anos.</strong> CPF e data de nascimento não substituem a verificação de identidade.</p>
+          <label class="kv-field"><span class="kv-stamp">Nascimento (18+)</span><input class="kv-input" type="date" name="birth_date" required></label>
+          <label class="kv-field"><span class="kv-stamp">CPF</span><input class="kv-input" type="text" name="cpf" inputmode="numeric" autocomplete="off" maxlength="14" placeholder="000.000.000-00" required></label>
           <label class="kv-field"><span class="kv-stamp">Phone · optional</span><input class="kv-input" type="tel" name="phone" autocomplete="tel" maxlength="20" placeholder="+55 11 91234-5678"></label>
           <label class="kv-field"><span class="kv-stamp">Password</span><span class="row"><input class="kv-input" type="password" name="password" autocomplete="new-password" required minlength="10"><button class="show" type="button">Show</button></span></label>
           <p class="hint">At least 10 characters. Only emails on the beta list can create an account.</p>
-          <label class="consent"><input type="checkbox" name="accept_terms" required> <span>I agree to the <a href="/terms/" target="_blank" rel="noopener">Terms of use</a> and the <a href="/privacy/" target="_blank" rel="noopener">Privacy</a> page.</span></label>
+          <p class="hint">Beta gratuita: compras em reais desativadas. Boosters aleatórios e funções restritas por idade dependem das verificações legais aplicáveis.</p>
+          <label class="consent"><input type="checkbox" name="accept_terms" required> <span>Li e aceito os <a href="/terms/" target="_blank" rel="noopener">Termos de Uso</a> (versão 2026-11-11-beta-v1) e li a <a href="/privacy/" target="_blank" rel="noopener">Política de Privacidade</a>.</span></label>
           <button class="kv-button" type="submit">Create account</button>
           <p class="kv-status" role="status" aria-live="polite"></p>
         </form>
@@ -164,8 +168,9 @@
     });
     $('#signup').addEventListener('submit', e => {
       e.preventDefault();
+      if (!e.target.checkValidity()) { e.target.reportValidity(); return; }
       const d = new FormData(e.target), f = Object.fromEntries(d);
-      submit(e.target, '/api/auth/register', {name: f.name, username: f.username, email: f.email, country: f.country, phone: f.phone, password: f.password, accept_terms: d.has('accept_terms')});
+      submit(e.target, '/api/auth/register', {name: f.name, username: f.username, email: f.email, country: f.country, phone: f.phone, birth_date: f.birth_date, cpf: f.cpf, password: f.password, accept_terms: d.has('accept_terms'), terms_version: '2026-11-11-beta-v1'});
     });
     // Já logado? Vai direto ao destino.
     fetch('/api/me', {credentials: 'same-origin'}).then(r => r.ok && location.replace(next)).catch(() => {});

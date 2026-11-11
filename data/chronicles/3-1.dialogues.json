@@ -1,0 +1,53 @@
+{
+ "nota": "Falas da missão 3.1 (rascunho da Saga 01, revisado em 11/11/2026). Máximo de duas frases por fala.",
+ "lines": {
+  "SCENE_1": {
+   "pt": "A luta de Shun e Jabu é cortada. As luzes caem, e uma voz vem das chamas.",
+   "en": "Shun and Jabu's bout is cut short. The lights go out, and a voice comes from the flames."
+  },
+  "SHUN_1": {
+   "pt": "Ikki... é você?",
+   "en": "Ikki... is that you?"
+  },
+  "IKKI_1": {
+   "pt": "O irmão que você conhecia morreu na Ilha da Rainha da Morte.",
+   "en": "The brother you knew died on Death Queen Island."
+  },
+  "SCENE_2": {
+   "pt": "Cavaleiros Negros cercam a arena. Ninguém sai dali sem lutar.",
+   "en": "Black Saints surround the arena. No one leaves without a fight."
+  },
+  "SEIYA_1": {
+   "pt": "Fique comigo, Shun. Vamos segurar eles juntos.",
+   "en": "Stay with me, Shun. We'll hold them off together."
+  },
+  "PREP_1": {
+   "pt": "Você não precisa vencer agora, Seiya. Resista seis turnos e proteja seu amigo.",
+   "en": "You don't need to win now, Seiya. Hold on for six turns and protect your friend."
+  },
+  "HINT_BLACK": {
+   "pt": "Um Cavaleiro Negro entrou. Ele copia a técnica, mas não o coração.",
+   "en": "A Black Saint entered. He copies the technique, not the heart."
+  },
+  "HINT_HOLD": {
+   "pt": "Aguente firme. Cada turno que passa já é uma vitória.",
+   "en": "Hold on. Every turn that passes is already a victory."
+  },
+  "WIN_1": {
+   "pt": "Os Cavaleiros Negros recuam para as chamas. Eles levam a Armadura de Ouro.",
+   "en": "The Black Saints retreat into the flames. They take the Gold Cloth with them."
+  },
+  "WIN_2": {
+   "pt": "Meu irmão... o que fizeram com você?",
+   "en": "My brother... what did they do to you?"
+  },
+  "WIN_3": {
+   "pt": "Vamos atrás deles, Shun. Juntos.",
+   "en": "We'll go after them, Shun. Together."
+  },
+  "LOSE_1": {
+   "pt": "Fracos. Nenhum de vocês merece aquela armadura.",
+   "en": "Weak. None of you deserves that Cloth."
+  }
+ }
+}

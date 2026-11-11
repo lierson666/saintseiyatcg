@@ -8,7 +8,6 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 load = lambda p: json.loads((ROOT / p).read_text())
 PREVIEW = re.compile(r'^(poseidon|hades|ares|artemis|neutral)-v6-')
-STARTERS = ('rulebook2-athena-d171', 'preview-poseidon-tide', 'preview-hades-108', 'preview-ares-legions', 'preview-artemis-hunt')
 
 rarity = {c['id']: (c['raridade'], c['tipo']) for c in load('data/cards.json')['cartas']}
 pool = [r['id'].lower() for r in load('data/canon/d268.json')['cards']]
@@ -19,10 +18,10 @@ for cid in pool:
     if tipo not in ('God', 'Domain'):
         booster.setdefault(r, []).append(cid)
 
-decks = {d['id']: d for f in ('decks-proposta-d171', 'decks-preview') for d in load(f'data/alpha-0.1/{f}.json')['decks']}
+starters = load('data/alpha-0.1/decks-starters.json')['decks']
 starter = {}
-for sid in STARTERS:
-    for e in decks[sid]['main_deck']:
+for deck in starters:
+    for e in deck['main_deck']:
         starter[e['card_id']] = min(3, starter.get(e['card_id'], 0) + e['quantity'])
 assert all(cid in sum(booster.values(), []) for cid in starter), 'deck inicial com carta fora do catálogo'
 

@@ -75,7 +75,7 @@
     import {mountKV} from '/shared/kv-sky.js?v=20261104-pub1';
     mountKV({anchor: 'h1 .kv-cosmo'});
     document.querySelector('.site-tab[aria-current]')?.scrollIntoView({inline: 'center', block: 'nearest'}); // celular: aba atual visível
-    const V = '20261102-1';
+    const V = '20261107-hd1';
     const cards = await fetch('/gallery/cards.json?v=' + V).then(r => r.json());
     const FILTERS = {
       faction: ['All', 'Athena', 'Poseidon', 'Hades', 'Ares', 'Artemis', 'Neutral'],

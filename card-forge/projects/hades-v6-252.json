@@ -2,13 +2,14 @@
   "title": "",
   "subtitle": "The Beauty of Eternal Death",
   "flavour": "",
+  "bonusPower": "",
+  "bonusResistance": "",
   "art": {
-    "src": "art/hades-v6-252-ref.jpg",
-    "w": 1488.0,
-    "x": 0.0,
-    "y": -276.72,
-    "zoom": 1,
-    "baseW": 1488.0,
-    "provisoria": true
+    "src": "art/hades-v6-252.png",
+    "w": 2383.7400000000007,
+    "x": -413.8426651376145,
+    "y": 56.91321663686614,
+    "zoom": 1.5200000000000005,
+    "baseW": 1568.25
   }
 }

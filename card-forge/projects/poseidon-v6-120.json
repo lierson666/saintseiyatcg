@@ -2,13 +2,14 @@
   "title": "",
   "subtitle": "He Has Seen the End of Every Shore",
   "flavour": "",
+  "bonusPower": "",
+  "bonusResistance": "",
   "art": {
-    "src": "art/poseidon-v6-120-ref.jpg",
-    "w": 1488.0,
-    "x": 0.0,
-    "y": -5.8,
+    "src": "art/poseidon-v6-120.png",
+    "w": 1568.25,
+    "x": -37.138761467889935,
+    "y": -142.02068940994798,
     "zoom": 1,
-    "baseW": 1488.0,
-    "provisoria": true
+    "baseW": 1568.25
   }
 }

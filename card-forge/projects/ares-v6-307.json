@@ -2,13 +2,14 @@
   "title": "",
   "subtitle": "Student of the Eternal Warfire",
   "flavour": "\"Master Ofir taught us that every flame has a purpose, and every enemy has a weakness.\"",
+  "bonusPower": "",
+  "bonusResistance": "",
   "art": {
-    "src": "art/ares-v6-307-ref.jpg",
-    "w": 1488.0,
-    "x": 0.0,
-    "y": -275.71,
-    "zoom": 1,
-    "baseW": 1488.0,
-    "provisoria": true
+    "src": "art/ares-v6-307.png",
+    "w": 2242.5975,
+    "x": -541.4885435779815,
+    "y": -866.9492652795838,
+    "zoom": 1.43,
+    "baseW": 1568.25
   }
 }

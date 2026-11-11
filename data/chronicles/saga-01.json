@@ -1,0 +1,221 @@
+{
+  "id": "saga-01",
+  "title": {
+    "pt": "O Cavaleiro de Pégaso",
+    "en": "The Pegasus Saint"
+  },
+  "nota": "Mapa da Saga 01 (CONTEXT/cosmo-chronicles-saga-01.md). status: ready = jogável; soon = ainda não feita. requires: missões que precisam de vitória antes.",
+  "chapters": [
+    {
+      "n": 1,
+      "title": {
+        "pt": "O Cavaleiro de Pégaso",
+        "en": "The Pegasus Saint"
+      },
+      "missions": [
+        {
+          "id": "1-1",
+          "title": {
+            "pt": "O treino de Marin",
+            "en": "Marin's Training"
+          },
+          "status": "ready",
+          "art": "athena-v6-021",
+          "file": "1-1",
+          "requires": []
+        },
+        {
+          "id": "1-2",
+          "title": {
+            "pt": "A Armadura de Pégaso",
+            "en": "The Pegasus Cloth"
+          },
+          "status": "ready",
+          "file": "1-2",
+          "art": "athena-v6-002",
+          "requires": [
+            "1-1"
+          ],
+          "boss": true
+        }
+      ],
+      "art": "athena-v6-060"
+    },
+    {
+      "n": 2,
+      "title": {
+        "pt": "A Guerra Galáctica",
+        "en": "The Galaxian Wars"
+      },
+      "missions": [
+        {
+          "id": "2-1",
+          "title": {
+            "pt": "O primeiro combate",
+            "en": "The First Battle"
+          },
+          "status": "ready",
+          "file": "2-1",
+          "requires": [
+            "1-2"
+          ],
+          "art": "athena-v6-029"
+        },
+        {
+          "id": "2-2",
+          "title": {
+            "pt": "O frio de Cisne",
+            "en": "The Cold of the Swan"
+          },
+          "status": "ready",
+          "requires": [
+            "2-1"
+          ],
+          "art": "athena-v6-005",
+          "file": "2-2"
+        },
+        {
+          "id": "2-3",
+          "title": {
+            "pt": "Pégaso contra Dragão",
+            "en": "Pegasus against Dragon"
+          },
+          "status": "ready",
+          "requires": [
+            "2-2"
+          ],
+          "art": "athena-v6-003",
+          "file": "2-3",
+          "boss": true
+        },
+        {
+          "id": "2-4",
+          "title": {
+            "pt": "A corrente de Andrômeda",
+            "en": "The Andromeda Chain"
+          },
+          "status": "ready",
+          "requires": [
+            "2-3"
+          ],
+          "art": "athena-v6-007",
+          "file": "2-4"
+        }
+      ],
+      "art": "athena-v6-062"
+    },
+    {
+      "n": 3,
+      "title": {
+        "pt": "O Retorno da Fênix",
+        "en": "The Return of the Phoenix"
+      },
+      "missions": [
+        {
+          "id": "3-1",
+          "title": {
+            "pt": "A interrupção",
+            "en": "The Interruption"
+          },
+          "status": "ready",
+          "requires": [
+            "2-4"
+          ],
+          "art": "athena-v6-009",
+          "file": "3-1"
+        },
+        {
+          "id": "3-2",
+          "title": {
+            "pt": "As partes da Armadura",
+            "en": "The Cloth Pieces"
+          },
+          "status": "ready",
+          "requires": [
+            "3-1"
+          ],
+          "art": "athena-v6-082",
+          "file": "3-2"
+        }
+      ],
+      "art": "athena-v6-080"
+    },
+    {
+      "n": 4,
+      "title": {
+        "pt": "A Batalha contra os Cavaleiros Negros",
+        "en": "The Battle against the Black Saints"
+      },
+      "missions": [
+        {
+          "id": "4-1",
+          "title": {
+            "pt": "Cisne Negro",
+            "en": "Black Swan"
+          },
+          "status": "ready",
+          "requires": [
+            "3-2"
+          ],
+          "art": "neutral-v6-453",
+          "file": "4-1"
+        },
+        {
+          "id": "4-2",
+          "title": {
+            "pt": "Dragão Negro",
+            "en": "Black Dragon"
+          },
+          "status": "ready",
+          "requires": [
+            "4-1"
+          ],
+          "art": "neutral-v6-452",
+          "file": "4-2"
+        },
+        {
+          "id": "4-3",
+          "title": {
+            "pt": "Andrômeda Negra",
+            "en": "Black Andromeda"
+          },
+          "status": "ready",
+          "requires": [
+            "4-2"
+          ],
+          "art": "neutral-v6-454",
+          "file": "4-3"
+        },
+        {
+          "id": "4-4",
+          "title": {
+            "pt": "Pégaso Negro",
+            "en": "Black Pegasus"
+          },
+          "status": "ready",
+          "requires": [
+            "4-3"
+          ],
+          "art": "neutral-v6-451",
+          "file": "4-4"
+        },
+        {
+          "id": "4-5",
+          "title": {
+            "pt": "A Fênix",
+            "en": "The Phoenix"
+          },
+          "status": "ready",
+          "requires": [
+            "4-4"
+          ],
+          "art": "athena-v6-009",
+          "file": "4-5",
+          "boss": true
+        }
+      ],
+      "art": "athena-v6-039"
+    }
+  ],
+  "total_missions": 13
+}

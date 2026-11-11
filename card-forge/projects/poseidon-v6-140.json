@@ -3,6 +3,14 @@
   "subtitle": "Our Lives Belong to the Emperor",
   "flavour": "",
   "art": {
+    "src": "art/poseidon-v6-140.png",
+    "w": 1568.25,
+    "x": -40.125,
+    "y": 0.0,
+    "zoom": 1,
+    "baseW": 1568.25
+  },
+  "art_previous_reference": {
     "src": "art/poseidon-v6-140-ref.jpg",
     "w": 1575.21,
     "x": -43.61,

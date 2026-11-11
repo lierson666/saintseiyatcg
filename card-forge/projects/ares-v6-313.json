@@ -2,13 +2,14 @@
   "title": "",
   "subtitle": "A Glorious Death Awaits",
   "flavour": "\"Lord Lior ordered us to die. I intend to make him laugh.\"",
+  "bonusPower": "",
+  "bonusResistance": "",
   "art": {
-    "src": "art/ares-v6-313-ref.jpg",
-    "w": 1488.0,
-    "x": 0.0,
-    "y": -70.5,
-    "zoom": 1,
-    "baseW": 1488.0,
-    "provisoria": true
+    "src": "art/ares-v6-313.png",
+    "w": 1857.9232,
+    "x": -184.96159999999998,
+    "y": -198.6450000000002,
+    "zoom": 1.19,
+    "baseW": 1561.28
   }
 }

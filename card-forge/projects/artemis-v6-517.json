@@ -1,14 +1,16 @@
 {
   "title": "",
-  "subtitle": "",
+  "subtitle": "The Bigger the Beast, the Harder It Falls",
   "flavour": "",
+  "bonusPower": "",
+  "bonusResistance": "",
   "art": {
     "src": "art/artemis-v6-517-ref.jpg",
-    "w": 1488.0,
-    "x": 0.0,
-    "y": -70.5,
+    "w": 1488,
+    "x": -7.2309633027522295,
+    "y": 158.11815263328992,
     "zoom": 1,
-    "baseW": 1488.0,
+    "baseW": 1488,
     "provisoria": true
   }
 }

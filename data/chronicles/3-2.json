@@ -1,0 +1,344 @@
+{
+ "nota": "Missão 3.2 do Cosmo Chronicles (CONTEXT/cosmo-chronicles-saga-01.md, 11/11/2026). Objetivo: destruir 5 Devotos do rival (victory.destroy_devotees); zerar a Soul do rival também vence; Soul do jogador a 0 perde. Cavaleiros Negros neutros com Athena só mecânica (decisão do autor, 11/11/2026). Simulação (rival normal, 200 partidas por linha, 0 erros): jogador cumpre a missão em 56,5% (IA easy) e 66,5% (IA normal). A IA quase nunca destrói 5 Devotos (mediana 1): quase toda vitória vem pela Soul. Mediana de 14 rodadas.",
+ "id": "3-2",
+ "saga": "saga-01",
+ "chapter": 3,
+ "order": 2,
+ "title": {
+  "pt": "As partes da Armadura",
+  "en": "The Cloth Pieces"
+ },
+ "description": {
+  "pt": "A Armadura de Ouro se partiu, e os Cavaleiros Negros fugiram com as partes. Pela primeira vez, Seiya, Shiryu e Hyoga lutam juntos.",
+  "en": "The Gold Cloth broke apart, and the Black Saints fled with the pieces. For the first time, Seiya, Shiryu and Hyoga fight together."
+ },
+ "level": {
+  "pt": "Intermediário",
+  "en": "Intermediate"
+ },
+ "duration": {
+  "pt": "10–15 minutos",
+  "en": "10–15 minutes"
+ },
+ "objective": {
+  "pt": "Destrua 5 Devotos inimigos. Zerar a Soul do rival também vence.",
+  "en": "Destroy 5 enemy Devotees. Bringing the rival's Soul to 0 also wins."
+ },
+ "characters": {
+  "seiya": {
+   "card": "athena-v6-001",
+   "name": {
+    "pt": "Seiya de Pégaso",
+    "en": "Pegasus Seiya"
+   }
+  },
+  "shiryu": {
+   "card": "athena-v6-003",
+   "name": {
+    "pt": "Shiryu de Dragão",
+    "en": "Dragon Shiryu"
+   }
+  },
+  "hyoga": {
+   "card": "athena-v6-005",
+   "name": {
+    "pt": "Hyoga de Cisne",
+    "en": "Cygnus Hyoga"
+   }
+  },
+  "black": {
+   "card": "neutral-v6-451",
+   "name": {
+    "pt": "Cavaleiros Negros",
+    "en": "Black Saints"
+   }
+  },
+  "marin": {
+   "card": "athena-v6-021",
+   "chibi": true,
+   "name": {
+    "pt": "Marin, na lembrança de Seiya",
+    "en": "Marin, in Seiya's memory"
+   }
+  },
+  "narrator": {
+   "name": {
+    "pt": "Narração",
+    "en": "Narration"
+   }
+  }
+ },
+ "requires": [
+  "3-1"
+ ],
+ "next": "4-1",
+ "player": {
+  "character": "seiya",
+  "deck": "chronicle-3-2-bronze"
+ },
+ "rival": {
+  "character": "black",
+  "deck": "chronicle-3-2-black-saints",
+  "ai": "normal",
+  "mechanical_god": "god-athena"
+ },
+ "arena": "olympus",
+ "music": null,
+ "victory": {
+  "type": "engine_or_objective",
+  "winner": "player",
+  "destroy_devotees": 5
+ },
+ "defeat": {
+  "draws_count_as": "defeat",
+  "retry": true
+ },
+ "reward": {
+  "enabled": true,
+  "coins": 250,
+  "boosters": 1,
+  "boss": false
+ },
+ "scenes": {
+  "intro": [
+   {
+    "art": "neutral-v6-455",
+    "who": "narrator",
+    "line": "SCENE_1"
+   },
+   {
+    "art": "athena-v6-062",
+    "who": "narrator",
+    "line": "SCENE_2"
+   },
+   {
+    "art": "athena-v6-005",
+    "who": "hyoga",
+    "line": "HYOGA_1"
+   },
+   {
+    "art": "athena-v6-001",
+    "who": "seiya",
+    "line": "SEIYA_1"
+   },
+   {
+    "art": "athena-v6-003",
+    "who": "shiryu",
+    "line": "SHIRYU_1"
+   }
+  ],
+  "prep": {
+   "who": "marin",
+   "line": "PREP_1",
+   "pose": "explain"
+  },
+  "win": [
+   {
+    "art": "neutral-v6-451",
+    "who": "narrator",
+    "line": "WIN_1"
+   },
+   {
+    "art": "athena-v6-003",
+    "who": "shiryu",
+    "line": "WIN_2"
+   },
+   {
+    "art": "athena-v6-001",
+    "who": "seiya",
+    "line": "WIN_3"
+   }
+  ],
+  "lose": [
+   {
+    "art": "neutral-v6-451",
+    "who": "black",
+    "line": "LOSE_1"
+   }
+  ]
+ },
+ "hints": [
+  {
+   "id": "HINT_DOWN",
+   "pose": "good",
+   "when": [
+    {
+     "event": "destroyed",
+     "owner": "B"
+    }
+   ]
+  },
+  {
+   "id": "HINT_HOLD",
+   "pose": "tip",
+   "when": [
+    {
+     "stall": 2
+    },
+    {
+     "event": "soul_lost",
+     "player": "A",
+     "atMost": {
+      "soul": 8
+     }
+    }
+   ]
+  }
+ ],
+ "decks": [
+  {
+   "id": "chronicle-3-2-bronze",
+   "god": "god-athena",
+   "domain_id": "athena-v6-062",
+   "main_deck": [
+    {
+     "card_id": "athena-v6-001",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-002",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-003",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-004",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-005",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-006",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-053",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-054",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-052",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-061",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-040",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-043",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-041",
+     "quantity": 2
+    },
+    {
+     "card_id": "neutral-v6-457",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-494",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-491",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-489",
+     "quantity": 3
+    }
+   ],
+   "nome": "Bronze · Chronicles 3.2",
+   "emprestado": true
+  },
+  {
+   "id": "chronicle-3-2-black-saints",
+   "god": "god-athena",
+   "domain_id": "athena-v6-062",
+   "main_deck": [
+    {
+     "card_id": "neutral-v6-451",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-452",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-453",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-456",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-458",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-600",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-601",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-604",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-602",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-457",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-490",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-603",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-492",
+     "quantity": 2
+    },
+    {
+     "card_id": "neutral-v6-498",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-497",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-491",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-478",
+     "quantity": 3
+    }
+   ],
+   "nome": "Cavaleiros Negros · Chronicles 3.2",
+   "emprestado": true
+  }
+ ]
+}

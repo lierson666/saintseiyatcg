@@ -2,13 +2,14 @@
   "title": "",
   "subtitle": "Keeper of the Ocean's Lost Knowledge",
   "flavour": "",
+  "bonusPower": "",
+  "bonusResistance": "",
   "art": {
-    "src": "art/poseidon-v6-113-ref.jpg",
-    "w": 1488.0,
-    "x": 0.0,
-    "y": -290.87,
-    "zoom": 1,
-    "baseW": 1488.0,
-    "provisoria": true
+    "src": "art/poseidon-v6-113.png",
+    "w": 1913.2649999999996,
+    "x": -206.1587614678897,
+    "y": -422.69546306079303,
+    "zoom": 1.2199999999999998,
+    "baseW": 1568.25
   }
 }

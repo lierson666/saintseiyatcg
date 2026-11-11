@@ -1,0 +1,307 @@
+{
+ "nota": "Missão 1.2 do Cosmo Chronicles (Especificação V1.0 do autor, 11/11/2026). Regras normais; decks emprestados, fora da coleção. Athena é só a configuração mecânica dos dois lados: na tela, o rival é Cassios.",
+ "id": "1-2",
+ "saga": "saga-01",
+ "chapter": 1,
+ "order": 2,
+ "title": {
+  "pt": "A Armadura de Pégaso",
+  "en": "The Pegasus Cloth"
+ },
+ "description": {
+  "pt": "Santuário de Athena, Grécia. Após seis anos de treinamento, Seiya enfrenta Cassios pelo direito de receber a Armadura de Bronze de Pégaso.",
+  "en": "Athena's Sanctuary, Greece. After six years of training, Seiya faces Cassios for the right to the Bronze Cloth of Pegasus."
+ },
+ "level": {
+  "pt": "Iniciante",
+  "en": "Beginner"
+ },
+ "duration": {
+  "pt": "6–10 minutos",
+  "en": "6–10 minutes"
+ },
+ "characters": {
+  "seiya": {
+   "card": "athena-v6-001",
+   "name": {
+    "pt": "Seiya de Pégaso",
+    "en": "Pegasus Seiya"
+   }
+  },
+  "marin": {
+   "card": "athena-v6-021",
+   "chibi": true,
+   "name": {
+    "pt": "Marin",
+    "en": "Marin"
+   }
+  },
+  "cassios": {
+   "card": "athena-v6-027",
+   "name": {
+    "pt": "Cassios",
+    "en": "Cassios"
+   }
+  },
+  "narrator": {
+   "name": {
+    "pt": "Narração",
+    "en": "Narration"
+   }
+  }
+ },
+ "requires": [
+  "1-1"
+ ],
+ "next": "2-1",
+ "player": {
+  "character": "seiya",
+  "deck": "chronicle-1-2-seiya"
+ },
+ "rival": {
+  "character": "cassios",
+  "deck": "chronicle-1-2-cassios",
+  "ai": "easy",
+  "mechanical_god": "god-athena"
+ },
+ "arena": "athena",
+ "music": null,
+ "victory": {
+  "type": "engine",
+  "winner": "player"
+ },
+ "defeat": {
+  "draws_count_as": "defeat",
+  "retry": true
+ },
+ "reward": {
+  "enabled": true,
+  "coins": 250,
+  "boosters": 3,
+  "boss": true
+ },
+ "scenes": {
+  "intro": [
+   {
+    "art": "athena-v6-065",
+    "who": "narrator",
+    "line": "SCENE_1"
+   },
+   {
+    "art": "athena-v6-021",
+    "who": "marin",
+    "line": "MARIN_1",
+    "pose": "explain"
+   },
+   {
+    "art": "athena-v6-027",
+    "who": "cassios",
+    "line": "CASSIOS_1"
+   }
+  ],
+  "prep": {
+   "who": "marin",
+   "line": "PREP_1",
+   "pose": "tip"
+  },
+  "win": [
+   {
+    "art": "athena-v6-002",
+    "who": "marin",
+    "line": "WIN_1",
+    "pose": "cheer"
+   },
+   {
+    "art": "athena-v6-001",
+    "who": "seiya",
+    "line": "WIN_2"
+   }
+  ],
+  "lose": [
+   {
+    "art": "athena-v6-027",
+    "who": "marin",
+    "line": "LOSE_1",
+    "pose": "confident"
+   }
+  ]
+ },
+ "hints": [
+  {
+   "id": "HINT_BASES",
+   "pose": "tip",
+   "when": [
+    {
+     "stall": 2
+    },
+    {
+     "event": "soul_lost",
+     "player": "A",
+     "atMost": {
+      "soul": 8
+     }
+    }
+   ]
+  }
+ ],
+ "decks": [
+  {
+   "id": "chronicle-1-2-seiya",
+   "nome": "Seiya · Chronicles 1.2",
+   "god": "god-athena",
+   "domain_id": "athena-v6-065",
+   "main_deck": [
+    {
+     "card_id": "athena-v6-001",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-021",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-036",
+     "quantity": 1
+    },
+    {
+     "card_id": "athena-v6-040",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-043",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-041",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-457",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-490",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-458",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-060",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-053",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-054",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-055",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-061",
+     "quantity": 2
+    },
+    {
+     "card_id": "neutral-v6-497",
+     "quantity": 2
+    },
+    {
+     "card_id": "athena-v6-044",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-051",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-494",
+     "quantity": 3
+    }
+   ],
+   "emprestado": true
+  },
+  {
+   "id": "chronicle-1-2-cassios",
+   "nome": "Cassios · Chronicles 1.2",
+   "god": "god-athena",
+   "domain_id": "athena-v6-065",
+   "main_deck": [
+    {
+     "card_id": "athena-v6-027",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-022",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-040",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-043",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-041",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-457",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-458",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-053",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-054",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-055",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-061",
+     "quantity": 2
+    },
+    {
+     "card_id": "neutral-v6-497",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-067",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-051",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-044",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-494",
+     "quantity": 3
+    },
+    {
+     "card_id": "neutral-v6-491",
+     "quantity": 3
+    }
+   ],
+   "emprestado": true
+  }
+ ]
+}

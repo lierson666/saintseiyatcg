@@ -1,0 +1,49 @@
+{
+ "nota": "Falas da missão 1.1 (rascunho da Saga 01, revisado em 11/11/2026). Máximo de duas frases por fala.",
+ "lines": {
+  "SCENE_1": {
+   "pt": "Santuário de Athena, Grécia. O sol nem nasceu, e o treino já começou.",
+   "en": "Athena's Sanctuary, Greece. The sun isn't up yet, and training has already begun."
+  },
+  "SEIYA_1": {
+   "pt": "Mais uma vez? Eu mal consigo ficar de pé, Marin.",
+   "en": "Again? I can barely stand, Marin."
+  },
+  "MARIN_1": {
+   "pt": "Aqui ninguém te dá nada, Seiya. Levante.",
+   "en": "Nobody gives you anything here, Seiya. Get up."
+  },
+  "SEIYA_2": {
+   "pt": "Eu vou voltar para casa com aquela armadura.",
+   "en": "I'm going home with that Cloth."
+  },
+  "MARIN_2": {
+   "pt": "Então me mostre o seu Cosmo.",
+   "en": "Then show me your Cosmo."
+  },
+  "PREP_1": {
+   "pt": "Hoje eu sou sua adversária. Quero ver pelo menos dois Golpes seus chegarem até o fim.",
+   "en": "Today I'm your opponent. I want to see at least two of your Strikes land."
+  },
+  "HINT_STRIKE": {
+   "pt": "Não fique só se defendendo, Seiya. Use suas Bases e golpeie quando tiver Cosmo para isso.",
+   "en": "Don't just defend, Seiya. Use your Bases and strike when you have the Cosmo for it."
+  },
+  "WIN_1": {
+   "pt": "Nada mal, Seiya. Seu Cosmo começa a acordar.",
+   "en": "Not bad, Seiya. Your Cosmo is starting to wake up."
+  },
+  "WIN_2": {
+   "pt": "Então a armadura está mais perto, Marin?",
+   "en": "So the Cloth is getting closer, Marin?"
+  },
+  "OBJECTIVE_1": {
+   "pt": "Você venceu, mas quase não atacou. Treino é para golpear, Seiya: de novo.",
+   "en": "You won, but you barely attacked. Training is for striking, Seiya: again."
+  },
+  "LOSE_1": {
+   "pt": "Caiu de novo. Levante e me mostre que aprendeu.",
+   "en": "You fell again. Get up and show me you've learned."
+  }
+ }
+}

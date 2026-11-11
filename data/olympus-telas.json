@@ -38,26 +38,6 @@
         "texto": "Her Angels strike from the night sky."
       }
     ],
-    "blocos": [
-      {
-        "imagem": "card:athena-v6-001",
-        "rotulo": "Decks",
-        "titulo": "Build your deck",
-        "destino": "decks"
-      },
-      {
-        "imagem": "card:athena-v6-003",
-        "rotulo": "Battle",
-        "titulo": "Challenge the AI",
-        "destino": "play"
-      },
-      {
-        "imagem": "card:god-poseidon",
-        "rotulo": "New",
-        "titulo": "Poseidon, Hades, Ares and Artemis",
-        "destino": "decks"
-      }
-    ],
     "botao_play": "Play"
   },
   "fundos": {
@@ -116,25 +96,47 @@
       "MUSIC/PEGASUS TYU SEI KEN.mp3",
       "MUSIC/SEIYAxRADAMANTYS.mp3",
       "MUSIC/TENKAIHEN.mp3",
-      "MUSIC/UNDERTHEWOODOFTHEWORLDTREE.mp3"
+      "MUSIC/UNDERTHEWOODOFTHEWORLDTREE.mp3",
+      "MUSIC/BLACK SAINT.mp3",
+      "MUSIC/Galaxian Wars.mp3",
+      "MUSIC/Revenger Phoenix.mp3",
+      "MUSIC/SADBROTHERS.mp3",
+      "MUSIC/Goddedd's Saint.mp3",
+      "MUSIC/Black Saint's Challenge.mp3",
+      "MUSIC/Burn Cosmos.mp3",
+      "MUSIC/Era Of Legend.mp3",
+      "MUSIC/Precept Of Death.mp3",
+      "MUSIC/Promise In Protection Star.mp3"
     ],
     "efeitos": {
-      "clique": null,
-      "play": null,
-      "voltar": null,
-      "turno": null,
-      "compra": null,
-      "conjurar": null,
-      "cosmo": null,
-      "gatilho": null,
-      "ataque": null,
-      "dano": null,
-      "morte": null,
+      "clique": "MUSIC/fx/ps3-se-SYS_SE-pt/5043.mp3",
+      "play": "MUSIC/fx/ps3-se-SYS_SE-pt/5002.mp3",
+      "turno": "MUSIC/fx/ps3-se-SYS_SE-pt/5020.mp3",
+      "compra": "MUSIC/fx/ps3-se-SYS_SE-pt/5038.mp3",
+      "conjurar": "MUSIC/fx/ps3-se-BT_AFG_SE-pt/5005.mp3",
+      "cosmo": "MUSIC/fx/ps3-se-SYS_SE-pt/5021.mp3",
+      "gatilho": "MUSIC/fx/ps3-se-SYS_SE-pt/5012.mp3",
+      "ataque": "MUSIC/fx/ps3-se-BT_SYS_SE-pt/5031.mp3",
+      "dano": "MUSIC/fx/ps3-se-SYS_SE-pt/5021.mp3",
+      "morte": "MUSIC/fx/ps3-se-BT_SYS_SE-pt/5110.mp3",
       "vitoria": null,
       "derrota": null,
-      "ultimate": null,
+      "ultimate": "MUSIC/fx/ps3-se-BT_SYS_SE-pt/5107.mp3",
       "equipar_armadura": "MUSIC/fx/soldiers-soul/BT_SYS_SE-15--GoldGuardHitSE_01--8b46e64b19f0.wav",
-      "equipar_arma": "MUSIC/fx/soldiers-soul/BT_SYS_SE-31--hit_m_sword--668be5353711.wav"
+      "equipar_arma": "MUSIC/fx/soldiers-soul/BT_SYS_SE-31--hit_m_sword--668be5353711.wav",
+      "hover": "MUSIC/fx/ps3-se-BT_SYS_SE-pt/5055.mp3",
+      "hover_mao": "MUSIC/fx/ps3-se-BT_SYS_SE-pt/5057.mp3",
+      "hover_base": "MUSIC/fx/ps3-se-BT_SYS_SE-pt/5056.mp3",
+      "passar_turno": "MUSIC/fx/ps3-se-BT_SYS_SE-pt/5078.mp3",
+      "receber_turno": "MUSIC/fx/ps3-se-BT_SYS_SE-pt/5072.mp3",
+      "declarar_ataque": "MUSIC/fx/ps3-se-BT_SID_SE-pt/5000.mp3",
+      "carga": "MUSIC/fx/ps3-se-BT_HLD_SE-pt/5000.mp3",
+      "impacto": "MUSIC/fx/ps3-se-BT_XSR_SE-pt/5014.mp3",
+      "impacto_deus": "MUSIC/fx/ps3-se-BT_ODN_SE-pt/5003.mp3",
+      "dano_deus": "MUSIC/fx/ps3-se-BT_TNT_SE-pt/5001.mp3",
+      "poder_divino": "MUSIC/fx/ps3-se-BT_MRN_SE-pt/5000.mp3",
+      "poder_dominio": "MUSIC/fx/ps3-se-BT_AFG_SE-pt/5005.mp3",
+      "awaken": "MUSIC/fx/ps3-se-BT_IKG_SE-pt/5000.mp3"
     },
     "vozes": [
       {

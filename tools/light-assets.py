@@ -2,18 +2,20 @@
 Rodar antes de cada deploy e depois de importar artes:  python3 tools/light-assets.py
 Incremental: só reconverte o que mudou. Os originais ficam intactos (Card Forge e Layout Studio continuam usando eles).
 
-- card-forge/art-web/*.jpg -> art-web/webp/<nome>.webp (lado maior até 1024 px) e art-web/thumb/<nome>.webp (até 320 px),
+- card-forge/art-web/*.jpg -> art-web/webp/<nome>.webp (lado maior até 1024 px, campo e mão no desktop), touch/ (640 px, toque),
+  thumb/ (320 px) e zoom/ (2048 px, carta em tela cheia; só quando a arte passa de 1024 px),
   mais art-web/light.json com a lista do que existe (shared/light-art.js só troca a URL quando a versão leve existe).
 - CARD-TEMPLATE/**/*.png e playtest/divine/assets/god-frames/*.png -> .webp ao lado, mesmo tamanho (molduras e peças).
 - CARD-TEMPLATE/**/*.png -> .sm.webp ao lado, metade do tamanho, para aparelhos de toque.
 Artes -ref (provisórias) entram também: o deploy já as filtra pelo nome."""
+import hashlib
 import json
 from pathlib import Path
 from PIL import Image
 
 ROOT = Path(__file__).resolve().parent.parent
 ART = ROOT / 'card-forge/art-web'
-SIZES = {'webp': (1024, 82), 'thumb': (320, 78)}  # pasta: (lado maior, qualidade)
+SIZES = {'webp': (1024, 82), 'touch': (640, 82), 'thumb': (320, 78), 'zoom': (2048, 84)}  # pasta: (lado maior, qualidade)
 
 
 def stale(src, dst):
@@ -35,12 +37,16 @@ def main():
     for size, (side, q) in SIZES.items():
         light[size] = []
         for src in sorted(ART.glob('*.jpg')):
+            if size == 'zoom' and max(Image.open(src).size) <= SIZES['webp'][0]:
+                continue  # igual à webp/: shared/light-art.js fica nela
             dst = ART / size / f'{src.stem}.webp'
             if stale(src, dst):
                 save(src, dst, side, q); made += 1
             light[size].append(src.stem)
             if size == 'webp':
                 before += src.stat().st_size; after += dst.stat().st_size
+    # Hash da arte na URL: .webp não tem Cache-Control no servidor, e o navegador segue mostrando a imagem antiga sem ele.
+    light['rev'] = {src.stem: hashlib.md5(src.read_bytes()).hexdigest()[:8] for src in ART.glob('*.jpg')}
     (ART / 'light.json').write_text(json.dumps(light, separators=(',', ':')))
 
     frames = [*ROOT.glob('CARD-TEMPLATE/**/*.png'), *ROOT.glob('playtest/divine/assets/god-frames/*.png')]
@@ -62,7 +68,7 @@ def main():
         before += src.stat().st_size; after += dst.stat().st_size
 
     # Auto-checagem: toda arte e toda peça têm a versão leve.
-    assert all((ART / s / f'{n}.webp').exists() for s in light for n in light[s])
+    assert all((ART / s / f'{n}.webp').exists() for s in SIZES for n in light[s])
     assert all(f.with_suffix('.webp').exists() for f in frames)
     print(f'{made} convertidas · {before / 1048576:.1f} MB -> {after / 1048576:.1f} MB')
 

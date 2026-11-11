@@ -2,13 +2,14 @@
   "title": "",
   "subtitle": "Armor of the Headless Horror",
   "flavour": "\"The executioner never needs to see the face of his victim.\"",
+  "bonusPower": "+2",
+  "bonusResistance": "+1",
   "art": {
-    "src": "art/ares-v6-282-ref.jpg",
-    "w": 1488.0,
-    "x": 0.0,
-    "y": -276.72,
+    "src": "art/ares-v6-282.png",
+    "w": 1568.25,
+    "x": -40.125,
+    "y": 0,
     "zoom": 1,
-    "baseW": 1488.0,
-    "provisoria": true
+    "baseW": 1568.25
   }
 }

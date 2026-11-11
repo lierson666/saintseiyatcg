@@ -2,13 +2,14 @@
   "title": "",
   "subtitle": "The Joy of Destruction",
   "flavour": "\"Lord Lior laughed as the fortress fell. We laughed even louder.\"",
+  "bonusPower": "",
+  "bonusResistance": "",
   "art": {
-    "src": "art/ares-v6-301-ref.jpg",
-    "w": 1488.0,
-    "x": 0.0,
-    "y": -70.5,
+    "src": "art/ares-v6-301.png",
+    "w": 1568.25,
+    "x": -40.125,
+    "y": 0,
     "zoom": 1,
-    "baseW": 1488.0,
-    "provisoria": true
+    "baseW": 1568.25
   }
 }
