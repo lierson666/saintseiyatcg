@@ -61,6 +61,14 @@ Pendente de conferência com o SDK oficial antes de ligar: o formato exato do ma
 - **Booster com coins comprados:** com `RANDOM_BOOSTERS_PURCHASABLE` desligado, booster só sai de coins ganhos jogando (`paid_coins`). Os outros gastos consomem primeiro os coins comprados.
 - Excluir a conta mantém o registro do pedido, sem a conta (fiscal).
 - Adaptador Google Play: reservado; recusa tudo.
+- **Arrependimento** (rodada 2 do /grill, 11/11/2026): o jogador desiste em até 7 dias da confirmação, só se as coins do pacote não tiverem sido usadas (`paid_coins` ≥ coins do pacote e saldo suficiente). Usou qualquer parte, perde o direito. `POST /api/payments/orders/<id>/withdraw` faz o reembolso total no Mercado Pago, tira as coins e não pausa a conta. Histórico: `GET /api/payments/orders`.
+
+### Loja no jogo (`playtest/economy.js`)
+- Aba **Cosmo Coins** na Store, ao lado de Boosters e cosméticos. Aparece só com a venda ligada (`coin_store` em `/api/economy`) e nunca dentro do app Android (TWA). O TWA abre em `/login/` com referrer `android-app://`, e o login marca a sessão (`sessionStorage.ssTwa`).
+- Mostra os 6 pacotes (preço em R$, bônus sobre 250 coins por R$1) e o motivo quando a compra está bloqueada (menor de idade, termos ou conta pausada). O botão leva ao Mercado Pago.
+- Histórico "Suas compras" com a situação de cada pedido e o botão **Desistir da compra** enquanto der.
+- Volta do Mercado Pago (`?purchase=<pedido>`): aviso no canto que confere o pedido a cada 3 s (até 1 min) e leva à aba.
+- Componente próprio `<ss-coin-shop>` e textos EN + PT-BR em pares `.i18n-en`/`.i18n-pt`, sem tocar no `lobby.js` (só a versão do import).
 
 ### Chaves do servidor (`sanctuary-api/flags.py`; `GET /api/flags`)
 `AGE_GATE_REQUIRED`, `IDENTITY_VERIFICATION_ENABLED`, `PAYMENTS_ENABLED`, `MERCADO_PAGO_ENABLED`, `GOOGLE_PLAY_BILLING_ENABLED` e `RANDOM_BOOSTERS_PURCHASABLE`. Todas desligadas; cada uma liga com `SANCTUARY_<CHAVE>=1`, conferida a cada pedido.
@@ -83,7 +91,7 @@ Pendente de conferência com o SDK oficial antes de ligar: o formato exato do ma
 
 | Arquivo | Resultado |
 |---|---|
-| `test_identity_payments` (novo, 20 testes) | OK |
+| `test_identity_payments` (novo, 21 testes) | OK |
 | `test_age_gate` | OK |
 | `test_economy_forge` | OK |
 | `test_server` | OK |
@@ -162,10 +170,17 @@ Ao vivo (servidor local `identity-local` com o gate ligado): cadastro, regulariz
 - Desligar as chaves basta para parar o gate e as compras, sem perder dados.
 - O código antigo ignora as tabelas novas; o histórico de pagamentos fica guardado.
 
+## 8.1 Decisões de lançamento (/grill, 11/11/2026)
+
+- Publicar no próximo deploy, com as chaves desligadas. Ligar o gate 18+ logo depois, com aviso 1 dia antes (Claude redige PT + EN; o autor aprova).
+- Claude gera `SANCTUARY_PII_KEY` direto no servidor. O autor cria a aplicação no Mercado Pago e grava `MP_ACCESS_TOKEN` e `MP_WEBHOOK_SECRET` no servidor.
+- Vendedor: **pessoa física**. Os Termos mostram nome, CPF, caixa postal dos Correios e e-mail de atendimento. **A venda só liga com esses dados preenchidos** (Termos v3, novo aceite).
+- Contador e advogado: depois, com a venda já rodando (risco assumido pelo autor). Abrir para todos direto, sem piloto.
+
 ## 9. Pendências jurídicas e comerciais (advogado e contador)
 
 1. Dados do operador nos Termos e na Privacidade: razão social, CNPJ, endereço, canal de atendimento e encarregado (DPO).
-2. Direito de arrependimento (art. 49 do CDC) para moeda virtual já usada.
+2. Revisar a regra de arrependimento adotada (7 dias, só com o pacote intacto).
 3. Se a autodeclaração basta para a Lei 15.211/2025 (ECA Digital) e o Decreto 12.880/2026, ou se é preciso aferição de idade confiável.
 4. Booster (conteúdo sorteado) e caixas de recompensa: se pode ser comprado com coins pagos. Hoje é proibido pela chave.
 5. Nota fiscal, tributos sobre a venda de moeda virtual e prazo de guarda dos registros de pagamento.

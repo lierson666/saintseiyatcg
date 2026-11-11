@@ -351,6 +351,43 @@ class Payments(Base):
         self.assertEqual(self.call('DELETE', '/api/me', {'password': 'x' * 12}, cookie=cookie)[0], 200)
         self.assertIsNone(server.db.execute('select user_id from payment_orders where id = ?', (oid,)).fetchone()[0])
 
+    def test_withdraw_within_7_days_only_if_intact(self):
+        cookie, uid = self.player()
+        with server.lock:
+            server.welcome(uid)
+        oid = self.order(cookie)[1]['order']['id']
+        pid = self.approve(oid, pid='9601')
+        with patch.dict(os.environ, ON):
+            self.webhook(pid, 'w1')
+            self.assertTrue(self.call('GET', '/api/economy', cookie=cookie)[1]['coin_store'])
+        mine = self.call('GET', '/api/payments/orders', cookie=cookie)[1]['orders']
+        self.assertTrue(mine[0]['withdrawable'])
+        before = server.coins_of(uid)
+        with patch.dict(os.environ, ON):
+            st, data, _ = self.call('POST', f'/api/payments/orders/{oid}/withdraw', {}, cookie=cookie)
+        self.assertEqual((st, data['status']), (200, 'REFUNDED'))
+        self.assertEqual(server.coins_of(uid), before - 1250)
+        self.assertEqual(self.order(cookie)[0], 201)  # arrependimento não pausa a conta
+        # pacote já gasto em parte: não pode
+        oid2 = self.order(cookie)[1]['order']['id']
+        pid2 = self.approve(oid2, pid='9602')
+        with patch.dict(os.environ, ON):
+            self.webhook(pid2, 'w2')
+            self.assertEqual(self.call('POST', '/api/store/buy', {'item': 'avatar', 'id': 'athena-v6-001'}, cookie=cookie)[0], 200)
+            st, data, _ = self.call('POST', f'/api/payments/orders/{oid2}/withdraw', {}, cookie=cookie)
+        self.assertEqual(st, 400)
+        # passou de 7 dias: não pode
+        cookie3, _ = self.player()
+        oid3 = self.order(cookie3)[1]['order']['id']
+        pid3 = self.approve(oid3, pid='9603')
+        with patch.dict(os.environ, ON):
+            self.webhook(pid3, 'w3')
+        server.db.execute("update payment_events set at = at - 8 * 86400 where order_id = ?", (oid3,))
+        self.assertFalse(self.call('GET', '/api/payments/orders', cookie=cookie3)[1]['orders'][0]['withdrawable'])
+        with patch.dict(os.environ, ON):
+            self.assertEqual(self.call('POST', f'/api/payments/orders/{oid3}/withdraw', {}, cookie=cookie3)[0], 400)
+        self.assertEqual(self.call('POST', f'/api/payments/orders/{oid3}/withdraw', {}, cookie=cookie)[0], 404)  # pedido de outro
+
     def test_signature_manifest(self):
         h = {'x-signature': sign('ABC', 'rq'), 'x-request-id': 'rq'}
         self.assertTrue(payments.MercadoPago.verify_signature(h, 'ABC', MP_SECRET))

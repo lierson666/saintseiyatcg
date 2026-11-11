@@ -294,6 +294,49 @@ def webhook(db, provider, headers, query, body, add_coins, coins_of):
     return result
 
 
+WITHDRAW_DAYS = 7  # arrependimento (CDC art. 49; autor, 11/11/2026): 7 dias, só com o pacote intacto
+
+
+def approved_at(db, order_id):
+    row = db.execute("select min(at) from payment_events where order_id = ? and to_status = 'APPROVED'", (order_id,)).fetchone()
+    return row[0]
+
+
+def withdraw_block(db, order, coins_of):
+    """Motivo de o pedido não poder ser desfeito pelo jogador, ou None. Intacto = coins comprados ainda não gastos."""
+    if order['status'] != 'APPROVED' or not order['provider_ref']:
+        return 'Only completed purchases can be cancelled.'
+    at = approved_at(db, order['id'])
+    if not at or time.time() - at > WITHDRAW_DAYS * 86400:
+        return f'The {WITHDRAW_DAYS}-day cancellation period has ended.'
+    if paid_remaining(db, order['user_id']) < order['coins'] or coins_of(order['user_id']) < order['coins']:
+        return 'Coins from this purchase were already used.'
+    return None
+
+
+def my_orders(db, uid, coins_of):
+    out = []
+    for r in db.execute('select * from payment_orders where user_id = ? order by created_at desc limit 50', (uid,)).fetchall():
+        block = withdraw_block(db, r, coins_of)
+        at = approved_at(db, r['id'])
+        out.append(order_view(r) | {'withdrawable': block is None, 'withdraw_until': at + WITHDRAW_DAYS * 86400 if at else None})
+    return out
+
+
+def withdraw(db, order_id, uid, add_coins, coins_of):
+    """Arrependimento pedido pelo jogador: reembolso total no provedor e as coins saem. Não pausa a conta."""
+    order = db.execute('select * from payment_orders where id = ? and user_id = ?', (order_id, uid)).fetchone()
+    if not order:
+        raise PaymentError(404, 'Order not found.')
+    block = withdraw_block(db, order, coins_of)
+    if block:
+        raise PaymentError(400, block)
+    ADAPTERS[order['provider']].refund(order['provider_ref'], f'refund-{order_id}')
+    status = apply_payment(db, ADAPTERS[order['provider']].get_payment(order['provider_ref']), add_coins, coins_of, source='withdraw:user')
+    db.execute('delete from payment_holds where user_id = ? and reason = ?', (uid, f'refund:{order_id}'))  # direito do jogador, não suspeita
+    return status
+
+
 def refund(db, order_id, admin, add_coins, coins_of):
     order = db.execute('select * from payment_orders where id = ?', (order_id,)).fetchone()
     if not order or order['status'] != 'APPROVED' or not order['provider_ref']:

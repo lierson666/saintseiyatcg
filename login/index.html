@@ -122,6 +122,8 @@
     import {mountKV} from '/shared/kv-sky.js?v=20261104-pub1';
     import {countryOptions} from '/shared/countries.js?v=20261031-i18n1';
     const kv = mountKV({anchor: 'h1 .kv-cosmo'});
+    // App Android (TWA) abre aqui: marca a sessão para a loja de coins não aparecer no app (política do Google Play).
+    if (document.referrer.startsWith('android-app://')) sessionStorage.setItem('ssTwa', '1');
     // Só destinos do próprio site (evita redirecionar para fora).
     const raw = new URLSearchParams(location.search).get('next') || '/playtest/';
     const next = raw.startsWith('/') && !raw.startsWith('//') ? raw : '/playtest/';

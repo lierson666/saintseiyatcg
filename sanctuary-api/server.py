@@ -822,9 +822,14 @@ class Handler(BaseHTTPRequestHandler):
                 return self.payment_packs()
             if method == 'POST' and path == '/api/payments/orders':
                 return self.payment_order()
+            if method == 'GET' and path == '/api/payments/orders':
+                return self.payment_history()
             m = re.fullmatch(r'/api/payments/orders/(ord_[0-9a-f]{24})', path)
             if m and method == 'GET':
                 return self.payment_order_status(m[1])
+            m = re.fullmatch(r'/api/payments/orders/(ord_[0-9a-f]{24})/withdraw', path)
+            if m and method == 'POST':
+                return self.payment_withdraw(m[1])
             if method == 'GET' and path == '/api/auth/check':
                 return self.auth_check()
             if method == 'POST' and path == '/api/auth/register':
@@ -1533,6 +1538,7 @@ class Handler(BaseHTTPRequestHandler):
         with lock:
             welcome(uid)
             state = economy_of(uid)
+        state['coin_store'] = flags.on('PAYMENTS_ENABLED') and flags.on('MERCADO_PAGO_ENABLED')  # aba Cosmo Coins na Store
         self.send_json(200, state)
 
     def store_buy(self):
@@ -1691,6 +1697,22 @@ class Handler(BaseHTTPRequestHandler):
             if not row:
                 raise ApiError(404, 'Order not found.')
             out = payments.order_view(row) | {'coins_balance': coins_of(user['id'])}
+        self.send_json(200, out)
+
+    def payment_history(self):
+        user = self.require_user()
+        with lock:
+            out = {'orders': payments.my_orders(db, user['id'], coins_of), 'withdraw_days': payments.WITHDRAW_DAYS}
+        self.send_json(200, out)
+
+    def payment_withdraw(self, order_id):  # arrependimento em 7 dias, pacote intacto (autor, 11/11/2026)
+        user = self.require_user()
+        with lock:
+            try:
+                status = payments.withdraw(db, order_id, user['id'], add_coins, coins_of)
+            except payments.PaymentError as e:
+                raise ApiError(e.status, e.message)
+            out = {'status': status, 'coins': coins_of(user['id'])}
         self.send_json(200, out)
 
     def payment_webhook(self, provider):
