@@ -360,7 +360,13 @@ export const buyCosmetic = (item, id) => call('/api/store/buy', 'POST', {item, i
 const L = (en, pt) => `<span class="i18n-en">${en}</span><span class="i18n-pt">${pt}</span>`;
 const brl = c => (c / 100).toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
 const money = (c, cur) => cur === 'USD' ? (c / 100).toLocaleString('en-US', {style: 'currency', currency: 'USD'}) : brl(c);
-const PAY = {mercadopago: ['Mercado Pago', 'Pix or card · R$', 'Pix ou cartão · R$'], paypal: ['PayPal', 'PayPal or card · US$', 'PayPal ou cartão · US$']};
+// Logos oficiais servidos pelas próprias empresas (marca de aceitação de pagamento).
+const PAY = {
+  mercadopago: {name: 'Mercado Pago', logo: 'https://http2.mlstatic.com/frontend-assets/dx-template-lib/assets/logo-mercadopago.svg', word: true,
+    chips: ['Pix', L('Card', 'Cartão')], cur: 'R$', how: L('Instant with Pix', 'Na hora com Pix')},
+  paypal: {name: 'PayPal', logo: 'https://www.paypalobjects.com/paypal-ui/logos/svg/paypal-color.svg', word: false,
+    chips: ['PayPal', L('Card', 'Cartão')], cur: 'US$', how: L('Pay in US dollars', 'Pague em dólar')}};
+const payLogo = id => `<span class="ec-plate ec-plate--${id}"><img src="${PAY[id].logo}" alt="${PAY[id].name}" loading="lazy" referrerpolicy="no-referrer">${PAY[id].word ? `<b>${PAY[id].name}</b>` : ''}</span>`;
 const dateOf = t => new Date(t * 1000).toLocaleDateString();
 const STATUS = {CREATED: ['Started', 'Iniciada'], PENDING: ['Waiting for payment', 'Aguardando pagamento'], APPROVED: ['Paid', 'Paga'],
   REJECTED: ['Declined', 'Recusada'], CANCELLED: ['Cancelled', 'Cancelada'], REFUNDED: ['Refunded', 'Reembolsada'],
@@ -372,9 +378,26 @@ const COIN_CSS = `ss-coin-shop{display:block}
 .ec-cpack small{color:#cfd8e6}.ec-cpack .ec-bonus{font:600 12px var(--kv-sans,system-ui);color:#7fe0a2}
 .ec-orders{width:100%;border-collapse:collapse;font:400 14px var(--kv-sans,system-ui);color:#cfd8e6}.ec-orders td,.ec-orders th{padding:8px 6px;border-bottom:1px solid #ffffff14;text-align:left}
 .ec-paynote{color:#cfd8e6;font-size:13px;max-width:70ch}
-.ec-paywith{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:6px 0 4px}.ec-paywith>span{font:500 12px var(--kv-sans,system-ui);letter-spacing:.16em;text-transform:uppercase;color:#cfd8e6}
-.ec-payopt{display:grid;gap:2px;min-height:48px;padding:8px 18px;border:1px solid #ffffff2e;border-radius:12px;background:#ffffff08;color:#f6ecd0;font:600 15px var(--kv-sans,system-ui);cursor:pointer;text-align:left}
-.ec-payopt small{font-weight:400;font-size:12px;color:#cfd8e6}.ec-payopt[aria-pressed="true"]{border-color:var(--kv-gold,#e6c36a);background:#e6c36a1f;box-shadow:inset 0 0 0 1px #e6c36a66}
+.ec-paywith{display:grid;gap:10px;margin:10px 0 18px}.ec-paywith>span,.ec-label{font:500 12px var(--kv-sans,system-ui);letter-spacing:.16em;text-transform:uppercase;color:#cfd8e6}
+.ec-payopts{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;max-width:640px}
+.ec-payopt{position:relative;display:grid;grid-template-columns:auto 1fr;align-items:center;gap:6px 14px;min-height:76px;padding:12px 36px 12px 14px;border:1px solid #ffffff26;border-radius:14px;background:linear-gradient(#ffffff0c,#ffffff04);color:#f6ecd0;font:400 13px var(--kv-sans,system-ui);cursor:pointer;text-align:left;transition:border-color .18s,background .18s,transform .18s}
+.ec-payopt:hover{border-color:#e6c36a88;transform:translateY(-1px)}.ec-payopt:focus-visible{outline:2px solid var(--kv-gold,#e6c36a);outline-offset:3px}
+.ec-payopt[aria-pressed="true"]{border-color:var(--kv-gold,#e6c36a);background:linear-gradient(#e6c36a26,#e6c36a0a);box-shadow:0 0 0 1px #e6c36a88,0 8px 28px #e6c36a1f}
+.ec-payopt[aria-pressed="true"]::after{content:"✓";position:absolute;top:8px;right:10px;width:20px;height:20px;border-radius:50%;background:var(--kv-gold,#e6c36a);color:#1a1405;font:700 12px/20px system-ui;text-align:center}
+.ec-payopt .ec-plate{grid-row:span 2}.ec-payopt em{font-style:normal;color:#cfd8e6}
+.ec-chips{display:flex;flex-wrap:wrap;gap:6px}.ec-chips i{font-style:normal;padding:2px 8px;border:1px solid #ffffff2a;border-radius:99px;font-size:11px;letter-spacing:.04em;color:#e8eef8}
+.ec-plate{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-width:112px;height:44px;padding:0 12px;border-radius:10px;background:#fff;box-shadow:inset 0 0 0 1px #0001}
+.ec-plate img{height:24px;width:auto;display:block}.ec-plate--paypal img{height:22px}.ec-plate b{font:700 14px/1 system-ui,sans-serif;color:#0a0080;letter-spacing:-.01em}
+.ec-dialog{position:fixed;inset:0;z-index:60;display:grid;place-items:center;padding:max(16px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) max(16px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left));background:#02030acc;backdrop-filter:blur(6px);animation:ec-fade .18s ease-out}
+.ec-sheet{width:min(440px,100%);max-height:100%;overflow:auto;padding:24px;border:1px solid #e9c45c66;border-radius:18px;background:radial-gradient(120% 80% at 50% 0,#1b2240,#070912);color:#f6ecd0;box-shadow:0 30px 80px #000c;animation:ec-rise .22s cubic-bezier(.2,.8,.2,1)}
+.ec-sheet h2{margin:0 0 4px;font:700 22px var(--kv-title,Cinzel,serif);color:var(--kv-gold-2,#f1d68a)}
+.ec-sum{display:grid;grid-template-columns:1fr auto;gap:6px 12px;margin:16px 0;padding:14px 16px;border-radius:12px;background:#ffffff0a;font:400 14px var(--kv-sans,system-ui);color:#cfd8e6}.ec-sum b{color:#f6ecd0;text-align:right;font-variant-numeric:tabular-nums}.ec-sum .ec-total{font-size:18px;color:var(--kv-gold-2,#f1d68a)}
+.ec-sheet .ec-payopts{grid-template-columns:1fr}.ec-sheet .ec-payopt{min-height:64px}
+.ec-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:16px}.ec-actions .ec-cta{min-height:44px;padding:0 20px}
+.ec-secure{margin:12px 0 0;font:400 12px var(--kv-sans,system-ui);color:#9fb0c8}
+.ec-wait{display:grid;justify-items:center;gap:12px;padding:12px 0;text-align:center}.ec-spin{width:36px;height:36px;border:3px solid #e6c36a33;border-top-color:var(--kv-gold,#e6c36a);border-radius:50%;animation:ec-turn 1s linear infinite}
+@keyframes ec-fade{from{opacity:0}}@keyframes ec-rise{from{opacity:0;transform:translateY(12px) scale(.98)}}@keyframes ec-turn{to{transform:rotate(1turn)}}
+@media (prefers-reduced-motion:reduce){.ec-dialog,.ec-sheet,.ec-spin{animation:none}.ec-payopt{transition:none}}
 .ec-purchase{position:fixed;inset:auto max(16px,env(safe-area-inset-right)) max(16px,env(safe-area-inset-bottom)) auto;z-index:50;max-width:360px;padding:16px 18px;border:1px solid #e9c45c88;border-radius:14px;background:#05060cf2;color:#f6ecd0;box-shadow:0 10px 40px #000a}
 .ec-purchase p{margin:0 0 10px}`;
 
@@ -397,8 +420,10 @@ async function coinShop(el) {
   const card = p => `<li class="ec-cpack"><h3>${esc(p.name)}</h3><strong><i class="ec-coin" aria-hidden="true"></i>${fmt(p.coins)}</strong>
       <small>Cosmo Coins</small>${bonus(p) > 0 ? `<span class="ec-bonus">+${bonus(p)}% ${L('bonus', 'bônus')}</span>` : ''}
       <button class="ec-cta" data-coin-buy="${esc(p.id)}" ${blocked ? 'disabled' : ''}>${price(p)}</button></li>`;
-  const payWith = provs.length > 1 ? `<div class="ec-paywith" role="group" aria-label="Payment method"><span>${L('Pay with', 'Pagar com')}</span>${provs.map(id =>
-      `<button type="button" class="ec-payopt" data-coin-provider="${id}" aria-pressed="${id === prov}">${PAY[id][0]}<small>${L(PAY[id][1], PAY[id][2])}</small></button>`).join('')}</div>` : '';
+  const opt = id => `<button type="button" class="ec-payopt" data-coin-provider="${id}" aria-pressed="${id === prov}">${payLogo(id)}
+      <em>${PAY[id].how} · ${PAY[id].cur}</em><span class="ec-chips">${PAY[id].chips.map(c => `<i>${c}</i>`).join('')}</span></button>`;
+  const payWith = provs.length ? `<div class="ec-paywith"><span id="ec-paywith-l">${L('Payment method', 'Forma de pagamento')}</span>
+      <div class="ec-payopts" role="group" aria-labelledby="ec-paywith-l">${provs.map(opt).join('')}</div></div>` : '';
   const row = o => `<tr><td>${dateOf(o.created_at)}</td><td>${esc(o.pack_id)} · ${fmt(o.coins)}</td><td>${money(o.price_cents, o.currency)}</td>
       <td>${L(...(STATUS[o.status] || [o.status, o.status]))}</td>
       <td>${o.withdrawable ? `<button class="ec-cta ec-cta--open" data-coin-withdraw="${esc(o.id)}">${L('Cancel purchase', 'Desistir da compra')}</button><br><small>${L('until', 'até')} ${dateOf(o.withdraw_until)}</small>` : ''}</td></tr>`;
@@ -424,7 +449,7 @@ async function coinShop(el) {
     if (!buy && !back) return;
     (buy || back).disabled = true;
     try {
-      if (buy) { const r = await call('/api/payments/orders', 'POST', {pack: buy.dataset.coinBuy, provider: prov}); location.href = r.checkout_url; return; }
+      if (buy) { buy.disabled = false; return checkout(packs.packs.find(p => p.id === buy.dataset.coinBuy), prov, () => coinShop(el)); }
       const pt = document.documentElement.lang === 'pt-BR';
       if (!confirm(pt ? 'Desistir desta compra? As moedas saem da sua conta e o pagamento é devolvido.' : 'Cancel this purchase? The coins leave your account and the payment is refunded.')) { back.disabled = false; return; }
       await call(`/api/payments/orders/${back.dataset.coinWithdraw}/withdraw`, 'POST', {});
@@ -432,12 +457,69 @@ async function coinShop(el) {
     } catch (err) { say(err.message); (buy || back).disabled = false; }
   };
 }
+// Confirmação dentro do jogo; o pagamento abre num pop-up do Mercado Pago/PayPal e o jogo fica aberto conferindo o pedido.
+// Pop-up bloqueado (ou app instalado): segue para a página do pagamento como antes, e a volta é pelo ?purchase=.
+function checkout(pack, prov, done) {
+  const opener = document.activeElement, box = Object.assign(document.createElement('div'), {className: 'ec-dialog'});
+  const price = id => id === 'paypal' ? money(pack.usd_cents, 'USD') : brl(pack.price_cents);
+  let popup = null, stop = false;
+  const close = () => { stop = true; box.remove(); document.removeEventListener('keydown', esc_); opener?.focus?.(); done(); };
+  const esc_ = ev => { if (ev.key === 'Escape') close(); };
+  const sheet = inner => { box.innerHTML = `<div class="ec-sheet" role="dialog" aria-modal="true" aria-labelledby="ec-ck-t">${inner}</div>`; box.querySelector('button')?.focus(); };
+  const confirmView = () => sheet(`<h2 id="ec-ck-t">${L('Confirm purchase', 'Confirmar compra')}</h2>
+    <div class="ec-sum"><span>${L('Pack', 'Pacote')}</span><b>${esc(pack.name)}</b><span>Cosmo Coins</span><b><i class="ec-coin" aria-hidden="true"></i>${fmt(pack.coins)}</b>
+      <span class="ec-total">${L('Total', 'Total')}</span><b class="ec-total">${price(prov)}</b></div>
+    <span class="ec-label">${L('Paying with', 'Pagando com')}</span>
+    <div class="ec-payopts" style="margin-top:8px"><div class="ec-payopt" aria-pressed="true">${payLogo(prov)}<em>${PAY[prov].how} · ${PAY[prov].cur}</em>
+      <span class="ec-chips">${PAY[prov].chips.map(c => `<i>${c}</i>`).join('')}</span></div></div>
+    <p class="ec-secure">🔒 ${L(`Payment happens on ${PAY[prov].name}'s secure window. The game never sees your card.`, `O pagamento é feito na janela segura do ${PAY[prov].name}. O jogo não vê seu cartão.`)}</p>
+    <p class="ec-hint" role="status" data-ck-msg></p>
+    <div class="ec-actions"><button class="ec-cta ec-cta--open" data-ck-cancel>${L('Cancel', 'Cancelar')}</button>
+      <button class="ec-cta" data-ck-pay>${L(`Pay ${price(prov)}`, `Pagar ${price(prov)}`)}</button></div>`);
+  const waitView = () => sheet(`<h2 id="ec-ck-t">${L('Finish in the payment window', 'Conclua na janela de pagamento')}</h2>
+    <div class="ec-wait">${payLogo(prov)}<span class="ec-spin" aria-hidden="true"></span>
+      <p role="status" data-ck-msg>${L('Waiting for the confirmation… The coins arrive here as soon as it is approved.', 'Aguardando a confirmação… As moedas entram aqui assim que for aprovado.')}</p></div>
+    <div class="ec-actions"><button class="ec-cta ec-cta--open" data-ck-reopen>${L('Reopen window', 'Reabrir janela')}</button><button class="ec-cta ec-cta--open" data-ck-cancel>${L('Close', 'Fechar')}</button></div>`);
+  const endView = (ok, msg) => sheet(`<h2 id="ec-ck-t">${ok ? L('Payment confirmed', 'Pagamento confirmado') : L('Payment not finished', 'Pagamento não concluído')}</h2>
+    <p>${msg}</p><div class="ec-actions"><button class="ec-cta" data-ck-cancel>${L('Done', 'Concluir')}</button></div>`);
+  let order = null;
+  const poll = async () => {
+    for (let i = 0; i < 200 && !stop; i++) {
+      const o = await call(`/api/payments/orders/${order.id}`).catch(() => null);
+      if (o?.status === 'APPROVED') return endView(true, L(`+${fmt(o.coins)} Cosmo Coins are in your account.`, `+${fmt(o.coins)} Cosmo Coins já estão na sua conta.`));
+      if (o && ['REJECTED', 'CANCELLED', 'FAILED'].includes(o.status)) return endView(false, L('Nothing was charged. You can try again.', 'Nada foi cobrado. Você pode tentar de novo.'));
+      await new Promise(r => setTimeout(r, i < 40 ? 3000 : 8000));
+    }
+  };
+  const openPopup = () => {
+    const w = 480, h = 720, x = screenX + (outerWidth - w) / 2, y = screenY + (outerHeight - h) / 2;
+    popup = window.open(order.checkout_url, 'sstcg-pay', `popup,width=${w},height=${h},left=${x},top=${y}`);
+    return popup;
+  };
+  box.onclick = async ev => {
+    if (ev.target === box || ev.target.closest('[data-ck-cancel]')) return close();
+    if (ev.target.closest('[data-ck-reopen]')) { if (popup && !popup.closed) popup.focus(); else openPopup(); return; }
+    const pay = ev.target.closest('[data-ck-pay]');
+    if (!pay) return;
+    pay.disabled = true;
+    try {
+      order = await call('/api/payments/orders', 'POST', {pack: pack.id, provider: prov});
+      if (!openPopup()) { location.href = order.checkout_url; return; }
+      waitView(); poll();
+    } catch (err) { box.querySelector('[data-ck-msg]').textContent = err.message; pay.disabled = false; }
+  };
+  addEventListener('message', ev => { if (ev.origin === location.origin && ev.data?.purchase === order?.id) popup = null; });
+  document.addEventListener('keydown', esc_);
+  document.body.append(box);
+  confirmView();
+}
 if (!customElements.get('ss-coin-shop')) customElements.define('ss-coin-shop', class extends HTMLElement { connectedCallback() { coinShop(this); } });
 
 // Volta do Mercado Pago (?purchase=<pedido>): mostra o andamento e leva à aba Cosmo Coins. O crédito é do servidor.
 (async () => {
   const id = new URLSearchParams(location.search).get('purchase');
   if (!id || !/^ord_[0-9a-f]{24}$/.test(id)) return;
+  try { if (window.opener && window.opener.location.origin === location.origin) { window.opener.postMessage({purchase: id}, location.origin); window.close(); return; } } catch { /* outra origem: segue normal */ }
   history.replaceState(null, '', location.pathname + location.hash);
   const box = Object.assign(document.createElement('div'), {className: 'ec-purchase', role: 'status'});
   if (!document.getElementById('ec-coin-css')) document.head.append(Object.assign(document.createElement('style'), {id: 'ec-coin-css', textContent: COIN_CSS}));
@@ -454,7 +536,7 @@ if (!customElements.get('ss-coin-shop')) customElements.define('ss-coin-shop', c
     if (o && ['REJECTED', 'CANCELLED', 'FAILED'].includes(o.status)) return show(L('The payment did not go through. No coins were charged.', 'O pagamento não foi concluído. Nada foi cobrado.'), true);
     await new Promise(r => setTimeout(r, 3000));
   }
-  show(L('Still waiting for Mercado Pago. Pix can take a few minutes; the coins arrive as soon as it is confirmed.', 'Ainda aguardando o Mercado Pago. O Pix pode levar alguns minutos; as moedas entram assim que ele confirmar.'), true);
+  show(L('Still waiting for the payment. Pix can take a few minutes; the coins arrive as soon as it is confirmed.', 'Ainda aguardando o pagamento. O Pix pode levar alguns minutos; as moedas entram assim que ele confirmar.'), true);
 })();
 
 // ---------- Idade 18+ no perfil (autodeclaração; a loja manda para cá) ----------
