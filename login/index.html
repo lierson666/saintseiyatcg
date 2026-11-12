@@ -130,7 +130,7 @@
     const $ = s => document.querySelector(s);
     const HEAD = {signin: 'Welcome back, Saint', signup: 'Join the Sanctuary', regularize: 'One more step, Saint'};
     // Versão dos Termos e da Privacidade (sanctuary-api TERMS_VERSION). O servidor recusa versão diferente.
-    const TERMS = '2026-11-11-v3';
+    const TERMS = '2026-11-11-v4';
     for (const el of document.querySelectorAll('[data-terms-version]')) el.textContent = TERMS;
     // CPF só para quem escolhe Brasil (autor, 11/11/2026); fora do Brasil vale a data de nascimento + confirmação de 18+.
     const cpfByCountry = form => {
