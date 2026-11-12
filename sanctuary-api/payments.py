@@ -23,6 +23,7 @@ import hmac
 import json
 import os
 import secrets
+import sys
 import time
 import urllib.error
 import urllib.request
@@ -275,6 +276,9 @@ def webhook(db, provider, headers, query, body, add_coins, coins_of):
     mp = ADAPTERS['mercadopago']
     data_id = query.get('data.id') or (body.get('data') or {}).get('id')
     if not mp.verify_signature(headers, data_id, os.environ.get('MP_WEBHOOK_SECRET', '')):
+        # diagnóstico sem segredo: o que veio para montar o manifesto
+        print('webhook bad signature:', json.dumps({'data_id': data_id, 'query': sorted(query), 'x-request-id': headers.get('x-request-id'),
+              'x-signature-ts': str(headers.get('x-signature') or '').split(',')[0], 'headers': sorted(headers)}), file=sys.stderr, flush=True)
         raise PaymentError(401, 'Bad signature.')
     request_id = headers.get('x-request-id') or f'no-id:{data_id}:{headers.get("x-signature")}'
     topic = body.get('type') or query.get('type') or query.get('topic')
