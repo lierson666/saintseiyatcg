@@ -381,9 +381,10 @@ async function coinShop(el) {
   catch (err) { el.innerHTML = `<p class="ec-hint">${esc(err.message)}</p>`; return; }
   const base = 250; // 250 coins = R$1 (docs/economia.md): o bônus de cada pacote é sobre essa base
   const bonus = p => Math.round((p.coins / (p.price_cents / 100 * base) - 1) * 100);
+  const toProfile = ` <button class="kv-ghost" data-act="go" data-screen="profile">${L('Open profile', 'Abrir perfil')}</button>`;
   const blocked = !packs.enabled ? L('Purchases are not available right now.', 'Compras indisponíveis no momento.')
-    : !packs.adult ? L('Purchases are for adults 18+. Confirm your age in your profile first.', 'Compras só para maiores de 18 anos. Confirme sua idade primeiro.')
-    : !packs.terms_accepted ? L('Accept the current Terms of Use to buy.', 'Aceite os Termos de Uso atuais para comprar.')
+    : !packs.adult ? L('Purchases are for adults 18+. Confirm your age in your profile first.', 'Compras só para maiores de 18 anos. Confirme sua idade no perfil primeiro.') + toProfile
+    : !packs.terms_accepted ? L('Accept the current Terms of Use to buy.', 'Aceite os Termos de Uso atuais para comprar.') + toProfile
     : packs.held ? L('Purchases are paused on this account. Contact support.', 'Compras pausadas nesta conta. Fale com o suporte.') : '';
   const card = p => `<li class="ec-cpack"><h3>${esc(p.name)}</h3><strong><i class="ec-coin" aria-hidden="true"></i>${fmt(p.coins)}</strong>
       <small>Cosmo Coins</small>${bonus(p) > 0 ? `<span class="ec-bonus">+${bonus(p)}% ${L('bonus', 'bônus')}</span>` : ''}
@@ -391,12 +392,17 @@ async function coinShop(el) {
   const row = o => `<tr><td>${dateOf(o.created_at)}</td><td>${esc(o.pack_id)} · ${fmt(o.coins)}</td><td>${brl(o.price_cents)}</td>
       <td>${L(...(STATUS[o.status] || [o.status, o.status]))}</td>
       <td>${o.withdrawable ? `<button class="ec-cta ec-cta--open" data-coin-withdraw="${esc(o.id)}">${L('Cancel purchase', 'Desistir da compra')}</button><br><small>${L('until', 'até')} ${dateOf(o.withdraw_until)}</small>` : ''}</td></tr>`;
-  el.innerHTML = `<p class="ec-tabnote">${L('Buy Cosmo Coins with Pix or card through Mercado Pago. Coins arrive after the payment is confirmed.', 'Compre Cosmo Coins com Pix ou cartão pelo Mercado Pago. As moedas entram depois que o pagamento é confirmado.')}</p>
+  const table = hist.orders.length ? `<table class="ec-orders"><tbody>${hist.orders.map(row).join('')}</tbody></table>` : '';
+  if (el.hasAttribute('history')) { // perfil: só o histórico, com o botão de desistir
+    el.innerHTML = `${table || `<p class="ec-hint">${L('No purchases yet.', 'Nenhuma compra ainda.')}</p>`}
+      <p class="ec-paynote">${L(`You can cancel a purchase within ${hist.withdraw_days} days if you have not used its coins.`, `Você pode desistir de uma compra em até ${hist.withdraw_days} dias se ainda não usou as moedas dela.`)}</p>
+      <p class="ec-hint" role="status" aria-live="polite" data-coin-status></p>`;
+  } else el.innerHTML = `<p class="ec-tabnote">${L('Buy Cosmo Coins with Pix or card through Mercado Pago. Coins arrive after the payment is confirmed.', 'Compre Cosmo Coins com Pix ou cartão pelo Mercado Pago. As moedas entram depois que o pagamento é confirmado.')}</p>
     ${blocked ? `<p class="ec-hint">${blocked}</p>` : ''}
     <ul class="ec-cpacks">${packs.packs.map(card).join('')}</ul>
     <p class="ec-paynote">${L(`Boosters can only be bought with Cosmo Coins earned by playing. You can cancel a purchase within ${hist.withdraw_days} days if you have not used its coins.`, `Boosters só podem ser comprados com Cosmo Coins ganhas jogando. Você pode desistir de uma compra em até ${hist.withdraw_days} dias se ainda não usou as moedas dela.`)}
       <a href="/terms/" target="_blank" rel="noopener">${L('Terms of Use', 'Termos de Uso')}</a></p>
-    ${hist.orders.length ? `<h2 class="ec-section">${L('Your purchases', 'Suas compras')}</h2><table class="ec-orders"><tbody>${hist.orders.map(row).join('')}</tbody></table>` : ''}
+    ${table ? `<h2 class="ec-section">${L('Your purchases', 'Suas compras')}</h2>${table}` : ''}
     <p class="ec-hint" role="status" aria-live="polite" data-coin-status></p>`;
   const say = t => { el.querySelector('[data-coin-status]').textContent = t; };
   el.onclick = async ev => {
@@ -436,3 +442,26 @@ if (!customElements.get('ss-coin-shop')) customElements.define('ss-coin-shop', c
   }
   show(L('Still waiting for Mercado Pago. Pix can take a few minutes; the coins arrive as soon as it is confirmed.', 'Ainda aguardando o Mercado Pago. O Pix pode levar alguns minutos; as moedas entram assim que ele confirmar.'), true);
 })();
+
+// ---------- Idade 18+ no perfil (autodeclaração; a loja manda para cá) ----------
+const ADULT = ['SELF_DECLARED_ADULT', 'VERIFIED_ADULT'];
+export function ageCard(u, msg = '') {
+  const id = u.identity || {}, adult = ADULT.includes(id.state), br = (u.country || 'BR') === 'BR';
+  if (adult && u.terms_accepted) return `<section class="kv-card lb-form"><h2>${L('Age 18+', 'Idade 18+')}</h2>
+    <p>${L('Confirmed.', 'Confirmada.')}${id.cpf_mask ? ` CPF ${esc(id.cpf_mask)}` : ''}</p></section>`;
+  const terms = u.terms_accepted ? '' : `<label class="lb-consent"><input type="checkbox" name="terms" required> ${L('I accept the', 'Aceito os')}
+    <a href="/terms/" target="_blank" rel="noopener">${L('Terms of Use', 'Termos de Uso')}</a> ${L('and the', 'e a')} <a href="/privacy/" target="_blank" rel="noopener">${L('Privacy Policy', 'Política de Privacidade')}</a>.</label>`;
+  const fields = adult ? '' : `<p>${L('Saint Seiya TCG is for adults. Confirm once to buy Cosmo Coins. We don\'t keep your birth date; for the CPF we keep only the last 2 digits.',
+      'O Saint Seiya TCG é para adultos. Confirme uma vez para comprar Cosmo Coins. Não guardamos sua data de nascimento; do CPF guardamos só os 2 últimos dígitos.')}</p>
+    <label class="kv-field"><span class="kv-stamp">${L('Birth date', 'Data de nascimento')}</span><input class="kv-input" name="birth_date" type="date" required autocomplete="bday"></label>
+    ${br ? `<label class="kv-field"><span class="kv-stamp">CPF</span><input class="kv-input" name="cpf" inputmode="numeric" required maxlength="14" placeholder="000.000.000-00" autocomplete="off"></label>` : ''}
+    <label class="lb-consent"><input type="checkbox" name="confirm_adult" required> ${L('I am 18 or older.', 'Tenho 18 anos ou mais.')}</label>`;
+  return `<form class="kv-card lb-form" data-form="age"><h2>${L('Age 18+', 'Idade 18+')}</h2>${fields}${terms}
+    <button class="kv-button">${L('Confirm', 'Confirmar')}</button>${msg}</form>`;
+}
+export async function submitAge(f, u, api) {
+  let user = u;
+  if (!ADULT.includes(u.identity?.state)) user = await api('/api/me/identity', 'POST', {country: u.country || 'BR', birth_date: f.birth_date, cpf: f.cpf, confirm_adult: 'confirm_adult' in f});
+  if (!user.terms_accepted) user = await api('/api/me/legal', 'POST', {accept: 'terms' in f, version: user.terms_version});
+  return user;
+}

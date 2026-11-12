@@ -19,7 +19,7 @@ import {countryOptions, countryName} from '../shared/countries.js?v=20261031-i18
 import {startPresence} from '../shared/presence.js?v=20261029-1';
 import {mountSocial} from './social.js?v=20261101-notch1';
 import {telas, imageUrl, sound, applyColors, applyTexts} from './telas.js?v=20261107-deus1';
-import {loadEconomy, ownedLimit, missingCards, coinBadge, storeScreen, collectionScreen, openBooster, buyBooster, buyCosmetic, redeemWildcard} from './economy.js?v=20261111-coins1';
+import {loadEconomy, ownedLimit, missingCards, coinBadge, storeScreen, collectionScreen, openBooster, buyBooster, buyCosmetic, redeemWildcard, ageCard, submitAge} from './economy.js?v=20261112-age1';
 import {lightArt, upgradeArt} from '../shared/light-art.js?v=20261102-art1';
 import {faceStyle, useGodPortraits} from './avatar-face.js?v=20261031-3';
 import {progressTrack} from './home-features.js?v=20261031-face3';
@@ -467,44 +467,66 @@ function profileScreen() {
       <button class="kv-button">Save</button>${msg('complete')}</form></section>`;
   const avatar = u.avatar_card || 'god-athena';
   const avatars = ui.econ?.cosmetics ? ui.econ.cosmetics.flatMap(g => g.items).filter(c => c.avatar.owned).map(c => c.id) : AVATARS; // as da loja que o jogador tem
-  return `<section class="lb-page lb-profile">
-    <header class="lb-profile__head kv-card">
-      <span class="lb-avatar" style="background-image:url('${artOf(avatar) || ''}');${faceStyle(avatar)}"></span>
-      <div><p class="kv-stamp kv-stamp--gold">${esc(countryName(u.country))}</p><h1>${playerName(u.username)}</h1>
-        <p class="lb-code"><span class="kv-stamp">Friend code</span><b>${esc(u.friend_code)}</b><button class="kv-ghost" data-act="copy-code">${ui.copied ? 'Copied' : 'Copy'}</button></p></div>
-    </header>
-    <div class="lb-profile__grid">
-      <form class="kv-card lb-form" data-form="me">
+  const adult = ['SELF_DECLARED_ADULT', 'VERIFIED_ADULT'].includes(u.identity?.state) && u.terms_accepted;
+  const tab = PF_TABS.some(t => t[0] === ui.profileTab) ? ui.profileTab : (adult ? 'account' : 'age');
+  const panes = {
+    account: () => `<form class="kv-card lb-form pf-pane" data-form="me">
         <h2>Account</h2>
-        <div class="lb-avatars" role="radiogroup" aria-label="Avatar">${avatars.map(id => `<button type="button" role="radio" aria-checked="${id === avatar}" class="lb-avatar lb-avatar--pick ${id === avatar ? 'is-on' : ''}" data-act="avatar" data-id="${id}" style="background-image:url('${artOf(id) || ''}');${faceStyle(id)}" aria-label="${esc(cards.get(id)?.name || id)}"></button>`).join('')}</div>
-        <label class="kv-field"><span class="kv-stamp">Full name</span><input class="kv-input" name="name" value="${esc(u.name)}" required maxlength="80" autocomplete="name"></label>
-        <label class="kv-field"><span class="kv-stamp">Email</span><input class="kv-input" value="${esc(u.email)}" disabled></label>
-        <label class="kv-field"><span class="kv-stamp">Country</span><select class="kv-input" name="country">${countryOptions(u.country)}</select></label>
-        <label class="kv-field"><span class="kv-stamp">Phone · optional</span><input class="kv-input" name="phone" type="tel" value="${esc(u.phone || '')}" maxlength="20" autocomplete="tel"></label>
-        <button class="kv-button">Save</button>${msg('me')}
+        <fieldset class="pf-avatars"><legend class="kv-stamp">Avatar</legend>
+          <div class="lb-avatars" role="radiogroup" aria-label="Avatar">${avatars.map(id => `<button type="button" role="radio" aria-checked="${id === avatar}" class="lb-avatar lb-avatar--pick ${id === avatar ? 'is-on' : ''}" data-act="avatar" data-id="${id}" style="background-image:url('${artOf(id) || ''}');${faceStyle(id)}" aria-label="${esc(cards.get(id)?.name || id)}"></button>`).join('')}</div></fieldset>
+        <div class="pf-fields">
+          <label class="kv-field"><span class="kv-stamp">Full name</span><input class="kv-input" name="name" value="${esc(u.name)}" required maxlength="80" autocomplete="name"></label>
+          <label class="kv-field"><span class="kv-stamp">Email</span><input class="kv-input" value="${esc(u.email)}" disabled></label>
+          <label class="kv-field"><span class="kv-stamp">Country</span><select class="kv-input" name="country">${countryOptions(u.country)}</select></label>
+          <label class="kv-field"><span class="kv-stamp">Phone · optional</span><input class="kv-input" name="phone" type="tel" value="${esc(u.phone || '')}" maxlength="20" autocomplete="tel"></label>
+        </div>
+        <div class="pf-actions"><button class="kv-button">Save</button>${msg('me')}</div>
+      </form>`,
+    age: () => ageCard(u, msg('age')),
+    purchases: () => `<section class="kv-card lb-form pf-pane"><h2>${bi('Purchases', 'Compras')}</h2>
+        <div class="pf-balance"><span class="ec-coin" aria-hidden="true"></span><div><b>${(ui.econ?.coins ?? 0).toLocaleString()}</b><small>Cosmo Coins</small></div>
+          <button class="kv-button" data-act="buy-coins">${bi('Buy Cosmo Coins', 'Comprar Cosmo Coins')}</button></div>
+        ${adult ? '' : `<p class="pf-note">${bi('Confirm your age (18+) before buying.', 'Confirme sua idade (18+) antes de comprar.')} <button class="kv-ghost" data-act="profile-tab" data-id="age">${bi('Confirm age', 'Confirmar idade')}</button></p>`}
+        <h3 class="pf-sub">${bi('History', 'Histórico')}</h3><ss-coin-shop history></ss-coin-shop></section>`,
+    titles: () => titlesCard(),
+    security: () => `<form class="kv-card lb-form pf-pane" data-form="password">
+        <h2>Password</h2><p>${bi('Changing it signs out your other devices.', 'Trocar a senha desconecta seus outros aparelhos.')}</p>
+        <label class="kv-field"><span class="kv-stamp">Current password</span><input class="kv-input" name="current" type="password" required autocomplete="current-password"></label>
+        <label class="kv-field"><span class="kv-stamp">New password</span><input class="kv-input" name="new" type="password" required minlength="10" autocomplete="new-password"></label>
+        <div class="pf-actions"><button class="kv-button">Change password</button>${msg('password')}</div>
       </form>
-      <div class="lb-profile__side">
-        ${titlesCard()}
-        <form class="kv-card lb-form" data-form="password">
-          <h2>Password</h2>
-          <label class="kv-field"><span class="kv-stamp">Current password</span><input class="kv-input" name="current" type="password" required autocomplete="current-password"></label>
-          <label class="kv-field"><span class="kv-stamp">New password</span><input class="kv-input" name="new" type="password" required minlength="10" autocomplete="new-password"></label>
-          <button class="kv-ghost">Change password</button>${msg('password')}
-        </form>
-        <form class="kv-card lb-form lb-danger" data-form="delete">
-          <h2>Delete account</h2><p>This removes your account, sessions and decks. It cannot be undone.</p>
-          <label class="kv-field"><span class="kv-stamp">Password</span><input class="kv-input" name="password" type="password" required autocomplete="current-password"></label>
-          <button class="kv-ghost">Delete my account</button>${msg('delete')}
-        </form>
-      </div>
+      <form class="kv-card lb-form lb-danger pf-pane" data-form="delete">
+        <h2>Delete account</h2><p>This removes your account, sessions and decks. It cannot be undone.</p>
+        <label class="kv-field"><span class="kv-stamp">Password</span><input class="kv-input" name="password" type="password" required autocomplete="current-password"></label>
+        <div class="pf-actions"><button class="kv-ghost pf-danger">Delete my account</button>${msg('delete')}</div>
+      </form>`};
+  const badge = {age: adult ? `<span class="pf-badge is-ok">${bi('Done', 'Ok')}</span>` : `<span class="pf-badge is-todo">${bi('Pending', 'Pendente')}</span>`,
+    titles: ui.ach ? `<span class="pf-badge">${ui.ach.achievements.filter(a => a.done).length}</span>` : ''};
+  return `<section class="lb-page lb-profile pf">
+    <header class="pf-hero kv-card">
+      <span class="lb-avatar pf-hero__avatar" style="background-image:url('${artOf(avatar) || ''}');${faceStyle(avatar)}"></span>
+      <div class="pf-hero__id"><p class="kv-stamp kv-stamp--gold">${esc(countryName(u.country))}</p><h1>${playerName(u.username)}</h1>
+        <p class="lb-code"><span class="kv-stamp">Friend code</span><b>${esc(u.friend_code)}</b><button class="kv-ghost" data-act="copy-code">${ui.copied ? 'Copied' : 'Copy'}</button></p></div>
+      <ul class="pf-stats">
+        <li><button data-act="profile-tab" data-id="purchases"><span class="ec-coin" aria-hidden="true"></span><b>${(ui.econ?.coins ?? 0).toLocaleString()}</b><small>Cosmo Coins</small></button></li>
+        <li><button data-act="profile-tab" data-id="age" class="${adult ? 'is-ok' : 'is-todo'}"><b>18+</b><small>${adult ? bi('Confirmed', 'Confirmada') : bi('Confirm age', 'Confirmar idade')}</small></button></li>
+        <li><button data-act="profile-tab" data-id="titles"><b>${ui.ach ? ui.ach.achievements.filter(a => a.done).length : '—'}</b><small>Titles</small></button></li>
+      </ul>
+    </header>
+    <div class="pf-body">
+      <nav class="pf-nav" aria-label="Profile sections">${PF_TABS.map(([id, en, pt]) => `<button class="pf-nav__item ${id === tab ? 'is-on' : ''}" ${id === tab ? 'aria-current="page"' : ''} data-act="profile-tab" data-id="${id}"><span>${bi(en, pt)}</span>${badge[id] || ''}</button>`).join('')}</nav>
+      <div class="pf-panel">${panes[tab]()}</div>
     </div></section>`;
 }
+const PF_TABS = [['account', 'Account', 'Conta'], ['age', 'Age & terms', 'Idade e termos'], ['purchases', 'Purchases', 'Compras'], ['titles', 'Titles', 'Títulos'], ['security', 'Security', 'Segurança']];
+const bi = (en, pt) => `<span class="i18n-en">${en}</span><span class="i18n-pt">${pt}</span>`;
 async function submitProfile(form) {
   const kind = form.dataset.form, f = Object.fromEntries(new FormData(form));
   const say = (text, k) => { ui.profileMsg = {[kind]: {text, kind: k}}; render(); };
   try {
     if (kind === 'complete') { ui.user = await api('/api/me', 'PATCH', {username: f.username, country: f.country, accept_terms: 'accept_terms' in f}); startSocial(); }
     if (kind === 'me') { ui.user = await api('/api/me', 'PATCH', {name: f.name, country: f.country, phone: f.phone}); return say('Saved.', 'ok'); }
+    if (kind === 'age') { ui.user = await submitAge(f, ui.user, api); ui.profileTab = 'age'; return say('Saved.', 'ok'); }
     if (kind === 'password') { await api('/api/me/password', 'POST', {current: f.current, new: f.new}); return say('Password changed. Other devices were signed out.', 'ok'); }
     if (kind === 'delete') {
       if (!confirm('Delete your account forever?')) return;
@@ -922,6 +944,8 @@ const actions = {
   avatar: async t => { try { ui.user = await api('/api/me', 'PATCH', {avatar_card: t.dataset.id}); } catch (e) { ui.profileMsg = {me: {text: e.message, kind: 'err'}}; } render(); },
   friends: () => social?.toggle(),
   'my-profile': () => openProfile(ui.user.username),
+  'profile-tab': t => { ui.profileTab = t.dataset.id; ui.profileMsg = null; },
+  'buy-coins': () => { ui.screen = 'store'; ui.storeTab = 'coins'; ui.play = false; },
   rank: t => openRankPanel(ui.rank, t),
   'copy-code': async () => { await navigator.clipboard?.writeText(ui.user.friend_code).catch(() => {}); ui.copied = true; setTimeout(() => { ui.copied = false; render(); }, 1500); },
   signout: async () => {
