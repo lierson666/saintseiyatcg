@@ -41,7 +41,7 @@ MSG_MAX, MSG_PER_MIN, MSG_KEEP_DAYS, MSG_PAGE = 500, 20, 90, 50
 # Em modo obrigatório, falha fechado para TODAS as contas sem prova verificada no servidor.
 # Gate 18+ e chaves do servidor: flags.py (SANCTUARY_<CHAVE>=1). Maioridade em identity.py; pagamentos em payments.py.
 # Termos e Privacidade v2 (11/11/2026): entram compra de Cosmo Coins, reembolso e chargeback. Aceite gravado em legal_acceptances.
-TERMS_VERSION = '2026-11-11-v2'
+TERMS_VERSION = '2026-11-11-v3'  # v3: operador e vendedor XEPA ASSESSORIA GASTRONOMICA LTDA (autor, 11/11/2026)
 PUBLIC_URL = os.environ.get('SANCTUARY_PUBLIC_URL', '').rstrip('/')
 LOGIN_VERSION = '3'
 # Painel do sistema (Star Hill → /admin/, autor 29/10/2026): admins por email; pedidos de acesso vêm da home.

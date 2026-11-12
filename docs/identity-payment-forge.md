@@ -174,7 +174,7 @@ Ao vivo (servidor local `identity-local` com o gate ligado): cadastro, regulariz
 
 - Publicar no próximo deploy, com as chaves desligadas. Ligar o gate 18+ logo depois, com aviso 1 dia antes (Claude redige PT + EN; o autor aprova).
 - Claude gera `SANCTUARY_PII_KEY` direto no servidor. O autor cria a aplicação no Mercado Pago e grava `MP_ACCESS_TOKEN` e `MP_WEBHOOK_SECRET` no servidor.
-- Vendedor: **pessoa física**. Os Termos mostram nome, CPF, caixa postal dos Correios e e-mail de atendimento. **A venda só liga com esses dados preenchidos** (Termos v3, novo aceite).
+- Vendedor: o autor decidiu primeiro por pessoa física e depois trocou (11/11/2026) para a **XEPA ASSESSORIA GASTRONOMICA LTDA**, CNPJ 47.409.135/0001-79, Rua Abagiba 603, e-mail limattenhauer@gmail.com. Esses dados estão nos Termos e na Privacidade **v3** (`TERMS_VERSION = '2026-11-11-v3'`, novo aceite). Faltam cidade/UF e CEP no endereço, e **a venda só liga com o endereço completo**. Pendência para o contador: o CNAE de assessoria gastronômica pode não cobrir a venda de moeda virtual de jogo.
 - Contador e advogado: depois, com a venda já rodando (risco assumido pelo autor). Abrir para todos direto, sem piloto.
 
 ## 9. Pendências jurídicas e comerciais (advogado e contador)
