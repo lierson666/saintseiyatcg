@@ -131,12 +131,13 @@ DUPLICATE_COINS = dict(ECO['duplicate_coins'])
 # Criar carta direto com coins (autor, 11/11/2026): 250 coins = R$1; o Curinga da raridade, se houver, vem antes.
 CRAFT_COINS = dict(ECO['craft_coins'])
 WIN_COINS = tuple(ECO['win_coins'])  # vitórias online do dia (docs/economia.md); só o duelo é confirmado pelo servidor, a IA vem do navegador
-# Booster de 15 cartas (autor, 07/11/2026): 9 Common, 5 Uncommon e 1 Legendary, que vira Divine em 1 de 8.
-# Em 1 de 10 pacotes, uma Uncommon dá lugar a uma segunda Legendary.
-PACK = (('Common', 9), ('Uncommon', 5))
+# Booster de 8 cartas como o de loja do MTG Arena (autor, 12/11/2026): 5 Common, 2 Uncommon e 1 do topo,
+# Legendary que vira Divine em 1 de 8. Sai a segunda Legendary de 07/11/2026.
+PACK = (('Common', 5), ('Uncommon', 2))
 DIVINE_ODDS = ECO['divine_odds']
-DOUBLE_LEGENDARY_ODDS = ECO['double_legendary_odds']
-# Wildcard estilo MTG Arena: às vezes ocupa a vaga de uma carta da mesma raridade (o pacote segue com 15)
+# Faltou carta da raridade no pool: a vaga desce uma raridade (autor, 12/11/2026); o pacote sai sempre com 8.
+LOWER = {'Divine': 'Legendary', 'Legendary': 'Uncommon', 'Uncommon': 'Common'}
+# Wildcard estilo MTG Arena: às vezes ocupa a vaga de uma carta da mesma raridade (o pacote segue com 8)
 # e depois vira qualquer carta daquela raridade na Coleção. Chance por pacote, 1 em N.
 WILDCARD_ODDS = dict(ECO['wildcard_odds'])
 WILDCARD = {r: f'wildcard-{r.lower()}' for r in WILDCARD_ODDS}
@@ -423,13 +424,9 @@ def gain_card(uid, cid):
 
 
 def pack_slots():
-    """Raridade de cada uma das 15 vagas e quais viram wildcard. Sem banco: só o sorteio."""
-    counts = dict(PACK)
-    tops = ['Divine' if roll.randrange(DIVINE_ODDS) == 0 else 'Legendary']
-    if roll.randrange(DOUBLE_LEGENDARY_ODDS) == 0:
-        counts['Uncommon'] -= 1
-        tops.append('Legendary')
-    slots = [[r, False] for r, n in counts.items() for _ in range(n)] + [[r, False] for r in tops]
+    """Raridade de cada uma das 8 vagas e quais viram wildcard. Sem banco: só o sorteio."""
+    top = 'Divine' if roll.randrange(DIVINE_ODDS) == 0 else 'Legendary'
+    slots = [[r, False] for r, n in PACK for _ in range(n)] + [[top, False]]
     for rarity, odds in WILDCARD_ODDS.items():
         if roll.randrange(odds):
             continue
@@ -440,9 +437,25 @@ def pack_slots():
     return slots
 
 
+def pack_picks(slots, pool):
+    """Cartas de cada vaga não-wildcard; sem carta bastante na raridade, a vaga desce (Common que falta repete)."""
+    need = {r: sum(1 for s in slots if s[0] == r and not s[1]) for r in WILDCARD}
+    for r in ('Divine', 'Legendary', 'Uncommon'):
+        extra = need[r] - len(pool.get(r, ()))
+        if extra > 0:
+            need[r] -= extra
+            need[LOWER[r]] += extra
+            for s in [s for s in slots if s[0] == r and not s[1]][:extra]:
+                s[0] = LOWER[r]
+    common = pool.get('Common', ())
+    picks = {r: roll.sample(list(pool.get(r, ())), n) for r, n in need.items() if r != 'Common'}
+    picks['Common'] = roll.sample(list(common), need['Common']) if need['Common'] <= len(common) else roll.choices(list(common), k=need['Common'])
+    return {r: iter(p) for r, p in picks.items()}
+
+
 def open_pack(uid):
     slots = pack_slots()
-    picks = {r: iter(roll.sample(CATALOG['booster'][r], sum(1 for s in slots if s[0] == r and not s[1]))) for r in WILDCARD}
+    picks = pack_picks(slots, CATALOG['booster'])
     out = []
     for rarity, wild in slots:
         if wild:

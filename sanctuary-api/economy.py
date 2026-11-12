@@ -23,7 +23,6 @@ DEFAULTS = {
     'chronicle_boosters': 1,
     'chronicle_boss_boosters': 3,
     'divine_odds': 8,
-    'double_legendary_odds': 10,
     'wildcard_odds': {'Common': 3, 'Uncommon': 5, 'Legendary': 24, 'Divine': 60},
     # Pacotes de Cosmo Coins com dinheiro real (Identity & Payment Forge V1.0, autor 11/11/2026). Preço em centavos de real.
     'coin_packs': [{'id': 'bronze', 'name': 'Bronze', 'price_cents': 499, 'coins': 1250},
@@ -47,7 +46,7 @@ GROUPS = [
     ('Vitórias online do dia', [(f'win_coins.{i}', f'{i + 1}ª vitória', 0, 10000) for i in range(5)]),
     ('Cosmo Chronicles (1ª vitória da missão)', [('chronicle_coins', 'Coins por missão', 0, 10000), ('chronicle_boosters', 'Boosters por missão', 0, 20),
                                                  ('chronicle_boss_boosters', 'Boosters por missão de chefe', 0, 20)]),
-    ('Booster · chances (1 em N pacotes)', [('divine_odds', 'Legendary vira Divine', 1, 1000), ('double_legendary_odds', 'Segunda Legendary', 1, 1000)]
+    ('Booster · chances (1 em N pacotes)', [('divine_odds', 'Legendary vira Divine', 1, 1000)]
      + [(f'wildcard_odds.{r}', f'Curinga {r}', 1, 1000) for r in RARITIES]),
     ('Pacotes de Cosmo Coins (dinheiro real; preço em centavos)', [(f'coin_packs.{i}.{k}', f'{n} · {"preço (centavos)" if k == "price_cents" else "coins"}',
                                                                     100 if k == 'price_cents' else 1, 100000 if k == 'price_cents' else 1000000)

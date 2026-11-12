@@ -4,6 +4,13 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-11-12 — Economia (`docs/economia.md`) — Composição do booster
+
+- **Antes:** 15 cartas: 9 Common, 5 Uncommon e 1 Legendary (Divine em 1 de 8); em 1 de 10 pacotes, uma segunda Legendary no lugar de uma Uncommon.
+- **Depois:** 8 cartas, como o booster de loja do MTG Arena: 5 Common, 2 Uncommon e 1 Legendary, que vira Divine em 1 de 8. Sai a segunda Legendary. Curingas seguem ocupando a vaga de uma carta da mesma raridade, com o pacote em 8. Faltou carta de uma raridade no pool: a vaga desce uma raridade.
+- **Motivo:** autor, 12/11/2026: seguir a distribuição do booster de loja do MTG Arena ("Rare" = Legendary).
+- **Pendências:** nenhuma de regra do guia. Código em `sanctuary-api/server.py` (`PACK`, `pack_slots`, `pack_picks`); o campo "Segunda Legendary" saiu do Economy Forge (`economy.py`); texto da loja em `playtest/economy.js` e `shared/i18n-pt.js`. Vale no ar só depois do deploy.
+
 ## 2026-11-10 — §55 — Partida guiada do jogador novo
 
 - **Antes:** toda partida começava com cara ou coroa, mulligan e relógio.

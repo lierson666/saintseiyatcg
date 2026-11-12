@@ -138,15 +138,15 @@ export function storeScreen(e, art = () => null, me = null, view = {}) {
         <i class="ec-coin" aria-hidden="true"></i>${b.off ? `<s>${fmt(full)}</s>` : ''}${fmt(b.price)}</button></li>`; };
   // Abrir 1 ou 10 de uma vez; com menos de 10, "Open all (N)".
   const opens = e.boosters > 1 ? `<button class="ec-cta ec-cta--open" data-act="open-booster" data-count="${Math.min(10, e.boosters)}">${e.boosters >= 10 ? 'Open 10' : `Open all (${e.boosters})`}</button>` : '';
-  const odds = [['9', 'Common'], ['5', 'Uncommon'], ['1', 'Legendary or Divine']];
+  const odds = [['5', 'Common'], ['2', 'Uncommon'], ['1', 'Legendary or Divine']];
   const tab = TABS.some(([t]) => t === view.tab) && tabOn(e, view.tab) ? view.tab : 'boosters';
   const boosters = `<article class="ec-feature">
       <div class="ec-feature__pack">${pack()}</div>
       <div class="ec-feature__info">
         <p class="ec-eyebrow">Booster · All Gods</p>
         <h2>Olympus</h2>
-        <ul class="ec-odds" aria-label="Each booster has 15 cards">${odds.map(([n, r]) => `<li><b>${n}</b>${r}</li>`).join('')}</ul>
-        <p class="ec-hint ec-odds__extra">Always 15 cards. 1 in 10 boosters brings a second Legendary, and some bring a Wildcard.</p>
+        <ul class="ec-odds" aria-label="Each booster has 8 cards">${odds.map(([n, r]) => `<li><b>${n}</b>${r}</li>`).join('')}</ul>
+        <p class="ec-hint ec-odds__extra">Always 8 cards. Some boosters bring a Wildcard in place of a card.</p>
         <p class="ec-note">A Divine card replaces the Legendary in about 1 of 8 boosters. Copies beyond 3 turn into Cosmo Coins.</p>
         ${e.boosters ? `<div class="ec-actions"><button class="ec-cta" data-act="open-booster" data-count="1">Open 1</button>${opens}</div>` : ''}
         <ul class="ec-bundles" aria-label="Buy boosters">${bundles.map(bundle).join('')}</ul>

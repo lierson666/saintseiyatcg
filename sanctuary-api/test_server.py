@@ -310,7 +310,7 @@ class Api(unittest.TestCase):
         self.assertEqual(self.call('POST', '/api/store/buy', {'item': 'booster'}, cookie=c)[0], 400)  # sem coins
         st, o, _, _ = self.call('POST', '/api/boosters/open', cookie=c)
         rar = [x['rarity'] for x in o['cards']]
-        self.assertEqual((st, len(rar), o['boosters']), (200, 15, 2))  # 15 cartas sempre, wildcard incluída
+        self.assertEqual((st, len(rar), o['boosters']), (200, 8, 2))  # 8 cartas sempre, wildcard incluída
         self.assertEqual(sum(o['wildcards'].values()), sum(1 for x in o['cards'] if x.get('wildcard')))
         self.assertTrue(all(n <= 3 for n in o['collection'].values()))
         self.assertEqual(o['coins'], sum(x['coins'] for x in o['cards']))  # repetidas acima de 3 viram coins
@@ -332,8 +332,8 @@ class Api(unittest.TestCase):
         self.assertEqual((before - b['coins'], b['boosters']), (20000, 26))
         self.assertEqual(self.call('POST', '/api/boosters/open', {'count': 11}, cookie=c)[0], 400)
         o = self.call('POST', '/api/boosters/open', {'count': 10}, cookie=c)[1]
-        self.assertEqual((len(o['packs']), len(o['cards']), o['boosters']), (10, 150, 16))
-        self.assertTrue(all(len(p) == 15 for p in o['packs']))
+        self.assertEqual((len(o['packs']), len(o['cards']), o['boosters']), (10, 80, 16))  # 10 pacotes de 8
+        self.assertTrue(all(len(p) == 8 for p in o['packs']))
         self.call('POST', '/api/admin/users/Seiya_Econ/economy', {'boosters': -14}, cookie=adm)
         o = self.call('POST', '/api/boosters/open', {'count': 10}, cookie=c)[1]  # "Open all (2)"
         self.assertEqual((len(o['packs']), o['boosters']), (2, 0))
@@ -420,6 +420,19 @@ class Api(unittest.TestCase):
         with server.lock:
             tops = [server.open_pack(uid)[-1]['rarity'] for _ in range(800)]
         self.assertTrue(60 < tops.count('Divine') < 150, tops.count('Divine'))
+
+    def test_booster_5_2_1(self):
+        # Booster de loja do MTG Arena (autor, 12/11/2026): sempre 5 Common, 2 Uncommon e 1 Legendary ou Divine, Curinga incluído
+        for _ in range(5000):
+            slots = server.pack_slots()
+            rar = [r for r, _ in slots]
+            self.assertEqual((len(rar), rar[:5], rar[5:7]), (8, ['Common'] * 5, ['Uncommon'] * 2))
+            self.assertIn(rar[7], ('Legendary', 'Divine'))
+        # pool sem Divine nem Legendary bastante: a vaga desce uma raridade e o pacote segue com 8
+        slots = [[r, False] for r in ['Common'] * 5 + ['Uncommon'] * 2 + ['Divine']]
+        picks = server.pack_picks(slots, {'Common': ['c1'], 'Uncommon': ['u1', 'u2', 'u3'], 'Legendary': [], 'Divine': []})
+        self.assertEqual([r for r, _ in slots], ['Common'] * 5 + ['Uncommon'] * 3)
+        self.assertEqual(sorted(next(picks[r]) for r, _ in slots), ['c1'] * 5 + ['u1', 'u2', 'u3'])
 
     def test_decks_limites(self):
         server.db.execute("insert or ignore into invites values ('decks@example.com', 1)")
