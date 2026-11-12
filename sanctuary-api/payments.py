@@ -25,12 +25,14 @@ import os
 import secrets
 import sys
 import time
+import base64
 import urllib.error
 import urllib.request
 
 import flags
 
 MP_API = 'https://api.mercadopago.com'
+PAYPAL_API = {'production': 'https://api-m.paypal.com', 'sandbox': 'https://api-m.sandbox.paypal.com'}
 ORDER_STATES = ('CREATED', 'PENDING', 'APPROVED', 'REJECTED', 'CANCELLED', 'REFUNDED', 'CHARGED_BACK', 'FAILED')
 ORDERS_PER_HOUR = 10
 
@@ -95,7 +97,7 @@ def booster_spendable(db, uid, balance):
 
 # ---------- Mercado Pago ----------
 def _http(method, url, token, body=None, headers=None):
-    data = None if body is None else json.dumps(body).encode()
+    data = None if body is None else body.encode() if isinstance(body, str) else json.dumps(body).encode()  # str: formulário (token do PayPal)
     req = urllib.request.Request(url, data=data, method=method)
     req.add_header('Authorization', f'Bearer {token}')
     req.add_header('Content-Type', 'application/json')
@@ -168,6 +170,111 @@ class MercadoPago:
         return hmac.compare_digest(hmac.new(secret.encode(), manifest.encode(), hashlib.sha256).hexdigest(), v1)
 
 
+# ---------- PayPal (autor, 12/11/2026: estrangeiro paga só por PayPal; brasileiro escolhe) ----------
+def usd_cents(pack, brl_per_usd_cents):
+    """Preço do pacote em centavos de dólar: o valor em real convertido pela cotação da economia (centavos de real por US$1)."""
+    return max(1, round(pack['price_cents'] * 100 / brl_per_usd_cents))
+
+
+class PayPal:
+    """Orders v2: cria o pedido, o jogador aprova no PayPal, o servidor captura. O pedido é lido no PayPal e vira o mesmo
+    formato de pagamento do Mercado Pago (status, valor, moeda, referência), para crédito, reembolso e conciliação iguais."""
+    name = 'paypal'
+    STATUS = {'COMPLETED': 'approved', 'REFUNDED': 'refunded', 'PARTIALLY_REFUNDED': 'refunded', 'REVERSED': 'charged_back',
+              'DECLINED': 'rejected', 'FAILED': 'rejected'}
+
+    def __init__(self, http=None):
+        self.http = http or _http
+        self._token = (None, 0)
+
+    def api(self):
+        return PAYPAL_API[env()]
+
+    def token(self):
+        cid, secret = os.environ.get('PAYPAL_CLIENT_ID', ''), os.environ.get('PAYPAL_CLIENT_SECRET', '')
+        if not cid or not secret:
+            raise PaymentError(503, 'PayPal is not configured.')
+        tok, until = self._token
+        if tok and until > time.time() + 60:
+            return tok
+        basic = base64.b64encode(f'{cid}:{secret}'.encode()).decode()
+        status, data = self.http('POST', f'{self.api()}/v1/oauth2/token', None, 'grant_type=client_credentials',
+                                 {'Authorization': f'Basic {basic}', 'Content-Type': 'application/x-www-form-urlencoded'})
+        if status != 200 or not data.get('access_token'):
+            raise PaymentError(502, f'PayPal sign-in failed ({status}).')
+        self._token = (data['access_token'], time.time() + int(data.get('expires_in', 300)))
+        return data['access_token']
+
+    def create_checkout(self, order, pack, public_url):
+        back = f'{public_url}/playtest/?purchase={order["id"]}'
+        value = f'{order["price_cents"] / 100:.2f}'
+        body = {'intent': 'CAPTURE', 'purchase_units': [{
+                    'reference_id': order['id'], 'custom_id': order['id'], 'description': f'{pack["coins"]} Cosmo Coins ({pack["name"]})',
+                    'amount': {'currency_code': order['currency'], 'value': value},
+                    'items': [{'name': f'{pack["coins"]} Cosmo Coins ({pack["name"]})', 'quantity': '1', 'category': 'DIGITAL_GOODS',
+                               'unit_amount': {'currency_code': order['currency'], 'value': value}}]}],
+                'payment_source': {'paypal': {'experience_context': {
+                    'brand_name': 'Saint Seiya TCG', 'shipping_preference': 'NO_SHIPPING', 'user_action': 'PAY_NOW',
+                    'return_url': back, 'cancel_url': back}}}}
+        status, data = self.http('POST', f'{self.api()}/v2/checkout/orders', self.token(), body, {'PayPal-Request-Id': order['id']})
+        link = next((l['href'] for l in data.get('links', []) if l.get('rel') in ('payer-action', 'approve')), None)
+        if status not in (200, 201) or not link:
+            raise PaymentError(502, 'Could not start the payment. Try again later.')
+        return data['id'], link
+
+    def get_payment(self, paypal_order_id):
+        status, data = self.http('GET', f'{self.api()}/v2/checkout/orders/{paypal_order_id}', self.token())
+        if status != 200:
+            raise PaymentError(502, f'Payment lookup failed ({status}).')
+        unit = (data.get('purchase_units') or [{}])[0]
+        cap = ((unit.get('payments') or {}).get('captures') or [None])[0]
+        amount = (cap or {}).get('amount') or unit.get('amount') or {}
+        if cap:
+            st = self.STATUS.get(cap.get('status'), 'pending')
+        else:
+            st = 'cancelled' if data.get('status') == 'VOIDED' else 'pending'
+        return {'id': data.get('id'), 'external_reference': unit.get('custom_id') or unit.get('reference_id'), 'status': st,
+                'transaction_amount': amount.get('value'), 'currency_id': amount.get('currency_code'), 'live_mode': None,
+                'capture_id': (cap or {}).get('id')}
+
+    def capture(self, paypal_order_id, request_id):
+        """Captura depois que o jogador aprovou. 422 = ainda não aprovado ou já capturado: não é erro."""
+        status, data = self.http('POST', f'{self.api()}/v2/checkout/orders/{paypal_order_id}/capture', self.token(), {},
+                                 {'PayPal-Request-Id': request_id})
+        if status not in (200, 201, 422):
+            raise PaymentError(502, f'Capture failed ({status}).')
+        return status != 422
+
+    def refund(self, paypal_order_id, idempotency_key):
+        cap = self.get_payment(paypal_order_id).get('capture_id')
+        if not cap:
+            raise PaymentError(400, 'Nothing to refund.')
+        status, data = self.http('POST', f'{self.api()}/v2/payments/captures/{cap}/refund', self.token(), {}, {'PayPal-Request-Id': idempotency_key})
+        if status not in (200, 201):
+            raise PaymentError(502, f'Refund failed ({status}).')
+        return data
+
+    def verify_webhook(self, headers, event):
+        """Confere a notificação no próprio PayPal (verify-webhook-signature) com o id do webhook cadastrado."""
+        hook = os.environ.get('PAYPAL_WEBHOOK_ID', '')
+        need = ('paypal-auth-algo', 'paypal-cert-url', 'paypal-transmission-id', 'paypal-transmission-sig', 'paypal-transmission-time')
+        if not hook or not all(headers.get(h) for h in need):
+            return False
+        body = {'auth_algo': headers['paypal-auth-algo'], 'cert_url': headers['paypal-cert-url'],
+                'transmission_id': headers['paypal-transmission-id'], 'transmission_sig': headers['paypal-transmission-sig'],
+                'transmission_time': headers['paypal-transmission-time'], 'webhook_id': hook, 'webhook_event': event}
+        status, data = self.http('POST', f'{self.api()}/v1/notifications/verify-webhook-signature', self.token(), body)
+        return status == 200 and data.get('verification_status') == 'SUCCESS'
+
+
+def settle_paypal(db, order, add_coins, coins_of, source='return'):
+    """Pedido PayPal pendente: tenta capturar (o jogador voltou do PayPal) e aplica o estado lido no PayPal."""
+    pp = ADAPTERS['paypal']
+    if order['status'] == 'PENDING':
+        pp.capture(order['provider_ref'], f'cap-{order["id"]}')
+    return apply_payment(db, pp.get_payment(order['provider_ref']), add_coins, coins_of, source=source)
+
+
 class GooglePlay:
     """Reservado. O jogo hoje roda só no navegador (autor, 11/11/2026). Antes de ligar: produtos no Play Console, Digital Goods
     API no TWA e conferência do purchaseToken no servidor pela Google Play Developer API. Sem isso, recusa tudo."""
@@ -177,8 +284,8 @@ class GooglePlay:
         raise PaymentError(503, 'Google Play Billing is not available yet.')
 
 
-ADAPTERS = {'mercadopago': MercadoPago(), 'googleplay': GooglePlay()}
-FLAG_OF = {'mercadopago': 'MERCADO_PAGO_ENABLED', 'googleplay': 'GOOGLE_PLAY_BILLING_ENABLED'}
+ADAPTERS = {'mercadopago': MercadoPago(), 'paypal': PayPal(), 'googleplay': GooglePlay()}
+FLAG_OF = {'mercadopago': 'MERCADO_PAGO_ENABLED', 'paypal': 'PAYPAL_ENABLED', 'googleplay': 'GOOGLE_PLAY_BILLING_ENABLED'}
 
 
 # ---------- pedidos ----------
@@ -194,7 +301,7 @@ def order_view(row):
     return {k: row[k] for k in ('id', 'pack_id', 'coins', 'price_cents', 'currency', 'provider', 'status', 'created_at', 'updated_at')}
 
 
-def create_order(db, uid, pack_id, packs, provider, public_url):
+def create_order(db, uid, pack_id, packs, provider, public_url, brl_per_usd_cents=None):
     """Cria o pedido e a tela de pagamento. Quem chama já conferiu login, maioridade, termos e chaves."""
     if provider not in ADAPTERS or not flags.on(FLAG_OF[provider]):
         raise PaymentError(503, 'This payment method is not available.')
@@ -207,8 +314,9 @@ def create_order(db, uid, pack_id, packs, provider, public_url):
     if db.execute('select count(*) from payment_orders where user_id = ? and created_at > ?', (uid, since)).fetchone()[0] >= ORDERS_PER_HOUR:
         raise PaymentError(429, 'Too many purchase attempts. Try again later.')
     now, oid = int(time.time()), 'ord_' + secrets.token_hex(12)
+    price, currency = (usd_cents(pack, brl_per_usd_cents), 'USD') if provider == 'paypal' else (pack['price_cents'], 'BRL')
     db.execute('insert into payment_orders (id, user_id, pack_id, coins, price_cents, currency, provider, env, status, created_at, updated_at) '
-               'values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', (oid, uid, pack['id'], pack['coins'], pack['price_cents'], 'BRL', provider, env(), 'CREATED', now, now))
+               'values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', (oid, uid, pack['id'], pack['coins'], price, currency, provider, env(), 'CREATED', now, now))
     db.execute('insert into payment_events (order_id, from_status, to_status, source, at) values (?, null, ?, ?, ?)', (oid, 'CREATED', 'server', now))
     order = db.execute('select * from payment_orders where id = ?', (oid,)).fetchone()
     try:
@@ -216,7 +324,8 @@ def create_order(db, uid, pack_id, packs, provider, public_url):
     except PaymentError as e:
         _set_status(db, oid, 'FAILED', 'server', {'error': e.message})
         raise
-    _set_status(db, oid, 'PENDING', 'server', {'preference': ref}, checkout_url=url)
+    extra = {'provider_ref': ref} if provider == 'paypal' else {}  # PayPal: o id do pedido de lá é a referência desde já
+    _set_status(db, oid, 'PENDING', 'server', {'preference': ref}, checkout_url=url, **extra)
     return {'order': order_view(db.execute('select * from payment_orders where id = ?', (oid,)).fetchone()), 'checkout_url': url}
 
 
@@ -269,10 +378,31 @@ def apply_payment(db, payment, add_coins, coins_of, source='webhook'):
     return db.execute('select status from payment_orders where id = ?', (order['id'],)).fetchone()['status']
 
 
+def paypal_webhook(db, headers, body, add_coins, coins_of):
+    """Webhook do PayPal: conferido no próprio PayPal; o estado sempre vem de uma nova leitura do pedido."""
+    pp = ADAPTERS['paypal']
+    if not pp.verify_webhook(headers, body):
+        raise PaymentError(401, 'Bad signature.')
+    request_id = headers['paypal-transmission-id']
+    if db.execute("select 1 from webhook_receipts where provider = 'paypal' and request_id = ?", (request_id,)).fetchone():
+        return 'duplicate'
+    kind, res = str(body.get('event_type') or ''), body.get('resource') or {}
+    pp_order = res.get('id') if kind.startswith('CHECKOUT.ORDER') else ((res.get('supplementary_data') or {}).get('related_ids') or {}).get('order_id')
+    result = 'ignored'
+    order = db.execute("select * from payment_orders where provider = 'paypal' and provider_ref = ?", (str(pp_order),)).fetchone() if pp_order else None
+    if order:
+        result = settle_paypal(db, order, add_coins, coins_of, source='webhook')
+    db.execute('insert or ignore into webhook_receipts (provider, request_id, topic, data_id, received_at) values (?, ?, ?, ?, ?)',
+               ('paypal', request_id, kind, str(pp_order), int(time.time())))
+    return result
+
+
 def webhook(db, provider, headers, query, body, add_coins, coins_of):
     """Webhook do Mercado Pago: assinatura, anti-replay por x-request-id e consulta do pagamento no provedor."""
-    if provider != 'mercadopago' or not (flags.on('PAYMENTS_ENABLED') and flags.on('MERCADO_PAGO_ENABLED')):
+    if provider not in ('mercadopago', 'paypal') or not (flags.on('PAYMENTS_ENABLED') and flags.on(FLAG_OF[provider])):
         raise PaymentError(404, 'Not found.')
+    if provider == 'paypal':
+        return paypal_webhook(db, headers, body, add_coins, coins_of)
     mp = ADAPTERS['mercadopago']
     data_id = query.get('data.id') or (body.get('data') or {}).get('id')
     if not mp.verify_signature(headers, data_id, os.environ.get('MP_WEBHOOK_SECRET', '')):
@@ -355,12 +485,15 @@ def reconcile(db, admin, add_coins, coins_of, days=30):
     """Relê no provedor os pedidos dos últimos dias e aplica o estado real. Devolve o que mudou."""
     changed = []
     since = int(time.time()) - days * 86400
-    for order in db.execute("select * from payment_orders where provider = 'mercadopago' and created_at > ? and status in ('PENDING', 'APPROVED')", (since,)).fetchall():
+    for order in db.execute("select * from payment_orders where provider in ('mercadopago', 'paypal') and created_at > ? and status in ('PENDING', 'APPROVED')", (since,)).fetchall():
         if not order['provider_ref']:
             continue  # sem pagamento conhecido; o webhook traz quando houver
         before = order['status']
         try:
-            after = apply_payment(db, ADAPTERS['mercadopago'].get_payment(order['provider_ref']), add_coins, coins_of, source='reconcile')
+            if order['provider'] == 'paypal':
+                after = settle_paypal(db, order, add_coins, coins_of, source='reconcile')
+            else:
+                after = apply_payment(db, ADAPTERS['mercadopago'].get_payment(order['provider_ref']), add_coins, coins_of, source='reconcile')
         except PaymentError as e:  # um pedido com erro não para a conciliação dos outros
             changed.append({'order': order['id'], 'error': e.message})
             continue

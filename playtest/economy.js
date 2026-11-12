@@ -359,6 +359,8 @@ export const buyCosmetic = (item, id) => call('/api/store/buy', 'POST', {item, i
 // ?purchase=<pedido>. Histórico com arrependimento em 7 dias se as coins do pacote não foram usadas. Textos EN + PT-BR.
 const L = (en, pt) => `<span class="i18n-en">${en}</span><span class="i18n-pt">${pt}</span>`;
 const brl = c => (c / 100).toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
+const money = (c, cur) => cur === 'USD' ? (c / 100).toLocaleString('en-US', {style: 'currency', currency: 'USD'}) : brl(c);
+const PAY = {mercadopago: ['Mercado Pago', 'Pix or card · R$', 'Pix ou cartão · R$'], paypal: ['PayPal', 'PayPal or card · US$', 'PayPal ou cartão · US$']};
 const dateOf = t => new Date(t * 1000).toLocaleDateString();
 const STATUS = {CREATED: ['Started', 'Iniciada'], PENDING: ['Waiting for payment', 'Aguardando pagamento'], APPROVED: ['Paid', 'Paga'],
   REJECTED: ['Declined', 'Recusada'], CANCELLED: ['Cancelled', 'Cancelada'], REFUNDED: ['Refunded', 'Reembolsada'],
@@ -370,6 +372,9 @@ const COIN_CSS = `ss-coin-shop{display:block}
 .ec-cpack small{color:#cfd8e6}.ec-cpack .ec-bonus{font:600 12px var(--kv-sans,system-ui);color:#7fe0a2}
 .ec-orders{width:100%;border-collapse:collapse;font:400 14px var(--kv-sans,system-ui);color:#cfd8e6}.ec-orders td,.ec-orders th{padding:8px 6px;border-bottom:1px solid #ffffff14;text-align:left}
 .ec-paynote{color:#cfd8e6;font-size:13px;max-width:70ch}
+.ec-paywith{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:6px 0 4px}.ec-paywith>span{font:500 12px var(--kv-sans,system-ui);letter-spacing:.16em;text-transform:uppercase;color:#cfd8e6}
+.ec-payopt{display:grid;gap:2px;min-height:48px;padding:8px 18px;border:1px solid #ffffff2e;border-radius:12px;background:#ffffff08;color:#f6ecd0;font:600 15px var(--kv-sans,system-ui);cursor:pointer;text-align:left}
+.ec-payopt small{font-weight:400;font-size:12px;color:#cfd8e6}.ec-payopt[aria-pressed="true"]{border-color:var(--kv-gold,#e6c36a);background:#e6c36a1f;box-shadow:inset 0 0 0 1px #e6c36a66}
 .ec-purchase{position:fixed;inset:auto max(16px,env(safe-area-inset-right)) max(16px,env(safe-area-inset-bottom)) auto;z-index:50;max-width:360px;padding:16px 18px;border:1px solid #e9c45c88;border-radius:14px;background:#05060cf2;color:#f6ecd0;box-shadow:0 10px 40px #000a}
 .ec-purchase p{margin:0 0 10px}`;
 
@@ -386,10 +391,15 @@ async function coinShop(el) {
     : !packs.adult ? L('Purchases are for adults 18+. Confirm your age in your profile first.', 'Compras só para maiores de 18 anos. Confirme sua idade no perfil primeiro.') + toProfile
     : !packs.terms_accepted ? L('Accept the current Terms of Use to buy.', 'Aceite os Termos de Uso atuais para comprar.') + toProfile
     : packs.held ? L('Purchases are paused on this account. Contact support.', 'Compras pausadas nesta conta. Fale com o suporte.') : '';
+  const provs = packs.providers || [];
+  const prov = provs.includes(el.dataset.provider) ? el.dataset.provider : provs[0]; // Brasil: Mercado Pago primeiro; fora: só PayPal
+  const price = p => prov === 'paypal' ? money(p.usd_cents, 'USD') : brl(p.price_cents);
   const card = p => `<li class="ec-cpack"><h3>${esc(p.name)}</h3><strong><i class="ec-coin" aria-hidden="true"></i>${fmt(p.coins)}</strong>
       <small>Cosmo Coins</small>${bonus(p) > 0 ? `<span class="ec-bonus">+${bonus(p)}% ${L('bonus', 'bônus')}</span>` : ''}
-      <button class="ec-cta" data-coin-buy="${esc(p.id)}" ${blocked ? 'disabled' : ''}>${brl(p.price_cents)}</button></li>`;
-  const row = o => `<tr><td>${dateOf(o.created_at)}</td><td>${esc(o.pack_id)} · ${fmt(o.coins)}</td><td>${brl(o.price_cents)}</td>
+      <button class="ec-cta" data-coin-buy="${esc(p.id)}" ${blocked ? 'disabled' : ''}>${price(p)}</button></li>`;
+  const payWith = provs.length > 1 ? `<div class="ec-paywith" role="group" aria-label="Payment method"><span>${L('Pay with', 'Pagar com')}</span>${provs.map(id =>
+      `<button type="button" class="ec-payopt" data-coin-provider="${id}" aria-pressed="${id === prov}">${PAY[id][0]}<small>${L(PAY[id][1], PAY[id][2])}</small></button>`).join('')}</div>` : '';
+  const row = o => `<tr><td>${dateOf(o.created_at)}</td><td>${esc(o.pack_id)} · ${fmt(o.coins)}</td><td>${money(o.price_cents, o.currency)}</td>
       <td>${L(...(STATUS[o.status] || [o.status, o.status]))}</td>
       <td>${o.withdrawable ? `<button class="ec-cta ec-cta--open" data-coin-withdraw="${esc(o.id)}">${L('Cancel purchase', 'Desistir da compra')}</button><br><small>${L('until', 'até')} ${dateOf(o.withdraw_until)}</small>` : ''}</td></tr>`;
   const table = hist.orders.length ? `<table class="ec-orders"><tbody>${hist.orders.map(row).join('')}</tbody></table>` : '';
@@ -397,8 +407,10 @@ async function coinShop(el) {
     el.innerHTML = `${table || `<p class="ec-hint">${L('No purchases yet.', 'Nenhuma compra ainda.')}</p>`}
       <p class="ec-paynote">${L(`You can cancel a purchase within ${hist.withdraw_days} days if you have not used its coins.`, `Você pode desistir de uma compra em até ${hist.withdraw_days} dias se ainda não usou as moedas dela.`)}</p>
       <p class="ec-hint" role="status" aria-live="polite" data-coin-status></p>`;
-  } else el.innerHTML = `<p class="ec-tabnote">${L('Buy Cosmo Coins with Pix or card through Mercado Pago. Coins arrive after the payment is confirmed.', 'Compre Cosmo Coins com Pix ou cartão pelo Mercado Pago. As moedas entram depois que o pagamento é confirmado.')}</p>
-    ${blocked ? `<p class="ec-hint">${blocked}</p>` : ''}
+  } else el.innerHTML = `<p class="ec-tabnote">${prov === 'paypal' && provs.length === 1
+      ? L('Buy Cosmo Coins in US dollars with PayPal or card. Coins arrive after the payment is confirmed.', 'Compre Cosmo Coins em dólar com PayPal ou cartão. As moedas entram depois que o pagamento é confirmado.')
+      : L('Buy Cosmo Coins with Pix or card through Mercado Pago, or with PayPal. Coins arrive after the payment is confirmed.', 'Compre Cosmo Coins com Pix ou cartão pelo Mercado Pago, ou pelo PayPal. As moedas entram depois que o pagamento é confirmado.')}</p>
+    ${blocked ? `<p class="ec-hint">${blocked}</p>` : ''}${payWith}
     <ul class="ec-cpacks">${packs.packs.map(card).join('')}</ul>
     <p class="ec-paynote">${L(`Boosters can only be bought with Cosmo Coins earned by playing. You can cancel a purchase within ${hist.withdraw_days} days if you have not used its coins.`, `Boosters só podem ser comprados com Cosmo Coins ganhas jogando. Você pode desistir de uma compra em até ${hist.withdraw_days} dias se ainda não usou as moedas dela.`)}
       <a href="/terms/" target="_blank" rel="noopener">${L('Terms of Use', 'Termos de Uso')}</a></p>
@@ -406,13 +418,15 @@ async function coinShop(el) {
     <p class="ec-hint" role="status" aria-live="polite" data-coin-status></p>`;
   const say = t => { el.querySelector('[data-coin-status]').textContent = t; };
   el.onclick = async ev => {
+    const pick = ev.target.closest('[data-coin-provider]');
+    if (pick) { el.dataset.provider = pick.dataset.coinProvider; coinShop(el); return; }
     const buy = ev.target.closest('[data-coin-buy]'), back = ev.target.closest('[data-coin-withdraw]');
     if (!buy && !back) return;
     (buy || back).disabled = true;
     try {
-      if (buy) { const r = await call('/api/payments/orders', 'POST', {pack: buy.dataset.coinBuy}); location.href = r.checkout_url; return; }
+      if (buy) { const r = await call('/api/payments/orders', 'POST', {pack: buy.dataset.coinBuy, provider: prov}); location.href = r.checkout_url; return; }
       const pt = document.documentElement.lang === 'pt-BR';
-      if (!confirm(pt ? 'Desistir desta compra? As moedas saem da sua conta e o Mercado Pago devolve o pagamento.' : 'Cancel this purchase? The coins leave your account and the payment is refunded by Mercado Pago.')) { back.disabled = false; return; }
+      if (!confirm(pt ? 'Desistir desta compra? As moedas saem da sua conta e o pagamento é devolvido.' : 'Cancel this purchase? The coins leave your account and the payment is refunded.')) { back.disabled = false; return; }
       await call(`/api/payments/orders/${back.dataset.coinWithdraw}/withdraw`, 'POST', {});
       await coinShop(el);
     } catch (err) { say(err.message); (buy || back).disabled = false; }

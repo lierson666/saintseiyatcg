@@ -15,7 +15,7 @@ from datetime import date
 from unittest.mock import patch
 from urllib.error import HTTPError
 
-os.environ['SANCTUARY_INVITES'] = ','.join(f'p{i}@example.com' for i in range(30)) + ',adm@example.com'
+os.environ['SANCTUARY_INVITES'] = ','.join(f'p{i}@example.com' for i in range(60)) + ',adm@example.com'
 os.environ['SANCTUARY_INSECURE_COOKIE'] = '1'
 os.environ['SANCTUARY_ADMINS'] = 'adm@example.com'
 sys.path.insert(0, os.path.dirname(__file__))
@@ -397,3 +397,106 @@ class Payments(Base):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+# ---------- PayPal (autor, 12/11/2026) ----------
+PP_ON = ON | {'SANCTUARY_PAYPAL_ENABLED': '1', 'PAYPAL_CLIENT_ID': 'cid', 'PAYPAL_CLIENT_SECRET': 'sec', 'PAYPAL_WEBHOOK_ID': 'wh-1'}
+PP_HEADERS = {'paypal-auth-algo': 'SHA256withRSA', 'paypal-cert-url': 'https://api.paypal.com/cert', 'paypal-transmission-sig': 'sig',
+              'paypal-transmission-time': '2026-11-12T12:00:00Z'}
+
+
+class FakePayPal:
+    """Responde como a API Orders v2 do PayPal: token, pedido, captura, reembolso e conferência do webhook."""
+    seq = 0  # ids únicos entre testes: o banco é o mesmo para a classe toda
+
+    def __init__(self):
+        self.orders, self.calls, self.approved, self.valid_hooks = {}, [], set(), True
+
+    def __call__(self, method, url, token, body=None, headers=None):
+        self.calls.append((method, url, body, headers))
+        if url.endswith('/v1/oauth2/token'):
+            return 200, {'access_token': 'pp-token', 'expires_in': 3600}
+        if url.endswith('/verify-webhook-signature'):
+            return 200, {'verification_status': 'SUCCESS' if self.valid_hooks else 'FAILURE'}
+        if url.endswith('/v2/checkout/orders') and method == 'POST':
+            FakePayPal.seq += 1
+            pid = f'PP{FakePayPal.seq}'
+            unit = body['purchase_units'][0]
+            self.orders[pid] = {'id': pid, 'status': 'CREATED', 'purchase_units': [{'custom_id': unit['custom_id'], 'amount': unit['amount']}]}
+            return 201, {'id': pid, 'links': [{'rel': 'payer-action', 'href': f'https://www.paypal.com/checkoutnow?token={pid}'}]}
+        if url.endswith('/capture'):
+            pid = url.split('/orders/')[1].split('/')[0]
+            o = self.orders[pid]
+            if pid not in self.approved or o['status'] == 'COMPLETED':
+                return 422, {'name': 'UNPROCESSABLE_ENTITY'}
+            o['status'] = 'COMPLETED'
+            o['purchase_units'][0]['payments'] = {'captures': [{'id': f'CAP-{pid}', 'status': 'COMPLETED', 'amount': o['purchase_units'][0]['amount']}]}
+            return 201, o
+        if '/v2/payments/captures/' in url and url.endswith('/refund'):
+            cap = url.split('/captures/')[1].split('/')[0]
+            self.orders[cap[4:]]['purchase_units'][0]['payments']['captures'][0]['status'] = 'REFUNDED'
+            return 201, {'id': 'RF1', 'status': 'COMPLETED'}
+        if '/v2/checkout/orders/' in url:
+            pid = url.rsplit('/', 1)[1]
+            return (200, self.orders[pid]) if pid in self.orders else (404, {})
+        return 404, {}
+
+
+class PayPalFlow(Base):
+    def setUp(self):
+        super().setUp()
+        self.pp = FakePayPal()
+        payments.ADAPTERS['paypal'].http = self.pp
+        payments.ADAPTERS['paypal']._token = (None, 0)
+
+    def order(self, cookie, provider='paypal'):
+        with patch.dict(os.environ, PP_ON):
+            return self.call('POST', '/api/payments/orders', {'pack': 'bronze', 'provider': provider}, cookie=cookie)
+
+    def hook(self, event, tid):
+        with patch.dict(os.environ, PP_ON):
+            return self.call('POST', '/api/payments/webhook/paypal', event, origin=None, headers=PP_HEADERS | {'paypal-transmission-id': tid})
+
+    def test_dollar_price_capture_on_return_and_refund(self):
+        cookie, uid = self.player()
+        with patch.dict(os.environ, PP_ON):
+            packs = self.call('GET', '/api/payments/packs', cookie=cookie)[1]
+        self.assertEqual(packs['providers'], ['mercadopago', 'paypal'])
+        self.assertEqual(packs['packs'][0]['usd_cents'], 91)  # R$4,99 / 5,50
+        st, data, _ = self.order(cookie)
+        self.assertEqual(st, 201, data)
+        oid = data['order']['id']
+        self.assertEqual((data['order']['price_cents'], data['order']['currency']), (91, 'USD'))
+        self.assertIn('paypal.com', data['checkout_url'])
+        before = server.coins_of(uid)
+        with patch.dict(os.environ, PP_ON):
+            self.assertEqual(self.call('GET', f'/api/payments/orders/{oid}', cookie=cookie)[1]['status'], 'PENDING')  # ainda não aprovou
+            self.pp.approved.add(f'PP{FakePayPal.seq}')
+            self.assertEqual(self.call('GET', f'/api/payments/orders/{oid}', cookie=cookie)[1]['status'], 'APPROVED')
+            self.call('GET', f'/api/payments/orders/{oid}', cookie=cookie)
+        self.assertEqual(server.coins_of(uid), before + 1250)
+        self.assertEqual(server.db.execute("select count(*) from coin_ledger where reason = ?", (f'purchase:{oid}',)).fetchone()[0], 1)
+        with patch.dict(os.environ, PP_ON):
+            st, out, _ = self.call('POST', f'/api/payments/orders/{oid}/withdraw', {}, cookie=cookie)
+        self.assertEqual((st, out['status']), (200, 'REFUNDED'), out)
+        self.assertEqual(server.coins_of(uid), before)
+
+    def test_webhook_verified_on_paypal_and_foreigner_only_paypal(self):
+        cookie, uid = self.player()
+        oid = self.order(cookie)[1]['order']['id']
+        pid = f'PP{FakePayPal.seq}'
+        self.pp.approved.add(pid)
+        self.pp.valid_hooks = False
+        event = {'event_type': 'CHECKOUT.ORDER.APPROVED', 'resource': {'id': pid}}
+        self.assertEqual(self.hook(event, 't1')[0], 401)
+        self.pp.valid_hooks = True
+        before = server.coins_of(uid)
+        self.assertEqual(self.hook(event, 't2')[0], 200)
+        self.assertEqual(self.hook(event, 't2')[1]['result'], 'duplicate')
+        self.assertEqual(server.coins_of(uid), before + 1250)
+        self.assertEqual(server.db.execute('select status from payment_orders where id = ?', (oid,)).fetchone()[0], 'APPROVED')
+        foreign, _ = self.player(declare={'birth_date': ADULT['birth_date'], 'country': 'PT', 'confirm_adult': True})
+        server.db.execute("update users set country = 'PT' where id = (select max(id) from users)")
+        with patch.dict(os.environ, PP_ON):
+            self.assertEqual(self.call('GET', '/api/payments/packs', cookie=foreign)[1]['providers'], ['paypal'])
+        self.assertEqual(self.order(foreign, provider='mercadopago')[0], 400)

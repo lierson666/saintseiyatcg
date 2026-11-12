@@ -32,6 +32,7 @@ DEFAULTS = {
                    {'id': 'divine', 'name': 'Divine', 'price_cents': 7999, 'coins': 28000},
                    {'id': 'olympus', 'name': 'Olympus', 'price_cents': 14999, 'coins': 55000}],
     'coins_per_brl': 250,  # só referência para o autor (R$ ao lado dos preços); o servidor não usa
+    'brl_per_usd_cents': 550,  # cotação para o PayPal (autor, 12/11/2026): preço em US$ = preço em R$ convertido; R$5,50 = 550
 }
 
 # (grupo, [(caminho, rótulo, mínimo, máximo)]): a tela do Forge e a validação saem daqui.
@@ -51,7 +52,8 @@ GROUPS = [
     ('Pacotes de Cosmo Coins (dinheiro real; preço em centavos)', [(f'coin_packs.{i}.{k}', f'{n} · {"preço (centavos)" if k == "price_cents" else "coins"}',
                                                                     100 if k == 'price_cents' else 1, 100000 if k == 'price_cents' else 1000000)
                                                                    for i, n in enumerate(('Bronze', 'Silver', 'Gold', 'Saint', 'Divine', 'Olympus')) for k in ('price_cents', 'coins')]),
-    ('Referência', [('coins_per_brl', 'Coins por R$1 (só para comparar)', 1, 100000)]),
+    ('Referência', [('coins_per_brl', 'Coins por R$1 (só para comparar)', 1, 100000),
+                    ('brl_per_usd_cents', 'Cotação do dólar para o PayPal (centavos de R$ por US$1)', 100, 5000)]),
 ]
 FIELDS = [f for _, fields in GROUPS for f in fields]
 

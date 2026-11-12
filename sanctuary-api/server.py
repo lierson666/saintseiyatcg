@@ -1551,7 +1551,7 @@ class Handler(BaseHTTPRequestHandler):
         with lock:
             welcome(uid)
             state = economy_of(uid)
-        state['coin_store'] = flags.on('PAYMENTS_ENABLED') and flags.on('MERCADO_PAGO_ENABLED')  # aba Cosmo Coins na Store
+        state['coin_store'] = flags.on('PAYMENTS_ENABLED') and (flags.on('MERCADO_PAGO_ENABLED') or flags.on('PAYPAL_ENABLED'))  # aba Cosmo Coins na Store
         self.send_json(200, state)
 
     def store_buy(self):
@@ -1675,14 +1675,26 @@ class Handler(BaseHTTPRequestHandler):
             fresh = db.execute('select * from users where id = ?', (user['id'],)).fetchone()
         self.send_json(200, profile(fresh))
 
+    def pay_providers(self, user):
+        """Brasil: Mercado Pago e PayPal; fora do Brasil: só PayPal, que cobra em dólar (autor, 12/11/2026)."""
+        out = []
+        if flags.on('MERCADO_PAGO_ENABLED') and (user['country'] or 'BR') == 'BR':
+            out.append('mercadopago')
+        if flags.on('PAYPAL_ENABLED'):
+            out.append('paypal')
+        return out
+
     def payment_packs(self):
         user = self.require_user()
-        on = flags.on('PAYMENTS_ENABLED') and flags.on('MERCADO_PAGO_ENABLED')
+        providers = self.pay_providers(user)
+        on = flags.on('PAYMENTS_ENABLED') and bool(providers)
         with lock:
             adult = identity.adult(db, user['id'], require_provider=flags.on('IDENTITY_VERIFICATION_ENABLED'))
             out = {'enabled': on, 'adult': adult, 'terms_accepted': legal_ok(user['id']), 'terms_version': TERMS_VERSION,
                    'held': bool(db.execute('select 1 from payment_holds where user_id = ?', (user['id'],)).fetchone()),
-                   'packs': [{k: p[k] for k in ('id', 'name', 'price_cents', 'coins')} for p in ECO['coin_packs']]}
+                   'providers': providers,
+                   'packs': [{k: p[k] for k in ('id', 'name', 'price_cents', 'coins')} | {'usd_cents': payments.usd_cents(p, ECO['brl_per_usd_cents'])}
+                             for p in ECO['coin_packs']]}
         self.send_json(200, out)
 
     def payment_order(self):
@@ -1696,9 +1708,12 @@ class Handler(BaseHTTPRequestHandler):
                 raise ApiError(403, 'Confirm that you are 18 or older before buying.')
             if not legal_ok(user['id']):
                 raise ApiError(403, 'Please accept the current terms before buying.')
+            provider = str(body.get('provider') or 'mercadopago')
+            if provider not in self.pay_providers(user):
+                raise ApiError(400, 'This payment method is not available for your country.')
             try:
                 out = payments.create_order(db, user['id'], str(body.get('pack', '')), ECO['coin_packs'],
-                                            str(body.get('provider') or 'mercadopago'), PUBLIC_URL or ORIGIN)
+                                            provider, PUBLIC_URL or ORIGIN, ECO['brl_per_usd_cents'])
             except payments.PaymentError as e:
                 raise ApiError(e.status, e.message)
         self.send_json(201, out)
@@ -1709,6 +1724,12 @@ class Handler(BaseHTTPRequestHandler):
             row = db.execute('select * from payment_orders where id = ? and user_id = ?', (order_id, user['id'])).fetchone()
             if not row:
                 raise ApiError(404, 'Order not found.')
+            if row['provider'] == 'paypal' and row['status'] == 'PENDING' and flags.on('PAYPAL_ENABLED'):
+                try:  # voltou do PayPal: captura aqui; se falhar, o webhook e a conciliação pegam depois
+                    payments.settle_paypal(db, row, add_coins, coins_of)
+                except payments.PaymentError:
+                    pass
+                row = db.execute('select * from payment_orders where id = ?', (order_id,)).fetchone()
             out = payments.order_view(row) | {'coins_balance': coins_of(user['id'])}
         self.send_json(200, out)
 

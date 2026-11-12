@@ -19,7 +19,7 @@ import {countryOptions, countryName} from '../shared/countries.js?v=20261031-i18
 import {startPresence} from '../shared/presence.js?v=20261029-1';
 import {mountSocial} from './social.js?v=20261101-notch1';
 import {telas, imageUrl, sound, applyColors, applyTexts} from './telas.js?v=20261107-deus1';
-import {loadEconomy, ownedLimit, missingCards, coinBadge, storeScreen, collectionScreen, openBooster, buyBooster, buyCosmetic, redeemWildcard, ageCard, submitAge} from './economy.js?v=20261112-age1';
+import {loadEconomy, ownedLimit, missingCards, coinBadge, storeScreen, collectionScreen, openBooster, buyBooster, buyCosmetic, redeemWildcard, ageCard, submitAge} from './economy.js?v=20261112-pp1';
 import {lightArt, upgradeArt} from '../shared/light-art.js?v=20261102-art1';
 import {faceStyle, useGodPortraits} from './avatar-face.js?v=20261031-3';
 import {progressTrack} from './home-features.js?v=20261031-face3';
@@ -879,6 +879,7 @@ function setCount(id, delta) {
     ui.big = null;
     ui.notice = {title: 'Splash limit reached', text: `This deck already has ${SPLASH_LIMIT} cards from its Domain's faction. Cards from your God's faction and neutral cards have no limit.`};
     return;
+    if (n.nodeName.includes('-')) return; // componente (ex.: ss-coin-shop) desenha o próprio conteúdo: o morph apagava a loja
   }
   if (delta > 0 && n > ownedLimit(ui.econ, id, card?.kind)) {  // coleção (docs/economia.md): só entram as cópias que o jogador tem
     if (n <= COPY_LIMIT) { ui.big = null; ui.notice = {title: 'Not in your collection', text: `You own ${ownedLimit(ui.econ, id, card?.kind)} of ${card?.name || 'this card'}. Open boosters in the Store to get more.`}; }
